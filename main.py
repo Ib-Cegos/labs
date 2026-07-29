@@ -13,21 +13,15 @@ def define_env(env):
             return "PAGE INTROUVABLE"
         return str(page.file.src_uri)
 
-@env.macro
-def sommaire():
-
-    page = env.variables["page"]
-
-    src_uri = page.file.src_uri
-
-    dossier_stage = Path("docs") / Path(src_uri).parent
-
-    resultat = []
-
-    for fichier in sorted(dossier_stage.glob("*.md")):
-        resultat.append(f"* {fichier.name}")
-
-    return "\n"*join(resultat)
+    @env.macro
+    def sommaire():
+        page = env.variables["page"]
+        src_uri = page.file.src_uri
+        dossier_stage = Path("docs") / Path(src_uri).parent
+        resultat = []
+        for fichier in sorted(dossier_stage.glob("*.md")):
+            resultat.append(f"* {fichier.name}")
+        return "\n"*join(resultat)
 
     @env.macro
     def derniere_modification():
