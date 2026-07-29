@@ -7,8 +7,11 @@ import yaml
 def define_env(env):
 
     @env.macro
-    def test():
-        return "MACRO OK"
+    def debug_page():
+        page = env.variables.get("page")
+        if page is None:
+            return "PAGE INTROUVABLE"
+        return str(page.file.src_uri)
 
     @env.macro
     def sommaire():
