@@ -4,10 +4,6 @@ import yaml
 
 def define_env(env):
     @env.macro
-    def test():
-        return "MACRO OK"
-
-    @env.macro
     def workshop_toc():
         dossier = Path(env.page.file.src_path).parent
         ateliers = {}

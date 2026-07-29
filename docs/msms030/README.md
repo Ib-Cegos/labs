@@ -1,3 +1,3 @@
 # Administration de Microsoft 365
-{{ test() }}
+{{ macros_info() }}
 {{ workshop_toc() }}
