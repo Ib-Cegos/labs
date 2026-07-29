@@ -1,7 +1,7 @@
 .md-typeset h1 { color: #0078d4; }
 /* Masquer le volet de navigation gauche de material*/
 .md-sidebar--primary { display: none !important;} 
-.md-content { max-width: 100% !important;}
+.md-content { max-width: 100% !important; margin:0 !important;}
 .md-grid { max-width: 100% !important; }
 /* Mise en page de la table des matières */
 .somLab { margin-bottom: 2rem; } 
@@ -14,6 +14,5 @@
 .listeStages li { margin-bottom: 0.5rem; }
 .listeStages a { font-size: 1.2rem; font-weight: 600; text-decoration: none; }
 
-.md-main__inner { min-height: calc(100vh - 120px); }
-.md-content__inner { min-height: calc(100vh - 250px); display: flex; flex-direction: column; }
+.md-content__inner { min-height: calc(100vh - 12rem); display: flex; flex-direction: column; }
 .pageUpdate { margin-top: 3rem; padding-top: 0.5rem; border-top: 1px solid #ddd; font-size: 0.4rem; color: #777; text-align: right; margin-top: auto;}

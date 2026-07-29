@@ -64,12 +64,6 @@ def define_env(env):
         return '\n'.join(html)
 
     @env.macro
-    def derniere_modification():
-        page = env.variables['page']
-        date_fr = datetime.strptime(str(page.update_date),"%Y-%m-%d").strftime("%d/%m/%Y")
-        return f'<div class="somDuree">Dernière modification : {date_fr}</div>'
-
-    @env.macro
     def liste_stages():
         docs = Path("docs")
         html = []
