@@ -48,7 +48,6 @@ def define_env(env):
             else:
                 html.append(f'<div class="somLabTit">Atelier {numero_atelier}</div>')
             html.append('<ul>')
-            duree_totale = 0
             for exercice in exercices:
                 html.append('<li class="somEx">')
                 html.append(
@@ -58,14 +57,8 @@ def define_env(env):
                 )
                 if exercice['duree']:
                     html.append(f'<span class="somDuree">{exercice["duree"]} min</span>')
-                    try:
-                        duree_totale += int(exercice['duree'])
-                    except ValueError:
-                        pass
                 html.append('</li>')
             html.append('</ul>')
-            if duree_totale > 0:
-                html.append(f'<div class="somDuree">Durée totale : {duree_totale} min</div>')
             html.append('</div>')
         return '\n'.join(html)
 
