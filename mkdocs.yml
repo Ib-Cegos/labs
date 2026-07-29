@@ -4,6 +4,7 @@ site_url: https://ib-cegos.github.io/labs
 theme:
   name: material
   language: fr
+  custom_dir: overrides
 
 plugins:
   - search
