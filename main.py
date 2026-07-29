@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
 import yaml
+from datetime import datetime
 
 
 def define_env(env):
@@ -65,7 +66,8 @@ def define_env(env):
     @env.macro
     def derniere_modification():
         page = env.variables['page']
-        return f'<div class="somDuree">Dernière mise à jour : {page.update_date}</div>'
+        date_fr = datetime.strptime(str(page.update_date),"%Y-%m-%d").strftime("%d/%m/%Y")
+        return f'<div class="somDuree">Dernière modification : {date_fr}</div>'
 
     @env.macro
     def liste_stages():

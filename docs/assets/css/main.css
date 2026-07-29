@@ -13,4 +13,7 @@
 .listeStages { list-style: none; padding-left: 0; }
 .listeStages li { margin-bottom: 0.5rem; }
 .listeStages a { font-size: 1.2rem; font-weight: 600; text-decoration: none; }
-.pageUpdate { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 0.9rem; color: #666; text-align: right; }
+
+.md-main__inner { min-height: calc(100vh - 120px); }
+.md-content__inner { min-height: calc(100vh - 250px); display: flex; flex-direction: column; }
+.pageUpdate { margin-top: 3rem; padding-top: 0.5rem; border-top: 1px solid #ddd; font-size: 0.4rem; color: #777; text-align: right; margin-top: auto;}
