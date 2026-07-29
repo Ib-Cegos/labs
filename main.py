@@ -4,114 +4,79 @@ import yaml
 
 
 def define_env(env):
-
     @env.macro
     def workshop_toc():
-
-        page = env.page
-
-        current_dir = Path(page.file.src_path).parent
-
-        exercices = []
-
-        pattern = re.compile(r"a(\d+)e(\d+)\.md")
-
-        for file in current_dir.glob("a*e*.md"):
-
-            match = pattern.match(file.name)
-
-            if not match:
-                continue
-
-            atelier_num = int(match.group(1))
-            exercice_num = int(match.group(2))
-
-            content = file.read_text(encoding="utf-8")
-
-            title = file.stem
-
-            if content.startswith("---"):
-                parts = content.split("---", 2)
-
-                metadata = yaml.safe_load(parts[1]) or {}
-
-                content = parts[2]
-            else:
-                metadata = {}
-
-            title_match = re.search(
-                r"^#\s+(.+)$",
-                content,
-                re.MULTILINE
-            )
-
-            if title_match:
-                title = title_match.group(1)
-
-            exercices.append(
-                {
-                    "atelier": atelier_num,
-                    "exercice": exercice_num,
-                    "title": title,
-                    "duree": metadata.get("duree"),
-                    "atelier_title": metadata.get("atelier"),
-                    "file": file.name,
-                }
-            )
-
-        exercices.sort(
-            key=lambda x: (x["atelier"], x["exercice"])
-        )
-
+        dossier = Path(env.page.file.src_path).parent
         ateliers = {}
-
-        for e in exercices:
-            ateliers.setdefault(
-                e["atelier"],
-                []
-            ).append(e)
-
-        output = []
-
-        for atelier_no, items in ateliers.items():
-
-            atelier_title = None
-
-            for item in items:
-                if item["atelier_title"]:
-                    atelier_title = item["atelier_title"]
+        # Recherche tous les fichiers du type a1e1.md
+        for fichier in dossier.glob("a*e*.md"):
+            correspondance = re.match(r"a(\d+)e(\d+)\.md", fichier.name)
+            if not correspondance:
+                continue
+            numero_atelier = int(correspondance.group(1))
+            numero_exercice = int(correspondance.group(2))
+            contenu = fichier.read_text(encoding="utf-8")
+            metadata = {}
+            # Lecture du Front Matter YAML
+            if contenu.startswith("---"):
+                morceaux = contenu.split("---", 2)
+                if len(morceaux) >= 3:
+                    metadata = yaml.safe_load(morceaux[1]) or {}
+                    contenu = morceaux[2]
+            # Recherche du premier titre H1
+            titre = fichier.stem
+            resultat = re.search(r"^#\s+(.+)$", contenu, re.MULTILINE)
+            if resultat:
+                titre = resultat.group(1).strip()
+            exercice = {
+                "numero": numero_exercice,
+                "titre": titre,
+                "fichier": fichier.name,
+                "duree": metadata.get("duree"),
+                "titre_atelier": metadata.get("atelier")
+            }
+            if numero_atelier not in ateliers:
+                ateliers[numero_atelier] = []
+            ateliers[numero_atelier].append(exercice)
+        resultat_html = []
+        for numero_atelier in sorted(ateliers.keys()):
+            exercices = sorted(
+                ateliers[numero_atelier],
+                key=lambda e: e["numero"]
+            )
+            titre_atelier = None
+            for exercice in exercices:
+                if exercice["titre_atelier"]:
+                    titre_atelier = exercice["titre_atelier"]
                     break
-
-            if atelier_title:
-                output.append(
-                    f"## Atelier {atelier_no} : {atelier_title}"
+            if titre_atelier:
+                resultat_html.append(
+                    f"## Atelier {numero_atelier} : {titre_atelier}"
                 )
             else:
-                output.append(
-                    f"## Atelier {atelier_no}"
+                resultat_html.append(
+                    f"## Atelier {numero_atelier}"
                 )
 
-            total = 0
-
-            for item in items:
-
+            resultat_html.append("")
+            duree_totale = 0
+            for exercice in exercices:
                 ligne = (
-                    f"- [Exercice {item['exercice']} - "
-                    f"{item{item['file']}"
+                    f"- [Exercice {exercice['numero']} - "
+                    f"{exercice{exercice['fichier']}"
                 )
+                if exercice["duree"]:
+                    ligne += f" ({exercice['duree']} min)"
+                    try:
+                        duree_totale += int(exercice["duree"])
+                    except:
+                        pass
+                resultat_html.append(ligne)
+            if duree_totale > 0:
 
-                if item["duree"]:
-                    ligne += f" ({item['duree']} min)"
-                    total += int(item["duree"])
-
-                output.append(ligne)
-
-            if total:
-                output.append("")
-                output.append(
-                    f"**Durée totale : {total} min**"
+                resultat_html.append("")
+                resultat_html.append(
+                    f"**Durée totale : {duree_totale} min**"
                 )
-
-            output.append("")
-
-        return "\n".join(output)
+            resultat_html.append("")
+        return "\n".join(resultat_html)
