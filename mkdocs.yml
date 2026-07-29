@@ -7,6 +7,7 @@ theme:
 
 plugins:
   - search
+  - macros
 
 markdown_extensions:
   - admonition
@@ -26,13 +27,5 @@ extra_javascript:
 
 nav:
   - Accueil: index.md
-
-  - msms030:
-      - Sommaire: msms030/README.md
-      - Exercice 1: msms030/a1e1.md
-      - Exercice 2: msms030/a1e2.md
-      - Exercice 3: msms030/a1e3.md
-
-  - ms503:
-      - Sommaire: ms503/README.md
-      - Exercice 1: ms503/a1e1.md
+  - msms030: msms030/README.md
+  - ms503: ms503/README.md
