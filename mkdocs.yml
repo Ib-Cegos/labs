@@ -1,11 +1,6 @@
 site_name: Ateliers ib Cegos
 site_url: https://ib-cegos.github.io/labs
 
-docs_dir: .
-
-exclude_docs: |
-  .github/**
-
 theme:
   name: material
   language: fr
@@ -30,7 +25,7 @@ extra_javascript:
   - assets/js/main.js
 
 nav:
-  - Accueil: README.md
+  - Accueil: index.md
 
   - msms030:
       - Sommaire: msms030/README.md
