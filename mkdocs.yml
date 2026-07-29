@@ -1,6 +1,11 @@
 site_name: Ateliers ib Cegos
 site_url: https://ib-cegos.github.io/labs
 
+docs_dir: .
+
+exclude_docs: |
+  .github/**
+
 theme:
   name: material
   language: fr
@@ -34,5 +39,5 @@ nav:
       - Exercice 3: msms030/a1e3.md
 
   - ms503:
-      - Présentation: ms503/README.md
+      - Sommaire: ms503/README.md
       - Exercice 1: ms503/a1e1.md
