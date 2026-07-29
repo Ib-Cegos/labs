@@ -28,8 +28,10 @@ nav:
   - Accueil: README.md
 
   - msms030:
-      - Présentation: msms030/README.md
-      - Atelier 1: msms030/a1e1.md
+      - Sommaire: msms030/README.md
+      - Exercice 1: msms030/a1e1.md
+      - Exercice 2: msms030/a1e2.md
+      - Exercice 3: msms030/a1e3.md
 
   - ms503:
       - Présentation: ms503/README.md
