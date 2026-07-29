@@ -62,14 +62,13 @@ def define_env(env):
             duree_totale = 0
             for exercice in exercices:
                 ligne = (
-                    f"- [Exercice {exercice['numero']} - "
-                    f"{exercice{exercice['fichier']}"
+                    f"- [Exercice {exercice['fichier']}"
                 )
                 if exercice["duree"]:
                     ligne += f" ({exercice['duree']} min)"
                     try:
                         duree_totale += int(exercice["duree"])
-                    except:
+                    except ValueError:
                         pass
                 resultat_html.append(ligne)
             if duree_totale > 0:
