@@ -1,0 +1,36 @@
+site_name: Ateliers ib Cegos
+site_url: https://ib-Cegos.github.io/labs
+
+theme:
+  name: material
+  language: fr
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_css:
+  - assets/css/main.css
+
+extra_javascript:
+  - assets/js/main.js
+
+nav:
+  - Accueil: README.md
+
+  - msms030:
+      - Présentation: msms030/README.md
+      - Atelier 1: msms030/a1e1.md
+
+  - ms503:
+      - Présentation: ms503/README.md
+      - Exercice 1: ms503/a1e1.md
