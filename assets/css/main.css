@@ -1,1 +1,14 @@
 .md-typeset h1 { color: #0078d4; }
+.md-sidebar--primary { display: none; } /* Masquer le volet de navigation gauche */
+.md-content { max-width: 100%; }
+.md-grid { max-width: 100%; }
+/* Mise en page de la table des matières */
+.somLab { margin-bottom: 2rem; } 
+.somLabTit { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
+.somEx { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
+.somExLink { text-decoration: none; }
+.somDuree { color: #666; font-size: 0.9rem; }
+/*Liste des stages sur page d'accueil*/
+.listeStages { list-style: none; padding-left: 0; }
+.listeStages li { margin-bottom: 0.5rem; }
+.listeStages a { font-size: 1.2rem; font-weight: 600; text-decoration: none; }

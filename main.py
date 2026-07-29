@@ -31,8 +31,8 @@ def define_env(env):
                 'numero': numero_exercice,
                 'titre': titre,
                 'fichier': fichier.stem + '/',
-                'duree': metadata.get('duree'),
-                'atelier_titre': metadata.get('atelier')
+                'duree': metadata.get('Duree'),
+                'atelier_titre': metadata.get('Atelier')
             })
         html = []
         for numero_atelier in sorted(ateliers.keys()):
@@ -73,3 +73,27 @@ def define_env(env):
     def derniere_modification():
         page = env.variables['page']
         return f'<div class="somDuree">Dernière mise à jour : {page.update_date}</div>'
+
+    @env.macro
+    def liste_stages():
+        docs = Path("docs")
+        html = []
+        html.append('<ul class="listeStages">')
+        for dossier in sorted(docs.iterdir()):
+            if not dossier.is_dir():
+                continue
+            readme = dossier / "README.md"
+            if not readme.exists():
+                continue
+            titre = dossier.name
+            contenu = readme.read_text(encoding="utf-8")
+            match = re.search(r"^#\s+(.+)$", contenu, re.MULTILINE)
+            if match:
+                titre = match.group(1).strip()
+            html.append(
+                f'<li><a href="{dossier.name}/" class="stageLink">'
+                f'{dossier.name.upper()} - {titre}'
+                f'</a></li>'
+            )
+        html.append('</ul>')
+        return "\n".join(html)
