@@ -1,32 +1,75 @@
 import re
 from pathlib import Path
-
 import yaml
 
 
 def define_env(env):
 
     @env.macro
-    def debug_page():
-        page = env.variables.get("page")
-        if page is None:
-            return "PAGE INTROUVABLE"
-        return str(page.file.src_uri)
-
-    @env.macro
     def sommaire():
-        page = env.variables["page"]
+        page = env.variables['page']
         dossier_stage = Path(page.file.abs_src_path).parent
-        resultat = []
-        for fichier in sorted(dossier_stage.glob("*.md")):
-            resultat.append(f"- {fichier.name}")
-        return "\n".join(resultat)
+        ateliers = {}
+        for fichier in dossier_stage.glob('a*e*.md'):
+            match = re.match(r'a(\d+)e(\d+)\.md$', fichier.name, re.IGNORECASE)
+            if not match:
+                continue
+            numero_atelier = int(match.group(1))
+            numero_exercice = int(match.group(2))
+            contenu = fichier.read_text(encoding='utf-8')
+            metadata = {}
+            if contenu.startswith('---'):
+                morceaux = contenu.split('---', 2)
+                if len(morceaux) >= 3:
+                    metadata = yaml.safe_load(morceaux[1]) or {}
+                    contenu = morceaux[2]
+            titre = fichier.stem
+            titre_match = re.search(r'^#\s+(.+)$', contenu, re.MULTILINE)
+            if titre_match:
+                titre = titre_match.group(1).strip()
+            ateliers.setdefault(numero_atelier, []).append({
+                'numero': numero_exercice,
+                'titre': titre,
+                'fichier': fichier.stem + '/',
+                'duree': metadata.get('duree'),
+                'atelier_titre': metadata.get('atelier')
+            })
+        html = []
+        for numero_atelier in sorted(ateliers.keys()):
+            exercices = sorted(ateliers[numero_atelier], key=lambda e: e['numero'])
+            titre_atelier = None
+            for exercice in exercices:
+                if exercice['atelier_titre']:
+                    titre_atelier = exercice['atelier_titre']
+                    break
+            html.append('<div class="somLab">')
+            if titre_atelier:
+                html.append(f'<div class="somLabTit">Atelier {numero_atelier} : {titre_atelier}</div>')
+            else:
+                html.append(f'<div class="somLabTit">Atelier {numero_atelier}</div>')
+            html.append('<ul>')
+            duree_totale = 0
+            for exercice in exercices:
+                html.append('<li class="somEx">')
+                html.append(
+                    f'<a class="somExLink" href="{exercice["fichier"]}">'
+                    f'Exercice {exercice["numero"]} - {exercice["titre"]}'
+                    f'</a>'
+                )
+                if exercice['duree']:
+                    html.append(f'<span class="somDuree">{exercice["duree"]} min</span>')
+                    try:
+                        duree_totale += int(exercice['duree'])
+                    except ValueError:
+                        pass
+                html.append('</li>')
+            html.append('</ul>')
+            if duree_totale > 0:
+                html.append(f'<div class="somDuree">Durée totale : {duree_totale} min</div>')
+            html.append('</div>')
+        return '\n'.join(html)
 
     @env.macro
     def derniere_modification():
-
-        page = env.variables["page"]
-
-        return (
-            f'*Dernière mise à jour : {page.update_date}*'
-        )
+        page = env.variables['page']
+        return f'<div class="somDuree">Dernière mise à jour : {page.update_date}</div>'
