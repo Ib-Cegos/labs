@@ -16,12 +16,11 @@ def define_env(env):
     @env.macro
     def sommaire():
         page = env.variables["page"]
-        src_uri = page.file.src_uri
-        dossier_stage = Path("docs") / Path(src_uri).parent
+        dossier_stage = Path(page.file.abs_src_path).parent
         resultat = []
         for fichier in sorted(dossier_stage.glob("*.md")):
-            resultat.append(f"* {fichier.name}")
-        return "\n"*join(resultat)
+            resultat.append(f"- {fichier.name}")
+        return "\n".join(resultat)
 
     @env.macro
     def derniere_modification():
