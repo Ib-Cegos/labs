@@ -3,12 +3,12 @@ from pathlib import Path
 import yaml
 from datetime import datetime
 
-def on_pre_page_macros(env):
-    fichier = Path(env.page.file.src_uri).name
-    if re.fullmatch(r"a\d+e\d+\.md", fichier, re.IGNORECASE):
-        env.markdown += "\n\n{{ ibNav() }}\n"
-
 def define_env(env):
+
+    @env.macro
+    def test_macro():
+        print("MACRO")
+        return "MACRO_OK"
 
     @env.macro
     def sommaire():
