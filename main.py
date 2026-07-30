@@ -5,17 +5,6 @@ from datetime import datetime
 
 def define_env(env):
 
-    env.variables["footer_date"] = ""
-
-    @env.macro
-    def date_footer():
-        page = env.variables["page"]
-        return (
-            f"{page.update_date[8:10]}/"
-            f"{page.update_date[5:7]}/"
-            f"{page.update_date[0:4]}"
-        )
-
     @env.macro
     def sommaire():
         page = env.variables['page']
@@ -96,3 +85,20 @@ def define_env(env):
             )
         html.append('</ul>')
         return "\n".join(html)
+
+def on_post_page(output, page, config):
+
+    date_fr = (
+        f"{page.update_date[8:10]}/"
+        f"{page.update_date[5:7]}/"
+        f"{page.update_date[0:4]}"
+    )
+    footer = (
+        '<div class="pageUpdateFooter">'
+        f'Dernière mise à jour : {date_fr}'
+        '</div>'
+    )
+    return output.replace(
+        "</article>",
+        footer + "</article>"
+    )
