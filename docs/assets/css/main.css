@@ -19,5 +19,7 @@
 .old .git-revision-date-localized-plugin { font-size: 0.5rem; color: #888; display: flex; position: absolute; right: 1em; bottom: 1em; }
 .md-source-file__fact { font-size: 0.5rem; color: #888; display: flex; position: absolute; right: 1em; bottom: 1em; }
 /*Navigation entre les exercices */
-.navEx { display: flex; justify-content: space-between; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ddd; }
-.navPrev, .navNext { text-decoration: none; font-weight: 500; }
+.navEx { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ddd; }
+.navPrev { justify-self: start; }
+.navSom { justify-self: center; }
+.navNext { justify-self: end; }
