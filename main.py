@@ -3,6 +3,12 @@ from pathlib import Path
 import yaml
 from datetime import datetime
 
+def on_page_markdown(markdown, page, config, files):
+    fichier = Path(page.file.src_uri).name
+    if re.match(r"a\d+e\d+\.md$", fichier, re.IGNORECASE):
+        markdown += "\n\n{{ ibNav() }}\n"
+    return markdown
+
 def define_env(env):
 
     @env.macro
@@ -155,4 +161,4 @@ def define_env(env):
         else:
             html.append('<span></span>')
         html.append('</div>')
-        return "\\n".join(html)
+        return "\n".join(html)
