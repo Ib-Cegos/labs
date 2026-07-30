@@ -1,6 +1,7 @@
 .md-typeset h1 { color: #0078d4; }
 /* Masquer le volet de navigation gauche de material*/
 .md-sidebar--primary { display: none !important;} 
+.md-sidebar--secondary { display: none !important;} 
 .md-content { max-width: 100% !important; margin:0 !important;}
 .md-grid { max-width: 100% !important; }
 /* Mise en page de la table des matières */
