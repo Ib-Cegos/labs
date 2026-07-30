@@ -27,8 +27,7 @@ plugins:
 markdown_extensions:
   - admonition
   - tables
-  - toc:
-      permalink: true
+  - toc
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tabbed:

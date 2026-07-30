@@ -85,3 +85,67 @@ def define_env(env):
             )
         html.append('</ul>')
         return "\n".join(html)
+
+    @env.macro
+    def navigation():
+        page = env.variables["page"]
+        fichier_courant = Path(page.file.src_uri).name
+        match = re.match(
+            r"a(\d+)e(\d+)\.md$",
+            fichier_courant,
+            re.IGNORECASE
+        )
+        if not match:
+            return ""
+        numero_atelier = int(match.group(1))
+        numero_exercice = int(match.group(2))
+        dossier_stage = Path(page.file.abs_src_path).parent
+        exercices = []
+        for fichier in dossier_stage.glob(f"a{numero_atelier}e*.md"):
+            m = re.match(
+                r"a(\d+)e(\d+)\.md$",
+                fichier.name,
+                re.IGNORECASE
+            )
+            if m:
+                exercices.append(
+                    (
+                        int(m.group(2)),
+                        fichier.stem
+                    )
+                )
+        exercices.sort()
+        # Atelier avec un seul exercice
+        if len(exercices) <= 1:
+            return ""
+        position = None
+        for index, (numero, _) in enumerate(exercices):
+            if numero == numero_exercice:
+                position = index
+                break
+        if position is None:
+            return ""
+        precedent = None
+        suivant = None
+        if position > 0:
+            precedent = exercices[position - 1][1]
+        if position < len(exercices) - 1:
+            suivant = exercices[position + 1][1]
+        html = []
+        html.append('<div class="navEx">')
+        if precedent:
+            html.append(
+                f'../{precedent}/'
+            )
+        else:
+            html.append('<span></span>')
+        if suivant:
+            html.append(
+                f'../{suivant}/'
+                f'Exercice suivant →'
+                f'</a>'
+            )
+        else:
+            html.append('<span></span>')
+        html.append('</div>')
+        return "\\n".join(html)
