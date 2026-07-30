@@ -87,7 +87,7 @@ def define_env(env):
         return "\n".join(html)
 
     @env.macro
-    def navigation():
+    def ibNav():
         page = env.variables["page"]
         fichier_courant = Path(page.file.src_uri).name
         match = re.match(
