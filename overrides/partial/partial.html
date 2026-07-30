@@ -1,0 +1,6 @@
+{% extends "partials/footer.html" %}
+{% block content %}
+{{ super() }}
+<div class="pageUpdateFooter"> Dernière mise à jour : {{ page.update_date[8:10] }}/{{ page.update_date[5:7] }}/{{ page.update_date[0:4] }} </div>
+
+{% endblock %}
