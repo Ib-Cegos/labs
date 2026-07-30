@@ -10,7 +10,7 @@ theme:
   favicon: assets/images/favicon.png
 
 hooks:
-  - hooks/navigation.py
+  - hooks/content_processor.py
 
 plugins:
   - search
