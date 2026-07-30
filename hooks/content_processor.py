@@ -2,8 +2,7 @@ import re
 from pathlib import Path
 
 def on_page_markdown(markdown, page, config, files):
-    markdown = markdown.replace("\t", "    ")
-    markdown = markdown.replace("\n    >","\n\n    >")
+    markdown = markdown.replace("\n\t>","\n\n\t>")
     return markdown
 
 
