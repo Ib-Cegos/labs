@@ -107,22 +107,15 @@ def define_env(env):
                 fichier.name,
                 re.IGNORECASE
             )
-            if m:
-                exercices.append(
-                    (
-                        int(m.group(2)),
-                        fichier.stem
-                    )
-                )
-        exercices.sort()
-        # Atelier avec un seul exercice
+        if m:
+            exercices.append((int(m.group(2)), fichier.stem))
+        exercices.sort(key=lambda x: x[0])
         if len(exercices) <= 1:
             return ""
-        position = None
-        for index, (numero, _) in enumerate(exercices):
-            if numero == numero_exercice:
-                position = index
-                break
+        position = next(
+            (i for i, (n, _) in enumerate(exercices) if n == numero_exercice),
+            None
+        )
         if position is None:
             return ""
         precedent = None
@@ -135,17 +128,19 @@ def define_env(env):
         html.append('<div class="navEx">')
         if precedent:
             html.append(
-                f'../{precedent}/'
+                f'<a class="navPrev" href="../{precedent}/">'
+                f'← Exercice précédent'
+                f'</a>'
             )
         else:
             html.append('<span></span>')
         if suivant:
             html.append(
-                f'../{suivant}/'
+                f'<a class="navNext" href="../{suivant}/">'
                 f'Exercice suivant →'
                 f'</a>'
             )
         else:
             html.append('<span></span>')
         html.append('</div>')
-        return "\\n".join(html)
+        return "\n".join(html)
