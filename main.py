@@ -3,7 +3,7 @@ from pathlib import Path
 import yaml
 from datetime import datetime
 
-def on_page_markdown(markdown, page, config, files):
+def on_pre_page_markdown(markdown, page, config, files):
     fichier = Path(page.file.src_uri).name
     if re.match(r"a\d+e\d+\.md$", fichier, re.IGNORECASE):
         markdown += "\n\n{{ ibNav() }}\n"
