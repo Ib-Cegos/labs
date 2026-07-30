@@ -1,8 +1,16 @@
 import re
 from pathlib import Path
 import yaml
+from datetime import datetime
 
 def define_env(env):
+
+    @env.macro
+    def date_maj():
+        page = env.variables["page"]
+        date_iso = str(page.update_date)
+        d = datetime.strptime(date_iso, "%Y-%m-%d")
+    return d.strftime("%d/%m/%Y")
 
     @env.macro
     def sommaire():
