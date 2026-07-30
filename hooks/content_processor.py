@@ -1,11 +1,6 @@
 import re
 from pathlib import Path
 
-def on_page_markdown(markdown, page, config, files):
-    markdown = markdown.replace("\n\t>","\n\n\t>")
-    return markdown
-
-
 def construire_navigation(page):
     fichier_courant = Path(page.file.src_uri).name
     match = re.match(r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE)
