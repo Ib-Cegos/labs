@@ -21,7 +21,7 @@ plugins:
       locale: fr
       exclude: 
         - README.md
-        - */README.md
+        - index.md
   
 
 markdown_extensions:
