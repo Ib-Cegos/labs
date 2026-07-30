@@ -5,11 +5,6 @@ from datetime import datetime
 
 def define_env(env):
 
-    @env.on_page_markdown
-    def ajouter_date(markdown, page, config, files):
-        env.variables["date_modification"] = str(page.update_date)
-        return markdown
-
     @env.macro
     def sommaire():
         page = env.variables['page']
