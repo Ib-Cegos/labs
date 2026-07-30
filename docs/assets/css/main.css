@@ -16,4 +16,4 @@
 .listeStages a { font-size: 1.2rem; font-weight: 600; text-decoration: none; }
 
 .md-content__inner { min-height: calc(100vh - 12rem); display: flex; flex-direction: column; }
-.md-source-file { font-size: 0.5rem; text-align: right; border-top: 1px solid #ddd; margin-top: 2rem; padding-top: .5rem; }
+.git-revision-date-localized-plugin { font-size: 0.5rem; color: #888; display: flex; justify-self: flex-end;}

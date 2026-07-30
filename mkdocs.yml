@@ -19,6 +19,9 @@ plugins:
       enable_creation_date: false
       type: date
       locale: fr
+      exclude: 
+        - README.md
+        - */README.md
   
 
 markdown_extensions:
