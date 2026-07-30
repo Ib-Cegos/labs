@@ -5,6 +5,8 @@ from datetime import datetime
 
 def define_env(env):
 
+    env.variables["date_generation"] = datetime.now().strftime("%d/%m/%Y")
+
     @env.macro
     def sommaire():
         page = env.variables['page']
