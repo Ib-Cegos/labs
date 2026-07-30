@@ -16,4 +16,4 @@
 .listeStages a { font-size: 1.2rem; font-weight: 600; text-decoration: none; }
 
 .md-content__inner { min-height: calc(100vh - 12rem); display: flex; flex-direction: column; }
-.pageUpdateFooter {text-align: right; font-size: 0.65em; color: rgba(255,255,255,.7); margin-top: .2rem;}
+.md-source-file { font-size: 0.5rem; text-align: right; border-top: 1px solid #ddd; margin-top: 2rem; padding-top: .5rem; }
