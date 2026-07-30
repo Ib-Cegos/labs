@@ -6,13 +6,6 @@ from datetime import datetime
 def define_env(env):
 
     @env.macro
-    def date_maj():
-        page = env.variables["page"]
-        date_iso = str(page.update_date)
-        d = datetime.strptime(date_iso, "%Y-%m-%d")
-    return d.strftime("%d/%m/%Y")
-
-    @env.macro
     def sommaire():
         page = env.variables['page']
         dossier_stage = Path(page.file.abs_src_path).parent
