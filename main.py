@@ -6,11 +6,6 @@ from datetime import datetime
 def define_env(env):
 
     @env.macro
-    def test_macro():
-        print("MACRO")
-        return "MACRO_OK"
-
-    @env.macro
     def sommaire():
         page = env.variables['page']
         dossier_stage = Path(page.file.abs_src_path).parent
