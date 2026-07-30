@@ -28,6 +28,7 @@ markdown_extensions:
   - admonition
   - tables
   - toc
+  - nl2br
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tabbed:
