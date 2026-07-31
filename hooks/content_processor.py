@@ -17,24 +17,18 @@ def ajouter_checkboxes(html, page):
         nonlocal compteur
         nonlocal dans_ol
         balise = match.group(0)
-        # Début d'une liste numérotée
         if balise.lower().startswith("<ol"):
             dans_ol = True
             return balise
-        # Fin d'une liste numérotée
         if balise.lower().startswith("</ol"):
             dans_ol = False
             return balise
-        # Début d'un item
         if balise.lower().startswith("<li") and dans_ol:
             compteur += 1
             identifiant = ( f"ibLab-{stage}-{fichier}-{compteur}" )
-            return ( balise + '<input type="checkbox" class="ibLabCheckbox" id="{identifiant}">' )
-        # Fin d'un item
-        if balise.lower() == "</li>" and dans_ol:
-            return ( '</li>' )
+            return ( f'<li class="ibLabTask" id="{identifiant}">' )
         return balise
-    return re.sub( r'</?ol[^>]*>|</?li[^>]*>', remplacer, html, flags=re.IGNORECASE )
+    return re.sub( r'</?ol[^>]*>|<li[^>]*>', remplacer, html, flags=re.IGNORECASE )
 
 def construire_navigation(page):
     fichier_courant = Path(page.file.src_uri).name
