@@ -33,13 +33,14 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .exerciceRef { font-weight: 400; text-decoration: underline; display:inline-block; margin-bottom: .8rem;}
 
 /* Gestion des espaces entre les paragrpahes */
-.md-typeset p { margin: 0.7em 0;}
-.md-typeset p + ol, .md-typeset p + ul { margin-top: -0.4em; }
-.md-typeset h1 {margin-bottom: .4rem;}
-.md-typeset h2 {margin-bottom: .25rem; margin-top: 1rem;}
+.md-typeset p { margin: 0.45em 0;}
+.md-typeset p + ol, .md-typeset p + ul { margin-top: -0.3em; }
+.md-typeset h1 { margin-bottom: .4rem; }
+.md-typeset h2 { margin-bottom: .25rem; margin-top: 1rem; }
+.md-typeset li { margin-bottom: .15rem; }
 
 /* Gestion des boutons de copie de code */
 .ibCodeBlock { position: relative; }
-.ibCopyButton { position: absolute; top: .5rem; right: .5rem; z-index: 9999; width:2rem; height:2rem; border: none; background: transparent; cursor: pointer; padding: .25rem; color: rgba(0,0,0,.45); }
-.ibCopyButton:hover { color: rgba(0,0,0,.75); }
+.ibCopyButton { position: absolute; top: .10rem; right: .4rem; z-index: 9999; width:1.6rem; height:1.6rem; border: none; background: transparent; cursor: pointer; padding: .25rem; color: rgba(0,0,0,.20); transition: all .2s ease; }
+.ibCopyButton:hover { color: rgba(0,0,0,.65); }
 .ibCopyButton svg { width: 1rem; height: 1rem; fill: currentColor; }
