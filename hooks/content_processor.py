@@ -72,10 +72,12 @@ def ajouter_boutons_copie(html):
     return pattern.sub(remplace, html)
 
 def ajouter_boutons_copie_inline(html):
-    pattern = re.compile(
-        r'(?<!<pre>)<code>(.*?)</code>',
-        re.DOTALL
-    )
+    blocs_pre = []
+    def proteger(match):
+        blocs_pre.append(match.group(0))
+        return f"%%PRE_BLOCK_{len(blocs_pre)-1}%%"
+    html = re.sub( r"<pre.*?</pre>", proteger, html, flags=re.DOTALL )
+    pattern = re.compile( r'(?<!<pre>)<code>(.*?)</code>', re.DOTALL )
     def remplace(match):
         code_html = match.group(0)
         return (
@@ -86,8 +88,10 @@ def ajouter_boutons_copie_inline(html):
             '</button>'
             '</span>'
         )
-
-    return pattern.sub(remplace, html)
+    html = pattern.sub(remplace, html)
+    for i, bloc in enumerate(blocs_pre):
+        html = html.replace( f"%%PRE_BLOCK_{i}%%", bloc )
+    return html
 
 def on_page_content(html, page, config, files):
     html = ajouter_boutons_copie(html)
