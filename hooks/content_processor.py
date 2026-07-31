@@ -170,12 +170,12 @@ def ajouter_boutons_copie_inline(html):
 
 def on_page_content(html, page, config, files):
     html = injecter_variables(html, page)
-    html = ajouter_variables_panneau(html, page)
     html = ajouter_boutons_copie(html)
     html = ajouter_boutons_copie_inline(html)
     html = ajouter_checkboxes(html, page)
     navigation_html = construire_navigation(page)
     html = remplacer_variables(html, page)
+    html += construire_panneau_parametres(page)
     if not navigation_html:
         return html
     return html + navigation_html
@@ -207,29 +207,28 @@ def on_page_markdown(markdown, page, config, files):
     )
     return markdown
 
-def generer_panneau_variables(page):
+def construire_panneau_parametres(page):
     meta = charger_meta_atelier(page)
     variables = meta.get("Variables", {})
-    html = ""
-    for nom, definition in variables.items():
-        html += f"""
-<div class="ibVariableEditor">
-    <label for="ibVar_{nom.lower()}">
-        {definition.get("lib", nom)}
-    </label>
-    <input
-        type="text"
-        id="ibVar_{nom.lower()}"
-        class="ibVariableInput"
-        data-variable="{nom.lower()}">
-
-    <div class="ibVariableHelp">
-        {definition.get("aide", "")}
-    </div>
-</div>
+    contenu = """
+<aside id="ibSettingsPanel">
+    <div class="ibSettingsHeader"><span>Paramètres</span><button id="ibSettingsClose" title="Fermer">✕</button></div>
+    <div id="ibSettingsContent">
 """
-    return html
-
-def ajouter_variables_panneau(html, page):
-    variables_html = generer_panneau_variables(page)
-    return html.replace( "<!--IB_VARIABLES-->", variables_html )
+    for nom, definition in variables.items():
+        contenu += f"""
+        <div class="ibVariableEditor">
+            <label for="ibVar_{nom.lower()}"> {definition.get("lib", nom)}</label>
+            <input type="text" id="ibVar_{nom.lower()}" class="ibVariableInput" data-variable="{nom.lower()}">
+            <div class="ibVariableHelp"> {definition.get("aide", "")} </div>
+        </div>
+"""
+    contenu += """
+        <div class="ibSettingsActions">
+            <button id="ibExportButton" class="ibSettingsAction">💾 Exporter mes données</button>
+            <button id="ibImportButton" class="ibSettingsAction">📂 Importer ma sauvegarde</button>
+        </div>
+        <input type="file" id="ibImportFile" accept=".json" style="display:none"></div>
+</aside>
+"""
+    return contenu
