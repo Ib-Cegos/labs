@@ -24,6 +24,7 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
         ibInitVariables();
+        ibUpdateVariables();
         const panel = document.getElementById( "ibSettingsPanel" );
         document.getElementById( "ibSettingsButton" ).addEventListener( "click", () => panel.classList.toggle( "open" ));
         document.getElementById( "ibSettingsClose"  ).addEventListener( "click", () => panel.classList.remove( "open" ));});
@@ -62,3 +63,9 @@ function ibInitVariables() {
             const cle = "ibLab-" + nom;
             if ( localStorage.getItem(cle) === null ) {
                 localStorage.setItem( cle, definition.defaut ); }});}
+
+function ibUpdateVariables() {
+    document.querySelectorAll(".ibVariable").forEach(variable => {
+    const nom = variable.dataset.variable;
+    const valeur = localStorage.getItem( "ibLab-" + nom );
+    if (valeur !== null) { variable.textContent = valeur; }});}

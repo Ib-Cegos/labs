@@ -34,6 +34,14 @@ def charger_meta_atelier(page):
         )
         return {}
 
+def remplacer_variables(html, page):
+    meta = charger_meta_atelier(page)
+    variables = meta.get("Variables", {})
+    for nom, definition in variables.items():
+        valeur_defaut = definition.get( "defaut", nom )
+        html = html.replace( f"[{nom}]", ( f'<span class="ibVariable" data-variable="{nom}">{valeur_defaut}</span>' ))
+    return html
+
 def injecter_variables(html, page):
     meta = charger_meta_atelier(page)
     variables = meta.get("Variables")
@@ -159,6 +167,7 @@ def on_page_content(html, page, config, files):
     html = ajouter_boutons_copie_inline(html)
     html = ajouter_checkboxes(html, page)
     navigation_html = construire_navigation(page)
+    html = remplacer_variables(html, page)
     if not navigation_html:
         return html
     return html + navigation_html
