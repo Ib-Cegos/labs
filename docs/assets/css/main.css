@@ -60,3 +60,12 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibLabTask.done { opacity: .7; }
 .ibLabTask::marker { content: counter(list-item) ". ☐ "; color: #666; }
 .ibLabTask.done::marker { content: counter(list-item) ". ☑ "; color: #198754; }
+
+/* Panneau des paramètres */
+#ibSettingsButton { position: fixed; top: 1rem; right: 5rem; z-index: 10001; border: none; background: transparent; cursor: pointer; color: rgba(255,255,255,.7); }
+#ibSettingsButton:hover { color: white; }
+#ibSettingsButton svg { width: 1.4rem; height: 1.4rem; }
+#ibSettingsPanel { position: fixed; top: 0; right: -400px; width: 400px; max-width: 90vw; height: 100vh; background: white; box-shadow: -4px 0 15px rgba(0,0,0,.2); z-index: 10000; transition: right .3s ease; overflow-y: auto; }
+#ibSettingsPanel.open { right: 0; }
+.ibSettingsHeader { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #ddd; position: sticky; top: 0; background: white; }
+#ibSettingsContent { padding: 1rem; }
