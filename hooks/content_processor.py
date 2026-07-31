@@ -57,10 +57,7 @@ def ajouter_boutons_copie(html):
         return (
             '<div class="ibCodeBlock">'
             '<button class="ibCopyButton" onclick="ibCopy(this.parentElement.querySelector(\'code\').innerText,this)">'
-            '<svg viewBox="0 0 24 24" aria-hidden="true">'
-            '<rect x="8" y="4" width="10" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/>'
-            '<rect x="5" y="7" width="10" height="12" rx="1" fill="currentColor" />'
-            '</svg>'
+            '<svg viewBox="0 0 24 24"> <path fill="currentColor" d="M3 3H17V17H3Z" /><path fill="none" stroke="currentColor" stroke-width="1.5" d="M7 7H21V21H7Z" /></svg>'
             '</button>'
             f'{bloc}'
             '</div>'
