@@ -12,7 +12,7 @@ COPY_BUTTON_SVG = """
 
 from pathlib import Path
 import yaml
-
+import re
 
 def charger_meta_atelier(page):
     try:
@@ -38,8 +38,15 @@ def remplacer_variables(html, page):
     meta = charger_meta_atelier(page)
     variables = meta.get("Variables", {})
     for nom, definition in variables.items():
+        nom_normalise = nom.lower()
         valeur_defaut = definition.get( "defaut", nom )
-        html = html.replace( f"[{nom}]", ( f'<span class="ibVariable" data-variable="{nom}">{valeur_defaut}</span>' ))
+        html = re.sub(
+            rf"\[{re.escape(nom)}\]",
+            (
+                f'<span class="ibVariable" data-variable="{nom_normalise}">{valeur_defaut}</span>'
+            ),
+            html,
+            flags=re.IGNORECASE )
     return html
 
 def injecter_variables(html, page):

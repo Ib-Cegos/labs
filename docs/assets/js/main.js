@@ -54,18 +54,18 @@ document.getElementById("ibImportFile").addEventListener( "change", event => {
     const reader = new FileReader();
     reader.onload = function(e) {
         const data = JSON.parse( e.target.result );
-        Object.entries(data).forEach(([key, value]) => { if ( key.startsWith("ibLab-") ) { localStorage.setItem( key, value ); }});
+        Object.entries(data).forEach(([key, value]) => { if ( key.toLowerCase().startsWith("ibLab-") ) { localStorage.setItem( key.toLowerCase(), value ); }});
         location.reload();};
     reader.readAsText(file);});
 function ibInitVariables() {
     if (!window.ibVariables) { return; }
     Object.entries(window.ibVariables).forEach(([nom, definition]) => {
-            const cle = "ibLab-" + nom;
+            const cle = "ibLab-" + nom.toLowerCase();
             if ( localStorage.getItem(cle) === null ) {
                 localStorage.setItem( cle, definition.defaut ); }});}
 
 function ibUpdateVariables() {
     document.querySelectorAll(".ibVariable").forEach(variable => {
-    const nom = variable.dataset.variable;
+    const nom = variable.dataset.variable.toLowerCase();
     const valeur = localStorage.getItem( "ibLab-" + nom );
     if (valeur !== null) { variable.textContent = valeur; }});}
