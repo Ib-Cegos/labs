@@ -56,6 +56,7 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibInlineCopyButton svg { width: .8rem; height: .8rem; fill: currentColor; }
 
 /* Les checkbox à cocher */
+.ibLabTask { cursor: pointer; }
 .ibLabTask.done { opacity: .7; }
 .ibLabTask::marker { content: counter(list-item) ". ☐ "; color: #666; }
 .ibLabTask.done::marker { content: counter(list-item) ". ☑ "; color: #198754; }
