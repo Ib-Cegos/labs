@@ -46,8 +46,11 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibCopyButton svg { width: 1rem; height: 1rem; fill: currentColor; }
 .ibCopyButton.ok,.ibInlineCopyButton.ok { color: #16a34a; }
 
-.ibInlineCode { display: inline-flex; align-items: center; gap: .15rem; }
+.ibInlineCode { display: inline-flex; align-items: center; gap: .15rem; padding: .05rem .25rem; border-radius: .2rem; background-color: var(--md-code-bg-color);}
+.ibInlineCode code { background: transparent; padding: 0; }
+.ibInlineCode:hover .ibInlineCopyButton {opacity: .4;}
+.ibInlineCopyButton:hover {opacity: 1 !important;}
 
-.ibInlineCopyButton { border: none; background: transparent; width: 1rem; height: 1rem; padding: 0; cursor: pointer; color: rgba(0,0,0,.15); vertical-align: middle; transition: color .2s ease; }
+.ibInlineCopyButton { border: none; background: transparent; width: .9rem; height: .9rem; padding: 0; cursor: pointer; color: rgba(0,0,0,.20); vertical-align: middle; transition: color .2s ease; opacity: 0;}
 .ibInlineCopyButton:hover { color: rgba(0,0,0,.60); }
 .ibInlineCopyButton svg { width: .8rem; height: .8rem; fill: currentColor; }
