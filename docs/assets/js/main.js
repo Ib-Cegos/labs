@@ -25,4 +25,23 @@ document.addEventListener(
     () => {
         const panel = document.getElementById( "ibSettingsPanel" );
         document.getElementById( "ibSettingsButton" ).addEventListener( "click", () => panel.classList.toggle( "open" ));
-        document.getElementById( "ibSettingsClose"  ).addEventListener( "click", () => panel.classList.remove( "open" ));});            
+        document.getElementById( "ibSettingsClose"  ).addEventListener( "click", () => panel.classList.remove( "open" ));});
+
+document.getElementById("ibExportButton").addEventListener("click", ibExport );
+
+function ibExport() {
+    const exportData = {};
+    Object.keys(localStorage)
+        .filter( key => key.startsWith("ibLab-"))
+        .forEach( key => { exportData[key] = localStorage.getItem(key); });
+    const json = JSON.stringify( exportData, null, 2 );
+    const blob = new Blob( [json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const date = new Date().toISOString().slice(0,10);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ibLab-${date}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url); }        
