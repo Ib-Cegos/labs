@@ -77,6 +77,10 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibSettingsAction:hover { background: #f5f5f5; }
 
 .ibVariable { border-bottom: 1px dotted #005fb8; }
+.ibVariableEditor { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #ddd; }
+.ibVariableEditor label { display: block; font-weight: 600; margin-bottom: .4rem; }
+.ibVariableInput { width: 100%; padding: .5rem; border: 1px solid #bbb; border-radius: .3rem; }
+.ibVariableHelp { margin-top: .4rem; font-size: .85rem; color: #666; }
 
 .md-footer-meta__inner { display: flex; justify-content: space-between; align-items: center; }
 

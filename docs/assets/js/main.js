@@ -1,6 +1,5 @@
 function ibCopy(texte) {
     navigator.clipboard.writeText(texte); }
-
 async function ibCopy(text, button) {
     await navigator.clipboard.writeText(text);
     button.classList.add("ok");
@@ -24,6 +23,8 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
         ibInitVariables();
+        ibLoadVariables();
+        ibSaveVariables();
         ibUpdateVariables();
         const panel = document.getElementById( "ibSettingsPanel" );
         document.getElementById( "ibSettingsButton" ).addEventListener( "click", () => panel.classList.toggle( "open" ));
@@ -69,3 +70,14 @@ function ibUpdateVariables() {
     const nom = variable.dataset.variable.toLowerCase();
     const valeur = localStorage.getItem( "ibLab-" + nom );
     if (valeur !== null) { variable.textContent = valeur; }});}
+function ibLoadVariables() {
+    document.querySelectorAll(".ibVariableInput").forEach(input => {
+            const cle = "ibLab-" + input.dataset.variable.toLowerCase();
+            input.value = localStorage.getItem(cle) ?? "";});}
+
+function ibSaveVariables() {
+    document.querySelectorAll(".ibVariableInput").forEach(input => {
+        input.addEventListener("change",() => {
+            localStorage.setItem( "ibLab-" + input.dataset.variable.toLowerCase(), input.value);
+            ibUpdateVariables(); });});}
+
