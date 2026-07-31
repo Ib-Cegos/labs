@@ -8,6 +8,32 @@ COPY_BUTTON_SVG = """
 </svg>
 """
 
+def ajouter_checkboxes(html, page):
+    stage = Path(page.file.src_uri).parent.name
+    fichier = Path(page.file.src_uri).stem
+    compteur = 0
+    dans_ol = False
+    def remplacer(match):
+        nonlocal compteur
+        nonlocal dans_ol
+        balise = match.group(0)
+        if balise.startswith("<ol"):
+            dans_ol = True
+            return balise
+        if balise.startswith("</ol"):
+            dans_ol = False
+            return balise
+        if balise.startswith("<li") and dans_ol:
+            compteur += 1
+            identifiant = ( f"ibLab-{stage}-{fichier}-{compteur}" )
+            return (
+                balise
+                + f'<input type="checkbox" class="ibLabCheckbox" id="{identifiant}">'
+            )
+        return balise
+    return re.sub( r"</?ol[^>]*>|<li[^>]*>", remplacer, html, flags=re.IGNORECASE )
+
+
 def construire_navigation(page):
     fichier_courant = Path(page.file.src_uri).name
     match = re.match(r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE)
@@ -96,6 +122,7 @@ def ajouter_boutons_copie_inline(html):
 def on_page_content(html, page, config, files):
     html = ajouter_boutons_copie(html)
     html = ajouter_boutons_copie_inline(html)
+    html = ajouter_checkboxes(html, page)
     navigation_html = construire_navigation(page)
     if not navigation_html:
         return html
