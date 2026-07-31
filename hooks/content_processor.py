@@ -29,10 +29,10 @@ def ajouter_checkboxes(html, page):
         if balise.lower().startswith("<li") and dans_ol:
             compteur += 1
             identifiant = ( f"ibLab-{stage}-{fichier}-{compteur}" )
-            return ( balise + '<div class="ibLabTask"> <input type="checkbox" class="ibLabCheckbox" id="{identifiant}"><div class="ibLabTaskContent">' )
+            return ( balise + '<input type="checkbox" class="ibLabCheckbox" id="{identifiant}">' )
         # Fin d'un item
         if balise.lower() == "</li>" and dans_ol:
-            return ( '</div></div></li>' )
+            return ( '</li>' )
         return balise
     return re.sub( r'</?ol[^>]*>|</?li[^>]*>', remplacer, html, flags=re.IGNORECASE )
 
