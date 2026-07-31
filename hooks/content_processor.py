@@ -1,5 +1,6 @@
 import re
 import json
+import yaml
 from pathlib import Path
 
 COPY_BUTTON_SVG = """
@@ -9,8 +10,33 @@ COPY_BUTTON_SVG = """
 </svg>
 """
 
+from pathlib import Path
+import yaml
+
+
+def charger_meta_atelier(page):
+    try:
+        fichier = Path("docs") / page.file.src_uri
+        readme = fichier.parent / "README.md"
+        if not readme.exists():
+            return {}
+        contenu = readme.read_text( encoding="utf-8" )
+        if not contenu.startswith("---"):
+            return {}
+        morceaux = contenu.split("---", 2)
+        if len(morceaux) < 3:
+            return {}
+        meta = yaml.safe_load( morceaux[1] )
+        return meta or {}
+    except Exception as erreur:
+        print(
+            f"Erreur lecture méta atelier : {erreur}"
+        )
+        return {}
+
 def injecter_variables(html, page):
-    variables = page.meta.get("Variables")
+    meta = charger_meta_atelier(page)
+    variables = meta.get("Variables")
     if not variables:
         return html
     script = (
