@@ -44,4 +44,17 @@ function ibExport() {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url); }        
+    URL.revokeObjectURL(url); }
+    
+document.getElementById("ibImportButton").addEventListener("click",() => { document.getElementById("ibImportFile").click(); });
+
+document.getElementById("ibImportFile").addEventListener( "change", event => {
+    const file = event.target.files[0];
+    if (!file) { return; }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const data = JSON.parse( e.target.result );
+        Object.entries(data).forEach(([key, value]) => { if ( key.startsWith("ibLab-") ) { localStorage.setItem( key, value ); }});
+        alert( "Sauvegarde importée avec succès." );
+        location.reload();};
+    reader.readAsText(file);});

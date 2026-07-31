@@ -14,6 +14,10 @@
   <span>Paramètres</span>
 <button id="ibSettingsClose" title="Fermer">✕</button></div>
 <div id="ibSettingsContent">
-<button id="ibExportButton" class="ibSettingsAction">💾 Exporter mes données</button>
+  <div class="ibSettingsActions">
+    <button id="ibExportButton" class="ibSettingsAction">💾 Exporter ma sauvegarde</button>
+    <button id="ibImportButton" class="ibSettingsAction">📂 Importer ma sauvegarde</button>
+  </div>
+  <input type="file" id="ibImportFile" accept=".json" style="display:none">
 </div>
 </aside>
