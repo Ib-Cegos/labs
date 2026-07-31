@@ -47,13 +47,29 @@ def construire_navigation(page):
     html.append('</div>')
     return ''.join(html)
 
+def ajouter_boutons_copie(html):
+    pattern = re.compile(
+        r'(<pre.*?</pre>)',
+        re.DOTALL
+    )
+    def remplace(match):
+        bloc = match.group(1)
+        return (
+            '<div class="ibCodeBlock">'
+            '<button class="ibCopyButton">'
+            '📋'
+            '</button>'
+            f'{bloc}'
+            '</div>'
+        )
+    return pattern.sub(remplace, html)
+
 
 def on_page_content(html, page, config, files):
+    html = ajouter_boutons_copie(html)
     navigation_html = construire_navigation(page)
-
     if not navigation_html:
         return html
-
     return html + navigation_html
 
 def on_page_markdown(markdown, page, config, files):
