@@ -1,6 +1,13 @@
 import re
 from pathlib import Path
 
+COPY_BUTTON_SVG = """
+<svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="8" y="4" width="11" height="13" rx="1" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+    <rect x="5" y="7" width="11" height="13" rx="1" fill="currentColor" />
+</svg>
+"""
+
 def construire_navigation(page):
     fichier_courant = Path(page.file.src_uri).name
     match = re.match(r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE)
@@ -57,16 +64,34 @@ def ajouter_boutons_copie(html):
         return (
             '<div class="ibCodeBlock">'
             '<button class="ibCopyButton" onclick="ibCopy(this.parentElement.querySelector(\'code\').innerText,this)">'
-            '<svg viewBox="0 0 24 24"> <path fill="currentColor" d="M3 3H17V17H3Z" /><path fill="none" stroke="currentColor" stroke-width="1.5" d="M7 7H21V21H7Z" /></svg>'
+            f'{COPY_BUTTON_SVG}'
             '</button>'
             f'{bloc}'
             '</div>'
         )
     return pattern.sub(remplace, html)
 
+def ajouter_boutons_copie_inline(html):
+    pattern = re.compile(
+        r'(?<!<pre>)<code>(.*?)</code>',
+        re.DOTALL
+    )
+    def remplace(match):
+        code_html = match.group(0)
+        return (
+            '<span class="ibInlineCode">'
+            f'{code_html}'
+            '<button class="ibInlineCopyButton" onclick="ibCopy(this.parentElement.querySelector(\'code\').innerText,this)">'
+            f'{COPY_BUTTON_SVG}'
+            '</button>'
+            '</span>'
+        )
+
+    return pattern.sub(remplace, html)
 
 def on_page_content(html, page, config, files):
     html = ajouter_boutons_copie(html)
+    html = ajouter_boutons_copie_inline(html)
     navigation_html = construire_navigation(page)
     if not navigation_html:
         return html
