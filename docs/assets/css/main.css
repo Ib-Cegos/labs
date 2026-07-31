@@ -62,7 +62,7 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibLabTask.done::marker { content: counter(list-item) ". ☑ "; color: #198754; }
 
 /* Panneau des paramètres */
-#ibSettingsButton { position: absolute; top: 50%; right: 4.5rem; transform: translateY(-50%); z-index: 10001; border: none; background: transparent; cursor: pointer; color: rgba(255,255,255,.75); }
+#ibSettingsButton { position: fixed; top: .9rem; right: 5.5rem; z-index: 10001; border: none; background: transparent; cursor: pointer; color: rgba(255,255,255,.75); }
 #ibSettingsButton:hover { color: white; }
 #ibSettingsButton svg { width: 1.4rem; height: 1.4rem; }
 #ibSettingsPanel { position: fixed; top: 64px; right: 2rem; width: 450px; transform: translateY(-120%); transition: transform .3s ease; }
