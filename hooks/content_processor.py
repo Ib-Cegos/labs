@@ -1,4 +1,5 @@
 import re
+import json
 from pathlib import Path
 
 COPY_BUTTON_SVG = """
@@ -7,6 +8,17 @@ COPY_BUTTON_SVG = """
     <rect x="5" y="7" width="11" height="13" rx="1" fill="currentColor" />
 </svg>
 """
+
+def injecter_variables(html, page):
+    variables = page.meta.get("Variables")
+    if not variables:
+        return html
+    script = (
+        "<script>"
+        f"window.ibVariables = {json.dumps(variables, ensure_ascii=False)};"
+        "</script>"
+    )
+    return script + html
 
 def ajouter_checkboxes(html, page):
     stage = Path(page.file.src_uri).parent.name
@@ -116,6 +128,7 @@ def ajouter_boutons_copie_inline(html):
     return html
 
 def on_page_content(html, page, config, files):
+    html = injecter_variables(html, page)
     html = ajouter_boutons_copie(html)
     html = ajouter_boutons_copie_inline(html)
     html = ajouter_checkboxes(html, page)

@@ -23,12 +23,12 @@ document.addEventListener(
 document.addEventListener(
     "DOMContentLoaded",
     () => {
+        ibInitVariables();
         const panel = document.getElementById( "ibSettingsPanel" );
         document.getElementById( "ibSettingsButton" ).addEventListener( "click", () => panel.classList.toggle( "open" ));
         document.getElementById( "ibSettingsClose"  ).addEventListener( "click", () => panel.classList.remove( "open" ));});
 
 document.getElementById("ibExportButton").addEventListener("click", ibExport );
-
 function ibExport() {
     const exportData = {};
     Object.keys(localStorage)
@@ -47,7 +47,6 @@ function ibExport() {
     URL.revokeObjectURL(url); }
     
 document.getElementById("ibImportButton").addEventListener("click",() => { document.getElementById("ibImportFile").click(); });
-
 document.getElementById("ibImportFile").addEventListener( "change", event => {
     const file = event.target.files[0];
     if (!file) { return; }
@@ -55,6 +54,11 @@ document.getElementById("ibImportFile").addEventListener( "change", event => {
     reader.onload = function(e) {
         const data = JSON.parse( e.target.result );
         Object.entries(data).forEach(([key, value]) => { if ( key.startsWith("ibLab-") ) { localStorage.setItem( key, value ); }});
-        alert( "Sauvegarde importée avec succès." );
         location.reload();};
     reader.readAsText(file);});
+function ibInitVariables() {
+    if (!window.ibVariables) { return; }
+    Object.entries(window.ibVariables).forEach(([nom, definition]) => {
+            const cle = "ibLab-" + nom;
+            if ( localStorage.getItem(cle) === null ) {
+                localStorage.setItem( cle, definition.defaut ); }});}
