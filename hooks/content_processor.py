@@ -52,10 +52,10 @@ def remplacer_variables(html, page):
 def injecter_variables(html, page):
     meta = charger_meta_atelier(page)
     variables = meta.get("Variables")
-    if not variables:
-        return html
+    code_atelier = (Path(page.file.src_uri).parent.name.lower())
     script = (
         "<script>"
+        f"window.ibLabCode = {json.dumps(code_atelier)};"
         f"window.ibVariables = {json.dumps(variables, ensure_ascii=False)};"
         "</script>"
     )

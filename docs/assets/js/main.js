@@ -3,6 +3,10 @@ async function ibCopy(text, button) {
     button.classList.add("ok");
     setTimeout( () => button.classList.remove("ok"), 1500 );}
 
+const IB_PREFIX = "iblab-";
+function ibVarKey(variable) {
+    return (IB_PREFIX + window.ibLabCode + "-" + variable.toLowerCase());}    
+
 document.addEventListener(
     "DOMContentLoaded",
     () => {
@@ -15,7 +19,7 @@ document.addEventListener(
 function ibInitVariables() {
     if (!window.ibVariables) { return; }
     Object.entries(window.ibVariables).forEach(([nom, definition]) => {
-        const cle = "iblab-" + nom.toLowerCase();
+        const cle = ibVarKey( nom );
         if ( localStorage.getItem(cle) === null ) { localStorage.setItem( cle, definition.defaut );}});
     ibLoadVariables();
     ibSaveVariables();
@@ -24,18 +28,18 @@ function ibInitVariables() {
 function ibUpdateVariables() {
     document.querySelectorAll(".ibVariable").forEach(variable => {
     const nom = variable.dataset.variable.toLowerCase();
-    const valeur = localStorage.getItem( "iblab-" + nom );
+    const valeur = localStorage.getItem( ibVarKey(nom));
     if (valeur !== null) { variable.textContent = valeur; }});}
 
 function ibLoadVariables() {
     document.querySelectorAll(".ibVariableInput").forEach(input => {
-            const cle = "iblab-" + input.dataset.variable.toLowerCase();
+            const cle = ibVarKey(input.dataset.variable);
             input.value = localStorage.getItem(cle) ?? "";});}
 
 function ibSaveVariables() {
     document.querySelectorAll(".ibVariableInput").forEach(input => {
         input.addEventListener("change",() => {
-            localStorage.setItem( "iblab-" + input.dataset.variable.toLowerCase(), input.value);
+            localStorage.setItem( ibVarKey(input.dataset.variable), input.value);
             ibUpdateVariables(); });});}
 
 function ibInitSettingsPanel() {
@@ -46,21 +50,26 @@ function ibInitSettingsPanel() {
     document.getElementById( "ibImportButton" ).addEventListener( "click",() => { document.getElementById( "ibImportFile" ).click(); });
     document.getElementById( "ibImportFile" ).addEventListener( "change", ibImport );}
 
+function ibClearData() {
+    Object.keys(localStorage).forEach(key => {
+        if ( key.toLowerCase().startsWith( IB_PREFIX + window.ibLabCode + "-") ) { localStorage.removeItem(key); }});}    
+
 function ibImport(event) {
     const file = event.target.files[0];
+    ibClearData();
     if (!file) { return; }
     const reader = new FileReader();
     reader.onload = function(e) {
         const data = JSON.parse( e.target.result );
         Object.entries(data).forEach(
-            ([key, value]) => {if ( key.toLowerCase().startsWith( "iblab-" ) ) { localStorage.setItem( key.toLowerCase(), value );}});
+            ([key, value]) => {if ( key.toLowerCase().startsWith( IB_PREFIX ) ) { localStorage.setItem( key, value );}});
         location.reload();};
     reader.readAsText(file);}    
     
 function ibExport() {
     const exportData = {};
     Object.keys(localStorage)
-        .filter( key => key.startsWith("iblab-"))
+        .filter( key => key.startsWith( IB_PREFIX ))
         .forEach( key => { exportData[key] = localStorage.getItem(key); });
     const json = JSON.stringify( exportData, null, 2 );
     const blob = new Blob( [json], { type: "application/json" });
