@@ -76,7 +76,7 @@ def on_page_markdown(markdown, page, config, files):
     numero_exercice = match.group(2)
     markdown = re.sub(
         r"^#\s+(.+)$",
-        rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1",
+        rf"# <span="exerciceRef">Atelier {numero_atelier} - Exercice {numero_exercice} :</span> \1",
         markdown,
         count=1,
         flags=re.MULTILINE,
