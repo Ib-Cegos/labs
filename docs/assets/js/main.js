@@ -1,5 +1,3 @@
-function ibCopy(texte) {
-    navigator.clipboard.writeText(texte); }
 async function ibCopy(text, button) {
     await navigator.clipboard.writeText(text);
     button.classList.add("ok");
@@ -8,33 +6,61 @@ async function ibCopy(text, button) {
 document.addEventListener(
     "DOMContentLoaded",
     () => {
-        const tasks = Array.from( document.querySelectorAll(".ibLabTask") );
-    /* Restauration de l'état */
-        tasks.forEach(task => { if ( localStorage.getItem(task.id) === "true" ) { task.classList.add("done"); }});
-    /* Gestion du clic */
-        tasks.forEach((task, index) => { task.addEventListener("click", event => {
-        if ( event.clientX > (task.getBoundingClientRect()).left + (parseFloat( getComputedStyle(task).fontSize ) * 3) ) { return; }
-        if (task.classList.contains("done")) {
-            for ( let i = index; i < tasks.length; i++) { tasks[i].classList.remove("done"); localStorage.removeItem(tasks[i].id);}}
-        else {
-            for ( let i = 0; i <= index; i++) { tasks[i].classList.add("done"); localStorage.setItem( tasks[i].id,"true");}}});})});
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
         ibInitVariables();
-        ibLoadVariables();
-        ibSaveVariables();
-        ibUpdateVariables();
-        const panel = document.getElementById( "ibSettingsPanel" );
-        document.getElementById( "ibSettingsButton" ).addEventListener( "click", () => panel.classList.toggle( "open" ));
-        document.getElementById( "ibSettingsClose"  ).addEventListener( "click", () => panel.classList.remove( "open" ));});
+        ibInitSettingsPanel();
+        ibInitTasks();
+    });
 
-document.getElementById("ibExportButton").addEventListener("click", ibExport );
+    
+function ibInitVariables() {
+    if (!window.ibVariables) { return; }
+    Object.entries(window.ibVariables).forEach(([nom, definition]) => {
+        const cle = "iblab-" + nom.toLowerCase();
+        if ( localStorage.getItem(cle) === null ) { localStorage.setItem( cle, definition.defaut );}});
+    ibLoadVariables();
+    ibSaveVariables();
+    ibUpdateVariables();}
+
+function ibUpdateVariables() {
+    document.querySelectorAll(".ibVariable").forEach(variable => {
+    const nom = variable.dataset.variable.toLowerCase();
+    const valeur = localStorage.getItem( "iblab-" + nom );
+    if (valeur !== null) { variable.textContent = valeur; }});}
+
+function ibLoadVariables() {
+    document.querySelectorAll(".ibVariableInput").forEach(input => {
+            const cle = "iblab-" + input.dataset.variable.toLowerCase();
+            input.value = localStorage.getItem(cle) ?? "";});}
+
+function ibSaveVariables() {
+    document.querySelectorAll(".ibVariableInput").forEach(input => {
+        input.addEventListener("change",() => {
+            localStorage.setItem( "iblab-" + input.dataset.variable.toLowerCase(), input.value);
+            ibUpdateVariables(); });});}
+
+function ibInitSettingsPanel() {
+    const panel = document.getElementById( "ibSettingsPanel" );
+    document.getElementById( "ibSettingsButton" ).addEventListener( "click",() => panel.classList.toggle("open"));
+    document.getElementById( "ibSettingsClose"  ).addEventListener( "click",() => panel.classList.remove("open"));
+    document.getElementById( "ibExportButton" ).addEventListener( "click", ibExport );
+    document.getElementById( "ibImportButton" ).addEventListener( "click",() => { document.getElementById( "ibImportFile" ).click(); });
+    document.getElementById( "ibImportFile" ).addEventListener( "change", ibImport );}
+
+function ibImport(event) {
+    const file = event.target.files[0];
+    if (!file) { return; }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const data = JSON.parse( e.target.result );
+        Object.entries(data).forEach(
+            ([key, value]) => {if ( key.toLowerCase().startsWith( "iblab-" ) ) { localStorage.setItem( key.toLowerCase(), value );}});
+        location.reload();};
+    reader.readAsText(file);}    
+    
 function ibExport() {
     const exportData = {};
     Object.keys(localStorage)
-        .filter( key => key.startsWith("ibLab-"))
+        .filter( key => key.startsWith("iblab-"))
         .forEach( key => { exportData[key] = localStorage.getItem(key); });
     const json = JSON.stringify( exportData, null, 2 );
     const blob = new Blob( [json], { type: "application/json" });
@@ -42,42 +68,25 @@ function ibExport() {
     const date = new Date().toISOString().slice(0,10);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `ibLab-${date}.json`;
+    a.download = `iblab-${date}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url); }
-    
-document.getElementById("ibImportButton").addEventListener("click",() => { document.getElementById("ibImportFile").click(); });
-document.getElementById("ibImportFile").addEventListener( "change", event => {
-    const file = event.target.files[0];
-    if (!file) { return; }
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const data = JSON.parse( e.target.result );
-        Object.entries(data).forEach(([key, value]) => { if ( key.toLowerCase().startsWith("ibLab-") ) { localStorage.setItem( key.toLowerCase(), value ); }});
-        location.reload();};
-    reader.readAsText(file);});
-function ibInitVariables() {
-    if (!window.ibVariables) { return; }
-    Object.entries(window.ibVariables).forEach(([nom, definition]) => {
-            const cle = "ibLab-" + nom.toLowerCase();
-            if ( localStorage.getItem(cle) === null ) {
-                localStorage.setItem( cle, definition.defaut ); }});}
 
-function ibUpdateVariables() {
-    document.querySelectorAll(".ibVariable").forEach(variable => {
-    const nom = variable.dataset.variable.toLowerCase();
-    const valeur = localStorage.getItem( "ibLab-" + nom );
-    if (valeur !== null) { variable.textContent = valeur; }});}
-function ibLoadVariables() {
-    document.querySelectorAll(".ibVariableInput").forEach(input => {
-            const cle = "ibLab-" + input.dataset.variable.toLowerCase();
-            input.value = localStorage.getItem(cle) ?? "";});}
-
-function ibSaveVariables() {
-    document.querySelectorAll(".ibVariableInput").forEach(input => {
-        input.addEventListener("change",() => {
-            localStorage.setItem( "ibLab-" + input.dataset.variable.toLowerCase(), input.value);
-            ibUpdateVariables(); });});}
-
+function ibInitTasks() {
+    const tasks = Array.from( document.querySelectorAll( ".ibLabTask" ));
+    /* restauration */
+    tasks.forEach(task => { if ( localStorage.getItem(task.id) === "true" ) { task.classList.add("done"); }});
+    /* clic */
+    tasks.forEach((task, index) => {
+        task.addEventListener( "click", event => {
+            if ( event.clientX > task.getBoundingClientRect().left + ( parseFloat( getComputedStyle(task).fontSize ) * 3 )) { return; }
+            if ( task.classList.contains( "done" )) {
+                for ( let i = index; i < tasks.length; i++ ) {
+                    tasks[i].classList.remove("done");
+                    localStorage.removeItem( tasks[i].id );}
+          } else {
+                for ( let i = 0; i <= index; i++ ) {
+                    tasks[i].classList.add("done");
+                    localStorage.setItem( tasks[i].id, "true" );}}});});}
