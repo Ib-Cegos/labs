@@ -56,5 +56,4 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibInlineCopyButton svg { width: .8rem; height: .8rem; fill: currentColor; }
 
 /* Les checkbox à cocher */
-.md-typeset ol li { display: flex; align-items: flex-start; gap: .5rem; }
-.ibLabCheckbox { margin-top: .25rem; flex-shrink: 0; accent-color: #005fb8; transform: scale(1.15);}
+.ibLabCheckbox { margin-right: .4rem; transform: scale(1.1); }
