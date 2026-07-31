@@ -56,8 +56,8 @@ def ajouter_boutons_copie(html):
         bloc = match.group(1)
         return (
             '<div class="ibCodeBlock">'
-            '<button class="ibCopyButton">'
-            '📋'
+            '<button class="ibCopyButton" onclick="ibCopy(this)">'
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4C2.89 1 2 1.89 2 3V17H4V3H16V1M19 5H8C6.89 5 6 5.89 6 7V21C6 22.11 6.89 23 8 23H19C20.11 23 21 22.11 21 21V7C21 5.89 20.11 5 19 5M19 21H8V7H19V21Z"/></svg>'
             '</button>'
             f'{bloc}'
             '</div>'
