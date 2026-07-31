@@ -57,5 +57,5 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 
 /* Les checkbox à cocher */
 .ibLabTask { display: flex; align-items: flex-start; gap: .5rem; }
-.ibLabCheckbox { flex-shrink: 0; margin-top: .25rem; }
+.ibLabCheckbox { flex-shrink: 0; margin-top: .25rem; margin-left: .25rem; }
 .ibLabTaskContent { flex: 1; }
