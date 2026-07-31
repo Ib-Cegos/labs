@@ -62,9 +62,9 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibLabTask.done::marker { content: counter(list-item) ". ☑ "; color: #198754; }
 
 /* Panneau des paramètres */
-#ibSettingsButton { background: transparent; border: none; color: rgba(255,255,255,.70); cursor: pointer; padding: .25rem; }
-#ibSettingsButton:hover { color: white; }
-#ibSettingsButton svg { width: 1.1rem; height: 1.1rem; }
+.ibSettingsFooterButton { display: flex; align-items: center; gap: .4rem; border: none; background: transparent; color: rgba(255,255,255,.75); cursor: pointer; font-size: .85rem; padding: .25rem 0; }
+.ibSettingsFooterButton:hover { color: white; }
+.ibSettingsFooterButton svg { width: 1rem; height: 1rem; flex-shrink: 0; }
 #ibSettingsPanel { position: fixed; left: 0; right: 0; bottom: -500px; height: 400px; background: white; transition: bottom .3s ease; z-index: 10000; overflow-y: auto; }
 #ibSettingsPanel.open { bottom: 0; }
 .ibSettingsHeader { position: sticky; top: 0; background: #eceff1; padding: 1rem; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; }
@@ -73,3 +73,5 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 #ibSettingsClose:hover { color: #000; }
 
 .md-footer-meta__inner { display: flex; justify-content: space-between; align-items: center; }
+
+
