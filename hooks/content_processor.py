@@ -212,23 +212,59 @@ def construire_panneau_parametres(page):
     variables = meta.get("Variables", {})
     contenu = """
 <aside id="ibSettingsPanel">
-    <div class="ibSettingsHeader"><span>Paramètres</span><button id="ibSettingsClose" title="Fermer">✕</button></div>
+    <div class="ibSettingsHeader">
+        <span>Paramètres</span>
+        <button id="ibSettingsClose" title="Fermer">✕</button>
+    </div>
     <div id="ibSettingsContent">
+"""
+    if variables:
+        contenu += """
+        <div class="ibVariablesIntro">
+            Les variables ci-dessous permettent de personnaliser les informations utilisées dans votre atelier.
+            Toute modification est automatiquement enregistrée et répercutée dans l'ensemble des exercices.
+        </div>
 """
     for nom, definition in variables.items():
         contenu += f"""
         <div class="ibVariableEditor">
-            <label for="ibVar_{nom.lower()}"> {definition.get("lib", nom)}</label>
-            <input type="text" id="ibVar_{nom.lower()}" class="ibVariableInput" data-variable="{nom.lower()}">
-            <div class="ibVariableHelp"> {definition.get("aide", "")} </div>
+            <label for="ibVar_{nom.lower()}">
+                {definition.get("lib", nom)}
+            </label>
+            <input
+                type="text"
+                id="ibVar_{nom.lower()}"
+                class="ibVariableInput"
+                data-variable="{nom.lower()}">
+            <div class="ibVariableHelp">
+                {definition.get("aide", "")}
+            </div>
         </div>
 """
     contenu += """
-        <div class="ibSettingsActions">
-            <button id="ibExportButton" class="ibSettingsAction">💾 Exporter mes données</button>
-            <button id="ibImportButton" class="ibSettingsAction">📂 Importer ma sauvegarde</button>
+        <div class="ibSettingsSection">
+            <div class="ibSettingsSectionTitle">
+                Sauvegarde
+            </div>
+            <div class="ibSettingsActions">
+                <button
+                    id="ibExportButton"
+                    class="ibSettingsAction">
+                    💾 Exporter ma sauvegarde
+                </button>
+                <button
+                    id="ibImportButton"
+                    class="ibSettingsAction">
+                    📂 Importer ma sauvegarde
+                </button>
+            </div>
         </div>
-        <input type="file" id="ibImportFile" accept=".json" style="display:none"></div>
+        <input
+            type="file"
+            id="ibImportFile"
+            accept=".json"
+            style="display:none">
+    </div>
 </aside>
 """
     return contenu
