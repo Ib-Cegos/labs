@@ -46,7 +46,7 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibCopyButton svg { width: 1rem; height: 1rem; fill: currentColor; }
 .ibCopyButton.ok,.ibInlineCopyButton.ok { color: #16a34a; }
 
-.ibInlineCode { display: inline-flex; align-items: center; gap: .15rem; padding: .05rem .25rem; border-radius: .2rem; background-color: var(--md-code-bg-color);}
+.ibInlineCode { display: inline-flex; align-items: center; gap: .15rem; padding: .05rem .25rem; border-radius: .2rem; background-color: var(--md-code-bg-color); margin: 0 .15rem;}
 .ibInlineCode code { background: transparent; padding: 0; }
 .ibInlineCode:hover .ibInlineCopyButton {opacity: .4;}
 .ibInlineCopyButton:hover {opacity: 1 !important;}
@@ -56,4 +56,5 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibInlineCopyButton svg { width: .8rem; height: .8rem; fill: currentColor; }
 
 /* Les checkbox à cocher */
-.ibLabCheckbox { margin-right: .5rem; vertical-align: middle; }
+.md-typeset ol li { display: flex; align-items: flex-start; gap: .5rem; }
+.ibLabCheckbox { margin-top: .25rem; flex-shrink: 0; accent-color: #005fb8; transform: scale(1.15);}
