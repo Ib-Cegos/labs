@@ -8,6 +8,8 @@ theme:
   custom_dir: overrides
   logo: assets/images/favicon.png
   favicon: assets/images/favicon.png
+  features:
+    - content.code.copy
 
 hooks:
   - hooks/content_processor.py
@@ -28,7 +30,6 @@ markdown_extensions:
   - admonition
   - tables
   - toc
-  - nl2br
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tabbed:

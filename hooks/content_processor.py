@@ -55,3 +55,30 @@ def on_page_content(html, page, config, files):
         return html
 
     return html + navigation_html
+
+def on_page_markdown(markdown, page, config, files):
+    """
+    Préfixe automatiquement le premier titre H1 des exercices.
+    Exemple :
+        # Création de l'environnement
+    devient :
+        # Atelier 1 - Exercice 1 : Création de l'environnement
+    """
+    fichier = Path(page.file.src_uri).name
+    match = re.fullmatch(
+        r"a(\d+)e(\d+)\.md",
+        fichier,
+        re.IGNORECASE,
+    )
+    if not match:
+        return markdown
+    numero_atelier = match.group(1)
+    numero_exercice = match.group(2)
+    markdown = re.sub(
+        r"^#\s+(.+)$",
+        rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1",
+        markdown,
+        count=1,
+        flags=re.MULTILINE,
+    )
+    return markdown
