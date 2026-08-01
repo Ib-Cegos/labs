@@ -210,61 +210,78 @@ def on_page_markdown(markdown, page, config, files):
 def construire_panneau_parametres(page):
     meta = charger_meta_atelier(page)
     variables = meta.get("Variables", {})
+    variables_visibles = {
+        nom: definition
+        for nom, definition in variables.items()
+        if definition.get("lib")
+    }
     contenu = """
 <aside id="ibSettingsPanel">
-    <div class="ibSettingsHeader">
-        <span>Paramètres</span>
-        <button id="ibSettingsClose" title="Fermer">✕</button>
-    </div>
+    <div class="ibSettingsHeader"><span>Paramètres</span><button id="ibSettingsClose" title="Fermer">✕</button></div>
     <div id="ibSettingsContent">
 """
-    if variables:
+    if variables_visibles:
         contenu += """
         <div class="ibVariablesIntro">
-            Les variables ci-dessous permettent de personnaliser les informations utilisées dans votre atelier.
-            Toute modification est automatiquement enregistrée et répercutée dans l'ensemble des exercices.
+            Les variables ci-dessous permettent de personnaliser les informations utilisées dans cet atelier.
+            (Toute modification est automatiquement enregistrée et répercutée dans les exercices.)
         </div>
 """
-    for nom, definition in variables.items():
+    for nom, definition in variables_visibles.items():
         contenu += f"""
         <div class="ibVariableEditor">
             <label for="ibVar_{nom.lower()}">
-                {definition.get("lib", nom)}
+                {definition["lib"]}
             </label>
-            <input
-                type="text"
-                id="ibVar_{nom.lower()}"
-                class="ibVariableInput"
-                data-variable="{nom.lower()}">
-            <div class="ibVariableHelp">
-                {definition.get("aide", "")}
-            </div>
+            <input type="text" id="ibVar_{nom.lower()}" class="ibVariableInput" data-variable="{nom.lower()}">
+            <div class="ibVariableHelp">{definition.get("aide", "")}</div>
         </div>
 """
     contenu += """
         <div class="ibSettingsSection">
-            <div class="ibSettingsSectionTitle">
-                Sauvegarde
-            </div>
+            <div class="ibSettingsSectionTitle">Sauvegarde</div>
             <div class="ibSettingsActions">
-                <button
-                    id="ibExportButton"
-                    class="ibSettingsAction">
-                    💾 Exporter ma sauvegarde
-                </button>
-                <button
-                    id="ibImportButton"
-                    class="ibSettingsAction">
-                    📂 Importer ma sauvegarde
-                </button>
+                <button id="ibExportButton" class="ibSettingsAction">💾 Exporter mes données</button>
+                <button id="ibImportButton" class="ibSettingsAction">📂 Importer ma sauvegarde</button>
             </div>
         </div>
-        <input
-            type="file"
-            id="ibImportFile"
-            accept=".json"
-            style="display:none">
+        <input type="file" id="ibImportFile" accept=".json" style="display:none">
     </div>
 </aside>
 """
     return contenu
+
+# --------------------------------------------------
+# Export d'atelier
+# --------------------------------------------------
+
+def retirer_frontmatter(texte):
+    return re.sub( r"^---\s*\n.*?\n---\s*\n", "", texte, flags=re.DOTALL )
+
+def extraire_titre(texte):
+    match = re.search( r"^#\s+(.+)$", texte, flags=re.MULTILINE )
+    if match:
+        return match.group(1)
+    return None
+
+def construire_markdown_atelier(page):
+    atelier_dir = ( Path("docs") / Path(page.file.src_uri).parent )
+    fichiers = []
+    readme = atelier_dir / "README.md"
+    if readme.exists():
+        fichiers.append(readme)
+    fichiers.extend(
+        sorted(
+            f
+            for f in atelier_dir.glob("*.md")
+             if f.name != "RE*DME.md" ))
+    contenu = []
+    for fichier in fichie*s:
+        texte = fichier.read_t*xt( encoding="utf-8" )
+        texte = retirer_f*ontmatter( texte ).strip()
+        if fichier.name != "README.md":
+            tit*e = extraire_titre( texte )
+            contenu.append( "\n*n---\n\n" )
+            contenu.append( "# {titre or fichier.stem}\n\n" )
+        contenu.append( texte )
+    return "\n".join(contenu)
