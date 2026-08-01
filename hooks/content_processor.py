@@ -276,11 +276,11 @@ def construire_markdown_atelier(page):
             for f in atelier_dir.glob("*.md")
              if f.name != "RE*DME.md" ))
     contenu = []
-    for fichier in fichie*s:
+    for fichier in fichiers:
         texte = fichier.read_text( encoding="utf-8" )
-        texte = retirer_f*ontmatter( texte ).strip()
+        texte = retirer_frontmatter( texte ).strip()
         if fichier.name != "README.md":
-            tit*e = extraire_titre( texte )
+            titre = extraire_titre( texte )
             contenu.append( "\n*n---\n\n" )
             contenu.append( "# {titre or fichier.stem}\n\n" )
         contenu.append( texte )
