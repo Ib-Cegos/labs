@@ -277,7 +277,7 @@ def construire_markdown_atelier(page):
              if f.name != "RE*DME.md" ))
     contenu = []
     for fichier in fichie*s:
-        texte = fichier.read_t*xt( encoding="utf-8" )
+        texte = fichier.read_text( encoding="utf-8" )
         texte = retirer_f*ontmatter( texte ).strip()
         if fichier.name != "README.md":
             tit*e = extraire_titre( texte )
