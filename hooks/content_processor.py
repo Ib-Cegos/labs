@@ -256,9 +256,6 @@ def on_page_context(context, page, config, nav):
                 ( int(m.group(2)), fichier.stem )
             )
     exercices.sort( key=lambda x: x[0] )
-    if len(exercices) <= 1:
-        context["ibNav"] = ""
-        return context
     position = next(
         (
             i
@@ -282,12 +279,13 @@ def on_page_context(context, page, config, nav):
     )
     html = []
     if precedent:
-        html.append( f'<a class="navPrec" href="../{precedent}/">← Précédent</a>' )
+        html.append( f'<a class="navPrev" href="../{precedent}/">❮</a>' )
     else:
         html.append( '<span class="navPlaceholder"></span>' )
-    html.append( '<a class="navSom" href="../">Sommaire</a>' )
+    html.append( '<a class="navSom" href="../">📖</a>' )
     if suivant:
-        html.append( f'<a class="navNext" href="../{suivant}/">Suivant →</a>' )
+        html.append( f'<a class="navNext" href="../{suivant}/">❯</a>'
+)
     else:
         html.append( '<span></span>' )
     context["ibNav"] = "".join(html)

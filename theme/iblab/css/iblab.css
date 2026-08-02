@@ -29,6 +29,7 @@ body { margin: 0; background: #f5f5f5; font-family: "Segoe UI", sans-serif; disp
 .navPlaceholder { display: inline-block; min-width: 8rem; }
 .navSom { font-weight: 600;  background: rgba(255,255,255,.15); }
 .navPrev, .navNext { font-weight: normal; }
+.navPrev, .navSom, .navNext { width: 2.5rem; min-width: 2.5rem; padding: .4rem; font-size: 1.1rem; }
 
 #ibFooterCorporate { color: var(--ib-color-discret); font-size: .9rem; }
 #ibContent { margin-top: 60px; margin-bottom: 60px; padding: 2rem; background: var(--ib-color-content); min-height: calc(100vh - 120px); }
