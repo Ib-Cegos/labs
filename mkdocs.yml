@@ -6,8 +6,6 @@ theme:
   name: mkdocs
   language: fr
   custom_dir: theme/iblab
-  logo: assets/images/favicon.png
-  favicon: assets/images/favicon.png
 
 hooks:
   - hooks/content_processor.py
@@ -33,8 +31,3 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
 
-extra_css:
-  - assets/css/main.css
-
-extra_javascript:
-  - assets/js/main.js
