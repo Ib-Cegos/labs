@@ -12,6 +12,7 @@ document.addEventListener(
     () => {
         ibInitVariables();
         ibInitSettingsPanel();
+        ibInitHelpPanel();
         ibInitTasks();
     });
 
