@@ -234,6 +234,65 @@ def construire_panneau_parametres(page):
 """
     return contenu
 
+# Pagination dans les exercices
+def on_page_context(context, page, config, nav):
+    fichier_courant = Path(page.file.src_uri).name
+    match = re.match(
+        r"a(\d+)e(\d+)\.md$",
+        fichier_courant,
+        re.IGNORECASE,
+    )
+    if not match:
+        context["ibNav"] = ""
+        return context
+    numero_atelier = int(match.group(1))
+    numero_exercice = int(match.group(2))
+    dossier_stage = Path(page.file.abs_src_path).parent
+    exercices = []
+    for fichier in dossier_stage.glob( f"a{numero_atelier}e*.md" ):
+        m = re.match( r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE,)
+        if m:
+            exercices.append(
+                ( int(m.group(2)), fichier.stem )
+            )
+    exercices.sort( key=lambda x: x[0] )
+    if len(exercices) <= 1:
+        context["ibNav"] = ""
+        return context
+    position = next(
+        (
+            i
+            for i, (n, _) in enumerate(exercices)
+            if n == numero_exercice
+        ),
+        None,
+    )
+    if position is None:
+        context["ibNav"] = ""
+        return context
+    precedent = (
+        exercices[position - 1][1]
+        if position > 0
+        else None
+    )
+    suivant = (
+        exercices[position + 1][1]
+        if position < len(exercices) - 1
+        else None
+    )
+    html = []
+    if precedent:
+        html.append( f'../{precedent}/← Précédent</a>' )
+    else:
+        html.append( '<span></span>' )
+    html.append( '../Sommaire</a>' )
+    if suivant:
+        html.append( f'../{suivant}/Suivant →</a>' )
+    else:
+        html.append( '<span></span>' )
+    context["ibNav"] = "".join(html)
+    return context
+
 # --------------------------------------------------
 # Export d'atelier
 # --------------------------------------------------
