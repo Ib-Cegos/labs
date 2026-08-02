@@ -156,3 +156,49 @@ def define_env(env):
             html.append('<span></span>')
         html.append('</div>')
         return "\n".join(html)
+
+    @env.macro
+    def titre_page():
+        page = env.variables["page"]
+        fichier = Path(page.file.src_uri)
+        # README du stage
+        if fichier.name.upper() == "README.MD":
+            code_stage = fichier.parent.name.upper()
+            chemin_readme = Path("docs") / fichier
+            contenu = chemin_readme.read_text( encoding="utf-8" )
+            match = re.search(
+                r"^#\s+(.+)$",
+                contenu,
+                re.MULTILINE,
+            )
+            if match:
+                return (
+                    f"{code_stage} - "
+                    f"{match.group(1).strip()}"
+                )
+            return code_stage
+        # Exercices
+        match = re.match(
+            r"a(\d+)e(\d+)\.md$",
+            fichier.name,
+            re.IGNORECASE,
+        )
+        if match:
+            numero_atelier = match.group(1)
+            numero_exercice = match.group(2)
+            chemin_exercice = Path("docs") / fichier
+            contenu = chemin_exercice.read_text( encoding="utf-8" )
+            titre_match = re.search(
+                r"^#\s+(.+)$",
+                contenu,
+                re.MULTILINE,
+            )
+            titre = (
+                titre_match.group(1).strip()
+                if titre_match
+                else fichier.stem
+            )
+            return (
+                f"Atelier {numero_atelier} - Exercice {numero_exercice} - {titre}"
+            )
+        return page.title        
