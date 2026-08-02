@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>{{ page.title }}</title>
+    {{ 'css/iblab.css' | url }}
+</head>
+<body>
+<header id="ibHeader">
+    <div id="ibHeaderTitle">{{ page.title }}</div>
+    <div id="ibHeaderBrand">
+        ibLab
+    </div>
+</header>
+
+<main id="ibContent">
+    {{ page.content }}
+</main>
+
+<footer id="ibFooter">
+    <div id="ibFooterTools">
+        ⚙ Paramètres
+        ❓ Aide
+    </div>
+    <div id="ibFooterNavigation">
+        Navigation
+    </div>
+    <div id="ibFooterCorporate">
+        ib Cegos
+    </div>
+</footer>
+<script>{{ 'js/iblab.js' | url }}</script>
+</body></html>
