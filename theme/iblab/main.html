@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8">
     <title>{{ page.title }}</title>
-    {{ 'css/iblab.css' | url }}
+    <link rel="stylesheet" href="{{ 'css/iblab.css' | url }}">
 </head>
 <body>
 <header id="ibHeader">
@@ -28,5 +28,5 @@
         ib Cegos
     </div>
 </footer>
-<script>{{ 'js/iblab.js' | url }}</script>
+<script src="{{ 'js/iblab.js' | url }}"></script>
 </body></html>
