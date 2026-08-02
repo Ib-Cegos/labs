@@ -6,10 +6,10 @@
   --ib-color-link: #2563eb;
   --ib-color-discret: rgba(255,255,255,.70);
   --ib-color-action: #60a5fa;
-  --ib-color-settings: #2563eb;
-  --ib-color-settings-hover: #1d4ed8;
-  --ib-color-help: #ec4899;
-  --ib-color-help-hover: #db2777;
+  --ib-color-settings: #1d4ed8;
+  --ib-color-settings-hover: #2563eb;;
+  --ib-color-help-hover: #6b7280;
+  --ib-color-help: #4b5563;
 }
 body { margin: 0; background: #f5f5f5; font-family: "Segoe UI", sans-serif; display: flex; flex-direction: column; }
 #ibHeader { position: fixed; top: 0; left: 0; right: 0; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; background: var(--ib-color-header); color: var(--ib-color-header-text); border-bottom: 1px solid var(--ib-color-border); z-index: 1000; }
