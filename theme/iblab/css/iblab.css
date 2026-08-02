@@ -24,8 +24,8 @@ body { margin: 0; background: #f5f5f5; font-family: "Segoe UI", sans-serif; disp
 #ibHelpButton { background: var(--ib-color-help); }
 #ibHelpButton:hover { background: var(--ib-color-help-hover); transform: translateY(-1px); }
 #ibFooterNavigation { display: flex; align-items: center; justify-content: center; gap: .5rem; }
-#ibFooterNavigation a { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; text-decoration: none; color: white; border-radius: 6px; font-size: 1.1rem; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); transition: all .2s ease; }
-#ibFooterNavigation a:hover { background: rgba(255,255,255,.20); border-color: rgba(255,255,255,.30); }
+#ibFooterNavigation a { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; text-decoration: none; color: white; border-radius: 6px; font-size: 1.1rem; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); transition: all .2s ease; }
+#ibFooterNavigation a:hover { background: rgba(255,255,255,.28); border-color: rgba(255,255,255,.45); }
 .navSom { width: 2.4rem !important; font-size: 1rem; }
 #ibFooterCorporate { color: var(--ib-color-discret); font-size: .9rem; }
 #ibContent { margin-top: 60px; margin-bottom: 60px; padding: 2rem; background: var(--ib-color-content); min-height: calc(100vh - 120px); }
