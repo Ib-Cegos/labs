@@ -174,9 +174,7 @@ def on_page_content(html, page, config, files):
     navigation_html = construire_navigation(page)
     html = remplacer_variables(html, page)
     html += construire_panneau_parametres(page)
-    if not navigation_html:
-        return html
-    return html + navigation_html
+    return html
 
 def on_page_markdown(markdown, page, config, files):
     fichier = Path(page.file.src_uri).name

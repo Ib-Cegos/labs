@@ -123,8 +123,6 @@ def define_env(env):
             if numero == numero_exercice:
                 position = index
                 break
-        if position is None:
-            return ""
         precedent = None
         suivant = None
         if position > 0:
