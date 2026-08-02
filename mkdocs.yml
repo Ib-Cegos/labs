@@ -3,6 +3,7 @@ site_url: https://www.ib-formation.fr
 copyright: ib Cegos
 
 theme:
+  name: mkdocs
   language: fr
   custom_dir: theme/iblab
   logo: assets/images/favicon.png
