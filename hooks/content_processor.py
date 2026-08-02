@@ -200,9 +200,9 @@ def construire_panneau_parametres(page):
         if definition.get("lib")
     }
     contenu = """
-<aside id="ibSettingsPanel">
-    <div class="ibSettingsHeader"><span>⚙ Paramètres</span><button id="ibSettingsClose" title="Fermer">✕</button></div>
-    <div id="ibSettingsContent">
+<aside id="ibSettingsPanel" class="ibModal">
+    <div class="ibSettingsHeader ibModalHeader"><span>⚙ Paramètres</span><button id="ibSettingsClose" class="ibModalClose" title="Fermer">✕</button></div>
+    <div id="ibSettingsContent" class="ibModalContent">
 """
     if variables_visibles:
         contenu += """
