@@ -15,6 +15,7 @@ Variables:
     userPass:
         defaut: ibForm@tion
 ---
+
 # Administration de Microsoft 365
 L'entreprise Adatum héberge actuellement un environnement informatique *classique*, dans ses datacenters, qui comporte diverses applications historiques (comme Microsoft Exchange par exemple). L'entreprise a cependant récemment acquis un abonnement Microsoft 365, voyant ici l'opportunité d'un déploiement hybride et d'un rapprochement des applications du Cloud.  
 
