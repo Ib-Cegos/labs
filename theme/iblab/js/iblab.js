@@ -8,5 +8,5 @@ function ibMajBoutonParametres() {
 
 function ibInitHelpPanel() {
     const panel = document.getElementById("ibHelpPanel");
-    document.getElementById( "ibHelpButton" ).addEventListener( "click", () => panel.classList.toggle("open"));
-    document.getElementById( "ibHelpClose" ).addEventListener( "click", () => panel.classList.remove("open"));}    
+    document.getElementById( "ibHelpButton" ).addEventListener( "click", () => panel.classList.add( "ibModalOpen" ));
+    document.getElementById( "ibHelpClose").addEventListener( "click", () => panel.classList.remove( "ibModalOpen" ));}
