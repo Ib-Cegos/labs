@@ -34,3 +34,22 @@ body { margin: 0; background: #f5f5f5; font-family: "Segoe UI", sans-serif; disp
 #ibFooterCorporate a:hover { color: white; }
 #ibContent { margin-top: 60px; margin-bottom: 60px; padding: 2rem; background: var(--ib-color-content); min-height: calc(100vh - 120px); }
 #ibContent h1:first-of-type { display: none; }
+
+/* Panneau des paramètres */
+/*
+.ibSettingsFooterButton { display: flex; align-items: center; gap: .4rem; border: none; background: transparent; color: rgba(255,255,255,.75); cursor: pointer; font-size: .85rem; padding: .25rem 0; }
+.ibSettingsFooterButton:hover { color: white; }
+.ibSettingsFooterButton svg { width: 1rem; height: 1rem; flex-shrink: 0; } */
+
+#ibSettingsPanel { position: fixed; left: 25%; top: 25vh; width: 50%; height: 50vh; background: white; border: 2px solid #222; border-radius: 16px; box-shadow: 0 8px 30px rgba(0, 0, 0, .25); z-index: 10000; display: flex; flex-direction: column; overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(30px); transition: opacity .2s ease, transform .2s ease; }
+#ibSettingsPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0); border-color: #005fb8; }
+.ibSettingsHeader { background: var(--ib-color-button); color: white; padding: .75rem 1rem; display: flex; justify-content: space-between; align-items: center; font-weight: 600; border-bottom: 1px solid rgba(0,0,0,.1); }
+#ibSettingsClose { background: transparent; border: none; color: white; cursor: pointer; font-size: 1rem; }
+#ibSettingsClose:hover { opacity: .8;}
+#ibSettingsContent { flex: 1; overflow-y: auto; padding: 1rem; }
+@media (max-width: 1200px) { #ibSettingsPanel { left: 10%; width: 80%; } }
+@media (max-width: 768px) { #ibSettingsPanel { left: 5%; width: 90%; height: 60vh; top: 20vh; }}
+
+.ibSettingsActions { display: flex; gap: 1rem; margin-bottom: 1rem; }
+.ibSettingsAction { flex: 1; padding: .75rem; border: 1px solid #ccc; border-radius: .4rem; background: white; cursor: pointer; text-align: center; font-size: 1rem; }
+.ibSettingsAction:hover { background: #f5f5f5; }

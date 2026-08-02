@@ -201,7 +201,7 @@ def construire_panneau_parametres(page):
     }
     contenu = """
 <aside id="ibSettingsPanel">
-    <div class="ibSettingsHeader"><span>Paramètres</span><button id="ibSettingsClose" title="Fermer">✕</button></div>
+    <div class="ibSettingsHeader"><span>⚙ Paramètres</span><button id="ibSettingsClose" title="Fermer">✕</button></div>
     <div id="ibSettingsContent">
 """
     if variables_visibles:
