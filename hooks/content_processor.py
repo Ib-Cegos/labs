@@ -180,6 +180,7 @@ def on_page_content(html, page, config, files):
         return html
     return html + navigation_html
 
+"""
 def on_page_markdown(markdown, page, config, files):
     fichier = Path(page.file.src_uri).name
     # Titre des pages d'exercices
@@ -193,6 +194,7 @@ def on_page_markdown(markdown, page, config, files):
         code_stage = Path(page.file.src_uri).parent.name.upper()
         return re.sub( r"^#\s+(.+)$", rf"# {code_stage} - \1", markdown, count=1, flags=re.MULTILINE, )
     return markdown
+"""
 
 def construire_panneau_parametres(page):
     meta = charger_meta_atelier(page)
