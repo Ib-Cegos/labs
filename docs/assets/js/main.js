@@ -15,7 +15,7 @@ document.addEventListener(
         ibInitTasks();
     });
 
-    
+/* Gestion des variabmes */
 function ibInitVariables() {
     if (!window.ibVariables) { return; }
     Object.entries(window.ibVariables).forEach(([nom, definition]) => {
@@ -29,7 +29,8 @@ function ibUpdateVariables() {
     document.querySelectorAll(".ibVariable").forEach(variable => {
     const nom = variable.dataset.variable.toLowerCase();
     const valeur = localStorage.getItem( ibVarKey(nom));
-    if (valeur !== null) { variable.textContent = valeur; }});}
+    if (valeur !== null) { variable.textContent = valeur; }});
+    ibMajBoutonParametres();}
 
 function ibLoadVariables() {
     document.querySelectorAll(".ibVariableInput").forEach(input => {
@@ -41,6 +42,12 @@ function ibSaveVariables() {
         input.addEventListener("change",() => {
             localStorage.setItem( ibVarKey(input.dataset.variable), input.value);
             ibUpdateVariables(); });});}
+
+function ibVariablesAConfigurer() {
+    if (!window.ibVariables) { return false; }
+    const variables = Object.entries( window.ibVariables ).filter(([nom, definition]) => definition.lib );
+    return variables.some(([nom, definition]) => { const valeur = localStorage.getItem(ibVarKey(nom));
+    return ( valeur === definition.defaut ); });}            
 
 function ibInitSettingsPanel() {
     const panel = document.getElementById( "ibSettingsPanel" );

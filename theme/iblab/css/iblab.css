@@ -21,6 +21,8 @@ body { margin: 0; background: #f5f5f5; font-family: "Segoe UI", sans-serif; disp
 .ibActionButton:hover { background: rgba(255,255,255,.10); border-color: var(--ib-color-header-text); }
 #ibSettingsButton { background: var(--ib-color-settings); }
 #ibSettingsButton:hover { background: var(--ib-color-settings-hover); transform: translateY(-1px); }
+.ibNeedsConfig { position: relative; }
+.ibNeedsConfig::after { content: ""; position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444;}
 #ibHelpButton { background: var(--ib-color-help); }
 #ibHelpButton:hover { background: var(--ib-color-help-hover); transform: translateY(-1px); }
 #ibFooterNavigation { display: flex; align-items: center; justify-content: center; gap: .5rem; }
