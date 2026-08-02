@@ -23,9 +23,10 @@ body { margin: 0; background: #f5f5f5; font-family: "Segoe UI", sans-serif; disp
 #ibSettingsButton:hover { background: var(--ib-color-settings-hover); transform: translateY(-1px); }
 #ibHelpButton { background: var(--ib-color-help); }
 #ibHelpButton:hover { background: var(--ib-color-help-hover); transform: translateY(-1px); }
-.navEx a { display: inline-flex; align-items: center; justify-content: center; min-width: 8rem; padding: .45rem .8rem; border-radius: 6px; text-decoration: none; background: rgba(255,255,255,.08); color: white; border: 1px solid rgba(255,255,255,.15); transition: all .2s ease; }
-.navEx a:hover { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.35); }
-.navEx { display: flex; gap: .75rem; align-items: center; justify-content: center; }
+#ibFooterNavigation { display: flex; gap: .75rem; align-items: center; justify-content: center; }
+#ibFooterNavigation a { display: inline-flex; align-items: center; justify-content: center; min-width: 8rem; padding: .45rem .9rem; border-radius: 6px; text-decoration: none; font-size: .95rem; color: white; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); transition: all .2s ease; }
+#ibFooterNavigation a:hover { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.35); }
+.navPlaceholder { display: inline-block; min-width: 8rem; }
 .navSom { font-weight: 600;  background: rgba(255,255,255,.15); }
 .navPrev, .navNext { font-weight: normal; }
 

@@ -284,7 +284,7 @@ def on_page_context(context, page, config, nav):
     if precedent:
         html.append( f'<a class="navPrec" href="../{precedent}/">← Précédent</a>' )
     else:
-        html.append( '<span></span>' )
+        html.append( '<span class="navPlaceholder"></span>' )
     html.append( '<a class="navSom" href="../">Sommaire</a>' )
     if suivant:
         html.append( f'<a class="navNext" href="../{suivant}/">Suivant →</a>' )
