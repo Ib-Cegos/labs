@@ -282,12 +282,12 @@ def on_page_context(context, page, config, nav):
     )
     html = []
     if precedent:
-        html.append( f'../{precedent}/← Précédent</a>' )
+        html.append( f'<a class="navPrec" href="../{precedent}/">← Précédent</a>' )
     else:
         html.append( '<span></span>' )
-    html.append( '../Sommaire</a>' )
+    html.append( '<a class="navSom" href="../">Sommaire</a>' )
     if suivant:
-        html.append( f'../{suivant}/Suivant →</a>' )
+        html.append( f'<a class="navNext" href="../{suivant}/">Suivant →</a>' )
     else:
         html.append( '<span></span>' )
     context["ibNav"] = "".join(html)
