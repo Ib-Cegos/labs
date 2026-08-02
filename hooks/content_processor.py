@@ -181,30 +181,17 @@ def on_page_content(html, page, config, files):
     return html + navigation_html
 
 def on_page_markdown(markdown, page, config, files):
-    """
-    Préfixe automatiquement le premier titre H1 des exercices.
-    Exemple :
-        # Création de l'environnement
-    devient :
-        # Atelier 1 - Exercice 1 : Création de l'environnement
-    """
     fichier = Path(page.file.src_uri).name
-    match = re.fullmatch(
-        r"a(\d+)e(\d+)\.md",
-        fichier,
-        re.IGNORECASE,
-    )
-    if not match:
-        return markdown
-    numero_atelier = match.group(1)
-    numero_exercice = match.group(2)
-    markdown = re.sub(
-        r"^#\s+(.+)$",
-        rf'# <span class="exerciceRef">Atelier {numero_atelier} - Exercice {numero_exercice} :</span> \1',
-        markdown,
-        count=1,
-        flags=re.MULTILINE,
-    )
+    # Titre des pages d'exercices
+    match = re.fullmatch( r"a(\d+)e(\d+)\.md", fichier, re.IGNORECASE, )
+    if match:
+        numero_atelier = match.group(1)
+        numero_exercice = match.group(2)
+        return re.sub( r"^#\s+(.+)$", rf"# <span class=\"exerciceRef\">Atelier {numero_atelier} - Exercice {numero_exercice} :</span> \1", markdown, count=1, flags=re.MULTILINE, )
+    # Titre des pages README
+    if fichier.upper() == "README.MD":
+        code_stage = Path(page.file.src_uri).parent.name.upper()
+        return re.sub( r"^#\s+(.+)$", rf"# {code_stage} - \1", markdown, count=1, flags=re.MULTILINE, )
     return markdown
 
 def construire_panneau_parametres(page):
