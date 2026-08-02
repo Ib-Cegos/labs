@@ -2,6 +2,7 @@ import re
 import json
 import yaml
 from pathlib import Path
+IB_PREFIX = "iblab-"
 
 COPY_BUTTON_SVG = """
 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -76,7 +77,7 @@ def ajouter_checkboxes(html, page):
             return balise
         if balise.lower().startswith("<li") and dans_ol:
             compteur += 1
-            identifiant = ( f"ibLab-{stage}-{fichier}-{compteur}" )
+            identifiant = ( f"{IB_PREFIX}{stage}-{fichier}-{compteur}" )
             return ( f'<li class="ibLabTask" id="{identifiant}">' )
         return balise
     return re.sub( r'</?ol[^>]*>|<li[^>]*>', remplacer, html, flags=re.IGNORECASE )
