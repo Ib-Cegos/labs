@@ -279,12 +279,12 @@ def on_page_context(context, page, config, nav):
     )
     html = []
     if precedent:
-        html.append( f'<a class="navPrev" href="../{precedent}/">❮</a>' )
+        html.append( f'<a class="navPrev" href="../{precedent}/" title="Exercice précédent">❮</a>' )
     else:
         html.append( '<span class="navPlaceholder"></span>' )
-    html.append( '<a class="navSom" href="../">📖</a>' )
+    html.append( '<a class="navSom" href="../" title="Sommaire de l\'atelier">📖</a>' )
     if suivant:
-        html.append( f'<a class="navNext" href="../{suivant}/">❯</a>'
+        html.append( f'<a class="navNext" href="../{suivant}/" title="Exercice suivzant">❯</a>'
 )
     else:
         html.append( '<span></span>' )
