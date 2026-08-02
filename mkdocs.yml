@@ -38,8 +38,3 @@ extra_css:
 
 extra_javascript:
   - assets/js/main.js
-
-nav:
-  - Accueil: index.md
-  - msms030: msms030/README.md
-  - ms503: ms503/README.md

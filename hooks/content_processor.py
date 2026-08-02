@@ -29,9 +29,7 @@ def charger_meta_atelier(page):
         meta = yaml.safe_load( morceaux[1] )
         return meta or {}
     except Exception as erreur:
-        print(
-            f"Erreur lecture méta atelier : {erreur}"
-        )
+        print( f"Erreur lecture méta atelier : {erreur}" )
         return {}
 
 def remplacer_variables(html, page):
