@@ -16,18 +16,6 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 
 .exerciceRef { font-weight: 400; text-decoration: underline; display:inline-block; margin-bottom: .8rem;}
 
-/*
-.md-typeset h1 { color: #0078d4; }
-*/
-
-/* Masquer le volet de navigation gauche de material
-.md-sidebar--primary { display: none !important;} 
-.md-sidebar--secondary { display: none !important;} 
-.md-content { max-width: 100% !important; margin:0 !important;}
-.md-grid { max-width: 100% !important; }*/
-
-
-
 .md-content__inner { min-height: calc(100vh - 12rem); display: flex; flex-direction: column; }
 .old .git-revision-date-localized-plugin { font-size: 0.5rem; color: #888; display: flex; position: absolute; right: 1em; bottom: 1em; }
 .md-source-file__fact { font-size: 0.5rem; color: #888; display: flex; position: absolute; right: 1em; bottom: 1em; }
@@ -39,15 +27,6 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .navNext { justify-self: end; font-weight: 400;}
 .navEx a { text-decoration: none; color: #666; font-weight: 400; transition: color .2s ease; }
 .navEx a:hover { color: #003366; }
-
-
-
-/* Gestion des espaces entre les paragrpahes 
-.md-typeset p { margin: 0.45em 0;}
-.md-typeset p + ol, .md-typeset p + ul { margin-top: -0.3em; }
-.md-typeset h1 { margin-bottom: .4rem; }
-.md-typeset h2 { margin-bottom: .25rem; margin-top: 1rem; }
-.md-typeset li { margin-bottom: .15rem; } */
 
 /* Gestion des boutons de copie de code */
 .ibCodeBlock { position: relative; }
@@ -79,10 +58,4 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibVariableHelp { margin-top: .75rem; padding: .5rem .75rem; background: #eef2f6; border-radius: 4px; font-size: .85rem; color: #666; font-style: italic; line-height: 1.4; }
 .ibVariableHelp::before { content: "("; }
 .ibVariableHelp::after { content: ")"; }
-
-/*
-.md-footer-meta__inner { display: flex; justify-content: space-between; align-items: center; }
-*/
-
-
 
