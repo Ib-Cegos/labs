@@ -52,7 +52,7 @@ function ibVariablesAConfigurer() {
 
 function ibInitSettingsPanel() {
     const panel = document.getElementById( "ibSettingsPanel" );
-    document.getElementById( "ibSettingsButton" ).addEventListener( "click", () => panel.classList.add( "ibModalOpen" ));
+    document.getElementById( "ibSettingsButton" ).addEventListener( "click", () => ibToggleModal("ibSettingsPanel");
     document.getElementById( "ibSettingsClose").addEventListener( "click", () => panel.classList.remove( "ibModalOpen" ));
     document.getElementById( "ibExportButton" ).addEventListener( "click", ibExport );
     document.getElementById( "ibImportButton" ).addEventListener( "click",() => { document.getElementById( "ibImportFile" ).click(); });
