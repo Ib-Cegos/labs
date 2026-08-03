@@ -23,10 +23,10 @@ plugins:
         - index.md
 
 extra_css:
-  - contenu.css
+  - assets/contenu.css
 
 extra_javascript:
-  - contenu.js  
+  - assets/contenu.js  
 
 markdown_extensions:
   - admonition
