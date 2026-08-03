@@ -15,11 +15,12 @@
 </header>
 
 <main id="ibContent">
+    {{ page.meta }}
     {{ page.content }}
 </main>
 
 <div id="ibPageInfo">
-    MAJ {{ page.meta.git_revision_date_localized }}
+    MÀJ {{ page.meta.git_revision_date_localized }}
 </div>
 
 <footer id="ibFooter">
