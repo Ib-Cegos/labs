@@ -1,6 +1,7 @@
 /* Taille de police modifiable */
 :root {
     --ib-content-font-size: 1rem;
+    --ib-content-margin: 2%;
 }
 
 /* Mise en page de la table des matières */
@@ -62,9 +63,15 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibDisplayInput { background: white; }
 
 /* Mise en forme générale */
-#ibContent { font-size: var(--ib-content-font-size);line-height: 1.6; }
+#ibContent { font-size: var(--ib-content-font-size);line-height: 1.6; width: calc(100% - (2 * var(--ib-content-margin))); margin-left: auto; margin-right: auto; }
 #ibContent ol { margin: .5rem 0 1rem 0; padding-left: 2rem; }
 #ibContent li { margin: .25rem 0; }
 #ibContent p { margin: .45em 0; }
 #ibContent p + ol, #ibContent p + ul { margin-top: -.3em; }
 #ibContent h2 { margin-top: 1rem; margin-bottom: .25rem; }
+#ibContent table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+#ibContent th { background: #f3f4f6; text-align: left; }
+#ibContent th, #ibContent td { padding: .6rem .8rem; border: 1px solid #d9d9d9; }
+#ibContent a { color: var(--ib-color-link); text-decoration: none; }
+#ibContent a:hover { text-decoration: underline; }
+#ibContent h2 { border-bottom: 1px solid #e5e7eb; padding-bottom: .15rem; }
