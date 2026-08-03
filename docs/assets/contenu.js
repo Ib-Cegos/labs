@@ -11,8 +11,8 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
         ibInitVariables();
-        ibInitTasks();
         ibInitFontSize();
+        ibInitTasks();
     });
 
 /* Gestion de la taille de police */
