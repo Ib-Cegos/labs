@@ -11,14 +11,17 @@
 .listeStages a { font-size: 1.2rem; font-weight: 600; text-decoration: none; }
 
 /* Mise en forme des notes */
-blockquote { border-left: 3px solid #0078d4; background: #f5f9ff; padding: .75rem 1rem; }
+blockquote { margin: 1rem 0; border-left: 3px solid #0078d4; background: #f5f9ff; padding: .75rem 1rem; }
 blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: #0078d4; }
 
-.exerciceRef { font-weight: 400; text-decoration: underline; display:inline-block; margin-bottom: .8rem;}
+/* Mise en forme des codes */
+#ibContent code { color: #7c3aed; }
+#ibContent pre code { color: #111827; }
+#ibContent pre { background: #f8fafc; border: 1px solid #dbe3ea; border-radius: 6px; padding: .75rem 1rem; overflow-x: auto; margin: .75rem 0; box-shadow: inset 0 1px 0 rgba(255,255,255,.5); white-space: pre; overflow-x: auto; }
+#ibContent pre code { background: transparent; padding: 0; border: none; font-size: .92rem; line-height: 1.5; }
 
-.md-content__inner { min-height: calc(100vh - 12rem); display: flex; flex-direction: column; }
-.old .git-revision-date-localized-plugin { font-size: 0.5rem; color: #888; display: flex; position: absolute; right: 1em; bottom: 1em; }
-.md-source-file__fact { font-size: 0.5rem; color: #888; display: flex; position: absolute; right: 1em; bottom: 1em; }
+
+.exerciceRef { font-weight: 400; text-decoration: underline; display:inline-block; margin-bottom: .8rem;}
 
 /*Navigation entre les exercices */
 .navEx {  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-top: 1rem; padding-top: .4rem; border-top: 1px solid #ececec; font-size: .80rem; font-family: "Segoe UI", sans-serif;font-size: .8rem;}
@@ -63,7 +66,6 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 #ibContent { line-height: 1.5; }
 #ibContent ol { margin: .5rem 0 1rem 0; padding-left: 2rem; }
 #ibContent li { margin: .25rem 0; }
-blockquote { margin: 1rem 0; border-left: 3px solid #0078d4; background: #f5f9ff; padding: .75rem 1rem; }
 #ibContent p { margin: .45em 0; }
 #ibContent p + ol, #ibContent p + ul { margin-top: -.3em; }
 #ibContent h2 { margin-top: 1rem; margin-bottom: .25rem; }
