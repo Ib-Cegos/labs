@@ -184,7 +184,7 @@ def on_page_markdown(markdown, page, config, files):
     if match:
         numero_atelier = match.group(1)
         numero_exercice = match.group(2)
-        return re.sub( r"^#\s+(.+)$", rf"# <span class=\"exerciceRef\">Atelier {numero_atelier} - Exercice {numero_exercice} :</span> \1", markdown, count=1, flags=re.MULTILINE, )
+        return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1", markdown, count=1, flags=re.MULTILINE, )
     # Titre des pages README
     if fichier.upper() == "README.MD":
         code_stage = Path(page.file.src_uri).parent.name.upper()
