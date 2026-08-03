@@ -3,9 +3,8 @@
     <meta charset="utf-8">
     <title>{{ page.title }}</title>
     <link rel="stylesheet" href="{{ 'theme.css' | url }}">
-    <link rel="stylesheet" href="{{ '../contenu.css' | url }}">
-    <link rel="icon" href="{{ '../images/favicon.png' | url }}">
-    <link rel="shortcut icon" href="{{ '../images/favicon.png' | url }}">
+    <link rel="stylesheet" href="{{ config.site_url }}assets/contenu.css">
+    <link rel="icon" href="{{ config.site_url }}assets/images/favicon.png">
 </head>
 <body>
 <header id="ibHeader">
@@ -50,6 +49,6 @@
         </ul>
     </div>
 </aside>
-<script src="{{ '../contenu.js' | url }}"></script>
+<script src="{{ config.site_url }}assets/contenu.js"></script>
 <script src="{{ 'theme.js' | url }}"></script>
 </body></html>
