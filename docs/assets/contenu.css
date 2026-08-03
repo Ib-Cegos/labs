@@ -26,17 +26,21 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 
 /* Gestion des boutons de copie de code */
 .ibCodeBlock { position: relative; }
-.ibCopyButton { position: absolute; top: .10rem; right: .4rem; z-index: 9999; width:1.6rem; height:1.6rem; border: none; background: transparent; cursor: pointer; padding: .25rem; color: rgba(0,0,0,.20); transition: all .2s ease; }
-.ibCopyButton:hover { color: rgba(0,0,0,.65); }
-.ibCopyButton svg { width: 1rem; height: 1rem; fill: currentColor; }
-.ibCopyButton.ok,.ibInlineCopyButton.ok { color: #16a34a; }
+.ibCopyButton { position: absolute; top: .5rem; right: .5rem; width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center; border: 1px solid #dbe3ea; border-radius: 6px; background: rgba(255,255,255,.90); cursor: pointer; color: #64748b; transition: color .2s ease, border-color .2s ease, background-color .2s ease, transform .15s ease; }
+.ibCopyButton:hover { color: #2563eb; border-color: #2563eb; background: white; transform: translateY(-1px); }
+.ibCopyButton svg { width: 1.15rem; height: 1.15rem; fill: currentColor; stroke: currentColor; }
+.ibCopyButton.ok { color: #16a34a; border-color: #16a34a; background: #f0fdf4; }
+
+
+
 .ibInlineCode { display: inline-flex; align-items: center; gap: .15rem; padding: .10rem .35rem; border-radius: .25rem; background: #f3f4f6; border: 1px solid #e5e7eb; margin: 0 .15rem; }
 .ibInlineCode code { background: transparent; padding: 0; }
 .ibInlineCode:hover .ibInlineCopyButton {opacity: .4;}
-.ibInlineCopyButton:hover {opacity: 1 !important;}
-.ibInlineCopyButton { border: none; background: transparent; width: .9rem; height: .9rem; padding: 0; cursor: pointer; color: rgba(0,0,0,.20); vertical-align: middle; transition: color .2s ease; opacity: 0;}
-.ibInlineCopyButton:hover { color: rgba(0,0,0,.60); }
-.ibInlineCopyButton svg { width: .8rem; height: .8rem; fill: currentColor; }
+
+.ibInlineCopyButton { border: none; background: transparent; width: 1rem; height: 1rem; padding: 0; cursor: pointer; color: #94a3b8; opacity: 0; transition: color .2s ease, opacity .2s ease; }
+.ibInlineCode:hover .ibInlineCopyButton { opacity: 1; }
+.ibInlineCopyButton:hover { color: #2563eb; }
+.ibInlineCopyButton.ok { color: #16a34a; }
 
 /* Les checkbox des listes numérotées */
 .ibLabTask { cursor: default; }

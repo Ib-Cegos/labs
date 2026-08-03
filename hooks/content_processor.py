@@ -7,9 +7,12 @@ from pathlib import Path
 IB_PREFIX = "iblab-"
 
 COPY_BUTTON_SVG = """
-<svg viewBox="0 0 24 24" aria-hidden="true">
-    <rect x="8" y="4" width="11" height="13" rx="1" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
-    <rect x="5" y="7" width="11" height="13" rx="1" fill="currentColor" />
+<svg viewBox="-1 0 20 20">
+  <g id="copy-4" transform="translate(-3 -2)">
+    <path id="secondary" fill="currentColor" d="M19,3H16V4a1,1,0,0,1-1,1H13a1,1,0,0,1-1-1V3H9A1,1,0,0,0,8,4V16a1,1,0,0,0,1,1H19a1,1,0,0,0,1-1V4A1,1,0,0,0,19,3Z"/>
+    <path id="primary" d="M16,17v3a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V8A1,1,0,0,1,5,7H8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="primary-2" data-name="primary" d="M19,3H9A1,1,0,0,0,8,4V16a1,1,0,0,0,1,1H19a1,1,0,0,0,1-1V4A1,1,0,0,0,19,3ZM12,4a1,1,0,0,0,1,1h2a1,1,0,0,0,1-1V3H12Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+  </g>
 </svg>
 """
 
