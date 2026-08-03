@@ -21,6 +21,7 @@ document.addEventListener(
 
 /* Gestion de la taille de police */
 function ibInitFontSize() {
+    if (!window.ibEnvironment.storage) { return; }
     const select = document.getElementById( "ibFontSize" );
     if (!select) { return; }
     const valeur = localStorage.getItem( "iblab-font-size" ) ?? "1rem";
@@ -33,6 +34,7 @@ function ibInitFontSize() {
 /* Gestion des variabmes */
 function ibInitVariables() {
     if (!window.ibVariables) { return; }
+    if (!window.ibEnvironment.storage) { return; }
     Object.entries(window.ibVariables).forEach(([nom, definition]) => {
         const cle = ibVarKey( nom );
         if ( localStorage.getItem(cle) === null ) { localStorage.setItem( cle, definition.defaut );}});
@@ -41,6 +43,7 @@ function ibInitVariables() {
     ibUpdateVariables();}
 
 function ibUpdateVariables() {
+    if (!window.ibEnvironment.storage) { return; }
     document.querySelectorAll(".ibVariable").forEach(variable => {
     const nom = variable.dataset.variable.toLowerCase();
     const valeur = localStorage.getItem( ibVarKey(nom));
@@ -124,6 +127,7 @@ function ibCheckEnvironment() {
             return true; }
         catch { return false; }}
     function testClipboard() {
+        return false;
         return !!( navigator.clipboard && navigator.clipboard.writeText );}
     window.ibEnvironment = {
         storage: testStorage(),
