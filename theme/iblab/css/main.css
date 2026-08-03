@@ -1,11 +1,3 @@
-.exerciceRef { font-weight: 400; text-decoration: underline; display:inline-block; margin-bottom: .8rem;}
-.md-typeset h1 { color: #0078d4; }
-/* Masquer le volet de navigation gauche de material*/
-.md-sidebar--primary { display: none !important;} 
-.md-sidebar--secondary { display: none !important;} 
-.md-content { max-width: 100% !important; margin:0 !important;}
-.md-grid { max-width: 100% !important; }
-
 /* Mise en page de la table des matières */
 .somLab { margin-bottom: 2rem; } 
 .somLabTit { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
@@ -17,6 +9,24 @@
 .listeStages { list-style: none; padding-left: 0; }
 .listeStages li { margin-bottom: 0.5rem; }
 .listeStages a { font-size: 1.2rem; font-weight: 600; text-decoration: none; }
+
+/* Mise en forme des notes */
+blockquote { border-left: 3px solid #0078d4; background: #f5f9ff; padding: .75rem 1rem; }
+blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: #0078d4; }
+
+.exerciceRef { font-weight: 400; text-decoration: underline; display:inline-block; margin-bottom: .8rem;}
+
+/*
+.md-typeset h1 { color: #0078d4; }
+*/
+
+/* Masquer le volet de navigation gauche de material
+.md-sidebar--primary { display: none !important;} 
+.md-sidebar--secondary { display: none !important;} 
+.md-content { max-width: 100% !important; margin:0 !important;}
+.md-grid { max-width: 100% !important; }*/
+
+
 
 .md-content__inner { min-height: calc(100vh - 12rem); display: flex; flex-direction: column; }
 .old .git-revision-date-localized-plugin { font-size: 0.5rem; color: #888; display: flex; position: absolute; right: 1em; bottom: 1em; }
@@ -30,16 +40,14 @@
 .navEx a { text-decoration: none; color: #666; font-weight: 400; transition: color .2s ease; }
 .navEx a:hover { color: #003366; }
 
-/* Mise en forme des notes */
-blockquote { border-left: 3px solid #0078d4; background: #f5f9ff; padding: .75rem 1rem; }
-blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: #0078d4; }
 
-/* Gestion des espaces entre les paragrpahes */
+
+/* Gestion des espaces entre les paragrpahes 
 .md-typeset p { margin: 0.45em 0;}
 .md-typeset p + ol, .md-typeset p + ul { margin-top: -0.3em; }
 .md-typeset h1 { margin-bottom: .4rem; }
 .md-typeset h2 { margin-bottom: .25rem; margin-top: 1rem; }
-.md-typeset li { margin-bottom: .15rem; }
+.md-typeset li { margin-bottom: .15rem; } */
 
 /* Gestion des boutons de copie de code */
 .ibCodeBlock { position: relative; }
@@ -55,12 +63,13 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibInlineCopyButton:hover { color: rgba(0,0,0,.60); }
 .ibInlineCopyButton svg { width: .8rem; height: .8rem; fill: currentColor; }
 
-/* Les checkbox à cocher */
+/* Les checkbox des listes numérotées */
 .ibLabTask { cursor: pointer; }
 .ibLabTask.done { opacity: .7; }
 .ibLabTask::marker { content: counter(list-item) ". ☐ "; color: #666; }
 .ibLabTask.done::marker { content: counter(list-item) ". ☑ "; color: #198754; }
 
+/* Gestion des variables */
 .ibVariable { border-bottom: 1px dotted #005fb8; }
 .ibVariablesIntro { margin-bottom: 1.5rem; padding: .75rem 1rem; background: #f3f4f6; border-left: 4px solid #0078d4; border-radius: 6px; font-size: .95rem; line-height: 1.5; }
 .ibVariableEditor { margin-bottom: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #d9d9d9; border-radius: 8px; }
@@ -71,7 +80,9 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibVariableHelp::before { content: "("; }
 .ibVariableHelp::after { content: ")"; }
 
+/*
 .md-footer-meta__inner { display: flex; justify-content: space-between; align-items: center; }
+*/
 
 
 

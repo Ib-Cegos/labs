@@ -11,8 +11,6 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
         ibInitVariables();
-        ibInitSettingsPanel();
-        ibInitHelpPanel();
         ibInitTasks();
     });
 
@@ -50,14 +48,7 @@ function ibVariablesAConfigurer() {
     return variables.some(([nom, definition]) => { const valeur = localStorage.getItem(ibVarKey(nom));
     return ( valeur === definition.defaut ); });}            
 
-function ibInitSettingsPanel() {
-    const panel = document.getElementById( "ibSettingsPanel" );
-    document.getElementById( "ibSettingsButton" ).addEventListener( "click", () => ibToggleModal("ibSettingsPanel"));
-    document.getElementById( "ibSettingsClose").addEventListener( "click", () => panel.classList.remove( "ibModalOpen" ));
-    document.getElementById( "ibExportButton" ).addEventListener( "click", ibExport );
-    document.getElementById( "ibImportButton" ).addEventListener( "click",() => { document.getElementById( "ibImportFile" ).click(); });
-    document.getElementById( "ibImportFile" ).addEventListener( "change", ibImport );}
-
+/* Sauvegarde et restauration */
 function ibClearData() {
     Object.keys(localStorage).forEach(key => {
         if ( key.toLowerCase().startsWith( IB_PREFIX + window.ibLabCode + "-") ) { localStorage.removeItem(key); }});}    
@@ -91,11 +82,10 @@ function ibExport() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url); }
 
+/* Gestion des tâches cliquables */    
 function ibInitTasks() {
     const tasks = Array.from( document.querySelectorAll( ".ibLabTask" ));
-    /* restauration */
     tasks.forEach(task => { if ( localStorage.getItem(task.id) === "true" ) { task.classList.add("done"); }});
-    /* clic */
     tasks.forEach((task, index) => {
         task.addEventListener( "click", event => {
             if ( event.clientX > task.getBoundingClientRect().left + ( parseFloat( getComputedStyle(task).fontSize ) * 3 )) { return; }
