@@ -1,7 +1,6 @@
 site_name: Ateliers ib Cegos
 site_url: https://ib-cegos.github.io/labs
 copyright: ib Cegos
-favicon: themes/images/favicon.png
 
 theme:
   name: mkdocs
@@ -21,12 +20,6 @@ plugins:
       exclude: 
         - "*/README.md"
         - index.md
-
-extra_css:
-  - assets/contenu.css
-
-extra_javascript:
-  - assets/contenu.js  
 
 markdown_extensions:
   - admonition
