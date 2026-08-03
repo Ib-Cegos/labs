@@ -11,6 +11,9 @@
   --ib-color-help-hover: #6b7280;
   --ib-color-help: #4b5563;
   --ib-content-margin: 1.5rem;
+  --ib-color-navigation: #dbeafe;
+  --ib-color-navigation-hover: #bfdbfe;
+  --ib-color-navigation-text: #1e3a8a;
 }
 /* Structure générale */
 body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", sans-serif; display: flex; flex-direction: column; }
@@ -64,9 +67,7 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 .ibSettingsAction:hover { background: #f5f5f5; }
 
 /* Panneau de navigation latéral */
-#ibNavigationButton { position: fixed; left: 0; top: 120px; }
-
-#ibNavigationTab { position: fixed; left: 0; top: 120px; writing-mode: vertical-rl; transform: rotate(180deg); background: var(--ib-color-header); color: white; padding: .75rem .5rem; border-radius: 0 0 8px 8px; cursor: pointer; z-index: 1100; user-select: none; font-size: .9rem; font-weight: 600; box-shadow: 2px 2px 8px rgba(0,0,0,.15); }
-#ibNavigationPanel { position: fixed; left: -320px; top: 60px; bottom: 60px; width: 320px; background: white; border-right: 1px solid #dbe3ea; box-shadow: 4px 0 12px rgba(0,0,0,.15); transition: left .3s ease; z-index: 1000; }
-#ibNavigationPanel.open { left: 0; }
+#ibNavigationTab { position: absolute; left: 100%; top: 60px; background: var(--ib-color-navigation); color: var(--ib-color-navigation-text); }
 #ibNavigationContent { padding: 1rem; overflow-y: auto; height: 100%; }
+#ibNavigationPanel { position: fixed; left: -320px; top: 60px; bottom: 60px; width: 320px; transition: left .3s ease; background: #f8fbff; }
+#ibNavigationPanel.open { left: 0; }
