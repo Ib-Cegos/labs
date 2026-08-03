@@ -132,6 +132,8 @@ function ibCheckEnvironment() {
     window.ibEnvironment = {
         storage: testStorage(),
         clipboard: testClipboard() };
+    if (!window.ibEnvironment.clipboard) {
+        document.querySelectorAll( ".ibCopyButton, .ibInlineCopyButton" ).forEach( bouton => bouton.classList.add( "ibClipboardUnavailable" ));}
     if (!window.ibEnvironment.storage) {
         /* Désactivation des commandes nécessitant le localStorage */
         document.querySelectorAll( ".ibVariableInput, .ibDisplayInput" ).forEach( elt => elt.disabled = true );
