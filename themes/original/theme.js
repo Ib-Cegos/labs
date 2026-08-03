@@ -32,3 +32,5 @@ function ibInitSettingsPanel() {
     document.getElementById( "ibImportButton" ).addEventListener( "click",() => { document.getElementById( "ibImportFile" ).click(); });
     document.getElementById( "ibImportFile" ).addEventListener( "change", ibImport );}
 
+function ibToggleNavigation() {
+    document.getElementById("ibNavigationPanel").classList.toggle("open"); }

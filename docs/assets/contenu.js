@@ -127,7 +127,6 @@ function ibCheckEnvironment() {
             return true; }
         catch { return false; }}
     function testClipboard() {
-        return false;
         return !!( navigator.clipboard && navigator.clipboard.writeText );}
     window.ibEnvironment = {
         storage: testStorage(),
