@@ -1,6 +1,7 @@
 site_name: Ateliers ib Cegos
 site_url: https://www.ib-formation.fr
 copyright: ib Cegos
+favicon: themes/images/favicon.png
 
 theme:
   name: mkdocs
@@ -20,7 +21,12 @@ plugins:
       exclude: 
         - "*/README.md"
         - index.md
-  
+
+extra_css:
+  - contenu.css
+
+extra_javascript:
+  - contenu.js  
 
 markdown_extensions:
   - admonition
