@@ -3,9 +3,9 @@ site_url: https://www.ib-formation.fr
 copyright: ib Cegos
 
 theme:
-  name: mkdocs
+  name: original
   language: fr
-  custom_dir: theme/iblab
+  custom_dir: themes/original
 
 hooks:
   - hooks/content_processor.py

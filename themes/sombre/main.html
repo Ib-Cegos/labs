@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>{{ page.title }}</title>
+    <link rel="stylesheet" href="{{ original.css' | url }}">
+    <link rel="stylesheet" href="{{ '../contenu.css' | url }}">
+    <link rel="icon" href="{{ '../images/favicon.png' | url }}">
+    <link rel="shortcut icon" href="{{ '../images/favicon.png' | url }}">
+</head>
+<body>
+<header id="ibHeader">
+    <div id="ibHeaderTitle">{{ page.title }}</div>
+    <div id="ibHeaderBrand">
+        ibLab
+    </div>
+</header>
+
+<main id="ibContent">
+    {{ page.content }}
+</main>
+
+<footer id="ibFooter">
+    <div id="ibFooterTools">
+        <button class="ibActionButton" id="ibSettingsButton" >⚙ Paramètres</button>
+        <button class="ibActionButton" id="ibHelpButton">❓ Aide</button>
+    </div>
+    <div id="ibFooterNavigation">
+        {{ ibNav }}
+    </div>
+    <div id="ibFooterCorporate">
+        <a href="https://www.ib-formation.fr" title="Site web ib Cegos" target = "_blank">ib Cegos</a>
+    </div>
+</footer>
+<aside id="ibHelpPanel" class="ibModal">
+    <div class="ibHelpHeader ibModalHeader">
+        <span>❓ Aide</span>
+        <button id="ibHelpClose" class="ibModalClose" title="Fermer">✕</button>
+    </div>
+    <div id="ibHelpContent" class="ibModalContent">
+        <h3>Aide rapide</h3>
+        <p>
+            Cette aide fournit quelques informations pratiques
+            concernant l'utilisation d'ibLab.
+        </p>
+        <ul>
+            <li>⚙ Paramètres : personnaliser l'atelier.</li>
+            <li>💾 Export : sauvegarder vos données.</li>
+            <li>📂 Import : restaurer une sauvegarde.</li>
+            <li>☰ Sommaire : revenir au plan de l'atelier.</li>
+        </ul>
+    </div>
+</aside>
+<script src="{{ '../contenu.js' | url }}"></script>
+<script src="{{ 'original.js' | url }}"></script>
+</body></html>
