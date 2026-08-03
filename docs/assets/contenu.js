@@ -12,7 +12,19 @@ document.addEventListener(
     () => {
         ibInitVariables();
         ibInitTasks();
+        ibInitFontSize();
     });
+
+/* Gestion de la taille de police */
+function ibInitFontSize() {
+    const select = document.getElementById( "ibFontSize" );
+    if (!select) { return; }
+    const valeur = localStorage.getItem( "iblab-font-size" ) ?? "1rem";
+    select.value = valeur;
+    document.documentElement.style.setProperty( "--ib-content-font-size", valeur );
+    select.addEventListener( "change", () => {
+        localStorage.setItem( "iblab-font-size", select.value );
+        document.documentElement.style.setProperty( "--ib-content-font-size", select.value);});}
 
 /* Gestion des variabmes */
 function ibInitVariables() {

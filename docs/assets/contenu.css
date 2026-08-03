@@ -1,3 +1,8 @@
+/* Taille de police modifiable */
+:root {
+    --ib-content-font-size: 1rem;
+}
+
 /* Mise en page de la table des matières */
 .somLab { margin-bottom: 2rem; } 
 .somLabTit { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
@@ -34,9 +39,9 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibInlineCopyButton svg { width: .8rem; height: .8rem; fill: currentColor; }
 
 /* Les checkbox des listes numérotées */
-.ibLabTask { cursor: pointer; }
+.ibLabTask { cursor: default; }
 .ibLabTask.done { opacity: .7; }
-.ibLabTask::marker { content: counter(list-item) ". ☐ "; color: #666; }
+.ibLabTask::marker { content: counter(list-item) ". ☐ "; color: #666; cursor: pointer}
 .ibLabTask.done::marker { content: counter(list-item) ". ☑ "; color: #198754; }
 
 /* Gestion des variables */
@@ -51,7 +56,7 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibVariableHelp::after { content: ")"; }
 
 /* Mise en forme générale */
-#ibContent { line-height: 1.5; }
+#ibContent { font-size: var(--ib-content-font-size);line-height: 1.6; }
 #ibContent ol { margin: .5rem 0 1rem 0; padding-left: 2rem; }
 #ibContent li { margin: .25rem 0; }
 #ibContent p { margin: .45em 0; }
