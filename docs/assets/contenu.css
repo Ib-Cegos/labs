@@ -37,7 +37,7 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibInlineCode code { background: transparent; padding: 0; }
 .ibInlineCode:hover .ibInlineCopyButton {opacity: .4;}
 
-.ibInlineCopyButton { border: none; background: transparent; width: 1rem; height: 1rem; padding: 0; cursor: pointer; color: #94a3b8; vertical-align: middle; transition: color .2s ease; opacity: .5; }
+.ibInlineCopyButton { border: none; background: transparent; width: 1rem; height: 1rem; padding: 0; cursor: pointer; color: #94a3b8; vertical-align: middle; transition: color .2s ease; opacity: .65; }
 .ibInlineCopyButton:hover { color: #2563eb; opacity: 1; }
 .ibInlineCopyButton.ok { color: #16a34a; }
 
