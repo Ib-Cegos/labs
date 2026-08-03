@@ -1,0 +1,82 @@
+/* Taille de police modifiable */
+:root {
+    --ib-content-font-size: 1rem;
+}
+
+/* Mise en page de la table des matières */
+.somLab { margin-bottom: 2rem; } 
+.somLabTit { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
+.somEx { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
+.somExLink { text-decoration: none; }
+.somDuree { color: #666; font-size: 0.9rem; }
+
+/*Liste des stages sur page d'accueil*/
+.listeStages { list-style: none; padding-left: 0; }
+.listeStages li { margin-bottom: 0.5rem; }
+.listeStages a { font-size: 1.2rem; font-weight: 600; text-decoration: none; }
+
+/* Mise en forme des notes */
+blockquote { margin: 1rem 0; border-left: 3px solid #0078d4; background: #eef5ff; padding: .75rem 1rem; }
+blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: #0078d4; }
+
+/* Mise en forme des codes */
+#ibContent code { background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 4px; padding: .10rem .30rem; color: #7c3aed; font-size: .95em; }
+#ibContent pre { background: #f8fafc; border: 1px solid #dbe3ea; border-radius: 8px; padding: .75rem 1rem; margin: .75rem 0; overflow-x: auto; white-space: pre; box-shadow: inset 0 1px 0 rgba(255,255,255,.5); }
+#ibContent pre code { background: transparent; border: none; padding: 0; color: #111827; font-size: .92rem; line-height: 1.5; }
+
+/* Gestion des boutons de copie de code */
+.ibCodeBlock { position: relative; }
+.ibCopyButton { position: absolute; top: .5rem; right: .5rem; width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center; border: 1px solid #dbe3ea; border-radius: 6px; background: rgba(255,255,255,.90); cursor: pointer; color: #64748b; transition: color .2s ease, border-color .2s ease, background-color .2s ease, transform .15s ease; }
+.ibCopyButton:hover { color: #2563eb; border-color: #2563eb; background: white; transform: translateY(-1px); }
+.ibCopyButton svg { width: 1.15rem; height: 1.15rem; fill: currentColor; stroke: currentColor; }
+.ibCopyButton.ok { color: #16a34a; border-color: #16a34a; background: #f0fdf4; }
+
+
+
+.ibInlineCode { display: inline-flex; align-items: center; gap: .15rem; padding: .10rem .35rem; border-radius: .25rem; background: #f3f4f6; border: 1px solid #e5e7eb; margin: 0 .15rem; }
+.ibInlineCode code { background: transparent; padding: 0; }
+.ibInlineCode:hover .ibInlineCopyButton {opacity: .4;}
+
+.ibInlineCopyButton { border: none; background: transparent; width: 1rem; height: 1rem; padding: 0; cursor: pointer; color: #94a3b8; vertical-align: middle; transition: color .2s ease; opacity: .65; }
+.ibInlineCopyButton:hover { color: #2563eb; opacity: 1; }
+.ibInlineCopyButton.ok { color: #16a34a; }
+
+/* Les checkbox des listes numérotées */
+.ibLabTask { cursor: default; }
+.ibLabTask.done { opacity: .7; }
+.ibLabTask::marker { content: counter(list-item) ". ☐ "; color: #666; cursor: pointer}
+.ibLabTask.done::marker { content: counter(list-item) ". ☑ "; color: #198754; }
+
+/* Gestion des variables */
+.ibVariable { border-bottom: 1px dotted #005fb8; }
+.ibVariablesIntro { margin-bottom: 1.5rem; padding: .75rem 1rem; background: #f3f4f6; border-left: 4px solid #0078d4; border-radius: 6px; font-size: .95rem; line-height: 1.5; }
+.ibVariableEditor { margin-bottom: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #d9d9d9; border-radius: 8px; }
+.ibVariableEditor label { display: block; margin-bottom: .5rem; font-weight: 600; color: #222; }
+.ibVariableInput, .ibDisplayInput { width: 100%; padding: .6rem .8rem; border: 1px solid #cfd8dc; border-radius: 6px; background: white; font-size: .95rem; transition: border-color .2s ease, box-shadow .2s ease; }
+.ibVariableInput:focus, .ibDisplayInput:focus { outline: none; border-color: #0078d4; box-shadow: 0 0 0 3px rgba(0,120,212,.15); }
+.ibVariableHelp { margin-top: .75rem; padding: .5rem .75rem; background: #eef2f6; border-radius: 4px; font-size: .85rem; color: #666; font-style: italic; line-height: 1.4; }
+.ibVariableHelp::before { content: "("; }
+.ibVariableHelp::after { content: ")"; }
+
+/* Gestion de la taille d'écriture */
+.ibSettingsSectionTitle { color: var(--ib-color-settings); font-size: 1.1rem; font-weight: 600; margin-bottom: .75rem; }
+.ibDisplayEditor { padding: 1rem; background: #f5f9ff; border: 1px solid #c9ddff; border-radius: 8px; }
+.ibDisplayEditor label { display: block; margin-bottom: .5rem; font-weight: 600; }
+.ibDisplayInput { background: white; }
+
+/* Mise en forme générale */
+#ibContent { font-size: var(--ib-content-font-size); line-height: 1.6; }
+#ibContent ol { margin: .5rem 0 1rem 0; padding-left: 2rem; }
+#ibContent li { margin: .25rem 0; }
+#ibContent p { margin: .45em 0; }
+#ibContent p + ol, #ibContent p + ul { margin-top: -.3em; }
+#ibContent h2 { margin-top: 1rem; margin-bottom: .25rem; }
+#ibContent table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+#ibContent th { background: #f3f4f6; text-align: left; }
+#ibContent th, #ibContent td { padding: .6rem .8rem; border: 1px solid #d9d9d9; }
+#ibContent a { color: var(--ib-color-link); text-decoration: none; }
+#ibContent a:hover { text-decoration: underline; }
+#ibContent h2 { border-bottom: 1px solid #e5e7eb; padding-bottom: .15rem; }
+
+/* date de mise à jour de l'exercice */
+#ibPageInfo { position: fixed; right: .5rem; bottom: 80px; writing-mode: vertical-rl; transform: rotate(180deg); font-size: .70rem; color: #999; }

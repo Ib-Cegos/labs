@@ -11,11 +11,22 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
         ibInitVariables();
-        ibInitSettingsPanel();
+        ibInitFontSize();
         ibInitTasks();
     });
 
-    
+/* Gestion de la taille de police */
+function ibInitFontSize() {
+    const select = document.getElementById( "ibFontSize" );
+    if (!select) { return; }
+    const valeur = localStorage.getItem( "iblab-font-size" ) ?? "1rem";
+    select.value = valeur;
+    document.documentElement.style.setProperty( "--ib-content-font-size", valeur );
+    select.addEventListener( "change", () => {
+        localStorage.setItem( "iblab-font-size", select.value );
+        document.documentElement.style.setProperty( "--ib-content-font-size", select.value);});}
+
+/* Gestion des variabmes */
 function ibInitVariables() {
     if (!window.ibVariables) { return; }
     Object.entries(window.ibVariables).forEach(([nom, definition]) => {
@@ -29,7 +40,8 @@ function ibUpdateVariables() {
     document.querySelectorAll(".ibVariable").forEach(variable => {
     const nom = variable.dataset.variable.toLowerCase();
     const valeur = localStorage.getItem( ibVarKey(nom));
-    if (valeur !== null) { variable.textContent = valeur; }});}
+    if (valeur !== null) { variable.textContent = valeur; }});
+    ibMajBoutonParametres();}
 
 function ibLoadVariables() {
     document.querySelectorAll(".ibVariableInput").forEach(input => {
@@ -42,14 +54,13 @@ function ibSaveVariables() {
             localStorage.setItem( ibVarKey(input.dataset.variable), input.value);
             ibUpdateVariables(); });});}
 
-function ibInitSettingsPanel() {
-    const panel = document.getElementById( "ibSettingsPanel" );
-    document.getElementById( "ibSettingsButton" ).addEventListener( "click",() => panel.classList.toggle("open"));
-    document.getElementById( "ibSettingsClose"  ).addEventListener( "click",() => panel.classList.remove("open"));
-    document.getElementById( "ibExportButton" ).addEventListener( "click", ibExport );
-    document.getElementById( "ibImportButton" ).addEventListener( "click",() => { document.getElementById( "ibImportFile" ).click(); });
-    document.getElementById( "ibImportFile" ).addEventListener( "change", ibImport );}
+function ibVariablesAConfigurer() {
+    if (!window.ibVariables) { return false; }
+    const variables = Object.entries( window.ibVariables ).filter(([nom, definition]) => definition.lib );
+    return variables.some(([nom, definition]) => { const valeur = localStorage.getItem(ibVarKey(nom));
+    return ( valeur === definition.defaut ); });}            
 
+/* Sauvegarde et restauration */
 function ibClearData() {
     Object.keys(localStorage).forEach(key => {
         if ( key.toLowerCase().startsWith( IB_PREFIX + window.ibLabCode + "-") ) { localStorage.removeItem(key); }});}    
@@ -83,11 +94,10 @@ function ibExport() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url); }
 
+/* Gestion des tâches cliquables */    
 function ibInitTasks() {
     const tasks = Array.from( document.querySelectorAll( ".ibLabTask" ));
-    /* restauration */
     tasks.forEach(task => { if ( localStorage.getItem(task.id) === "true" ) { task.classList.add("done"); }});
-    /* clic */
     tasks.forEach((task, index) => {
         task.addEventListener( "click", event => {
             if ( event.clientX > task.getBoundingClientRect().left + ( parseFloat( getComputedStyle(task).fontSize ) * 3 )) { return; }

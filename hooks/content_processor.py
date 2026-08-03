@@ -2,17 +2,19 @@ import re
 import json
 import yaml
 from pathlib import Path
+from datetime import datetime
+from pathlib import Path
+IB_PREFIX = "iblab-"
 
 COPY_BUTTON_SVG = """
-<svg viewBox="0 0 24 24" aria-hidden="true">
-    <rect x="8" y="4" width="11" height="13" rx="1" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
-    <rect x="5" y="7" width="11" height="13" rx="1" fill="currentColor" />
+<svg viewBox="-1 0 20 20">
+  <g id="copy-4" transform="translate(-3 -2)">
+    <path id="secondary" fill="currentColor" d="M19,3H16V4a1,1,0,0,1-1,1H13a1,1,0,0,1-1-1V3H9A1,1,0,0,0,8,4V16a1,1,0,0,0,1,1H19a1,1,0,0,0,1-1V4A1,1,0,0,0,19,3Z"/>
+    <path id="primary" d="M16,17v3a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V8A1,1,0,0,1,5,7H8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="primary-2" data-name="primary" d="M19,3H9A1,1,0,0,0,8,4V16a1,1,0,0,0,1,1H19a1,1,0,0,0,1-1V4A1,1,0,0,0,19,3ZM12,4a1,1,0,0,0,1,1h2a1,1,0,0,0,1-1V3H12Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+  </g>
 </svg>
 """
-
-from pathlib import Path
-import yaml
-import re
 
 def charger_meta_atelier(page):
     try:
@@ -29,9 +31,7 @@ def charger_meta_atelier(page):
         meta = yaml.safe_load( morceaux[1] )
         return meta or {}
     except Exception as erreur:
-        print(
-            f"Erreur lecture méta atelier : {erreur}"
-        )
+        print( f"Erreur lecture méta atelier : {erreur}" )
         return {}
 
 def remplacer_variables(html, page):
@@ -78,7 +78,7 @@ def ajouter_checkboxes(html, page):
             return balise
         if balise.lower().startswith("<li") and dans_ol:
             compteur += 1
-            identifiant = ( f"ibLab-{stage}-{fichier}-{compteur}" )
+            identifiant = ( f"{IB_PREFIX}{stage}-{fichier}-{compteur}" )
             return ( f'<li class="ibLabTask" id="{identifiant}">' )
         return balise
     return re.sub( r'</?ol[^>]*>|<li[^>]*>', remplacer, html, flags=re.IGNORECASE )
@@ -176,35 +176,20 @@ def on_page_content(html, page, config, files):
     navigation_html = construire_navigation(page)
     html = remplacer_variables(html, page)
     html += construire_panneau_parametres(page)
-    if not navigation_html:
-        return html
-    return html + navigation_html
+    return html
 
 def on_page_markdown(markdown, page, config, files):
-    """
-    Préfixe automatiquement le premier titre H1 des exercices.
-    Exemple :
-        # Création de l'environnement
-    devient :
-        # Atelier 1 - Exercice 1 : Création de l'environnement
-    """
     fichier = Path(page.file.src_uri).name
-    match = re.fullmatch(
-        r"a(\d+)e(\d+)\.md",
-        fichier,
-        re.IGNORECASE,
-    )
-    if not match:
-        return markdown
-    numero_atelier = match.group(1)
-    numero_exercice = match.group(2)
-    markdown = re.sub(
-        r"^#\s+(.+)$",
-        rf'# <span class="exerciceRef">Atelier {numero_atelier} - Exercice {numero_exercice} :</span> \1',
-        markdown,
-        count=1,
-        flags=re.MULTILINE,
-    )
+    # Titre des pages d'exercices
+    match = re.fullmatch( r"a(\d+)e(\d+)\.md", fichier, re.IGNORECASE, )
+    if match:
+        numero_atelier = match.group(1)
+        numero_exercice = match.group(2)
+        return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1", markdown, count=1, flags=re.MULTILINE, )
+    # Titre des pages README
+    if fichier.upper() == "README.MD":
+        code_stage = Path(page.file.src_uri).parent.name.upper()
+        return re.sub( r"^#\s+(.+)$", rf"# {code_stage} - \1", markdown, count=1, flags=re.MULTILINE, )
     return markdown
 
 def construire_panneau_parametres(page):
@@ -216,9 +201,9 @@ def construire_panneau_parametres(page):
         if definition.get("lib")
     }
     contenu = """
-<aside id="ibSettingsPanel">
-    <div class="ibSettingsHeader"><span>Paramètres</span><button id="ibSettingsClose" title="Fermer">✕</button></div>
-    <div id="ibSettingsContent">
+<aside id="ibSettingsPanel" class="ibModal">
+    <div class="ibSettingsHeader ibModalHeader"><span>⚙ Paramètres</span><button id="ibSettingsClose" class="ibModalClose" title="Fermer">✕</button></div>
+    <div id="ibSettingsContent" class="ibModalContent">
 """
     if variables_visibles:
         contenu += """
@@ -239,6 +224,16 @@ def construire_panneau_parametres(page):
 """
     contenu += """
         <div class="ibSettingsSection">
+            <div class="ibSettingsSectionTitle">Affichage</div>
+            <div class="ibDisplayEditor">
+            <label for="ibFontSize">📝 Taille du texte</label>
+            <select id="ibFontSize" class="ibDisplayInput">
+                <option value="0.95rem">Petite</option>
+                <option value="1rem">Normale</option>
+                <option value="1.1rem">Grande</option>
+                <option value="1.2rem">Très grande</option></select>
+            <div class="ibVariableHelp">Modifie la taille du texte affiché dans les ateliers.</div></div></div>
+        <div class="ibSettingsSection">
             <div class="ibSettingsSectionTitle">Sauvegarde</div>
             <div class="ibSettingsActions">
                 <button id="ibExportButton" class="ibSettingsAction">💾 Exporter mes données</button>
@@ -250,6 +245,66 @@ def construire_panneau_parametres(page):
 </aside>
 """
     return contenu
+
+# Pagination dans les exercices
+
+def on_page_context(context, page, config, nav):
+    fichier = Path(page.file.abs_src_path)
+    context["ibLastUpdate"] = (
+        datetime
+        .fromtimestamp(fichier.stat().st_mtime)
+        .strftime("%d/%m/%Y")
+    )
+    fichier_courant = Path(page.file.src_uri).name
+    match = re.match( r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE, )
+    if not match:
+        context["ibNav"] = ""
+        return context
+    numero_atelier = int(match.group(1))
+    numero_exercice = int(match.group(2))
+    dossier_stage = Path(page.file.abs_src_path).parent
+    exercices = []
+    for fichier in dossier_stage.glob( f"a{numero_atelier}e*.md" ):
+        m = re.match( r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE,)
+        if m:
+            exercices.append(
+                ( int(m.group(2)), fichier.stem )
+            )
+    exercices.sort( key=lambda x: x[0] )
+    position = next(
+        (
+            i
+            for i, (n, _) in enumerate(exercices)
+            if n == numero_exercice
+        ),
+        None,
+    )
+    if position is None:
+        context["ibNav"] = ""
+        return context
+    precedent = (
+        exercices[position - 1][1]
+        if position > 0
+        else None
+    )
+    suivant = (
+        exercices[position + 1][1]
+        if position < len(exercices) - 1
+        else None
+    )
+    html = []
+    if precedent:
+        html.append( f'<a class="navPrev" href="../{precedent}/" title="Exercice précédent">❮</a>' )
+    else:
+        html.append( '<span class="navPlaceholder"></span>' )
+    html.append( '<a class="navSom" href="../" title="Sommaire de l\'atelier">📖</a>' )
+    if suivant:
+        html.append( f'<a class="navNext" href="../{suivant}/" title="Exercice suivzant">❯</a>'
+)
+    else:
+        html.append( '<span></span>' )
+    context["ibNav"] = "".join(html)
+    return context
 
 # --------------------------------------------------
 # Export d'atelier

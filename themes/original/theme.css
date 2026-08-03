@@ -1,0 +1,64 @@
+:root { 
+  --ib-color-header: #1f2937;
+  --ib-color-header-text: #ffffff;
+  --ib-color-content: #ffffff;
+  --ib-color-border: #d0d0d0;
+  --ib-color-link: #2563eb;
+  --ib-color-discret: rgba(255,255,255,.70);
+  --ib-color-action: #60a5fa;
+  --ib-color-settings: #1d4ed8;
+  --ib-color-settings-hover: #2563eb;;
+  --ib-color-help-hover: #6b7280;
+  --ib-color-help: #4b5563;
+  --ib-content-margin: 1.5rem;
+}
+/* Structure générale */
+body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", sans-serif; display: flex; flex-direction: column; }
+#ibHeader { position: fixed; top: 0; left: 0; width: 100%; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; background: var(--ib-color-header); color: var(--ib-color-header-text); border-bottom: 1px solid var(--ib-color-border); z-index: 1000; box-sizing: border-box; }
+#ibHeaderTitle { font-size: 1.4rem; font-weight: 600; letter-spacing: .02em; }
+#ibHeaderBrand { color: var(--ib-color-discret); font-size: 1rem; font-weight: 500; }
+#ibFooter { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; background: var(--ib-color-header); color: var(--ib-color-header-text); border-top: 1px solid var(--ib-color-border); z-index: 1000; box-sizing: border-box; }
+#ibFooterTools { color: var(--ib-color-action); }
+#ibFooterNavigation { display: flex; align-items: center; justify-content: center; gap: .5rem; }
+#ibFooterNavigation a { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; text-decoration: none; color: white; border-radius: 6px; font-size: 1.1rem; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); transition: all .2s ease; }
+#ibFooterNavigation a:hover { background: rgba(255,255,255,.28); border-color: rgba(255,255,255,.45); }
+#ibFooterCorporate { color: var(--ib-color-discret); font-size: .9rem; }
+#ibFooterCorporate a { color: var(--ib-color-discret); text-decoration: none; }
+#ibFooterCorporate a:hover { color: white; }
+#ibContent { margin-top:50px; margin-bottom: 50px; padding: 2rem; background: var(--ib-color-content); width:auto ; margin-left: var(--ib-content-margin); margin-right: var(--ib-content-margin); }
+#ibContent h1:first-of-type { display: none; }
+
+/* Boutons d'action */
+.ibActionButton { border: none; border-radius: 6px; padding: .45rem .9rem; color: white; cursor: pointer; font-size: .95rem; transition: background-color .2s ease, transform .15s ease; }
+.ibActionButton:hover { background: rgba(255,255,255,.10); border-color: var(--ib-color-header-text); }
+#ibSettingsButton { background: var(--ib-color-settings); }
+#ibSettingsButton:hover { background: var(--ib-color-settings-hover); transform: translateY(-1px); }
+.ibNeedsConfig { position: relative; }
+.ibNeedsConfig::after { content: ""; position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444;}
+#ibHelpButton { background: var(--ib-color-help); }
+#ibHelpButton:hover { background: var(--ib-color-help-hover); transform: translateY(-1px); }
+
+/* Navigation entre les exercices */
+.navSom { justify-self: center; font-weight: 500; width: 2.4rem !important; font-size: 1rem; }
+.navEx {  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-top: 1rem; padding-top: .4rem; border-top: 1px solid #ececec; font-size: .80rem; font-family: "Segoe UI", sans-serif;font-size: .8rem;}
+.navEx a { text-decoration: none; color: #666; font-weight: 400; transition: color .2s ease; }
+.navEx a:hover { color: #003366; }
+.navPrev { justify-self: start; font-weight: 400;}
+.navNext { justify-self: end; font-weight: 400;}
+
+/*Fénêtres modales (aide et de paramètres) */
+.ibModal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.97); opacity: 0; width: 50%; height: 50vh; background: white; border: 2px solid #222; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,.25); z-index: 10000; display: flex; flex-direction: column; overflow: hidden; pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+.ibSettingsHeader { background: var(--ib-color-settings);}
+.ibHelpHeader { background: var(--ib-color-help);}
+.ibModalOpen { opacity: 1; pointer-events: auto;transform: translate(-50%, -50%) scale(1); border-color: #005fb8; }
+.ibModalContent { flex: 1; overflow-y: auto; padding: 1rem; background: white; }
+.ibModalHeader  { flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; padding: .8rem 1rem; border-bottom: 1px solid #ccc; font-size: 1.25rem; font-weight: 600; color: #ccc;}
+.ibModalClose { border: none; background: transparent; cursor: pointer; font-size: 1.6rem; line-height: 1; color: white; }
+.ibModalClose:hover {opacity: .8;}
+@media (max-width: 1200px) { .ibModal { left: 50%; width: 80%; }}
+@media (max-width: 768px) { .ibModal { left: 50%; top: 50%; width: 90%; height: 60vh; }}
+
+/* Contenu de l'aide et des paramètres */
+.ibSettingsActions { display: flex; gap: 1rem; margin-bottom: 1rem; }
+.ibSettingsAction { flex: 1; padding: .75rem; border: 1px solid #ccc; border-radius: .4rem; background: white; cursor: pointer; text-align: center; font-size: 1rem; }
+.ibSettingsAction:hover { background: #f5f5f5; }
