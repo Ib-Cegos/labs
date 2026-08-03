@@ -1,7 +1,6 @@
 /* Taille de police modifiable */
 :root {
     --ib-content-font-size: 1rem;
-    --ib-content-margin: 2%;
 }
 
 /* Mise en page de la table des matières */

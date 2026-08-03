@@ -10,6 +10,7 @@
   --ib-color-settings-hover: #2563eb;;
   --ib-color-help-hover: #6b7280;
   --ib-color-help: #4b5563;
+  --ib-content-margin: 1.5rem;
 }
 /* Structure générale */
 body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", sans-serif; display: flex; flex-direction: column; }
@@ -24,7 +25,7 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibFooterCorporate { color: var(--ib-color-discret); font-size: .9rem; }
 #ibFooterCorporate a { color: var(--ib-color-discret); text-decoration: none; }
 #ibFooterCorporate a:hover { color: white; }
-#ibContent { margin-top:50px; margin-bottom: 50px; padding: 2rem; background: var(--ib-color-content); width: calc(100% - (2 * var(--ib-content-margin))); margin-left: auto; margin-right: auto; }
+#ibContent { margin-top:50px; margin-bottom: 50px; padding: 2rem; background: var(--ib-color-content); width:auto ; margin-left: var(--ib-content-margin); margin-right: var(--ib-content-margin); }
 #ibContent h1:first-of-type { display: none; }
 
 /* Boutons d'action */
