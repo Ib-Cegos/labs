@@ -2,6 +2,8 @@ import re
 import json
 import yaml
 from pathlib import Path
+from datetime import datetime
+from pathlib import Path
 IB_PREFIX = "iblab-"
 
 COPY_BUTTON_SVG = """
@@ -10,10 +12,6 @@ COPY_BUTTON_SVG = """
     <rect x="5" y="7" width="11" height="13" rx="1" fill="currentColor" />
 </svg>
 """
-
-from pathlib import Path
-import yaml
-import re
 
 def charger_meta_atelier(page):
     try:
@@ -246,13 +244,16 @@ def construire_panneau_parametres(page):
     return contenu
 
 # Pagination dans les exercices
+
 def on_page_context(context, page, config, nav):
-    fichier_courant = Path(page.file.src_uri).name
-    match = re.match(
-        r"a(\d+)e(\d+)\.md$",
-        fichier_courant,
-        re.IGNORECASE,
+    fichier = Path(page.file.abs_src_path)
+    context["ibLastUpdate"] = (
+        datetime
+        .fromtimestamp(fichier.stat().st_mtime)
+        .strftime("%d/%m/%Y")
     )
+    fichier_courant = Path(page.file.src_uri).name
+    match = re.match( r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE, )
     if not match:
         context["ibNav"] = ""
         return context
