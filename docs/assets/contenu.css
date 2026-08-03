@@ -49,8 +49,8 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibVariablesIntro { margin-bottom: 1.5rem; padding: .75rem 1rem; background: #f3f4f6; border-left: 4px solid #0078d4; border-radius: 6px; font-size: .95rem; line-height: 1.5; }
 .ibVariableEditor { margin-bottom: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #d9d9d9; border-radius: 8px; }
 .ibVariableEditor label { display: block; margin-bottom: .5rem; font-weight: 600; color: #222; }
-.ibVariableInput { width: 100%; padding: .6rem .8rem; border: 1px solid #cfd8dc; border-radius: 6px; background: white; font-size: .95rem; transition: border-color .2s ease, box-shadow .2s ease; }
-.ibVariableInput:focus { outline: none; border-color: #0078d4; box-shadow: 0 0 0 3px rgba(0,120,212,.15); }
+.ibVariableInput, .ibDisplayInput { width: 100%; padding: .6rem .8rem; border: 1px solid #cfd8dc; border-radius: 6px; background: white; font-size: .95rem; transition: border-color .2s ease, box-shadow .2s ease; }
+.ibVariableInput:focus, .ibDisplayInput:focus { outline: none; border-color: #0078d4; box-shadow: 0 0 0 3px rgba(0,120,212,.15); }
 .ibVariableHelp { margin-top: .75rem; padding: .5rem .75rem; background: #eef2f6; border-radius: 4px; font-size: .85rem; color: #666; font-style: italic; line-height: 1.4; }
 .ibVariableHelp::before { content: "("; }
 .ibVariableHelp::after { content: ")"; }

@@ -225,7 +225,7 @@ def construire_panneau_parametres(page):
         <div class="ibSettingsSection">
             <div class="ibSettingsSectionTitle">Affichage</div>
                 <div class="ibVariableEditor"><label for="ibFontSize">Taille du texte</label>
-                <select id="ibFontSize" class="ibVariableInput">
+                <select id="ibFontSize" class="ibDisplaySetting">
                     <option value="0.95rem">Petite</option>
                     <option value="1rem">Normale</option>
                     <option value="1.1rem">Grande</option>
