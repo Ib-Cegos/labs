@@ -63,7 +63,7 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibDisplayInput { background: white; }
 
 /* Mise en forme générale */
-#ibContent { font-size: var(--ib-content-font-size);line-height: 1.6; width: calc(100% - (2 * var(--ib-content-margin))); margin-left: auto; margin-right: auto; }
+#ibContent { font-size: var(--ib-content-font-size); line-height: 1.6; }
 #ibContent ol { margin: .5rem 0 1rem 0; padding-left: 2rem; }
 #ibContent li { margin: .25rem 0; }
 #ibContent p { margin: .45em 0; }
