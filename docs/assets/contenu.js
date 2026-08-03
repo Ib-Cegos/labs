@@ -1,4 +1,7 @@
 async function ibCopy(text, button) {
+    if (!window.ibEnvironment.clipboard) {
+    alert( "Désolé, la copie dans le presse-papiers n'est pas disponible dans votre navigateur." );
+    return;}
     await navigator.clipboard.writeText(text);
     button.classList.add("ok");
     setTimeout( () => button.classList.remove("ok"), 1500 );}
@@ -10,6 +13,7 @@ function ibVarKey(variable) {
 document.addEventListener(
     "DOMContentLoaded",
     () => {
+        ibCheckEnvironment();
         ibInitVariables();
         ibInitFontSize();
         ibInitTasks();
@@ -109,3 +113,24 @@ function ibInitTasks() {
                 for ( let i = 0; i <= index; i++ ) {
                     tasks[i].classList.add("done");
                     localStorage.setItem( tasks[i].id, "true" );}}});});}
+
+/* Vérification de l'environnement */
+function ibCheckEnvironment() {
+    function testStorage() {
+        try {
+            const test = "__iblab_test__";
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
+            return true; }
+        catch { return false; }}
+    function testClipboard() {
+        return !!( navigator.clipboard && navigator.clipboard.writeText );}
+    window.ibEnvironment = {
+        storage: testStorage(),
+        clipboard: testClipboard() };
+    if (!window.ibEnvironment.storage) {
+        /* Désactivation des commandes nécessitant le localStorage */
+        document.querySelectorAll( ".ibVariableInput, .ibDisplayInput" ).forEach( elt => elt.disabled = true );
+        document.getElementById("ibExportButton").setAttribute( "disabled", true );
+        document.getElementById("ibImportButton").setAttribute( "disabled", true ); 
+        document.getElementById( "ibSettingsContent" ).insertAdjacentHTML( "afterbegin",'<div class="ibWarning">Le navigateur n\'autorise pas le stockage local.<br/>La progression et les paramètres ne pourront pas être conservés.</div>' );}}
