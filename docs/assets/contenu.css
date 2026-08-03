@@ -77,4 +77,4 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 #ibContent h2 { border-bottom: 1px solid #e5e7eb; padding-bottom: .15rem; }
 
 /* date de mise à jour de l'exercice */
-#ibPageInfo { position: fixed; right: .25rem; bottom: 70px; writing-mode: vertical-rl; font-size: .65rem; color: #b0b0b0; letter-spacing: .05rem; }
+#ibPageInfo { position: fixed; right: .5rem; bottom: 80px; writing-mode: vertical-rl; font-size: .70rem; color: #999; }
