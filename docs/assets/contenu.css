@@ -55,6 +55,11 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibVariableHelp::before { content: "("; }
 .ibVariableHelp::after { content: ")"; }
 
+/* Gestion de la taille d'écriture */
+.ibSettingsSectionTitle { font-size: 1.1rem; font-weight: 600; margin-bottom: .75rem; }
+.ibDisplayEditor { padding: 1rem; background: #f8f9fa; border: 1px solid #d9d9d9; border-radius: 8px; }
+.ibDisplayEditor label { display: block; margin-bottom: .5rem; font-weight: 600; }
+
 /* Mise en forme générale */
 #ibContent { font-size: var(--ib-content-font-size);line-height: 1.6; }
 #ibContent ol { margin: .5rem 0 1rem 0; padding-left: 2rem; }

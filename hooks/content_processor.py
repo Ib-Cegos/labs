@@ -224,13 +224,14 @@ def construire_panneau_parametres(page):
     contenu += """
         <div class="ibSettingsSection">
             <div class="ibSettingsSectionTitle">Affichage</div>
-                <div class="ibVariableEditor"><label for="ibFontSize">Taille du texte</label>
-                <select id="ibFontSize" class="ibDisplaySetting">
-                    <option value="0.95rem">Petite</option>
-                    <option value="1rem">Normale</option>
-                    <option value="1.1rem">Grande</option>
-                    <option value="1.2rem">Très grande</option>
-                </select></div></div>
+            <div class="ibDisplayEditor">
+            <label for="ibFontSize">📝 Taille du texte</label>
+            <select id="ibFontSize" class="ibDisplayInput">
+                <option value="0.95rem">Petite</option>
+                <option value="1rem">Normale</option>
+                <option value="1.1rem">Grande</option>
+                <option value="1.2rem">Très grande</option></select>
+            <div class="ibVariableHelp">Modifie la taille du texte affiché dans les ateliers.</div></div></div>
         <div class="ibSettingsSection">
             <div class="ibSettingsSectionTitle">Sauvegarde</div>
             <div class="ibSettingsActions">
