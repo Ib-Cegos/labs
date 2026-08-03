@@ -3,7 +3,7 @@ site_url: https://www.ib-formation.fr
 copyright: ib Cegos
 
 theme:
-  name: original
+  name: mkdocs
   language: fr
   custom_dir: themes/original
 
