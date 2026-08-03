@@ -65,5 +65,8 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 
 /* Panneau de navigation latéral */
 #ibNavigationButton { position: fixed; left: 0; top: 120px; }
-#ibNavigationPanel { position: fixed; left: -320px; top: 60px; bottom: 60px; width: 320px; background: white; box-shadow: 4px 0 12px rgba(0,0,0,.15); transition: left .3s ease; z-index: 900; }
+
+#ibNavigationTab { position: fixed; left: 0; top: 120px; writing-mode: vertical-rl; transform: rotate(180deg); background: var(--ib-color-header); color: white; padding: .75rem .5rem; border-radius: 0 0 8px 8px; cursor: pointer; z-index: 1100; user-select: none; font-size: .9rem; font-weight: 600; box-shadow: 2px 2px 8px rgba(0,0,0,.15); }
+#ibNavigationPanel { position: fixed; left: -320px; top: 60px; bottom: 60px; width: 320px; background: white; border-right: 1px solid #dbe3ea; box-shadow: 4px 0 12px rgba(0,0,0,.15); transition: left .3s ease; z-index: 1000; }
 #ibNavigationPanel.open { left: 0; }
+#ibNavigationContent { padding: 1rem; overflow-y: auto; height: 100%; }

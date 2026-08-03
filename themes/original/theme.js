@@ -4,6 +4,7 @@ document.addEventListener(
 
         ibInitSettingsPanel();
         ibInitHelpPanel();
+        ibInitNavigationPanel();
 
     });
 
@@ -32,5 +33,6 @@ function ibInitSettingsPanel() {
     document.getElementById( "ibImportButton" ).addEventListener( "click",() => { document.getElementById( "ibImportFile" ).click(); });
     document.getElementById( "ibImportFile" ).addEventListener( "change", ibImport );}
 
-function ibToggleNavigation() {
-    document.getElementById("ibNavigationPanel").classList.toggle("open"); }
+function ibInitNavigationPanel() {
+    const panel = document.getElementById( "ibNavigationPanel" );
+    document.getElementById( "ibNavigationTab" ).addEventListener( "click",() => panel.classList.toggle( "open" )); }
