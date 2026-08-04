@@ -2,8 +2,11 @@ import re
 from pathlib import Path
 import yaml
 from datetime import datetime
-from hooks.tools import charger_structure_stage
 print("MAIN CHARGE")
+
+from hooks.tools import charger_structure_stage
+
+print("IMPORT OK")
 
 def define_env(env):
 

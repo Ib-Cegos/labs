@@ -4,7 +4,6 @@ import yaml
 from pathlib import Path
 from datetime import datetime
 import sys
-print(sys.path)
 from tools import charger_structure_stage
 
 IB_PREFIX = "iblab-"
