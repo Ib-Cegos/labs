@@ -36,7 +36,9 @@ function ibInitSettingsPanel() {
 function ibInitNavigationPanel() {
     const panel = document.getElementById( "ibNavigationPanel" );
     const tab = document.getElementById( "ibNavigationTab" );
-    if (!panel || !tab) return;
+    if (!panel || !tab) {
+        if (window.ibEnvironment.storage) { localStorage.setItem("ibNavigationOpen","false") }
+        return; }
     if ( localStorage.getItem( "ibNavigationOpen" ) === "true" ) { panel.classList.add("open"); }
     tab.addEventListener( "click", () => {
         panel.classList.toggle("open");

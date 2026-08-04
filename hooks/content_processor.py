@@ -73,10 +73,10 @@ def construire_pagination(page):
         if position < len(exercices) - 1
         else None )
     html = []
-    if precedent: html.append( f'<a class="navPrev" href="../{precedent}/" title="Exercice précédent"></a>' )
+    if precedent: html.append( f'<a class="navPrev" href="../{precedent}/" title="Exercice précédent">⬅️</a>' )
     else: html.append( '<span class="navPlaceholder"></span>' )
     html.append( '<a class="navSom" href="../" title="Sommaire de l\'atelier">📖</a>' )
-    if suivant: html.append( f'<a class="navNext" href="../{suivant}/" title="Exercice suivant"></a>' )
+    if suivant: html.append( f'<a class="navNext" href="../{suivant}/" title="Exercice suivant">➡️</a>' )
     else: html.append('&lt;span>&lt;/span>')
     return "".join(html)    
 
