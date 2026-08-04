@@ -12,14 +12,7 @@ hooks:
 
 plugins:
   - search
-  - macros:
-  - git-revision-date-localized:
-      enable_creation_date: false
-      type: date
-      locale: fr
-      exclude: 
-        - "*/README.md"
-        - index.md
+  - macros
 
 markdown_extensions:
   - admonition
