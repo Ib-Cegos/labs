@@ -26,12 +26,12 @@ def charger_structure_stage(dossier_stage):
         metadata = {}
 
         if contenu.startswith('---'):
+
             morceaux = contenu.split('---', 2)
 
             if len(morceaux) >= 3:
                 metadata = yaml.safe_load(morceaux[1]) or {}
-
-            contenu = morceaux[2]
+                contenu = morceaux[2]
 
         titre = fichier.stem
 
@@ -44,15 +44,10 @@ def charger_structure_stage(dossier_stage):
         if titre_match:
             titre = titre_match.group(1).strip()
 
-        atelier = ateliers.setdefault(
+        ateliers.setdefault(
             numero_atelier,
-            {
-                'titre': metadata.get('Atelier'),
-                'exercices': []
-            }
-        )
-
-        atelier['exercices'].append(
+            []
+        ).append(
             {
                 'numero': numero_exercice,
                 'titre': titre,
