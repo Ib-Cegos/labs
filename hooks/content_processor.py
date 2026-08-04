@@ -3,6 +3,9 @@ import json
 import yaml
 from pathlib import Path
 from datetime import datetime
+import sys
+from tools import charger_structure_stage
+
 IB_PREFIX = "iblab-"
 
 COPY_BUTTON_SVG = """
@@ -77,7 +80,7 @@ def construire_pagination(page):
     else: html.append( '<span class="navPlaceholder"></span>' )
     html.append( '<a class="navSom" href="../" title="Sommaire de l\'atelier">📖</a>' )
     if suivant: html.append( f'<a class="navNext" href="../{suivant}/" title="Exercice suivant">➡️</a>' )
-    else: html.append('&lt;span>&lt;/span>')
+    else: html.append('<span></span>')
     return "".join(html)    
 
 def charger_meta_atelier(page):
@@ -137,6 +140,7 @@ def ajouter_checkboxes(html, page):
         return balise
     return re.sub( r'</?ol[^>]*>|<li[^>]*>', remplacer, html, flags=re.IGNORECASE )
 
+#Cette fonction sert-elle encore ?
 def construire_navigation(page):
     fichier_courant = Path(page.file.src_uri).name
     match = re.match(r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE)
@@ -238,94 +242,37 @@ def construire_panneau_parametres(page):
 """
     return contenu
 
-def charger_structure_stage(dossier_stage):
-    ateliers = {}
-    for fichier in dossier_stage.glob('a*e*.md'):
-        match = re.match( r'a(\d+)e(\d+)\.md$', fichier.name, re.IGNORECASE )
-        if not match: continue
-        numero_atelier = int(match.group(1))
-        numero_exercice = int(match.group(2))
-        contenu = fichier.read_text(encoding='utf-8')
-        metadata = {}
-        if contenu.startswith('---'):
-            morceaux = contenu.split('---', 2)
-            if len(morceaux) >= 3:
-                metadata = yaml.safe_load(morceaux[1]) or {}
-                contenu = morceaux[2]
-        titre = fichier.stem
-        titre_match = re.search( r'^#\s+(.+)$', contenu, re.MULTILINE )
-        if titre_match: titre = titre_match.group(1).strip()
-        ateliers.setdefault( numero_atelier, [] ).append({ 'numero': numero_exercice, 'titre': titre, 'fichier': fichier.stem + '/', 'duree': metadata.get('Duree'), 'atelier_titre': metadata.get('Atelier')})
-    return ateliers    
-
 def construire_navigation_stage(page):
-
     fichier_courant = Path(page.file.src_uri).name
-
-    if not re.match(
-        r"a\d+e\d+\.md$",
-        fichier_courant,
-        re.IGNORECASE
-    ):
+    if not re.match( r"a\d+e\d+\.md$", fichier_courant, re.IGNORECASE ):
         return ""
-
     dossier_stage = Path(page.file.abs_src_path).parent
-
     exercices = list(dossier_stage.glob("a*e*.md"))
-
-    if len(exercices) <= 1:
-        return ""
-
+    if len(exercices) <= 1: return ""
     ateliers = charger_structure_stage(dossier_stage)
-
     html = []
-
     for numero_atelier in sorted(ateliers.keys()):
-
-        exercices = sorted(
-            ateliers[numero_atelier],
-            key=lambda e: e["numero"]
-        )
-
+        exercices = sorted( ateliers[numero_atelier], key=lambda e: e["numero"] )
         titre_atelier = None
-
+        atelier_courant = False
         for exercice in exercices:
-            if exercice["atelier_titre"]:
-                titre_atelier = exercice["atelier_titre"]
-                break
-
-        if titre_atelier:
-            html.append(
-                f'<div class="ibNavAtelier">'
-                f'Atelier {numero_atelier} - {titre_atelier}'
-                f'</div>'
-            )
-        else:
-            html.append(
-                f'<div class="ibNavAtelier">'
-                f'Atelier {numero_atelier}'
-                f'</div>'
-            )
-
+            if exercice["atelier_titre"]: titre_atelier = exercice["atelier_titre"]
+            stem = exercice["fichier"].rstrip("/")
+            if stem == Path(page.file.src_uri).stem: atelier_courant = True
+        code_stage = dossier_stage.name.lower()
+        html.append( f'<details class="ibNavAtelier{" ibNavAtelierCurrent" if atelier_courant else ""}" data-stage="{code_stage}" data-atelier="{numero_atelier}" {"open" if atelier_courant else ""}>' )
+        html.append( f'<summary class="ibNavAtelierHeader"><div class="ibNavAtelierText"><div class="ibNavAtelierRef">Atelier {numero_atelier}</div><div class="ibNavAtelierTitre">{titre_atelier or ""}</div></div></summary>' )
+ 
         for exercice in exercices:
-
             stem = exercice["fichier"].rstrip("/")
             titre = exercice["titre"]
             numero_exercice = exercice["numero"]
-
             courant = (
-                " ibNavCurrent"
-                if stem == Path(page.file.src_uri).stem
-                else ""
-            )
-
-            html.append(
-                f'<a class="ibNavExercice{courant}" '
-                f'href="../{stem}/">'
-                f'Exercice {numero_exercice} - {titre}'
-                f'</a>'
-            )
-
+            " ibNavCurrent"
+            if stem == Path(page.file.src_uri).stem
+            else "")
+            html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/"><div class="ibNavExRef">Exercice {numero_exercice}</div><div class="ibNavExTitre">{titre}</div></a>' )
+        html.append('</details>')
     return "".join(html)
 
 def extraire_titre_fichier(fichier):

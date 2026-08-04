@@ -5,6 +5,7 @@ document.addEventListener(
         ibInitSettingsPanel();
         ibInitHelpPanel();
         ibInitNavigationPanel();
+        ibInitialiserNavigation();
 
     });
 
@@ -43,3 +44,19 @@ function ibInitNavigationPanel() {
     tab.addEventListener( "click", () => {
         panel.classList.toggle("open");
         localStorage.setItem( "ibNavigationOpen", panel.classList.contains( "open" )); }); }    
+
+function ibInitialiserNavigation() {
+    const storageKey = "ibNavContent";
+    let navigation = {};
+    try { navigation = JSON.parse( localStorage.getItem(storageKey) || "{}" ); }
+    catch { navigation = {}; }
+    document.querySelectorAll(".ibNavAtelier").forEach(atelier => {
+        const cle = atelier.dataset.stage + "-a" + atelier.dataset.atelier;
+        const atelierCourant = atelier.classList.contains( "ibNavAtelierCurrent" );
+        if (atelierCourant) { atelier.open = true; } else if (cle in navigation) { atelier.open = navigation[cle]; } else { atelier.open = false; }
+        atelier.addEventListener( "toggle", () => {
+            if (atelierCourant) {
+                atelier.open = true;
+                return; }
+            navigation[cle] = atelier.open;
+            localStorage.setItem( storageKey, JSON.stringify(navigation) );});});}        
