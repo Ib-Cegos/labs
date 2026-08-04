@@ -244,24 +244,30 @@ def construire_navigation_stage(page):
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = list(dossier_stage.glob("a*e*.md"))
     if len(exercices) <= 1: return ""
+    readme = dossier_stage / "README.md"
+    titre_stage = ( extraire_titre_fichier(readme) if readme.exists() else dossier_stage.name )
     ateliers = {}
     for fichier in dossier_stage.glob("a*e*.md"):
         match = re.match( r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE, )
         if not match: continue
         atelier = int(match.group(1))
         exercice = int(match.group(2))
-        ateliers.setdefault( atelier, [] ).append((exercice, fichier.stem))
+        ateliers.setdefault( atelier, [] ).append((exercice, fichier.stem, extraire_titre_fichier(fichier)))
     html = []
     for numero_atelier in sorted(ateliers.keys()):
-        html.append( f'<div class="ibNavAtelier">Atelier {numero_atelier}</div>' )
+        html.append( f'<div class="ibNavAtelier">Atelier {numero_atelier} - {titre_stage}</div>' )
         for numero_exercice, stem in sorted(ateliers[numero_atelier]):
             courant = (
                 " ibNavCurrent"
                 if stem == Path(page.file.src_uri).stem
                 else "" )
-            html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/">Exercice {numero_exercice}</a>' )
+            html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/">Exercice {numero_exercice} - {titre}</a>' )
     return "".join(html)
 
+def extraire_titre_fichier(fichier):
+    texte = fichier.read_text(encoding="utf-8")
+    texte = retirer_frontmatter(texte)
+    return extraire_titre(texte) or fichier.stem
 
 # --------------------------------------------------
 # Export d'atelier
