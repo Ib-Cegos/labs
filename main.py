@@ -2,15 +2,15 @@ import re
 from pathlib import Path
 import yaml
 from datetime import datetime
-print("MAIN CHARGE")
 
-from hooks.tools import charger_structure_stage
-
-print("IMPORT OK")
+try:
+    from hooks.tools import charger_structure_stage
+    print("IMPORT OK")
+except Exception as e:
+    print("ERREUR IMPORT :", repr(e))
+    raise
 
 def define_env(env):
-
-    print("DEFINE_ENV")
 
     @env.macro
     def sommaire():
