@@ -1,14 +1,11 @@
 import re
-from pathlib import Path
 import yaml
+import sys
 from datetime import datetime
+from pathlib import Path
 
-try:
-    from hooks.tools import charger_structure_stage
-    print("IMPORT OK")
-except Exception as e:
-    print("ERREUR IMPORT :", repr(e))
-    raise
+sys.path.append( str(Path(__file__).parent / "hooks"))
+from tools import charger_structure_stage
 
 def define_env(env):
 
