@@ -260,7 +260,7 @@ def construire_navigation_stage(page):
                 titre_atelier = exercice["atelier_titre"]
                 break
         if titre_atelier:
-            html.append( f'<div class="ibNavAtelier"><div class="ibNavAtelierRef">Atelier {numero_atelier}</div><div> - <div class="ibNavAtelierTitre">{titre_atelier}</div></div>' )
+            html.append( f'<div class="ibNavAtelier"><div class="ibNavAtelierRef">Atelier {numero_atelier}</div><div><div class="ibNavAtelierTitre">{titre_atelier}</div></div>' )
         else:
             html.append( f'<div class="ibNavAtelier">Atelier {numero_atelier}</div>' )
         for exercice in exercices:
