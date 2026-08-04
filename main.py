@@ -12,8 +12,7 @@ def define_env(env):
         ateliers = {}
         for fichier in dossier_stage.glob('a*e*.md'):
             match = re.match(r'a(\d+)e(\d+)\.md$', fichier.name, re.IGNORECASE)
-            if not match:
-                continue
+            if not match: continue
             numero_atelier = int(match.group(1))
             numero_exercice = int(match.group(2))
             contenu = fichier.read_text(encoding='utf-8')
@@ -25,15 +24,8 @@ def define_env(env):
                     contenu = morceaux[2]
             titre = fichier.stem
             titre_match = re.search(r'^#\s+(.+)$', contenu, re.MULTILINE)
-            if titre_match:
-                titre = titre_match.group(1).strip()
-            ateliers.setdefault(numero_atelier, []).append({
-                'numero': numero_exercice,
-                'titre': titre,
-                'fichier': fichier.stem + '/',
-                'duree': metadata.get('Duree'),
-                'atelier_titre': metadata.get('Atelier')
-            })
+            if titre_match: titre = titre_match.group(1).strip()
+            ateliers.setdefault(numero_atelier, []).append({ 'numero': numero_exercice, 'titre': titre, 'fichier': fichier.stem + '/', 'duree': metadata.get('Duree'), 'atelier_titre': metadata.get('Atelier') })
         html = []
         for numero_atelier in sorted(ateliers.keys()):
             exercices = sorted(ateliers[numero_atelier], key=lambda e: e['numero'])
@@ -43,20 +35,13 @@ def define_env(env):
                     titre_atelier = exercice['atelier_titre']
                     break
             html.append('<div class="somLab">')
-            if titre_atelier:
-                html.append(f'<div class="somLabTit">Atelier {numero_atelier} : {titre_atelier}</div>')
-            else:
-                html.append(f'<div class="somLabTit">Atelier {numero_atelier}</div>')
+            if titre_atelier: html.append(f'<div class="somLabTit">Atelier {numero_atelier} : {titre_atelier}</div>')
+            else: html.append(f'<div class="somLabTit">Atelier {numero_atelier}</div>')
             html.append('<ul>')
             for exercice in exercices:
                 html.append('<li class="somEx">')
-                html.append(
-                    f'<a class="somExLink" href="{exercice["fichier"]}">'
-                    f'Exercice {exercice["numero"]} - {exercice["titre"]}'
-                    f'</a>'
-                )
-                if exercice['duree']:
-                    html.append(f'<span class="somDuree">{exercice["duree"]} min</span>')
+                html.append( f'<a class="somExLink" href="{exercice["fichier"]}">Exercice {exercice["numero"]} - {exercice["titre"]}</a>' )
+                if exercice['duree']: html.append(f'<span class="somDuree">{exercice["duree"]} min</span>')
                 html.append('</li>')
             html.append('</ul>')
             html.append('</div>')
@@ -68,22 +53,13 @@ def define_env(env):
         html = []
         html.append('<ul class="listeStages">')
         for dossier in sorted(docs.iterdir()):
-            if not dossier.is_dir():
-                continue
+            if not dossier.is_dir(): continue
             readme = dossier / "README.md"
-            if not readme.exists():
-                continue
+            if not readme.exists(): continue
             titre = dossier.name
             contenu = readme.read_text(encoding="utf-8")
             match = re.search(r"^#\s+(.+)$", contenu, re.MULTILINE)
-            if match:
-                titre = match.group(1).strip()
-            html.append(
-                f'<li><a href="{dossier.name}/" class="stageLink">'
-                f'{dossier.name.upper()} - {titre}'
-                f'</a></li>'
-            )
+            if match: titre = match.group(1).strip()
+            html.append( f'<li><a href="{dossier.name}/" class="stageLink">{dossier.name.upper()} - {titre}</a></li>' )
         html.append('</ul>')
         return "\n".join(html)
-
-   

@@ -15,6 +15,71 @@ COPY_BUTTON_SVG = """
 </svg>
 """
 
+def on_page_content(html, page, config, files):
+    html = injecter_variables(html, page)
+    html = ajouter_boutons_copie(html)
+    html = ajouter_boutons_copie_inline(html)
+    html = ajouter_checkboxes(html, page)
+    html = remplacer_variables(html, page)
+    html += construire_panneau_parametres(page)
+    return html
+
+def on_page_markdown(markdown, page, config, files):
+    fichier = Path(page.file.src_uri).name
+    # Titre des pages d'exercices
+    match = re.fullmatch( r"a(\d+)e(\d+)\.md", fichier, re.IGNORECASE, )
+    if match:
+        numero_atelier = match.group(1)
+        numero_exercice = match.group(2)
+        return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1", markdown, count=1, flags=re.MULTILINE, )
+    # Titre des pages README
+    if fichier.upper() == "README.MD":
+        code_stage = Path(page.file.src_uri).parent.name.upper()
+        return re.sub( r"^#\s+(.+)$", rf"# {code_stage} - \1", markdown, count=1, flags=re.MULTILINE, )
+    return markdown
+
+def on_page_context(context, page, config, nav):
+    fichier = Path(page.file.abs_src_path)
+    context["ibLastUpdate"] = ( datetime.fromtimestamp(fichier.stat().st_mtime).strftime("%d/%m/%Y") )
+    context["ibNav"] = construire_pagination(page)
+    context["ibNavigationTree"] = ( construire_navigation_stage(page) )
+    context["ibShowNavigation"] = bool( context["ibNavigationTree"] )
+    return context
+
+# Pagination dans les exercices
+def construire_pagination(page):
+    fichier_courant = Path(page.file.src_uri).name
+    match = re.match( r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE )
+    if not match: return ""
+    numero_atelier = int(match.group(1))
+    numero_exercice = int(match.group(2))
+    dossier_stage = Path(page.file.abs_src_path).parent
+    exercices = []
+    for fichier in dossier_stage.glob( f"a{numero_atelier}e*.md" ):
+        m = re.match( r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE )
+        if m: exercices.append( (int(m.group(2)), fichier.stem) )
+    exercices.sort( key=lambda x: x[0] )
+    if len(exercices) <= 1: return ""
+    position = next(
+        (i for i, (n, _) in enumerate(exercices)
+         if n == numero_exercice),
+        None )
+    if position is None: return ""
+    precedent = (
+        exercices[position - 1][1]
+        if position > 0 else None )
+    suivant = (
+        exercices[position + 1][1]
+        if position < len(exercices) - 1
+        else None )
+    html = []
+    if precedent: html.append( f'<a class="navPrev" href="../{precedent}/" title="Exercice précédent"></a>' )
+    else: html.append( '<span class="navPlaceholder"></span>' )
+    html.append( '<a class="navSom" href="../" title="Sommaire de l\'atelier">📖</a>' )
+    if suivant: html.append( f'<a class="navNext" href="../{suivant}/" title="Exercice suivant"></a>' )
+    else: html.append('&lt;span>&lt;/span>')
+    return "".join(html)    
+
 def charger_meta_atelier(page):
     try:
         fichier = Path("docs") / page.file.src_uri
@@ -120,29 +185,6 @@ def ajouter_boutons_copie_inline(html):
     for i, bloc in enumerate(blocs_pre): html = html.replace( f"%%PRE_BLOCK_{i}%%", bloc )
     return html
 
-def on_page_content(html, page, config, files):
-    html = injecter_variables(html, page)
-    html = ajouter_boutons_copie(html)
-    html = ajouter_boutons_copie_inline(html)
-    html = ajouter_checkboxes(html, page)
-    html = remplacer_variables(html, page)
-    html += construire_panneau_parametres(page)
-    return html
-
-def on_page_markdown(markdown, page, config, files):
-    fichier = Path(page.file.src_uri).name
-    # Titre des pages d'exercices
-    match = re.fullmatch( r"a(\d+)e(\d+)\.md", fichier, re.IGNORECASE, )
-    if match:
-        numero_atelier = match.group(1)
-        numero_exercice = match.group(2)
-        return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1", markdown, count=1, flags=re.MULTILINE, )
-    # Titre des pages README
-    if fichier.upper() == "README.MD":
-        code_stage = Path(page.file.src_uri).parent.name.upper()
-        return re.sub( r"^#\s+(.+)$", rf"# {code_stage} - \1", markdown, count=1, flags=re.MULTILINE, )
-    return markdown
-
 def construire_panneau_parametres(page):
     meta = charger_meta_atelier(page)
     variables = meta.get("Variables", {})
@@ -195,54 +237,6 @@ def construire_panneau_parametres(page):
 </aside>
 """
     return contenu
-
-# Pagination dans les exercices
-
-def on_page_context(context, page, config, nav):
-    fichier = Path(page.file.abs_src_path)
-    context["ibLastUpdate"] = (
-        datetime
-        .fromtimestamp(fichier.stat().st_mtime)
-        .strftime("%d/%m/%Y"))
-    fichier_courant = Path(page.file.src_uri).name
-    match = re.match( r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE, )
-    if not match:
-        context["ibNavigationTree"] = ""
-        context["ibNav"] = ""
-        return context
-    numero_atelier = int(match.group(1))
-    numero_exercice = int(match.group(2))
-    dossier_stage = Path(page.file.abs_src_path).parent
-    exercices = []
-    for fichier in dossier_stage.glob( f"a{numero_atelier}e*.md" ):
-        m = re.match( r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE,)
-        if m: exercices.append(( int(m.group(2)), fichier.stem ))
-    exercices.sort( key=lambda x: x[0] )
-    position = next((
-            i
-            for i, (n, _) in enumerate(exercices)
-            if n == numero_exercice ),
-        None, )
-    if position is None:
-        context["ibNav"] = ""
-        return context
-    precedent = (
-        exercices[position - 1][1]
-        if position > 0
-        else None )
-    suivant = (
-        exercices[position + 1][1]
-        if position < len(exercices) - 1
-        else None )
-    html = []
-    if precedent: html.append( f'<a class="navPrev" href="../{precedent}/" title="Exercice précédent">❮</a>' )
-    else: html.append( '<span class="navPlaceholder"></span>' )
-    html.append( '<a class="navSom" href="../" title="Sommaire de l\'atelier">📖</a>' )
-    if suivant: html.append( f'<a class="navNext" href="../{suivant}/" title="Exercice suivzant">❯</a>' )
-    else: html.append( '<span></span>' )
-    context["ibNav"] = "".join(html)
-    context["ibNavigationTree"] = ( construire_navigation_stage(page) )
-    return context
 
 def construire_navigation_stage(page):
     fichier_courant = Path(page.file.src_uri).name

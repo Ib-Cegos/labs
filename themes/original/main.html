@@ -53,12 +53,16 @@
         </ul>
     </div>
 </aside>
+{% if ibShowNavigation %}
 <aside id="ibNavigationPanel">
-    <div id="ibNavigationTab">☰ Navigation ☰</div>
+    <div id="ibNavigationTab">
+        Navigation
+    </div>
     <div id="ibNavigationContent">
         {{ ibNavigationTree }}
     </div>
 </aside>
+{% endif %}
 <script src="{{ config.site_url }}assets/contenu.js"></script>
 <script src="{{ 'theme.js' | url }}"></script>
 </body></html>
