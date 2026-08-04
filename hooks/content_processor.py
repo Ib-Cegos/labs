@@ -271,7 +271,7 @@ def construire_navigation_stage(page):
                 " ibNavCurrent"
                 if stem == Path(page.file.src_uri).stem
                 else "" )
-            html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/">Exercice {numero_exercice}</div><div class="ibNavExTitre">{titre}</div></a>' )
+            html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/"><div class="ibNavExRef">Exercice {numero_exercice}</div><div class="ibNavExTitre">{titre}</div></a>' )
     return "".join(html)
 
 def extraire_titre_fichier(fichier):
