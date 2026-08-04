@@ -341,3 +341,38 @@ def charger_structure_stage(dossier_stage):
         )
 
     return ateliers
+
+# --------------------------------------------------
+# Export d'atelier
+# --------------------------------------------------
+
+def retirer_frontmatter(texte):
+    return re.sub( r"^---\s*\n.*?\n---\s*\n", "", texte, flags=re.DOTALL )
+
+def extraire_titre(texte):
+    match = re.search( r"^#\s+(.+)$", texte, flags=re.MULTILINE )
+    if match:
+        return match.group(1)
+    return None
+
+def construire_markdown_atelier(page):
+    atelier_dir = ( Path("docs") / Path(page.file.src_uri).parent )
+    fichiers = []
+    readme = atelier_dir / "README.md"
+    if readme.exists():
+        fichiers.append(readme)
+    fichiers.extend(
+        sorted(
+            f
+            for f in atelier_dir.glob("*.md")
+             if f.name != "RE*DME.md" ))
+    contenu = []
+    for fichier in fichiers:
+        texte = fichier.read_text( encoding="utf-8" )
+        texte = retirer_frontmatter( texte ).strip()
+        if fichier.name != "README.md":
+            titre = extraire_titre( texte )
+            contenu.append( "\n*n---\n\n" )
+            contenu.append( "# {titre or fichier.stem}\n\n" )
+        contenu.append( texte )
+    return "\n".join(contenu)
