@@ -238,30 +238,94 @@ def construire_panneau_parametres(page):
 """
     return contenu
 
-def construire_navigation_stage(page):
-    fichier_courant = Path(page.file.src_uri).name
-    if not re.match( r"a\d+e\d+\.md$", fichier_courant, re.IGNORECASE, ): return ""
-    dossier_stage = Path(page.file.abs_src_path).parent
-    exercices = list(dossier_stage.glob("a*e*.md"))
-    if len(exercices) <= 1: return ""
-    readme = dossier_stage / "README.md"
-    titre_stage = ( extraire_titre_fichier(readme) if readme.exists() else dossier_stage.name )
+def charger_structure_stage(dossier_stage):
     ateliers = {}
-    for fichier in dossier_stage.glob("a*e*.md"):
-        match = re.match( r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE, )
+    for fichier in dossier_stage.glob('a*e*.md'):
+        match = re.match( r'a(\d+)e(\d+)\.md$', fichier.name, re.IGNORECASE )
         if not match: continue
-        atelier = int(match.group(1))
-        exercice = int(match.group(2))
-        ateliers.setdefault( atelier, [] ).append((exercice, fichier.stem, extraire_titre_fichier(fichier)))
+        numero_atelier = int(match.group(1))
+        numero_exercice = int(match.group(2))
+        contenu = fichier.read_text(encoding='utf-8')
+        metadata = {}
+        if contenu.startswith('---'):
+            morceaux = contenu.split('---', 2)
+            if len(morceaux) >= 3:
+                metadata = yaml.safe_load(morceaux[1]) or {}
+                contenu = morceaux[2]
+        titre = fichier.stem
+        titre_match = re.search( r'^#\s+(.+)$', contenu, re.MULTILINE )
+        if titre_match: titre = titre_match.group(1).strip()
+        ateliers.setdefault( numero_atelier, [] ).append({ 'numero': numero_exercice, 'titre': titre, 'fichier': fichier.stem + '/', 'duree': metadata.get('Duree'), 'atelier_titre': metadata.get('Atelier')})
+    return ateliers    
+
+def construire_navigation_stage(page):
+
+    fichier_courant = Path(page.file.src_uri).name
+
+    if not re.match(
+        r"a\d+e\d+\.md$",
+        fichier_courant,
+        re.IGNORECASE
+    ):
+        return ""
+
+    dossier_stage = Path(page.file.abs_src_path).parent
+
+    exercices = list(dossier_stage.glob("a*e*.md"))
+
+    if len(exercices) <= 1:
+        return ""
+
+    ateliers = charger_structure_stage(dossier_stage)
+
     html = []
+
     for numero_atelier in sorted(ateliers.keys()):
-        html.append( f'<div class="ibNavAtelier">Atelier {numero_atelier} - {titre_stage}</div>' )
-        for numero_exercice, stem, titre in sorted(ateliers[numero_atelier]):
+
+        exercices = sorted(
+            ateliers[numero_atelier],
+            key=lambda e: e["numero"]
+        )
+
+        titre_atelier = None
+
+        for exercice in exercices:
+            if exercice["atelier_titre"]:
+                titre_atelier = exercice["atelier_titre"]
+                break
+
+        if titre_atelier:
+            html.append(
+                f'<div class="ibNavAtelier">'
+                f'Atelier {numero_atelier} - {titre_atelier}'
+                f'</div>'
+            )
+        else:
+            html.append(
+                f'<div class="ibNavAtelier">'
+                f'Atelier {numero_atelier}'
+                f'</div>'
+            )
+
+        for exercice in exercices:
+
+            stem = exercice["fichier"].rstrip("/")
+            titre = exercice["titre"]
+            numero_exercice = exercice["numero"]
+
             courant = (
                 " ibNavCurrent"
                 if stem == Path(page.file.src_uri).stem
-                else "" )
-            html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/">Exercice {numero_exercice} - {titre}</a>' )
+                else ""
+            )
+
+            html.append(
+                f'<a class="ibNavExercice{courant}" '
+                f'href="../{stem}/">'
+                f'Exercice {numero_exercice} - {titre}'
+                f'</a>'
+            )
+
     return "".join(html)
 
 def extraire_titre_fichier(fichier):
