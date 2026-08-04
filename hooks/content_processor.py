@@ -81,7 +81,7 @@ def construire_pagination(page):
     else: html.append( '<span class="navPlaceholder"></span>' )
     html.append( '<a class="navSom" href="../" title="Sommaire de l\'atelier">📖</a>' )
     if suivant: html.append( f'<a class="navNext" href="../{suivant}/" title="Exercice suivant">➡️</a>' )
-    else: html.append('&lt;span>&lt;/span>')
+    else: html.append('<span></span>')
     return "".join(html)    
 
 def charger_meta_atelier(page):
@@ -141,6 +141,7 @@ def ajouter_checkboxes(html, page):
         return balise
     return re.sub( r'</?ol[^>]*>|<li[^>]*>', remplacer, html, flags=re.IGNORECASE )
 
+#Cette fonction sert-elle encore ?
 def construire_navigation(page):
     fichier_courant = Path(page.file.src_uri).name
     match = re.match(r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE)
@@ -243,73 +244,34 @@ def construire_panneau_parametres(page):
     return contenu
 
 def construire_navigation_stage(page):
-
     fichier_courant = Path(page.file.src_uri).name
-
-    if not re.match(
-        r"a\d+e\d+\.md$",
-        fichier_courant,
-        re.IGNORECASE
-    ):
+    if not re.match( r"a\d+e\d+\.md$", fichier_courant, re.IGNORECASE ):
         return ""
-
     dossier_stage = Path(page.file.abs_src_path).parent
-
     exercices = list(dossier_stage.glob("a*e*.md"))
-
-    if len(exercices) <= 1:
-        return ""
-
+    if len(exercices) <= 1: return ""
     ateliers = charger_structure_stage(dossier_stage)
-
     html = []
-
     for numero_atelier in sorted(ateliers.keys()):
-
-        exercices = sorted(
-            ateliers[numero_atelier],
-            key=lambda e: e["numero"]
-        )
-
+        exercices = sorted( ateliers[numero_atelier], key=lambda e: e["numero"] )
         titre_atelier = None
-
         for exercice in exercices:
             if exercice["atelier_titre"]:
                 titre_atelier = exercice["atelier_titre"]
                 break
-
         if titre_atelier:
-            html.append(
-                f'<div class="ibNavAtelier">'
-                f'Atelier {numero_atelier} - {titre_atelier}'
-                f'</div>'
-            )
+            html.append( f'<div class="ibNavAtelier"><div class="ibNavAtelierRef">Atelier {numero_atelier}</div><div> - <div class="ibNavAtelierTitre">{titre_atelier}</div></div>' )
         else:
-            html.append(
-                f'<div class="ibNavAtelier">'
-                f'Atelier {numero_atelier}'
-                f'</div>'
-            )
-
+            html.append( f'<div class="ibNavAtelier">Atelier {numero_atelier}</div>' )
         for exercice in exercices:
-
             stem = exercice["fichier"].rstrip("/")
             titre = exercice["titre"]
             numero_exercice = exercice["numero"]
-
             courant = (
                 " ibNavCurrent"
                 if stem == Path(page.file.src_uri).stem
-                else ""
-            )
-
-            html.append(
-                f'<a class="ibNavExercice{courant}" '
-                f'href="../{stem}/">'
-                f'Exercice {numero_exercice} - {titre}'
-                f'</a>'
-            )
-
+                else "" )
+            html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/">Exercice {numero_exercice} - {titre}</a>' )
     return "".join(html)
 
 def extraire_titre_fichier(fichier):
