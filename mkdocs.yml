@@ -13,8 +13,6 @@ hooks:
 plugins:
   - search
   - macros:
-      modules:
-        - tools
   - git-revision-date-localized:
       enable_creation_date: false
       type: date
