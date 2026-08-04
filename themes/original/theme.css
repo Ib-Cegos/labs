@@ -71,3 +71,9 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibNavigationPanel { position: fixed; left: -320px; top: 60px; bottom: 60px; width: 320px; background: #f8fbff; border-right: 1px solid #dbe3ea; box-shadow: 4px 0 12px rgba(0,0,0,.15); transition: left .3s ease; z-index: 1000; }
 #ibNavigationPanel.open { left: 0; }
 #ibNavigationContent { padding: 1rem; overflow-y: auto; height: 100%; }
+
+/*Navigation latérale dans l'atelier */
+.ibNavAtelier { margin: 1rem 0 .5rem 0; font-weight: 600; color: var(--ib-color-header); }
+.ibNavExercice { display: block; padding: .35rem .75rem; margin-bottom: .1rem; text-decoration: none; color: #374151; border-radius: 6px; }
+.ibNavExercice:hover { background: #eef5ff; }
+.ibNavCurrent { background: #dbeafe; color: #1e40af; font-weight: 600; }
