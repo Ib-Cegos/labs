@@ -3,7 +3,6 @@ import json
 import yaml
 from pathlib import Path
 from datetime import datetime
-from pathlib import Path
 IB_PREFIX = "iblab-"
 
 COPY_BUTTON_SVG = """
@@ -20,14 +19,11 @@ def charger_meta_atelier(page):
     try:
         fichier = Path("docs") / page.file.src_uri
         readme = fichier.parent / "README.md"
-        if not readme.exists():
-            return {}
+        if not readme.exists(): return {}
         contenu = readme.read_text( encoding="utf-8" )
-        if not contenu.startswith("---"):
-            return {}
+        if not contenu.startswith("---"): return {}
         morceaux = contenu.split("---", 2)
-        if len(morceaux) < 3:
-            return {}
+        if len(morceaux) < 3: return {}
         meta = yaml.safe_load( morceaux[1] )
         return meta or {}
     except Exception as erreur:
@@ -40,13 +36,7 @@ def remplacer_variables(html, page):
     for nom, definition in variables.items():
         nom_normalise = nom.lower()
         valeur_defaut = definition.get( "defaut", nom )
-        html = re.sub(
-            rf"\[{re.escape(nom)}\]",
-            (
-                f'<span class="ibVariable" data-variable="{nom_normalise}">{valeur_defaut}</span>'
-            ),
-            html,
-            flags=re.IGNORECASE )
+        html = re.sub( rf"\[{re.escape(nom)}\]", ( f'<span class="ibVariable" data-variable="{nom_normalise}">{valeur_defaut}</span>' ), html, flags=re.IGNORECASE )
     return html
 
 def injecter_variables(html, page):
@@ -57,8 +47,7 @@ def injecter_variables(html, page):
         "<script>"
         f"window.ibLabCode = {json.dumps(code_atelier)};"
         f"window.ibVariables = {json.dumps(variables, ensure_ascii=False)};"
-        "</script>"
-    )
+        "</script>" )
     return script + html
 
 def ajouter_checkboxes(html, page):
@@ -86,64 +75,35 @@ def ajouter_checkboxes(html, page):
 def construire_navigation(page):
     fichier_courant = Path(page.file.src_uri).name
     match = re.match(r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE)
-    if not match:
-        return ""
+    if not match: return ""
     numero_atelier = int(match.group(1))
     numero_exercice = int(match.group(2))
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = []
     for fichier in dossier_stage.glob(f"a{numero_atelier}e*.md"):
         m = re.match(r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE)
-        if m:
-            exercices.append((int(m.group(2)), fichier.stem))
+        if m: exercices.append((int(m.group(2)), fichier.stem))
     exercices.sort(key=lambda x: x[0])
-    if len(exercices) <= 1:
-        return ""
-    position = next(
-        (i for i, (n, _) in enumerate(exercices) if n == numero_exercice),
-        None,
-    )
-
-    if position is None:
-        return ""
+    if len(exercices) <= 1: return ""
+    position = next((i for i, (n, _) in enumerate(exercices) if n == numero_exercice), None, )
+    if position is None: return ""
     precedent = exercices[position - 1][1] if position > 0 else None
     suivant = exercices[position + 1][1] if position < len(exercices) - 1 else None
     html = []
     html.append('<div class="navEx">')
-    if precedent:
-        html.append(
-            f'<a class="navPrev" href="../{precedent}/">← Exercice précédent</a>'
-        )
-    else:
-        html.append('<span></span>')
-
-    html.append(
-        '<a class="navSom" href="../">Sommaire</a>'
-    )
-    if suivant:
-        html.append(
-            f'<a class="navNext" href="../{suivant}/">Exercice suivant →</a>'
-        )
-    else:
-        html.append('<span></span>')
+    if precedent: html.append( f'<a class="navPrev" href="../{precedent}/">← Exercice précédent</a>' )
+    else: html.append('<span></span>')
+    html.append( '<a class="navSom" href="../">Sommaire</a>' )
+    if suivant: html.append( f'<a class="navNext" href="../{suivant}/">Exercice suivant →</a>' )
+    else: html.append('<span></span>')
     html.append('</div>')
     return ''.join(html)
 
 def ajouter_boutons_copie(html):
-    pattern = re.compile(
-        r'(<pre.*?</pre>)',
-        re.DOTALL
-    )
+    pattern = re.compile( r'(<pre.*?</pre>)', re.DOTALL )
     def remplace(match):
         bloc = match.group(1)
-        return (
-            '<div class="ibCodeBlock">'
-            '<button class="ibCopyButton" onclick="ibCopy(this.parentElement.querySelector(\'code\').innerText,this)">'
-            f'{COPY_BUTTON_SVG}'
-            '</button>'
-            f'{bloc}'
-            '</div>'
-        )
+        return ( f'<div class="ibCodeBlock"><button class="ibCopyButton" onclick="ibCopy(this.parentElement.querySelector(\'code\').innerText,this)">{COPY_BUTTON_SVG}</button>{bloc}</div>' )
     return pattern.sub(remplace, html)
 
 def ajouter_boutons_copie_inline(html):
@@ -155,17 +115,9 @@ def ajouter_boutons_copie_inline(html):
     pattern = re.compile( r'(?<!<pre>)<code>(.*?)</code>', re.DOTALL )
     def remplace(match):
         code_html = match.group(0)
-        return (
-            '<span class="ibInlineCode">'
-            f'{code_html}'
-            '<button class="ibInlineCopyButton" onclick="ibCopy(this.parentElement.querySelector(\'code\').innerText,this)">'
-            f'{COPY_BUTTON_SVG}'
-            '</button>'
-            '</span>'
-        )
+        return ( f'<span class="ibInlineCode">{code_html}<button class="ibInlineCopyButton" onclick="ibCopy(this.parentElement.querySelector(\'code\').innerText,this)">{COPY_BUTTON_SVG}</button></span>' )
     html = pattern.sub(remplace, html)
-    for i, bloc in enumerate(blocs_pre):
-        html = html.replace( f"%%PRE_BLOCK_{i}%%", bloc )
+    for i, bloc in enumerate(blocs_pre): html = html.replace( f"%%PRE_BLOCK_{i}%%", bloc )
     return html
 
 def on_page_content(html, page, config, files):
@@ -173,7 +125,6 @@ def on_page_content(html, page, config, files):
     html = ajouter_boutons_copie(html)
     html = ajouter_boutons_copie_inline(html)
     html = ajouter_checkboxes(html, page)
-    navigation_html = construire_navigation(page)
     html = remplacer_variables(html, page)
     html += construire_panneau_parametres(page)
     return html
@@ -198,8 +149,7 @@ def construire_panneau_parametres(page):
     variables_visibles = {
         nom: definition
         for nom, definition in variables.items()
-        if definition.get("lib")
-    }
+        if definition.get("lib")}
     contenu = """
 <aside id="ibSettingsPanel" class="ibModal">
     <div class="ibSettingsHeader ibModalHeader"><span>⚙ Paramètres</span><button id="ibSettingsClose" class="ibModalClose" title="Fermer">✕</button></div>
@@ -253,8 +203,7 @@ def on_page_context(context, page, config, nav):
     context["ibLastUpdate"] = (
         datetime
         .fromtimestamp(fichier.stat().st_mtime)
-        .strftime("%d/%m/%Y")
-    )
+        .strftime("%d/%m/%Y"))
     fichier_courant = Path(page.file.src_uri).name
     match = re.match( r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE, )
     if not match:
@@ -267,60 +216,44 @@ def on_page_context(context, page, config, nav):
     exercices = []
     for fichier in dossier_stage.glob( f"a{numero_atelier}e*.md" ):
         m = re.match( r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE,)
-        if m:
-            exercices.append(
-                ( int(m.group(2)), fichier.stem )
-            )
+        if m: exercices.append(( int(m.group(2)), fichier.stem ))
     exercices.sort( key=lambda x: x[0] )
-    position = next(
-        (
+    position = next((
             i
             for i, (n, _) in enumerate(exercices)
-            if n == numero_exercice
-        ),
-        None,
-    )
+            if n == numero_exercice ),
+        None, )
     if position is None:
         context["ibNav"] = ""
         return context
     precedent = (
         exercices[position - 1][1]
         if position > 0
-        else None
-    )
+        else None )
     suivant = (
         exercices[position + 1][1]
         if position < len(exercices) - 1
-        else None
-    )
+        else None )
     html = []
-    if precedent:
-        html.append( f'<a class="navPrev" href="../{precedent}/" title="Exercice précédent">❮</a>' )
-    else:
-        html.append( '<span class="navPlaceholder"></span>' )
+    if precedent: html.append( f'<a class="navPrev" href="../{precedent}/" title="Exercice précédent">❮</a>' )
+    else: html.append( '<span class="navPlaceholder"></span>' )
     html.append( '<a class="navSom" href="../" title="Sommaire de l\'atelier">📖</a>' )
-    if suivant:
-        html.append( f'<a class="navNext" href="../{suivant}/" title="Exercice suivzant">❯</a>'
-)
-    else:
-        html.append( '<span></span>' )
+    if suivant: html.append( f'<a class="navNext" href="../{suivant}/" title="Exercice suivzant">❯</a>' )
+    else: html.append( '<span></span>' )
     context["ibNav"] = "".join(html)
     context["ibNavigationTree"] = ( construire_navigation_stage(page) )
     return context
 
 def construire_navigation_stage(page):
     fichier_courant = Path(page.file.src_uri).name
-    if not re.match( r"a\d+e\d+\.md$", fichier_courant, re.IGNORECASE, ):
-        return ""
+    if not re.match( r"a\d+e\d+\.md$", fichier_courant, re.IGNORECASE, ): return ""
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = list(dossier_stage.glob("a*e*.md"))
-    if len(exercices) <= 1:
-        return ""
+    if len(exercices) <= 1: return ""
     ateliers = {}
     for fichier in dossier_stage.glob("a*e*.md"):
         match = re.match( r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE, )
-        if not match:
-            continue
+        if not match: continue
         atelier = int(match.group(1))
         exercice = int(match.group(2))
         ateliers.setdefault( atelier, [] ).append((exercice, fichier.stem))
@@ -331,8 +264,7 @@ def construire_navigation_stage(page):
             courant = (
                 " ibNavCurrent"
                 if stem == Path(page.file.src_uri).stem
-                else ""
-            )
+                else "" )
             html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/">Exercice {numero_exercice}</a>' )
     return "".join(html)
 
