@@ -1,4 +1,6 @@
 #Ici se trouvent les fonctions utilisables dans les autres scripts python
+import re
+import yaml
 
 def charger_structure_stage(dossier_stage):
     ateliers = {}
