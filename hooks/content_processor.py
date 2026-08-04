@@ -255,23 +255,24 @@ def construire_navigation_stage(page):
     for numero_atelier in sorted(ateliers.keys()):
         exercices = sorted( ateliers[numero_atelier], key=lambda e: e["numero"] )
         titre_atelier = None
+        atelier_courant = False
         for exercice in exercices:
-            if exercice["atelier_titre"]:
-                titre_atelier = exercice["atelier_titre"]
-                break
-        if titre_atelier:
-            html.append( f'<div class="ibNavAtelier"><div class="ibNavAtelierRef">Atelier {numero_atelier}</div><div><div class="ibNavAtelierTitre">{titre_atelier}</div></div>' )
-        else:
-            html.append( f'<div class="ibNavAtelier">Atelier {numero_atelier}</div>' )
+            if exercice["atelier_titre"]: titre_atelier = exercice["atelier_titre"]
+        stem = exercice["fichier"].rstrip("/")
+        if stem == Path(page.file.src_uri).stem: atelier_courant = True
+        code_stage = dossier_stage.name.lower()
+        html.append( f'<details class="ibNavAtelier" data-stage="{code_stage}" data-atelier="{numero_atelier}" {"open" if atelier_courant else ""}>' )
+        html.append( f'<summary class="ibNavAtelierHeader"><div class="ibNavAtelierRef">Atelier {numero_atelier}</div><div class="ibNavAtelierTitre">{titre_atelier or ""}</div></summary>' )
         for exercice in exercices:
             stem = exercice["fichier"].rstrip("/")
             titre = exercice["titre"]
             numero_exercice = exercice["numero"]
             courant = (
-                " ibNavCurrent"
-                if stem == Path(page.file.src_uri).stem
-                else "" )
+            " ibNavCurrent"
+            if stem == Path(page.file.src_uri).stem
+            else "")
             html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/"><div class="ibNavExRef">Exercice {numero_exercice}</div><div class="ibNavExTitre">{titre}</div></a>' )
+    html.append('</details>')
     return "".join(html)
 
 def extraire_titre_fichier(fichier):
