@@ -258,8 +258,8 @@ def construire_navigation_stage(page):
         atelier_courant = False
         for exercice in exercices:
             if exercice["atelier_titre"]: titre_atelier = exercice["atelier_titre"]
-        stem = exercice["fichier"].rstrip("/")
-        if stem == Path(page.file.src_uri).stem: atelier_courant = True
+            stem = exercice["fichier"].rstrip("/")
+            if stem == Path(page.file.src_uri).stem: atelier_courant = True
         code_stage = dossier_stage.name.lower()
         html.append( f'<details class="ibNavAtelier" data-stage="{code_stage}" data-atelier="{numero_atelier}" {"open" if atelier_courant else ""}>' )
         html.append( f'<summary class="ibNavAtelierHeader"><div class="ibNavAtelierRef">Atelier {numero_atelier}</div><div class="ibNavAtelierTitre">{titre_atelier or ""}</div></summary>' )
@@ -272,7 +272,7 @@ def construire_navigation_stage(page):
             if stem == Path(page.file.src_uri).stem
             else "")
             html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/"><div class="ibNavExRef">Exercice {numero_exercice}</div><div class="ibNavExTitre">{titre}</div></a>' )
-    html.append('</details>')
+        html.append('</details>')
     return "".join(html)
 
 def extraire_titre_fichier(fichier):
