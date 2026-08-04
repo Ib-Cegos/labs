@@ -3,8 +3,11 @@ from pathlib import Path
 import yaml
 from datetime import datetime
 from hooks.tools import charger_structure_stage
+print("MAIN CHARGE")
 
 def define_env(env):
+
+    print("DEFINE_ENV")
 
     @env.macro
     def sommaire():
