@@ -41,7 +41,7 @@ def define_env(env):
             for exercice in exercices:
                 html.append('<li class="somEx">')
                 html.append( f'<a class="somExLink" href="{exercice["fichier"]}">Exercice {exercice["numero"]} - {exercice["titre"]}</a>' )
-                if exercice['duree']: html.append(f'<span class="somDuree">{exercice["duree"]} min</span>')
+                if exercice['duree']: html.append(f'<span class="somDuree">({exercice["duree"]} min)</span>')
                 html.append('</li>')
             html.append('</ul>')
             html.append('</div>')
