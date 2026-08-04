@@ -256,7 +256,7 @@ def construire_navigation_stage(page):
     html = []
     for numero_atelier in sorted(ateliers.keys()):
         html.append( f'<div class="ibNavAtelier">Atelier {numero_atelier} - {titre_stage}</div>' )
-        for numero_exercice, stem in sorted(ateliers[numero_atelier]):
+        for numero_exercice, stem, titre in sorted(ateliers[numero_atelier]):
             courant = (
                 " ibNavCurrent"
                 if stem == Path(page.file.src_uri).stem
