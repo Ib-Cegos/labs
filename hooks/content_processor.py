@@ -262,7 +262,15 @@ def construire_navigation_stage(page):
             if stem == Path(page.file.src_uri).stem: atelier_courant = True
         code_stage = dossier_stage.name.lower()
         html.append( f'<details class="ibNavAtelier" data-stage="{code_stage}" data-atelier="{numero_atelier}" {"open" if atelier_courant else ""}>' )
-        html.append( f'<summary class="ibNavAtelierHeader"><div class="ibNavAtelierRef">Atelier {numero_atelier}</div><div class="ibNavAtelierTitre">{titre_atelier or ""}</div></summary>' )
+        html.append(
+    f'<summary class="ibNavAtelierHeader">'
+    f'<div class="ibNavAtelierText">'
+    f'<div class="ibNavAtelierRef">Atelier {numero_atelier}</div>'
+    f'<div class="ibNavAtelierTitre">{titre_atelier or ""}</div>'
+    f'</div>'
+    f'</summary>'
+)
+ 
         for exercice in exercices:
             stem = exercice["fichier"].rstrip("/")
             titre = exercice["titre"]
