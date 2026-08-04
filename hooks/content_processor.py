@@ -333,7 +333,9 @@ def construire_navigation_stage(page):
                 if stem == Path(page.file.src_uri).stem
                 else ""
             )
-            html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/"<Exercice {numero_exercice}</a>' )
+            html.append( f'<a class="ibNavExercice{courant}" href="../{stem}/">Exercice {numero_exercice}</a>' )
+    return "".join(html)
+
 
 # --------------------------------------------------
 # Export d'atelier
