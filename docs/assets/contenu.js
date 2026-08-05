@@ -155,7 +155,10 @@ function ibInitNotes() {
     textarea.value = localStorage.getItem(key) ?? "";
     ibMajBoutonNotes();
     ibMajBoutonSuppressionNote();
-    textarea.addEventListener( "input", () => { localStorage.setItem( key, textarea.value ); ibMajBoutonNotes(); ibMajBoutonSuppressionNote();});}
+    textarea.addEventListener( "input", () => { localStorage.setItem( key, textarea.value ); ibMajBoutonNotes(); ibMajBoutonSuppressionNote();});
+    document.getElementById("ibNotesDelete").addEventListener( "click", () => {
+            if (!confirm( "Voulez-vous vraiment supprimer tout le contenu de cette note ?" )) { return; }
+            textarea.value = ""; localStorage.removeItem(key); ibMajBoutonNotes(); ibMajBoutonSuppressionNote();}; }
 
 function ibMajBoutonSuppressionNote() {
     const bouton = document.getElementById("ibNotesDelete");
