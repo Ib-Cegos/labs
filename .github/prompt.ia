@@ -19,6 +19,7 @@ Fonctionnellement, en dehors de faire de la mise en place du site par mkdocs, no
 - L'affichage de la date dernière modification de chaque md (en bas à droite de la page html)
 Des boutons fonctionnels, dans le footer fixe : chaque bouton ouvre un pop-in dont le style de la barre de titre reprend le style du bouton qui l'a ouvert. En plus d'unc croix de fermeture, chaque pop-in peut être fermé par le bouton qui l'a ouvert.
 - Un bouton "Aide" permettant l'affichage d'un panneau d'aide synthétique : le moteur est effectif mais le contenu du panneau reste à déterminer.
+- Un bouton "Notes" permettant d'anoter un exercice. les notes sont conservées et font partie de l'export/import
 - Un bouton "Paramètres" permettant l'affichage d'un panneau paramètres qui contient :
   - La gestion des variables dynamiques du stage (celles avec une propriété "lib"). Si toutes les variables dynamiques n'ont pas été modifiées, une petite pastille rouge s'affiche à coté du bouton paramètre, pour indiquer au lecteur qu'il serait bon de s'en occuper.
   - La possibilité de modifier la taille de la police d'affichage pour faciliter la lecture du site (stockée dans localstorage "iblab-font-size").

@@ -8,6 +8,8 @@
 .somLabTit { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
 .somEx { margin-bottom: 0.3rem; }
 .somExLink { text-decoration: none; }
+.somExLink.ibHasNote { position: relative; }
+.somExLink.ibHasNote::before { content: ""; position: absolute; left: -0.5rem; top: 0.15rem; width: 4px; height: 1rem; background: var(--ib-color-notes); border-radius: 2px; }
 .somDuree { color: #888; font-size: .9em; }
 
 /*Liste des stages sur page d'accueil*/
