@@ -153,5 +153,5 @@ function ibInitNotes() {
     if (!textarea) { return; }
     const key = ibNoteKey();
     textarea.value = localStorage.getItem(key) ?? "";
-    ibMajBoutonNotes;
+    ibMajBoutonNotes();
     textarea.addEventListener( "input", () => { localStorage.setItem( key, textarea.value); ibMajBoutonNotes();});}
