@@ -154,4 +154,12 @@ function ibInitNotes() {
     const key = ibNoteKey();
     textarea.value = localStorage.getItem(key) ?? "";
     ibMajBoutonNotes();
-    textarea.addEventListener( "input", () => { localStorage.setItem( key, textarea.value); ibMajBoutonNotes();});}
+    ibMajBoutonSuppressionNote();
+    textarea.addEventListener( "input", () => { localStorage.setItem( key, textarea.value ); ibMajBoutonNotes(); ibMajBoutonSuppressionNote();});}
+
+function ibMajBoutonSuppressionNote() {
+    const bouton = document.getElementById("ibNotesDelete");
+    if (!bouton) { return; }
+    const textarea = document.getElementById("ibNotesTextarea");
+    if (!textarea) { return; }
+    bouton.disabled = textarea.value.trim().length === 0;}    

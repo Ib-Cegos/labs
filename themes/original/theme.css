@@ -48,6 +48,8 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 .ibNotesHeader { background: var(--ib-color-notes); color: #222; }
 .ibNotesHeader span { color: #222; }
 .ibNotesHeader .ibModalClose { color: #222; }
+.ibModalActions { display: flex; gap: .25rem; }
+#ibNotesDelete:disabled { opacity: .4; cursor: default; }
 .ibNotesLabel { font-weight: 600; margin-bottom: .5rem; color: #444; }
 .ibNotesIntro { font-size: .9rem; color: #666; margin-bottom: 1rem; }
 .ibNotesStatus { margin-top: .75rem; padding-top: .5rem; text-align: right; font-size: .85em; color: #6b7280; font-style: italic; border-top: 1px solid #eee; }
