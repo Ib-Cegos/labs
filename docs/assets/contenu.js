@@ -179,4 +179,3 @@ function ibMajIndicateursNotes() {
         const key = ibNoteKey( element.dataset.stage, element.dataset.exercice );
         const note = localStorage.getItem(key) ?? "";
         element.classList.toggle( "ibHasNote", note.trim().length > 0 ); });}
-`
