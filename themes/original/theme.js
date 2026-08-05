@@ -11,10 +11,19 @@ document.addEventListener(
     });
 
 function ibMajBoutonParametres() {
-    const bouton = document.getElementById( "ibSettingsButton" );
+    const bouton = document.getElementById("ibSettingsButton");
     if (!bouton) { return; }
-    bouton.classList.remove( "ibNeedsConfig" );
-    if ( ibVariablesAConfigurer()) { bouton.classList.add( "ibNeedsConfig" ); }}
+    bouton.classList.remove("ibNotification");
+    if (ibVariablesAConfigurer()) { bouton.classList.add("ibNotification");}}
+
+function ibMajBoutonNotes() {
+    const bouton = document.getElementById("ibNotesButton");
+    if (!bouton) { return; }
+    bouton.classList.remove("ibNotification");
+    if (!window.ibIsExercise) { return; }
+    const key = ibNoteKey();
+    const note = localStorage.getItem(key) ?? "";
+    if (note.trim().length > 0) { bouton.classList.add("ibNotification");}}    
 
 function ibToggleModal(id) {
     const modal = document.getElementById(id);
