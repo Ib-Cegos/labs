@@ -87,6 +87,7 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibNavigationPanel { position: fixed; left: -320px; top: 60px; bottom: 60px; width: 320px; background: #f8fbff; border-right: 1px solid #dbe3ea; box-shadow: 4px 0 12px rgba(0,0,0,.15); transition: left .3s ease; z-index: 1000; }
 #ibNavigationPanel.open { left: 0; }
 #ibNavigationContent { padding: 1rem; overflow-y: auto; height: 100%; }
+.ibHasNote::after { content: ""; display: inline-block; width: .65rem; height: .65rem; margin-left: .5rem; vertical-align: middle; background: var(--ib-color-notes); border: 1px solid rgba(0,0,0,.15); border-radius: 2px; }
 
 /* Navigation latérale dans l'atelier */
 .ibNavAtelier { margin: 1rem 0 .5rem 0; }
