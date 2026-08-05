@@ -24,6 +24,7 @@ document.addEventListener(
         ibInitVariables();
         ibInitFontSize();
         ibInitTasks();
+        ibMajIndicateursNotes();
         ibInitNotes();
     });
 
