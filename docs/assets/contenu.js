@@ -7,8 +7,13 @@ async function ibCopy(text, button) {
     setTimeout( () => button.classList.remove("ok"), 1500 );}
 
 const IB_PREFIX = "iblab-";
+
 function ibVarKey(variable) {
-    return (IB_PREFIX + window.ibLabCode + "-" + variable.toLowerCase());}    
+    return (IB_PREFIX + window.ibLabCode + "-" + variable.toLowerCase());}
+
+function ibNoteKey() {
+    if (!window.ibIsExercise) { return null; }
+    return ( IB_PREFIX + "note-" + window.ibLabCode.toLowerCase() + "-" + window.ibExerciseCode.toLowerCase());}
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -17,6 +22,7 @@ document.addEventListener(
         ibInitVariables();
         ibInitFontSize();
         ibInitTasks();
+        ibInitNotes();
     });
 
 /* Gestion de la taille de police */
@@ -139,3 +145,27 @@ function ibCheckEnvironment() {
         document.getElementById("ibExportButton").setAttribute( "disabled", true );
         document.getElementById("ibImportButton").setAttribute( "disabled", true ); 
         document.getElementById( "ibSettingsContent" ).insertAdjacentHTML( "afterbegin",'<div class="ibWarning">Le navigateur n\'autorise pas le stockage local.<br/>La progression et les paramètres ne pourront pas être conservés.</div>' );}}
+    
+function ibInitNotes() {
+    if (!window.ibEnvironment.storage) { return; }
+    if (!window.ibIsExercise) { return; }
+    const textarea = document.getElementById("ibNotesTextarea");
+    if (!textarea) { return; }
+    const key = ibNoteKey();
+    textarea.value = localStorage.getItem(key) ?? "";
+    ibMajBoutonNotes();
+    ibMajBoutonSuppressionNote();
+    textarea.addEventListener( "input", () => { localStorage.setItem( key, textarea.value ); ibMajBoutonNotes(); ibMajBoutonSuppressionNote();});
+    document.getElementById("ibNotesDelete").addEventListener( "click", () => {
+        if (!confirm( "Voulez-vous vraiment supprimer cette note ?" )) { return; }
+        textarea.value = "";
+        localStorage.removeItem(key);
+        ibMajBoutonNotes();
+        ibMajBoutonSuppressionNote(); });}
+
+function ibMajBoutonSuppressionNote() {
+    const bouton = document.getElementById("ibNotesDelete");
+    if (!bouton) { return; }
+    const textarea = document.getElementById("ibNotesTextarea");
+    if (!textarea) { return; }
+    bouton.disabled = textarea.value.trim().length === 0;}    

@@ -14,6 +14,8 @@
   --ib-color-navigation: #dbeafe;
   --ib-color-navigation-hover: #bfdbfe;
   --ib-color-navigation-text: #1e3a8a;
+  --ib-color-notes: #facc15;
+  --ib-color-notes-hover: #eab308;
 }
 /* Structure générale */
 body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", sans-serif; display: flex; flex-direction: column; }
@@ -32,14 +34,28 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibContent h1:first-of-type { display: none; }
 
 /* Boutons d'action */
+.ibNotification { position: relative; }
+.ibNotification::after { content: ""; position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; }
 .ibActionButton { border: none; border-radius: 6px; padding: .45rem .9rem; color: white; cursor: pointer; font-size: .95rem; transition: background-color .2s ease, transform .15s ease; }
 .ibActionButton:hover { background: rgba(255,255,255,.10); border-color: var(--ib-color-header-text); }
 #ibSettingsButton { background: var(--ib-color-settings); }
 #ibSettingsButton:hover { background: var(--ib-color-settings-hover); transform: translateY(-1px); }
-.ibNeedsConfig { position: relative; }
-.ibNeedsConfig::after { content: ""; position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444;}
 #ibHelpButton { background: var(--ib-color-help); }
 #ibHelpButton:hover { background: var(--ib-color-help-hover); transform: translateY(-1px); }
+#ibNotesButton { background: var(--ib-color-notes); color: #222; }
+#ibNotesButton:hover { background: var(--ib-color-notes-hover); color: #222; transform: translateY(-1px); }
+#ibNotesButton:disabled { opacity: .50; cursor: default; transform: none; }
+.ibNotesHeader { background: var(--ib-color-notes); color: #222; }
+.ibNotesHeader span { color: #222; }
+.ibNotesHeader .ibModalClose { color: #222; }
+.ibModalActions { display: flex; gap: .25rem; }
+#ibNotesDelete:disabled { opacity: .4; cursor: default; }
+#ibNotesDelete svg { width: 1.4rem; height: 1.4rem; display: block; }
+#ibNotesDelete:hover:not(:disabled) { color: #dc2626; }
+.ibNotesLabel { font-weight: 600; margin-bottom: .5rem; color: #444; }
+.ibNotesIntro { font-size: .9rem; color: #666; margin-bottom: 1rem; }
+.ibNotesStatus { margin-top: .75rem; padding-top: .5rem; text-align: right; font-size: .85em; color: #6b7280; font-style: italic; border-top: 1px solid #eee; }
+#ibNotesTextarea { width: 100%; min-height: 300px; padding: 1rem; border: 1px solid #d9d9d9; border-radius: 10px; background: #fffef7; box-shadow: inset 0 1px 3px rgba(0,0,0,.05); font-family: inherit; font-size: 1rem; line-height: 1.5; resize: vertical; box-sizing: border-box; }
 
 /* Navigation entre les exercices */
 .navSom { justify-self: center; font-weight: 500; width: 2.4rem !important; font-size: 1rem; }
@@ -73,62 +89,20 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibNavigationContent { padding: 1rem; overflow-y: auto; height: 100%; }
 
 /* Navigation latérale dans l'atelier */
-
 .ibNavAtelier { margin: 1rem 0 .5rem 0; }
 .ibNavAtelierRef { font-weight: 600; color: var(--ib-color-header); line-height: 1.2; }
 .ibNavAtelierTitre { font-size: .85rem; color: #6b7280; line-height: 1.2; margin-top: .1rem; }
-.ibNavExercice {
-    display: block;
-    padding: .35rem .75rem;
-    margin-bottom: .1rem;
-    margin-left: 1rem;
-    text-decoration: none;
-    color: #374151;
-    border-radius: 6px;
-}
+.ibNavExercice { display: block; padding: .35rem .75rem; margin-bottom: .1rem; margin-left: 1rem; text-decoration: none; color: #374151; border-radius: 6px; }
 .ibNavExRef { font-weight: 500; line-height: 1.2; }
 .ibNavExTitre { font-size: .85rem; color: #6b7280; line-height: 1.25; margin-top: .05rem; }
 .ibNavExercice:hover { background: #eef5ff; }
 .ibNavCurrent { background: #dbeafe; color: #1e40af; }
 .ibNavCurrent .ibNavExRef, .ibNavCurrent .ibNavExTitre { color: inherit; }
 .ibNavCurrent .ibNavExRef { font-weight: 600; }
-.ibNavAtelierHeader {
-    display: flex;
-    align-items: flex-start;
-    gap: .35rem;
-    cursor: pointer;
-    list-style: none;
-}
-
-.ibNavAtelierHeader::-webkit-details-marker {
-    display: none;
-}
-
-.ibNavAtelierHeader::before {
-    content: "▶";
-    color: var(--ib-color-header);
-    font-size: .8rem;
-    margin-top: .15rem;
-    transition: transform .2s ease;
-}
-
-.ibNavAtelier[open] .ibNavAtelierHeader::before {
-    transform: rotate(90deg);
-}
-
-.ibNavAtelierText {
-    display: flex;
-    flex-direction: column;
-}
-
-.ibNavAtelierRef {
-    font-weight: 600;
-    color: var(--ib-color-header);
-    line-height: 1.2;
-}
-
-.ibNavAtelierTitre {
-    font-size: .85rem;
-    color: #6b7280;
-    line-height: 1.2;
-}
+.ibNavAtelierHeader { display: flex; align-items: flex-start; gap: .35rem; cursor: pointer; list-style: none; }
+.ibNavAtelierHeader::-webkit-details-marker { display: none; }
+.ibNavAtelierHeader::before { content: "▶"; color: var(--ib-color-header); font-size: .8rem; margin-top: .15rem; transition: transform .2s ease; }
+.ibNavAtelier[open] .ibNavAtelierHeader::before { transform: rotate(90deg); }
+.ibNavAtelierText { display: flex; flex-direction: column; }
+.ibNavAtelierRef { font-weight: 600; color: var(--ib-color-header); line-height: 1.2; }
+.ibNavAtelierTitre { font-size: .85rem; color: #6b7280; line-height: 1.2; }
