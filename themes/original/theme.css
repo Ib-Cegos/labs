@@ -14,6 +14,8 @@
   --ib-color-navigation: #dbeafe;
   --ib-color-navigation-hover: #bfdbfe;
   --ib-color-navigation-text: #1e3a8a;
+  --ib-color-notes: #facc15;
+  --ib-color-notes-hover: #eab308;
 }
 /* Structure générale */
 body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", sans-serif; display: flex; flex-direction: column; }
@@ -40,6 +42,11 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 .ibNeedsConfig::after { content: ""; position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444;}
 #ibHelpButton { background: var(--ib-color-help); }
 #ibHelpButton:hover { background: var(--ib-color-help-hover); transform: translateY(-1px); }
+#ibNotesButton { background: var(--ib-color-notes); color: #222; }
+#ibNotesButton:hover { background: var(--ib-color-notes-hover); color: #222; transform: translateY(-1px); }
+#ibNotesButton:disabled { opacity: .50; cursor: default; transform: none; }
+.ibNotesHeader { background: var(--ib-color-notes); color: #222; }
+.ibNotesHeader .ibModalClose { color: #222; }
 
 /* Navigation entre les exercices */
 .navSom { justify-self: center; font-weight: 500; width: 2.4rem !important; font-size: 1rem; }
@@ -73,62 +80,20 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibNavigationContent { padding: 1rem; overflow-y: auto; height: 100%; }
 
 /* Navigation latérale dans l'atelier */
-
 .ibNavAtelier { margin: 1rem 0 .5rem 0; }
 .ibNavAtelierRef { font-weight: 600; color: var(--ib-color-header); line-height: 1.2; }
 .ibNavAtelierTitre { font-size: .85rem; color: #6b7280; line-height: 1.2; margin-top: .1rem; }
-.ibNavExercice {
-    display: block;
-    padding: .35rem .75rem;
-    margin-bottom: .1rem;
-    margin-left: 1rem;
-    text-decoration: none;
-    color: #374151;
-    border-radius: 6px;
-}
+.ibNavExercice { display: block; padding: .35rem .75rem; margin-bottom: .1rem; margin-left: 1rem; text-decoration: none; color: #374151; border-radius: 6px; }
 .ibNavExRef { font-weight: 500; line-height: 1.2; }
 .ibNavExTitre { font-size: .85rem; color: #6b7280; line-height: 1.25; margin-top: .05rem; }
 .ibNavExercice:hover { background: #eef5ff; }
 .ibNavCurrent { background: #dbeafe; color: #1e40af; }
 .ibNavCurrent .ibNavExRef, .ibNavCurrent .ibNavExTitre { color: inherit; }
 .ibNavCurrent .ibNavExRef { font-weight: 600; }
-.ibNavAtelierHeader {
-    display: flex;
-    align-items: flex-start;
-    gap: .35rem;
-    cursor: pointer;
-    list-style: none;
-}
-
-.ibNavAtelierHeader::-webkit-details-marker {
-    display: none;
-}
-
-.ibNavAtelierHeader::before {
-    content: "▶";
-    color: var(--ib-color-header);
-    font-size: .8rem;
-    margin-top: .15rem;
-    transition: transform .2s ease;
-}
-
-.ibNavAtelier[open] .ibNavAtelierHeader::before {
-    transform: rotate(90deg);
-}
-
-.ibNavAtelierText {
-    display: flex;
-    flex-direction: column;
-}
-
-.ibNavAtelierRef {
-    font-weight: 600;
-    color: var(--ib-color-header);
-    line-height: 1.2;
-}
-
-.ibNavAtelierTitre {
-    font-size: .85rem;
-    color: #6b7280;
-    line-height: 1.2;
-}
+.ibNavAtelierHeader { display: flex; align-items: flex-start; gap: .35rem; cursor: pointer; list-style: none; }
+.ibNavAtelierHeader::-webkit-details-marker { display: none; }
+.ibNavAtelierHeader::before { content: "▶"; color: var(--ib-color-header); font-size: .8rem; margin-top: .15rem; transition: transform .2s ease; }
+.ibNavAtelier[open] .ibNavAtelierHeader::before { transform: rotate(90deg); }
+.ibNavAtelierText { display: flex; flex-direction: column; }
+.ibNavAtelierRef { font-weight: 600; color: var(--ib-color-header); line-height: 1.2; }
+.ibNavAtelierTitre { font-size: .85rem; color: #6b7280; line-height: 1.2; }

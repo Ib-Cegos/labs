@@ -23,10 +23,11 @@
 </div>
 
 <footer id="ibFooter">
-    <div id="ibFooterTools">
-        <button class="ibActionButton" id="ibSettingsButton" >⚙ Paramètres</button>
-        <button class="ibActionButton" id="ibHelpButton">❓ Aide</button>
-    </div>
+<div id="ibFooterTools">
+    <button class="ibActionButton" id="ibSettingsButton">⚙ Paramètres</button>
+    <button class="ibActionButton" id="ibNotesButton">📝 Notes</button>
+    <button class="ibActionButton" id="ibHelpButton">❓ Aide</button>
+</div>
     <div id="ibFooterNavigation">
         {{ ibNav }}
     </div>
@@ -53,6 +54,16 @@
         </ul>
     </div>
 </aside>
+<aside id="ibNotesPanel" class="ibModal">
+    <div class="ibNotesHeader ibModalHeader">
+        <span>📝 Notes</span>
+        <button id="ibNotesClose" class="ibModalClose" title="Fermer">✕</button>
+    </div>
+    <div class="ibModalContent">
+        Fonctionnalité en cours de développement...
+    </div>
+</aside>
+``
 {% if ibShowNavigation %}
 <aside id="ibNavigationPanel">
     <div id="ibNavigationTab">

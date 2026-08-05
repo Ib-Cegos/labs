@@ -1,0 +1,63 @@
+J'ai réalisé une application web dont l'objectif est d'héberger les consignes d'ateliers des stages.
+Elle est basé sur un socle mkDocs pour l'interprétation du contenu des exercices d'ateliers qui sont rédigés en markdown, par des formateurs qui ne sont pas informaticiens et encore moins développeurs. le but est donc que le moteur de l'application s'occupe de tout enrichir.
+Un fichier main.py est appelé par mkDocs pour la création des pages html. Un fichier hooks/content_processor.py est appelé pendant la génération des pages par mkdocs afin d'en customiser le contenu. Un fichier hooks/tools.py contient des fonctions qui peuvent être utiles aussi bien pour main.py que pour conten_processor.py.
+Le style du "moteur" sera donné par un système de "thèmes" qui pourra être choisi par le lecteur (non fonctionnel à date, mais structure prévue pour avoir au moins un theme "original" et un theme "sombre". donc un dossier "theme" qui contient 2 sous-dossiers (possiblement plus à l'avenir) "original" et sombre" chacun des sous-dossiers contient un fichier main.html, qui est le "modèle" des pages, un fichier "theme.css" pour les feuilles de style (les principales couleurs y sont déclarée en variables en début du fichier) et un fichier "theme.js" qui contient le code du moteur du site.
+Le contenu markdown et les fonctionnalités qui y sont associées sont incluses dans un dossier "assets" sous le dossier "docs" de mkdocs. Le dossier "assets" contient un fichier "contenu.css" et un fichier "contenu.js", en lien avec le contenu des exercices (et donc valables quel que soit le "thème")
+Le site est découpé ainsi :
+ - Une page d'accueil index.md (qui représente les coulisses, avec la liste des stages et ne sera pas communiquée aux apprenants)
+ - Chaque stage est matérialisé par un dossier, nommé par sa référence (ms503,msms030 etc) et contient une page d'accueil README.md. C'est cette page qui sera fournie aux stagiaires. elle contient une liste d'objets nommés "variables" dans son en-tête YAML et le nom du stage en premier titre #. Elle peut aussi contenir un petit texte d'introduction au stage et/ou à l'ensemble des ateliers. Le sommaire du stage, répertoriant les ateliers est construit dynamiquement par le moteur en parcourant les fichiers md présents dans le dossier.
+ - Un stage peut être composé d'un ou plusieurs ateliers, chacun composé d'un ou plisseurs exercices. La notion d'atelier n'existe pas dans les fichiers mais elle est bien présente dans l'arborescence de consultation du site. On s'appuie sur le nom des fichiers d'exercice pour réaliser ça !
+ - Chaque exercice est contenu dans un fichier .md stocké dans le répertoire de son stage. Le nom de ces fichiers est "aXeY.md" ou X est le numéro séquentiel de l'atelier dans le stage et Y le numéro séquentiel de l'exercice dans l'atelier. Au moins un des exercices de chaque atelier (de préférence le premier, mais ce n'est pas une exigence éditoriale) est sensé contenir le nom de l'atelier dans son en-tete YAML (Atelier: Nom de cet atelier). L'en-tête YAML de chaque exercice peut aussi contenir (mais ce n'est pas une exigence) la durée estimée de l'exercice.
+Si ça peut t'aider à m'aider, je n'ai aucun mal à te fournir les fichiers composant le site (dont l'accès est d'ailleurs public, j'utilise la publication GitHub Pages du dépôt https://github.com/ib-Cegos/labs) demande les moi !
+
+Fonctionnellement, en dehors de faire de la mise en place du site par mkdocs, notre moteur se compose à date de :
+- Une gestion de l'absence de prérequis dans le navigateur (accès impossible au presse papier et/ou indisponibilité du localstorage).
+- Un système de suivi des tâches d'exercice réalisées : ainsi, toutes les listes numérotées se voient ajouter une checkbox et leur état est conservé dans localstorage (iblab-IDATELIER-aXeY-NUM) ou IDATELIER reprend le nom du dossier de l'atelier, X le numéro de l'atelier, Y le numéro de l'exercice et NUM l'index de la checkbox dans la page.
+- Un système de bouton pour faciliter la copie des codes présents dans la page (traitement des codes et des inline-codes)
+- Un panneau de navigation entre les exercice, affichable par une languette située sur le bord gauche de l'écran
+- Un système de gestion de variables, stockées dans localstorage (iblab-VARIABLE) ou VARIABLE reprend le nom de la variable sur le site (insensible à la casse). Dans les pages d'un atelier, toute mention de [VARIABLE] sera remplaçée par le contenu de la variable en question. Le contenu de la variable pourra être fixé par le rédacteur du .md (basé sur la valeur de la propriété "defaut" de l'objet variable dans l'en-tête YAML du README.MD) ou dynamiquement modifiable par l'apprenant, si l'objet VARAIBLE dans le YAML possède une propriété "lib".
+- L'affichage de la date dernière modification de chaque md (en bas à droite de la page html)
+Des boutons fonctionnels, dans le footer fixe : chaque bouton ouvre un pop-in dont le style de la barre de titre reprend le style du bouton qui l'a ouvert. En plus d'unc croix de fermeture, chaque pop-in peut être fermé par le bouton qui l'a ouvert.
+- Un bouton "Aide" permettant l'affichage d'un panneau d'aide synthétique : le moteur est effectif mais le contenu du panneau reste à déterminer.
+- Un bouton "Paramètres" permettant l'affichage d'un panneau paramètres qui contient :
+  - La gestion des variables dynamiques du stage (celles avec une propriété "lib"). Si toutes les variables dynamiques n'ont pas été modifiées, une petite pastille rouge s'affiche à coté du bouton paramètre, pour indiquer au lecteur qu'il serait bon de s'en occuper.
+  - La possibilité de modifier la taille de la police d'affichage pour faciliter la lecture du site (stockée dans localstorage "iblab-font-size").
+  - Un bouton "Exporter mes données" qui permet le téléchargement d'un json contenant tous les localSTorage iblab-XXXXXX
+  - Un bouton "Importer ma sauvegarde" qui consomme un fichier json précédemment exporté pour effacer toutes les variables et leur remettre la valeur exportée (utile également si le stagiaire change de navigateur/machine)
+
+
+
+Voici un exemple de début d'un README d'un stage :
+
+---
+Variables:
+    MODPassword:
+        lib: Mot de passe de l'administrateur du tenant
+        defaut: MOD Admin Password
+        aide: Trouvable dans la section "Office 365 Tenant Credentials" de l'onglet "Home" du volet de gauche de votre environnement goDeploy.
+    userPass:
+        defaut: ibForm@tion
+---
+
+# Administration de Microsoft 365
+L'entreprise Adatum héberge actuellement un environnement informatique *classique*, da
+
+Voici l'arborescence principale du débot Github :
+.
+├── docs
+│   ├── assets
+│   │   ├── contenu.css
+│   │   └── contenu.js
+│   ├── ms503
+│   └── ms030
+├── hooks
+│   ├── content_processor.py
+│   └── tools.py
+├── themes
+│   ├── original
+│   └── sombre
+└── main.py
+
+Nota : lorsque tu me donnes du code, échappe les "<" en &lt; (pas besoin d'échapper les ">" ) sinon ton chat web mange une partie du code.
+
+J'ésère que cette description te donne une idée assez précise du moteur. Aujourd'hui, j'ai besoin de ton aide pour 

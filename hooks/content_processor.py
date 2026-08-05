@@ -111,11 +111,14 @@ def injecter_variables(html, page):
     meta = charger_meta_atelier(page)
     variables = meta.get("Variables")
     code_atelier = (Path(page.file.src_uri).parent.name.lower())
+    fichier = Path(page.file.src_uri).name
+    est_exercice = bool( re.fullmatch(r"a\d+e\d+\.md", fichier, re.IGNORECASE ))
     script = (
-        "<script>"
-        f"window.ibLabCode = {json.dumps(code_atelier)};"
-        f"window.ibVariables = {json.dumps(variables, ensure_ascii=False)};"
-        "</script>" )
+    "<script>"
+    f"window.ibLabCode = {json.dumps(code_atelier)};"
+    f"window.ibVariables = {json.dumps(variables, ensure_ascii=False)};"
+    f"window.ibIsExercise = {str(est_exercice).lower()};"
+    "</script>" )
     return script + html
 
 def ajouter_checkboxes(html, page):
