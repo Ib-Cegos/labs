@@ -50,7 +50,7 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 .ibNotesHeader .ibModalClose { color: #222; }
 .ibModalActions { display: flex; gap: .25rem; }
 #ibNotesDelete:disabled { opacity: .4; cursor: default; }
-#ibNotesDelete svg { width: 18px; height: 18px; display: block; }
+#ibNotesDelete svg { width: 1.4rem; height: 1.4rem; display: block; }
 #ibNotesDelete:hover:not(:disabled) { color: #dc2626; }
 .ibNotesLabel { font-weight: 600; margin-bottom: .5rem; color: #444; }
 .ibNotesIntro { font-size: .9rem; color: #666; margin-bottom: 1rem; }
