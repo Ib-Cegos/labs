@@ -46,6 +46,7 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibNotesButton:hover { background: var(--ib-color-notes-hover); color: #222; transform: translateY(-1px); }
 #ibNotesButton:disabled { opacity: .50; cursor: default; transform: none; }
 .ibNotesHeader { background: var(--ib-color-notes); color: #222; }
+.ibNotesHeader span { color: #222; }
 .ibNotesHeader .ibModalClose { color: #222; }
 
 /* Navigation entre les exercices */
