@@ -48,7 +48,10 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 .ibNotesHeader { background: var(--ib-color-notes); color: #222; }
 .ibNotesHeader span { color: #222; }
 .ibNotesHeader .ibModalClose { color: #222; }
-#ibNotesTextarea { width: 100%; height: 100%; min-height: 300px; resize: vertical; box-sizing: border-box; padding: .75rem; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; font-size: 1rem; }
+.ibNotesLabel { font-weight: 600; margin-bottom: .5rem; color: #444; }
+.ibNotesIntro { font-size: .9rem; color: #666; margin-bottom: 1rem; }
+.ibNotesStatus { margin-top: .75rem; padding-top: .5rem; text-align: right; font-size: .85em; color: #6b7280; font-style: italic; border-top: 1px solid #eee; }
+#ibNotesTextarea { width: 100%; min-height: 300px; padding: 1rem; border: 1px solid #d9d9d9; border-radius: 10px; background: #fffef7; box-shadow: inset 0 1px 3px rgba(0,0,0,.05); font-family: inherit; font-size: 1rem; line-height: 1.5; resize: vertical; box-sizing: border-box; }
 
 /* Navigation entre les exercices */
 .navSom { justify-self: center; font-weight: 500; width: 2.4rem !important; font-size: 1rem; }
