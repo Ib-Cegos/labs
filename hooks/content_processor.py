@@ -113,11 +113,14 @@ def injecter_variables(html, page):
     code_atelier = (Path(page.file.src_uri).parent.name.lower())
     fichier = Path(page.file.src_uri).name
     est_exercice = bool( re.fullmatch(r"a\d+e\d+\.md", fichier, re.IGNORECASE ))
+    code_exercice = None
+    if est_exercice: code_exercice = Path(page.file.src_uri).stem.lower()
     script = (
     "<script>"
     f"window.ibLabCode = {json.dumps(code_atelier)};"
     f"window.ibVariables = {json.dumps(variables, ensure_ascii=False)};"
     f"window.ibIsExercise = {str(est_exercice).lower()};"
+    f"window.ibExerciseCode = {json.dumps(code_exercice)};"
     "</script>" )
     return script + html
 
