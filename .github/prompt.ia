@@ -1,7 +1,12 @@
 J'ai réalisé une application web dont l'objectif est d'héberger les consignes d'ateliers des stages.
 Elle est basé sur un socle mkDocs pour l'interprétation du contenu des exercices d'ateliers qui sont rédigés en markdown, par des formateurs qui ne sont pas informaticiens et encore moins développeurs. le but est donc que le moteur de l'application s'occupe de tout enrichir.
 Un fichier main.py est appelé par mkDocs pour la création des pages html. Un fichier hooks/content_processor.py est appelé pendant la génération des pages par mkdocs afin d'en customiser le contenu. Un fichier hooks/tools.py contient des fonctions qui peuvent être utiles aussi bien pour main.py que pour conten_processor.py.
-Le style du "moteur" sera donné par un système de "thèmes" qui pourra être choisi par le lecteur (non fonctionnel à date, mais structure prévue pour avoir au moins un theme "original" et un theme "sombre". donc un dossier "theme" qui contient 2 sous-dossiers (possiblement plus à l'avenir) "original" et sombre" chacun des sous-dossiers contient un fichier main.html, qui est le "modèle" des pages, un fichier "theme.css" pour les feuilles de style (les principales couleurs y sont déclarée en variables en début du fichier) et un fichier "theme.js" qui contient le code du moteur du site.
+Le style du "moteur" sera donné par un système de "thèmes" qui pourra être choisi par le lecteur (non fonctionnel à date, mais structure prévue pour avoir au moins un theme "original" et un theme "sombre").
+Chaque thème contient :
+- main.html
+- theme.css
+- theme.js
+Le contenu pédagogique (contenu.css et contenu.js) reste indépendant du thème.
 Le contenu markdown et les fonctionnalités qui y sont associées sont incluses dans un dossier "assets" sous le dossier "docs" de mkdocs. Le dossier "assets" contient un fichier "contenu.css" et un fichier "contenu.js", en lien avec le contenu des exercices (et donc valables quel que soit le "thème")
 Le site est découpé ainsi :
  - Une page d'accueil index.md (qui représente les coulisses, avec la liste des stages et ne sera pas communiquée aux apprenants)
@@ -19,13 +24,35 @@ Fonctionnellement, en dehors de faire de la mise en place du site par mkdocs, no
 - L'affichage de la date dernière modification de chaque md (en bas à droite de la page html)
 Des boutons fonctionnels, dans le footer fixe : chaque bouton ouvre un pop-in dont le style de la barre de titre reprend le style du bouton qui l'a ouvert. En plus d'unc croix de fermeture, chaque pop-in peut être fermé par le bouton qui l'a ouvert.
 - Un bouton "Aide" permettant l'affichage d'un panneau d'aide synthétique : le moteur est effectif mais le contenu du panneau reste à déterminer.
+- Un bouton "Notes" permettant d'anoter un exercice. les notes sont conservées et font partie de l'export/import (localstorage = iblab-note-STAGE-aXeY). Un système de notifications indique la présence de notes, sur le sommaire et la navigation latérale.
 - Un bouton "Paramètres" permettant l'affichage d'un panneau paramètres qui contient :
   - La gestion des variables dynamiques du stage (celles avec une propriété "lib"). Si toutes les variables dynamiques n'ont pas été modifiées, une petite pastille rouge s'affiche à coté du bouton paramètre, pour indiquer au lecteur qu'il serait bon de s'en occuper.
   - La possibilité de modifier la taille de la police d'affichage pour faciliter la lecture du site (stockée dans localstorage "iblab-font-size").
   - Un bouton "Exporter mes données" qui permet le téléchargement d'un json contenant tous les localSTorage iblab-XXXXXX
   - Un bouton "Importer ma sauvegarde" qui consomme un fichier json précédemment exporté pour effacer toutes les variables et leur remettre la valeur exportée (utile également si le stagiaire change de navigateur/machine)
 
+Toutes les données utilisateur sont stockées dans localStorage. Toutes les clés persistées commencent par : "iblab-" (L'export/import repose exclusivement sur ce préfixe.)
 
+Principes d'architecture :
+theme.js gère l'interface utilisateur (modales, navigation, boutons, interactions visuelles).
+contenu.js gère les données utilisateur (localStorage, variables, progression, notes, export/import).
+theme.css gère l'apparence du moteur.
+contenu.css gère l'apparence des contenus pédagogiques.
+Python fournit la structure HTML et les métadonnées nécessaires au JavaScript mais ne pilote pas les données utilisateur.
+Lorsqu'une nouvelle fonctionnalité est développée, privilégier :
+- Python pour la génération de structure HTML et les métadonnées ;
+- theme.js pour les interactions d'interface ;
+- contenu.js pour les données utilisateur persistées ;
+- CSS pour l'apparence.
+
+Éviter autant que possible le mélange des responsabilités.
+
+Principes UX :
+- Interface volontairement simple.
+- Public principal : stagiaires et formateurs.
+- Les fonctionnalités doivent rester discrètes et pédagogiques.
+- Les données importantes doivent être sauvegardées automatiquement.
+- Les interactions doivent rester évidentes sans documentation.
 
 Voici un exemple de début d'un README d'un stage :
 
@@ -58,6 +85,17 @@ Voici l'arborescence principale du débot Github :
 │   └── sombre
 └── main.py
 
-Nota : lorsque tu me donnes du code, échappe les "<" en &lt; (pas besoin d'échapper les ">" ) sinon ton chat web mange une partie du code.
+Nota : Avant de proposer du code, privilégie l'analyse de l'architecture existante et l'intégration aux mécanismes déjà présents plutôt que l'ajout d'un système parallèle.
+Nota bis : lorsque tu me donnes du code, échappe les "<" en &lt; (pas besoin d'échapper les ">" ) sinon ton chat web mange une partie du code.
+Nota ter : Je préfère les évolutions incrémentales. Lorsqu'une nouvelle fonctionnalité est ajoutée :
+    - créer le squelette minimal ;
+    - valider le fonctionnement ;
+    - enrichir progressivement ;
+(éviter les implémentations ambitieuses en une seule étape. Je préfère plusieurs petits commits testables à une grosse évolution d'un seul coup.)
 
-J'ésère que cette description te donne une idée assez précise du moteur. Aujourd'hui, j'ai besoin de ton aide pour 
+Ressources :
+- Dépôt GitHub : https://github.com/ib-Cegos/labs
+En cas de doute sur un fichier, n'hésite pas à me demander son contenu.
+Je peux te fournir l'url des fichiers impactés par l'évolution envisagée aujourdhui ou t'en copier le contenu dans ton chat.
+
+J'ésère que cette description te donne une idée assez précise du moteur. Aujourd'hui, j'ai besoin de ton aide pour mettre en place le système d'impression d'un atelier.

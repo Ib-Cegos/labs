@@ -11,9 +11,11 @@ const IB_PREFIX = "iblab-";
 function ibVarKey(variable) {
     return (IB_PREFIX + window.ibLabCode + "-" + variable.toLowerCase());}
 
-function ibNoteKey() {
-    if (!window.ibIsExercise) { return null; }
-    return ( IB_PREFIX + "note-" + window.ibLabCode.toLowerCase() + "-" + window.ibExerciseCode.toLowerCase());}
+function ibNoteKey(stage = null, exercice = null) {
+    stage = stage ?? window.ibLabCode;
+    exercice = exercice ?? window.ibExerciseCode;
+    if (!stage || !exercice) { return null; }
+    return ( IB_PREFIX + "note-" + stage.toLowerCase() + "-" + exercice.toLowerCase());}
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -22,6 +24,7 @@ document.addEventListener(
         ibInitVariables();
         ibInitFontSize();
         ibInitTasks();
+        ibMajIndicateursNotes();
         ibInitNotes();
     });
 
@@ -155,17 +158,25 @@ function ibInitNotes() {
     textarea.value = localStorage.getItem(key) ?? "";
     ibMajBoutonNotes();
     ibMajBoutonSuppressionNote();
-    textarea.addEventListener( "input", () => { localStorage.setItem( key, textarea.value ); ibMajBoutonNotes(); ibMajBoutonSuppressionNote();});
+    ibMajIndicateursNotes();
+    textarea.addEventListener( "input", () => { localStorage.setItem( key, textarea.value ); ibMajBoutonNotes(); ibMajBoutonSuppressionNote();ibMajIndicateursNotes();});
     document.getElementById("ibNotesDelete").addEventListener( "click", () => {
         if (!confirm( "Voulez-vous vraiment supprimer cette note ?" )) { return; }
         textarea.value = "";
         localStorage.removeItem(key);
         ibMajBoutonNotes();
-        ibMajBoutonSuppressionNote(); });}
+        ibMajBoutonSuppressionNote();
+        ibMajIndicateursNotes(); });}
 
 function ibMajBoutonSuppressionNote() {
     const bouton = document.getElementById("ibNotesDelete");
     if (!bouton) { return; }
     const textarea = document.getElementById("ibNotesTextarea");
     if (!textarea) { return; }
-    bouton.disabled = textarea.value.trim().length === 0;}    
+    bouton.disabled = textarea.value.trim().length === 0;}
+
+function ibMajIndicateursNotes() {
+    document.querySelectorAll("[data-stage][data-exercice]").forEach(element => {
+        const key = ibNoteKey( element.dataset.stage, element.dataset.exercice );
+        const note = localStorage.getItem(key) ?? "";
+        element.classList.toggle( "ibHasNote", note.trim().length > 0 ); });}
