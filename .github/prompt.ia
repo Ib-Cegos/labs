@@ -12,7 +12,7 @@ Le site est découpé ainsi :
  - Une page d'accueil index.md (qui représente les coulisses, avec la liste des stages et ne sera pas communiquée aux apprenants)
  - Chaque stage est matérialisé par un dossier, nommé par sa référence (ms503,msms030 etc) et contient une page d'accueil README.md. C'est cette page qui sera fournie aux stagiaires. elle contient une liste d'objets nommés "variables" dans son en-tête YAML et le nom du stage en premier titre #. Elle peut aussi contenir un petit texte d'introduction au stage et/ou à l'ensemble des ateliers. Le sommaire du stage, répertoriant les ateliers est construit dynamiquement par le moteur en parcourant les fichiers md présents dans le dossier.
  - Un stage peut être composé d'un ou plusieurs ateliers, chacun composé d'un ou plisseurs exercices. La notion d'atelier n'existe pas dans les fichiers mais elle est bien présente dans l'arborescence de consultation du site. On s'appuie sur le nom des fichiers d'exercice pour réaliser ça !
- - Chaque exercice est contenu dans un fichier .md stocké dans le répertoire de son stage. Le nom de ces fichiers est "aXeY.md" ou X est le numéro séquentiel de l'atelier dans le stage et Y le numéro séquentiel de l'exercice dans l'atelier. Au moins un des exercices de chaque atelier (de préférence le premier, mais ce n'est pas une exigence éditoriale) est sensé contenir le nom de l'atelier dans son en-tete YAML (Atelier: Nom de cet atelier). L'en-tête YAML de chaque exercice peut aussi contenir (mais ce n'est pas une exigence) la durée estimée de l'exercice.
+ - Chaque exercice est contenu dans un fichier .md stocké dans le répertoire de son stage. Le nom de ces fichiers est "aXeY.md" ou X est le numéro séquentiel de l'atelier dans le stage et Y le numéro séquentiel de l'exercice dans l'atelier. Au moins un des exercices de chaque atelier (de préférence le premier, mais ce n'est pas une exigence éditoriale) est sensé contenir le nom de l'atelier dans son en-tete YAML (Atelier: Nom de cet atelier). L'en-tête YAML de chaque exercice peut aussi contenir (mais ce n'est pas une exigence) la durée estimée de l'exercice; lorsque cette durée est présente, elle est affichée dans le sommaire du stage ainsi qu'en tête de la page d'exercice.
 Si ça peut t'aider à m'aider, je n'ai aucun mal à te fournir les fichiers composant le site (dont l'accès est d'ailleurs public, j'utilise la publication GitHub Pages du dépôt https://github.com/ib-Cegos/labs) demande les moi !
 
 Fonctionnellement, en dehors de faire de la mise en place du site par mkdocs, notre moteur se compose à date de :
@@ -30,6 +30,10 @@ Des boutons fonctionnels, dans le footer fixe : chaque bouton ouvre un pop-in do
   - La possibilité de modifier la taille de la police d'affichage pour faciliter la lecture du site (stockée dans localstorage "iblab-font-size").
   - Un bouton "Exporter mes données" qui permet le téléchargement d'un json contenant tous les localSTorage iblab-XXXXXX
   - Un bouton "Importer ma sauvegarde" qui consomme un fichier json précédemment exporté pour effacer toutes les variables et leur remettre la valeur exportée (utile également si le stagiaire change de navigateur/machine)
+Cas particulier : un stage peut être composé d'un unique exercice a1e1.md. Dans ce cas, le moteur le considère comme un "atelier autonome" :
+  - le README reste obligatoire pour l'introduction et les variables mais il redirige automatiquement vers a1e1 ;
+  - la navigation spécifique à l'atelier est masquée ;
+  - le titre de l'exercice n'est pas préfixé par "Atelier X - Exercice Y".
 
 Toutes les données utilisateur sont stockées dans localStorage. Toutes les clés persistées commencent par : "iblab-" (L'export/import repose exclusivement sur ce préfixe.)
 
@@ -53,6 +57,7 @@ Principes UX :
 - Les fonctionnalités doivent rester discrètes et pédagogiques.
 - Les données importantes doivent être sauvegardées automatiquement.
 - Les interactions doivent rester évidentes sans documentation.
+- Le moteur doit masquer autant que possible les contraintes de structure aux rédacteurs et aux apprenants.
 
 Voici un exemple de début d'un README d'un stage :
 
