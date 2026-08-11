@@ -32,9 +32,19 @@ def on_page_markdown(markdown, page, config, files):
     # Titre des pages d'exercices
     match = re.fullmatch( r"a(\d+)e(\d+)\.md", fichier, re.IGNORECASE, )
     if match:
-        numero_atelier = match.group(1)
-        numero_exercice = match.group(2)
-        return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1", markdown, count=1, flags=re.MULTILINE, )
+        numero_atelier = int(match.group(1))
+        numero_exercice = int(match.group(2))
+        duree = None
+        dossier_stage = Path(page.file.abs_src_path).parent
+        ateliers = charger_structure_stage(dossier_stage)
+        for exercice in ateliers.get(numero_atelier, []):
+            if exercice["numero"] == numero_exercice:
+                duree = exercice["duree"]
+                break
+        bloc_duree = ""
+        if duree: bloc_duree = ( f'\n\n<div class="ibDuration">⏱ Durée estimée : {duree} minutes</div>\n' )
+        if est_atelier_autonome(page): return re.sub( r"^#\s+(.+)$", r"# \1" + bloc_duree, markdown, count=1, flags=re.MULTILINE, )
+        return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1" + bloc_duree, markdown, count=1, flags=re.MULTILINE, )
     # Titre des pages README
     if fichier.upper() == "README.MD":
         code_stage = Path(page.file.src_uri).parent.name.upper()
@@ -48,6 +58,17 @@ def on_page_context(context, page, config, nav):
     context["ibNavigationTree"] = ( construire_navigation_stage(page) )
     context["ibShowNavigation"] = bool( context["ibNavigationTree"] )
     return context
+
+# Gestion des ateliers "autonomes"
+def est_atelier_autonome(page):
+    dossier_stage = Path(page.file.abs_src_path).parent
+    ateliers = charger_structure_stage(dossier_stage)
+    nombre_exercices = sum(
+        len(exercices)
+        for exercices in ateliers.values() )
+    return (
+        len(ateliers) == 1
+        and nombre_exercices == 1)
 
 # Pagination dans les exercices
 def construire_pagination(page):
@@ -115,14 +136,8 @@ def injecter_variables(html, page):
     est_exercice = bool( re.fullmatch(r"a\d+e\d+\.md", fichier, re.IGNORECASE ))
     code_exercice = None
     if est_exercice: code_exercice = Path(page.file.src_uri).stem.lower()
-    dossier_stage = Path(page.file.abs_src_path).parent
-    ateliers = charger_structure_stage(dossier_stage)
-    nombre_exercices = sum(
-        len(exercices)
-        for exercices in ateliers.values())
-    atelier_autonome = (
-        len(ateliers) == 1
-        and nombre_exercices == 1 )
+    atelier_autonome = est_atelier_autonome(page)
+    est_readme = ( fichier.lower() == "readme.md" )
     script = (
     "<script>"
     f"window.ibLabCode = {json.dumps(code_atelier)};"
@@ -130,6 +145,7 @@ def injecter_variables(html, page):
     f"window.ibIsExercise = {str(est_exercice).lower()};"
     f"window.ibExerciseCode = {json.dumps(code_exercice)};"
     f"window.ibStandaloneWorkshop = {str(atelier_autonome).lower()};"
+    f"window.ibIsReadme = {str(est_readme).lower()};"
     "</script>" )
     return script + html
 

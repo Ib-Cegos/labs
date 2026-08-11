@@ -1,7 +1,9 @@
 document.addEventListener(
     "DOMContentLoaded",
     () => {
-
+        if ( window.ibStandaloneWorkshop && window.ibIsReadme ) {
+            window.location.replace("./a1e1/");
+            return; }
         ibInitSettingsPanel();
         ibInitHelpPanel();
         ibInitNotesPanel();
