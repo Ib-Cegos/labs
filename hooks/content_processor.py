@@ -115,12 +115,21 @@ def injecter_variables(html, page):
     est_exercice = bool( re.fullmatch(r"a\d+e\d+\.md", fichier, re.IGNORECASE ))
     code_exercice = None
     if est_exercice: code_exercice = Path(page.file.src_uri).stem.lower()
+    dossier_stage = Path(page.file.abs_src_path).parent
+    ateliers = charger_structure_stage(dossier_stage)
+    nombre_exercices = sum(
+        len(exercices)
+        for exercices in ateliers.values())
+    atelier_autonome = (
+        len(ateliers) == 1
+        and nombre_exercices == 1 )
     script = (
     "<script>"
     f"window.ibLabCode = {json.dumps(code_atelier)};"
     f"window.ibVariables = {json.dumps(variables, ensure_ascii=False)};"
     f"window.ibIsExercise = {str(est_exercice).lower()};"
     f"window.ibExerciseCode = {json.dumps(code_exercice)};"
+    f"window.ibStandaloneWorkshop = {str(atelier_autonome).lower()};"
     "</script>" )
     return script + html
 
