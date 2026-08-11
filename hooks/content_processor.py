@@ -34,8 +34,17 @@ def on_page_markdown(markdown, page, config, files):
     if match:
         numero_atelier = match.group(1)
         numero_exercice = match.group(2)
-        if est_atelier_autonome(page): return markdown
-        return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1", markdown, count=1, flags=re.MULTILINE, )
+        duree = None
+        dossier_stage = Path(page.file.abs_src_path).parent
+        ateliers = charger_structure_stage(dossier_stage)
+        for exercice in ateliers.get(numero_atelier, []):
+            if exercice["numero"] == numero_exercice:
+                duree = exercice["duree"]
+                break
+        bloc_duree = ""
+        if duree: bloc_duree = ( f'\n\n<div class="ibDuration">⏱ Durée estimée : {duree} minutes</div>\n' )
+        if est_atelier_autonome(page): return re.sub( r"^#\s+(.+)$", r"# \1" + bloc_duree, markdown, count=1, flags=re.MULTILINE, )
+        return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1" + bloc_duree, markdown, count=1, flags=re.MULTILINE, )
     # Titre des pages README
     if fichier.upper() == "README.MD":
         code_stage = Path(page.file.src_uri).parent.name.upper()
