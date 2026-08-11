@@ -123,6 +123,7 @@ def injecter_variables(html, page):
     atelier_autonome = (
         len(ateliers) == 1
         and nombre_exercices == 1 )
+    est_readme = ( fichier.lower() == "readme.md" )
     script = (
     "<script>"
     f"window.ibLabCode = {json.dumps(code_atelier)};"
@@ -130,6 +131,7 @@ def injecter_variables(html, page):
     f"window.ibIsExercise = {str(est_exercice).lower()};"
     f"window.ibExerciseCode = {json.dumps(code_exercice)};"
     f"window.ibStandaloneWorkshop = {str(atelier_autonome).lower()};"
+    f"window.ibIsReadme = {str(est_readme).lower()};"
     "</script>" )
     return script + html
 
