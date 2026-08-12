@@ -24,7 +24,7 @@ def on_page_content(html, page, config, files):
     html = ajouter_boutons_copie_inline(html)
     html = ajouter_checkboxes(html, page)
     html = remplacer_variables(html, meta)
-    html += construire_alerte_yaml(meta)
+    html += construire_alerte_yaml()
     html += construire_panneau_parametres(meta)
     return html
 
