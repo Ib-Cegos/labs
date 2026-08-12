@@ -227,7 +227,7 @@ def construire_alerte_yaml(page):
     if not erreurs: return ""
     html = ['<div class="ibYamlWarning">','<div class="ibYamlWarningTitle">⚠ Erreur YAML détectée</div>']
     for erreur in YAML_ERRORS:
-        html.append( f'<p><b>Fichier {Path(erreur["fichier"]).relative_to(Path("docs"))}</b></p>')
+        html.append( f'<p><b>Fichier {Path(erreur["fichier"]).name}</b></p>')
         html.append( f'<pre>{erreur["erreur"]}</pre>')
     html.append('</div>')
     return "".join(html)
