@@ -71,10 +71,9 @@ def est_atelier_autonome(page):
 # Pagination dans les exercices
 def construire_pagination(page):
     fichier_courant = Path(page.file.src_uri).name
-    match = REGEX_EXERCICE.match(fichier_courant)
-    if not match: return ""
-    numero_atelier = int(match.group(1))
-    numero_exercice = int(match.group(2))
+    infos = analyser_exercice(fichier_courant)
+    if not infos: return ""
+    numero_atelier, numero_exercice = infos
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = []
     for fichier in dossier_stage.glob( f"a{numero_atelier}e*.md" ):
@@ -131,7 +130,7 @@ def injecter_variables(html, page):
     variables = meta.get("Variables")
     code_atelier = (Path(page.file.src_uri).parent.name.lower())
     fichier = Path(page.file.src_uri).name
-    est_exercice = bool( re.fullmatch(r"a\d+e\d+\.md", fichier, re.IGNORECASE ))
+    est_exercice = bool(analyser_exercice(fichier))
     code_exercice = None
     if est_exercice: code_exercice = Path(page.file.src_uri).stem.lower()
     atelier_autonome = est_atelier_autonome(page)
