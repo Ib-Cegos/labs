@@ -20,7 +20,8 @@ def charger_structure_stage(dossier_stage):
                 try:
                     metadata = yaml.safe_load(morceaux[1]) or {}
                 except yaml.YAMLError as erreur:
-                    YAML_ERRORS.append({"fichier": str(fichier), "erreur": str(erreur)})
+                    erreur_yaml = { "fichier": str(fichier),"erreur": str(erreur)}
+                    if erreur_yaml not in YAML_ERRORS: YAML_ERRORS.append(erreur_yaml)
                     metadata = {}
                 contenu = morceaux[2]
         titre = fichier.stem
@@ -48,7 +49,8 @@ def charger_meta_atelier(page):
             meta = yaml.safe_load(morceaux[1])
             return meta or {}
         except yaml.YAMLError as erreur:
-            YAML_ERRORS.append({"fichier": str(readme),"erreur": str(erreur)})
+            erreur_yaml = {"fichier": str(fichier), "erreur": str(erreur)}
+            if erreur_yaml not in YAML_ERRORS: YAML_ERRORS.append(erreur_yaml)
             return {}
     except Exception as erreur:
         print( f"Erreur lecture méta atelier : {erreur}" )

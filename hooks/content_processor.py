@@ -3,7 +3,7 @@ import json
 import yaml
 from pathlib import Path
 from datetime import datetime
-from tools import ( charger_structure_stage, analyser_exercice, charger_meta_atelier, est_atelier_autonome, extraire_titre_atelier, REGEX_EXERCICE )
+from tools import ( charger_structure_stage, analyser_exercice, charger_meta_atelier, est_atelier_autonome, extraire_titre_atelier, REGEX_EXERCICE, YAML_ERRORS )
 
 IB_PREFIX = "iblab-"
 
@@ -217,14 +217,14 @@ def construire_panneau_parametres(meta):
     return contenu
 
 # prévenir rédacteur d'erreur dans le YAML
-def construire_alerte_yaml(meta):
-    erreur = meta.get("__yaml_error__")
-    if not erreur: return ""
-    return f"""
-<div class="ibYamlWarning"><div class="ibYamlWarningTitle">⚠ Erreur dans le YAML du README</div>
-    <div class="ibYamlWarningText"> Une erreur a été détectée dans l'en-tête YAML de ce stage. Certaines fonctionnalités peuvent ne pas fonctionner correctement.</div>
-    <pre class="ibYamlWarningDetail">{erreur}</pre></div>
-"""    
+def construire_alerte_yaml():
+    if not YAML_ERRORS: return ""
+    html = ['<div class="ibYamlWarning">','<div class="ibYamlWarningTitle">⚠ Erreur YAML détectée</div>']
+    for erreur in YAML_ERRORS:
+        html.append( f'<p><b>{erreur["fichier"]}</b></p>')
+        html.append( f'<pre>{erreur["erreur"]}</pre>')
+    html.append('</div>')
+    return "".join(html)
 
 def construire_navigation_stage(page):
     fichier_courant = Path(page.file.src_uri).name
