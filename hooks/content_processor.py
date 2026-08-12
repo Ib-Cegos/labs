@@ -77,8 +77,9 @@ def construire_pagination(page):
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = []
     for fichier in dossier_stage.glob( f"a{numero_atelier}e*.md" ):
-        m = REGEX_EXERCICE.match(fichier.name)
-        if m: exercices.append( (int(m.group(2)), fichier.stem) )
+        infos = analyser_exercice(fichier.name)
+        if infos: _, numero_exercice = infos
+        exercices.append((numero_exercice, fichier.stem))
     exercices.sort( key=lambda x: x[0] )
     if len(exercices) <= 1: return ""
     position = next(

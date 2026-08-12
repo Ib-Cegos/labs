@@ -9,8 +9,7 @@ def charger_structure_stage(dossier_stage):
     for fichier in dossier_stage.glob('a*e*.md'):
         match = REGEX_EXERCICE.match(fichier.name)
         if not match: continue
-        numero_atelier = int(match.group(1))
-        numero_exercice = int(match.group(2))
+        numero_atelier, numero_exercice = analyser_exercice(fichier.name)
         contenu = fichier.read_text(encoding='utf-8')
         metadata = {}
         if contenu.startswith('---'):
