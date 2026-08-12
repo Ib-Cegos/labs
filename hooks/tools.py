@@ -42,4 +42,20 @@ def charger_meta_atelier(page):
         return meta or {}
     except Exception as erreur:
         print( f"Erreur lecture méta atelier : {erreur}" )
-        return {}    
+        return {}  
+
+# Gestion des ateliers "autonomes"
+def est_atelier_autonome(page):
+    dossier_stage = Path(page.file.abs_src_path).parent
+    ateliers = charger_structure_stage(dossier_stage)
+    nombre_exercices = sum(
+        len(exercices)
+        for exercices in ateliers.values() )
+    return (
+        len(ateliers) == 1
+        and nombre_exercices == 1)
+
+def extraire_titre_atelier(exercices):
+    for exercice in exercices:
+        if exercice["atelier_titre"]: return exercice["atelier_titre"]
+    return None        

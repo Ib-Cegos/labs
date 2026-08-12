@@ -3,7 +3,7 @@ import json
 import yaml
 from pathlib import Path
 from datetime import datetime
-from tools import ( charger_structure_stage, analyser_exercice, charger_meta_atelier, REGEX_EXERCICE )
+from tools import ( charger_structure_stage, analyser_exercice, charger_meta_atelier, est_atelier_autonome, extraire_titre_atelier, REGEX_EXERCICE )
 
 IB_PREFIX = "iblab-"
 
@@ -57,17 +57,6 @@ def on_page_context(context, page, config, nav):
     context["ibNavigationTree"] = ( construire_navigation_stage(page) )
     context["ibShowNavigation"] = bool( context["ibNavigationTree"] )
     return context
-
-# Gestion des ateliers "autonomes"
-def est_atelier_autonome(page):
-    dossier_stage = Path(page.file.abs_src_path).parent
-    ateliers = charger_structure_stage(dossier_stage)
-    nombre_exercices = sum(
-        len(exercices)
-        for exercices in ateliers.values() )
-    return (
-        len(ateliers) == 1
-        and nombre_exercices == 1)
 
 # Pagination dans les exercices
 def construire_pagination(page):
@@ -236,10 +225,9 @@ def construire_navigation_stage(page):
     html = []
     for numero_atelier in sorted(ateliers.keys()):
         exercices = sorted( ateliers[numero_atelier], key=lambda e: e["numero"] )
-        titre_atelier = None
+        titre_atelier = extraire_titre_atelier(exercices)
         atelier_courant = False
         for exercice in exercices:
-            if exercice["atelier_titre"]: titre_atelier = exercice["atelier_titre"]
             stem = exercice["fichier"].rstrip("/")
             if stem == Path(page.file.src_uri).stem: atelier_courant = True
         code_stage = dossier_stage.name.lower()
