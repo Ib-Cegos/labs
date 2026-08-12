@@ -24,7 +24,7 @@ def on_page_content(html, page, config, files):
     html = ajouter_boutons_copie_inline(html)
     html = ajouter_checkboxes(html, page)
     html = remplacer_variables(html, meta)
-    html += construire_alerte_yaml(page)
+    html = construire_alerte_yaml(page) + html
     html += construire_panneau_parametres(meta)
     return html
 
@@ -225,9 +225,9 @@ def construire_alerte_yaml(page):
         for erreur in YAML_ERRORS
         if erreur["fichier"] == fichier_courant]
     if not erreurs: return ""
-    html = ['<div class="ibYamlWarning">','<div class="ibYamlWarningTitle">⚠ Erreur YAML détectée</div>']
+    html = ['<div class="ibYamlWarning">','<div class="ibYamlWarningTitle">⚠ Erreur dans l\'en-tête YAM</div>']
     for erreur in YAML_ERRORS:
-        html.append( f'<p><b>Fichier {Path(erreur["fichier"]).name}</b></p>')
+        html.append( f'<p><b>Le fichier {Path(erreur["fichier"]).name} contient une erreur de configuration.</b><br/>Les variables, durées ou métadonnées de l\'atelier peuvent ne pas être interprétées correctement.</p>')
         html.append( f'<pre>{erreur["erreur"]}</pre>')
     html.append('</div>')
     return "".join(html)
