@@ -3,7 +3,7 @@ import json
 import yaml
 from pathlib import Path
 from datetime import datetime
-from tools import ( charger_structure_stage, analyser_exercice, REGEX_EXERCICE )
+from tools import ( charger_structure_stage, analyser_exercice, charger_meta_atelier, REGEX_EXERCICE )
 
 IB_PREFIX = "iblab-"
 
@@ -102,21 +102,6 @@ def construire_pagination(page):
     if suivant: html.append( f'<a class="navNext" href="../{suivant}/" title="Exercice suivant">➡️</a>' )
     else: html.append('<span></span>')
     return "".join(html)    
-
-def charger_meta_atelier(page):
-    try:
-        fichier = Path("docs") / page.file.src_uri
-        readme = fichier.parent / "README.md"
-        if not readme.exists(): return {}
-        contenu = readme.read_text( encoding="utf-8" )
-        if not contenu.startswith("---"): return {}
-        morceaux = contenu.split("---", 2)
-        if len(morceaux) < 3: return {}
-        meta = yaml.safe_load( morceaux[1] )
-        return meta or {}
-    except Exception as erreur:
-        print( f"Erreur lecture méta atelier : {erreur}" )
-        return {}
 
 def remplacer_variables(html, meta):
     variables = meta.get("Variables", {})

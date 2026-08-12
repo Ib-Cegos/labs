@@ -26,4 +26,19 @@ def charger_structure_stage(dossier_stage):
 def analyser_exercice(nom_fichier):
     match = REGEX_EXERCICE.match(nom_fichier)
     if not match: return None
-    return ( int(match.group(1)), int(match.group(2)) )    
+    return ( int(match.group(1)), int(match.group(2)) )
+
+def charger_meta_atelier(page):
+    try:
+        fichier = Path("docs") / page.file.src_uri
+        readme = fichier.parent / "README.md"
+        if not readme.exists(): return {}
+        contenu = readme.read_text( encoding="utf-8" )
+        if not contenu.startswith("---"): return {}
+        morceaux = contenu.split("---", 2)
+        if len(morceaux) < 3: return {}
+        meta = yaml.safe_load( morceaux[1] )
+        return meta or {}
+    except Exception as erreur:
+        print( f"Erreur lecture méta atelier : {erreur}" )
+        return {}    
