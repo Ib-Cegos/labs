@@ -109,3 +109,47 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 .ibNavAtelierText { display: flex; flex-direction: column; }
 .ibNavAtelierRef { font-weight: 600; color: var(--ib-color-header); line-height: 1.2; }
 .ibNavAtelierTitre { font-size: .85rem; color: #6b7280; line-height: 1.2; }
+
+/* Erreur YAML - information pour rédacteur */
+
+.ibYamlWarning {
+    margin: 2rem auto;
+    padding: 1rem;
+
+    max-width: 900px;
+    width: 90%;
+
+    border: 2px solid #c62828;
+    border-radius: 8px;
+
+    background: #ffebee;
+    color: #b71c1c;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.ibYamlWarningTitle {
+    text-align: center;
+
+    font-weight: bold;
+    font-size: 1.25rem;
+
+    margin-bottom: 1rem;
+}
+
+.ibYamlWarning p {
+    margin: 0.5rem 0;
+}
+
+.ibYamlWarningDetail {
+    margin-top: 1rem;
+    padding: 0.75rem;
+
+    background: rgba(0,0,0,0.05);
+
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 4px;
+
+    overflow-x: auto;
+    white-space: pre-wrap;
+}

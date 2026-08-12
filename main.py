@@ -1,11 +1,9 @@
 import re
-import yaml
 import sys
-from datetime import datetime
 from pathlib import Path
 
 sys.path.append( str(Path(__file__).parent / "hooks"))
-from tools import charger_structure_stage
+from tools import ( charger_structure_stage, analyser_exercice, extraire_titre_atelier, REGEX_EXERCICE )
 
 def define_env(env):
 
@@ -17,11 +15,7 @@ def define_env(env):
         html = []
         for numero_atelier in sorted(ateliers.keys()):
             exercices = sorted(ateliers[numero_atelier], key=lambda e: e['numero'])
-            titre_atelier = None
-            for exercice in exercices:
-                if exercice['atelier_titre']:
-                    titre_atelier = exercice['atelier_titre']
-                    break
+            titre_atelier = extraire_titre_atelier(exercices)
             html.append('<div class="somLab">')
             if titre_atelier: html.append(f'<div class="somLabTit">Atelier {numero_atelier} : {titre_atelier}</div>')
             else: html.append(f'<div class="somLabTit">Atelier {numero_atelier}</div>')

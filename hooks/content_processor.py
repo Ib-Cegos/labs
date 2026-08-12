@@ -3,8 +3,7 @@ import json
 import yaml
 from pathlib import Path
 from datetime import datetime
-import sys
-from tools import charger_structure_stage
+from tools import ( charger_structure_stage, analyser_exercice, charger_meta_atelier, est_atelier_autonome, extraire_titre_atelier, REGEX_EXERCICE, YAML_ERRORS )
 
 IB_PREFIX = "iblab-"
 
@@ -19,21 +18,22 @@ COPY_BUTTON_SVG = """
 """
 
 def on_page_content(html, page, config, files):
-    html = injecter_variables(html, page)
+    meta = charger_meta_atelier(page)
+    html = injecter_variables(html, page, meta)
     html = ajouter_boutons_copie(html)
     html = ajouter_boutons_copie_inline(html)
     html = ajouter_checkboxes(html, page)
-    html = remplacer_variables(html, page)
-    html += construire_panneau_parametres(page)
+    html = remplacer_variables(html, meta)
+    html = construire_alerte_yaml(page) + html
+    html += construire_panneau_parametres(meta)
     return html
 
 def on_page_markdown(markdown, page, config, files):
     fichier = Path(page.file.src_uri).name
     # Titre des pages d'exercices
-    match = re.fullmatch( r"a(\d+)e(\d+)\.md", fichier, re.IGNORECASE, )
-    if match:
-        numero_atelier = int(match.group(1))
-        numero_exercice = int(match.group(2))
+    infos = analyser_exercice(fichier)
+    if infos:
+        numero_atelier, numero_exercice = infos
         duree = None
         dossier_stage = Path(page.file.abs_src_path).parent
         ateliers = charger_structure_stage(dossier_stage)
@@ -59,29 +59,18 @@ def on_page_context(context, page, config, nav):
     context["ibShowNavigation"] = bool( context["ibNavigationTree"] )
     return context
 
-# Gestion des ateliers "autonomes"
-def est_atelier_autonome(page):
-    dossier_stage = Path(page.file.abs_src_path).parent
-    ateliers = charger_structure_stage(dossier_stage)
-    nombre_exercices = sum(
-        len(exercices)
-        for exercices in ateliers.values() )
-    return (
-        len(ateliers) == 1
-        and nombre_exercices == 1)
-
 # Pagination dans les exercices
 def construire_pagination(page):
     fichier_courant = Path(page.file.src_uri).name
-    match = re.match( r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE )
-    if not match: return ""
-    numero_atelier = int(match.group(1))
-    numero_exercice = int(match.group(2))
+    infos = analyser_exercice(fichier_courant)
+    if not infos: return ""
+    numero_atelier, numero_exercice = infos
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = []
     for fichier in dossier_stage.glob( f"a{numero_atelier}e*.md" ):
-        m = re.match( r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE )
-        if m: exercices.append( (int(m.group(2)), fichier.stem) )
+        infos = analyser_exercice(fichier.name)
+        if infos: _, numero_exercice_fichier = infos
+        exercices.append((numero_exercice_fichier, fichier.stem))
     exercices.sort( key=lambda x: x[0] )
     if len(exercices) <= 1: return ""
     position = next(
@@ -104,23 +93,7 @@ def construire_pagination(page):
     else: html.append('<span></span>')
     return "".join(html)    
 
-def charger_meta_atelier(page):
-    try:
-        fichier = Path("docs") / page.file.src_uri
-        readme = fichier.parent / "README.md"
-        if not readme.exists(): return {}
-        contenu = readme.read_text( encoding="utf-8" )
-        if not contenu.startswith("---"): return {}
-        morceaux = contenu.split("---", 2)
-        if len(morceaux) < 3: return {}
-        meta = yaml.safe_load( morceaux[1] )
-        return meta or {}
-    except Exception as erreur:
-        print( f"Erreur lecture méta atelier : {erreur}" )
-        return {}
-
-def remplacer_variables(html, page):
-    meta = charger_meta_atelier(page)
+def remplacer_variables(html, meta):
     variables = meta.get("Variables", {})
     for nom, definition in variables.items():
         nom_normalise = nom.lower()
@@ -128,12 +101,11 @@ def remplacer_variables(html, page):
         html = re.sub( rf"\[{re.escape(nom)}\]", ( f'<span class="ibVariable" data-variable="{nom_normalise}">{valeur_defaut}</span>' ), html, flags=re.IGNORECASE )
     return html
 
-def injecter_variables(html, page):
-    meta = charger_meta_atelier(page)
+def injecter_variables(html, page, meta):
     variables = meta.get("Variables")
     code_atelier = (Path(page.file.src_uri).parent.name.lower())
     fichier = Path(page.file.src_uri).name
-    est_exercice = bool( re.fullmatch(r"a\d+e\d+\.md", fichier, re.IGNORECASE ))
+    est_exercice = bool(analyser_exercice(fichier))
     code_exercice = None
     if est_exercice: code_exercice = Path(page.file.src_uri).stem.lower()
     atelier_autonome = est_atelier_autonome(page)
@@ -171,34 +143,6 @@ def ajouter_checkboxes(html, page):
         return balise
     return re.sub( r'</?ol[^>]*>|<li[^>]*>', remplacer, html, flags=re.IGNORECASE )
 
-#Cette fonction sert-elle encore ?
-def construire_navigation(page):
-    fichier_courant = Path(page.file.src_uri).name
-    match = re.match(r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE)
-    if not match: return ""
-    numero_atelier = int(match.group(1))
-    numero_exercice = int(match.group(2))
-    dossier_stage = Path(page.file.abs_src_path).parent
-    exercices = []
-    for fichier in dossier_stage.glob(f"a{numero_atelier}e*.md"):
-        m = re.match(r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE)
-        if m: exercices.append((int(m.group(2)), fichier.stem))
-    exercices.sort(key=lambda x: x[0])
-    if len(exercices) <= 1: return ""
-    position = next((i for i, (n, _) in enumerate(exercices) if n == numero_exercice), None, )
-    if position is None: return ""
-    precedent = exercices[position - 1][1] if position > 0 else None
-    suivant = exercices[position + 1][1] if position < len(exercices) - 1 else None
-    html = []
-    html.append('<div class="navEx">')
-    if precedent: html.append( f'<a class="navPrev" href="../{precedent}/">← Exercice précédent</a>' )
-    else: html.append('<span></span>')
-    html.append( '<a class="navSom" href="../">Sommaire</a>' )
-    if suivant: html.append( f'<a class="navNext" href="../{suivant}/">Exercice suivant →</a>' )
-    else: html.append('<span></span>')
-    html.append('</div>')
-    return ''.join(html)
-
 def ajouter_boutons_copie(html):
     pattern = re.compile( r'(<pre.*?</pre>)', re.DOTALL )
     def remplace(match):
@@ -220,8 +164,7 @@ def ajouter_boutons_copie_inline(html):
     for i, bloc in enumerate(blocs_pre): html = html.replace( f"%%PRE_BLOCK_{i}%%", bloc )
     return html
 
-def construire_panneau_parametres(page):
-    meta = charger_meta_atelier(page)
+def construire_panneau_parametres(meta):
     variables = meta.get("Variables", {})
     variables_visibles = {
         nom: definition
@@ -273,10 +216,25 @@ def construire_panneau_parametres(page):
 """
     return contenu
 
+# prévenir rédacteur d'erreur dans le YAML
+def construire_alerte_yaml(page):
+    fichier_courant = str(Path(page.file.abs_src_path))
+    if not YAML_ERRORS: return ""
+    erreurs = [
+        erreur
+        for erreur in YAML_ERRORS
+        if erreur["fichier"] == fichier_courant]
+    if not erreurs: return ""
+    html = ['<div class="ibYamlWarning">','<div class="ibYamlWarningTitle">⚠ Erreur dans l\'en-tête YAM</div>']
+    for erreur in YAML_ERRORS:
+        html.append( f'<p><b>Le fichier "{Path(erreur["fichier"]).name}" contient une erreur de configuration.</b><br/>Les variables, durées ou métadonnées de l\'atelier peuvent ne pas être interprétées correctement.</p>')
+        html.append( f'<pre>{erreur["erreur"]}</pre>')
+    html.append('</div>')
+    return "".join(html)
+
 def construire_navigation_stage(page):
     fichier_courant = Path(page.file.src_uri).name
-    if not re.match( r"a\d+e\d+\.md$", fichier_courant, re.IGNORECASE ):
-        return ""
+    if not REGEX_EXERCICE.match(fichier_courant): return ""
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = list(dossier_stage.glob("a*e*.md"))
     if len(exercices) <= 1: return ""
@@ -284,10 +242,9 @@ def construire_navigation_stage(page):
     html = []
     for numero_atelier in sorted(ateliers.keys()):
         exercices = sorted( ateliers[numero_atelier], key=lambda e: e["numero"] )
-        titre_atelier = None
+        titre_atelier = extraire_titre_atelier(exercices)
         atelier_courant = False
         for exercice in exercices:
-            if exercice["atelier_titre"]: titre_atelier = exercice["atelier_titre"]
             stem = exercice["fichier"].rstrip("/")
             if stem == Path(page.file.src_uri).stem: atelier_courant = True
         code_stage = dossier_stage.name.lower()
@@ -305,44 +262,3 @@ def construire_navigation_stage(page):
             html.append( f'<a class="ibNavExercice{courant}" data-stage="{code_stage}" data-exercice="{stem}" href="../{stem}/"><div class="ibNavExRef">Exercice {numero_exercice}</div><div class="ibNavExTitre">{titre}</div></a>' )
         html.append('</details>')
     return "".join(html)
-
-def extraire_titre_fichier(fichier):
-    texte = fichier.read_text(encoding="utf-8")
-    texte = retirer_frontmatter(texte)
-    return extraire_titre(texte) or fichier.stem
-
-
-# --------------------------------------------------
-# Export d'atelier
-# --------------------------------------------------
-
-def retirer_frontmatter(texte):
-    return re.sub( r"^---\s*\n.*?\n---\s*\n", "", texte, flags=re.DOTALL )
-
-def extraire_titre(texte):
-    match = re.search( r"^#\s+(.+)$", texte, flags=re.MULTILINE )
-    if match:
-        return match.group(1)
-    return None
-
-def construire_markdown_atelier(page):
-    atelier_dir = ( Path("docs") / Path(page.file.src_uri).parent )
-    fichiers = []
-    readme = atelier_dir / "README.md"
-    if readme.exists():
-        fichiers.append(readme)
-    fichiers.extend(
-        sorted(
-            f
-            for f in atelier_dir.glob("*.md")
-             if f.name != "RE*DME.md" ))
-    contenu = []
-    for fichier in fichiers:
-        texte = fichier.read_text( encoding="utf-8" )
-        texte = retirer_frontmatter( texte ).strip()
-        if fichier.name != "README.md":
-            titre = extraire_titre( texte )
-            contenu.append( "\n*n---\n\n" )
-            contenu.append( "# {titre or fichier.stem}\n\n" )
-        contenu.append( texte )
-    return "\n".join(contenu)
