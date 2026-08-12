@@ -78,8 +78,8 @@ def construire_pagination(page):
     exercices = []
     for fichier in dossier_stage.glob( f"a{numero_atelier}e*.md" ):
         infos = analyser_exercice(fichier.name)
-        if infos: _, numero_exercice = infos
-        exercices.append((numero_exercice, fichier.stem))
+        if infos: _, numero_exercice_fichier = infos
+        exercices.append((numero_exercice_fichier, fichier.stem))
     exercices.sort( key=lambda x: x[0] )
     if len(exercices) <= 1: return ""
     position = next(
