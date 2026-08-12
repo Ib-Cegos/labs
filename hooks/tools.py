@@ -27,6 +27,7 @@ def charger_structure_stage(dossier_stage):
         titre_match = re.search( r'^#\s+(.+)$', contenu, re.MULTILINE )
         if titre_match: titre = titre_match.group(1).strip()
         ateliers.setdefault( numero_atelier, [] ).append({ 'numero': numero_exercice, 'titre': titre, 'fichier': fichier.stem + '/', 'duree': metadata.get('Duree'), 'atelier_titre': metadata.get('Atelier')})
+    if YAML_ERRORS: print("YAML_ERRORS =", YAML_ERRORS)
     return ateliers
 
 def analyser_exercice(nom_fichier):
