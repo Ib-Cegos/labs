@@ -1,6 +1,7 @@
 #Ici se trouvent les fonctions utilisables dans les autres scripts python
 import re
 import yaml
+from pathlib import Path
 
 REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
 
