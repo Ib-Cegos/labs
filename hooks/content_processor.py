@@ -3,7 +3,6 @@ import json
 import yaml
 from pathlib import Path
 from datetime import datetime
-import sys
 from tools import charger_structure_stage
 
 IB_PREFIX = "iblab-"
