@@ -18,7 +18,8 @@ COPY_BUTTON_SVG = """
 """
 
 def on_page_content(html, page, config, files):
-    html = injecter_variables(html, page)
+    meta = charger_meta_atelier(page)
+    html = injecter_variables(html, page, meta)
     html = ajouter_boutons_copie(html)
     html = ajouter_boutons_copie_inline(html)
     html = ajouter_checkboxes(html, page)
@@ -117,8 +118,7 @@ def charger_meta_atelier(page):
         print( f"Erreur lecture méta atelier : {erreur}" )
         return {}
 
-def remplacer_variables(html, page):
-    meta = charger_meta_atelier(page)
+def remplacer_variables(html, meta):
     variables = meta.get("Variables", {})
     for nom, definition in variables.items():
         nom_normalise = nom.lower()
@@ -126,8 +126,7 @@ def remplacer_variables(html, page):
         html = re.sub( rf"\[{re.escape(nom)}\]", ( f'<span class="ibVariable" data-variable="{nom_normalise}">{valeur_defaut}</span>' ), html, flags=re.IGNORECASE )
     return html
 
-def injecter_variables(html, page):
-    meta = charger_meta_atelier(page)
+def injecter_variables(html, page, meta):
     variables = meta.get("Variables")
     code_atelier = (Path(page.file.src_uri).parent.name.lower())
     fichier = Path(page.file.src_uri).name
@@ -190,8 +189,7 @@ def ajouter_boutons_copie_inline(html):
     for i, bloc in enumerate(blocs_pre): html = html.replace( f"%%PRE_BLOCK_{i}%%", bloc )
     return html
 
-def construire_panneau_parametres(page):
-    meta = charger_meta_atelier(page)
+def construire_panneau_parametres(meta):
     variables = meta.get("Variables", {})
     variables_visibles = {
         nom: definition
