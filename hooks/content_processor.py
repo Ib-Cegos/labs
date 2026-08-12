@@ -29,10 +29,9 @@ def on_page_content(html, page, config, files):
 def on_page_markdown(markdown, page, config, files):
     fichier = Path(page.file.src_uri).name
     # Titre des pages d'exercices
-    match = REGEX_EXERCICE.match(fichier)
-    if match:
-        numero_atelier = int(match.group(1))
-        numero_exercice = int(match.group(2))
+    infos = analyser_exercice(fichier)
+    if infos:
+        numero_atelier, numero_exercice = infos
         duree = None
         dossier_stage = Path(page.file.abs_src_path).parent
         ateliers = charger_structure_stage(dossier_stage)
