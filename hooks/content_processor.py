@@ -24,6 +24,7 @@ def on_page_content(html, page, config, files):
     html = ajouter_boutons_copie_inline(html)
     html = ajouter_checkboxes(html, page)
     html = remplacer_variables(html, meta)
+    html += construire_alerte_yaml(meta)
     html += construire_panneau_parametres(meta)
     return html
 
@@ -214,6 +215,16 @@ def construire_panneau_parametres(meta):
 </aside>
 """
     return contenu
+
+# prévenir rédacteur d'erreur dans le YAML
+def construire_alerte_yaml(meta):
+    erreur = meta.get("__yaml_error__")
+    if not erreur: return ""
+    return f"""
+<div class="ibYamlWarning"><div class="ibYamlWarningTitle">⚠ Erreur dans le YAML du README</div>
+    <div class="ibYamlWarningText"> Une erreur a été détectée dans l'en-tête YAML de ce stage. Certaines fonctionnalités peuvent ne pas fonctionner correctement.</div>
+    <pre class="ibYamlWarningDetail">{erreur}</pre></div>
+"""    
 
 def construire_navigation_stage(page):
     fichier_courant = Path(page.file.src_uri).name

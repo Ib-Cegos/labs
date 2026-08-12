@@ -4,6 +4,7 @@ import yaml
 from pathlib import Path
 
 REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
+YAML_ERRORS = []
 
 def charger_structure_stage(dossier_stage):
     ateliers = {}
@@ -16,7 +17,11 @@ def charger_structure_stage(dossier_stage):
         if contenu.startswith('---'):
             morceaux = contenu.split('---', 2)
             if len(morceaux) >= 3:
-                metadata = yaml.safe_load(morceaux[1]) or {}
+                try:
+                    metadata = yaml.safe_load(morceaux[1]) or {}
+                except yaml.YAMLError as erreur:
+                    YAML_ERRORS.append({"fichier": str(fichier), "erreur": str(erreur)})
+                    metadata = {}
                 contenu = morceaux[2]
         titre = fichier.stem
         titre_match = re.search( r'^#\s+(.+)$', contenu, re.MULTILINE )
@@ -38,8 +43,12 @@ def charger_meta_atelier(page):
         if not contenu.startswith("---"): return {}
         morceaux = contenu.split("---", 2)
         if len(morceaux) < 3: return {}
-        meta = yaml.safe_load( morceaux[1] )
-        return meta or {}
+        try:
+            meta = yaml.safe_load(morceaux[1])
+            return meta or {}
+        except yaml.YAMLError as erreur:
+            YAML_ERRORS.append({"fichier": str(readme),"erreur": str(erreur)})
+            return {}
     except Exception as erreur:
         print( f"Erreur lecture méta atelier : {erreur}" )
         return {}  
