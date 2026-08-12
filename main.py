@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 sys.path.append( str(Path(__file__).parent / "hooks"))
-from tools import ( charger_structure_stage, REGEX_EXERCICE )
+from tools import ( charger_structure_stage, analyser_exercice, REGEX_EXERCICE )
 
 def define_env(env):
 

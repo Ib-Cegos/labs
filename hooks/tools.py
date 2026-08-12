@@ -23,3 +23,8 @@ def charger_structure_stage(dossier_stage):
         if titre_match: titre = titre_match.group(1).strip()
         ateliers.setdefault( numero_atelier, [] ).append({ 'numero': numero_exercice, 'titre': titre, 'fichier': fichier.stem + '/', 'duree': metadata.get('Duree'), 'atelier_titre': metadata.get('Atelier')})
     return ateliers
+
+def analyser_exercice(nom_fichier):
+    match = REGEX_EXERCICE.match(nom_fichier)
+    if not match: return None
+    return ( int(match.group(1)), int(match.group(2)) )    
