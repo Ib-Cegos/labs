@@ -23,8 +23,8 @@ def on_page_content(html, page, config, files):
     html = ajouter_boutons_copie(html)
     html = ajouter_boutons_copie_inline(html)
     html = ajouter_checkboxes(html, page)
-    html = remplacer_variables(html, page)
-    html += construire_panneau_parametres(page)
+    html = remplacer_variables(html, meta)
+    html += construire_panneau_parametres(meta)
     return html
 
 def on_page_markdown(markdown, page, config, files):
