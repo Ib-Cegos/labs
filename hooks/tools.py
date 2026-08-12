@@ -2,10 +2,12 @@
 import re
 import yaml
 
+REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
+
 def charger_structure_stage(dossier_stage):
     ateliers = {}
     for fichier in dossier_stage.glob('a*e*.md'):
-        match = re.match( r'a(\d+)e(\d+)\.md$', fichier.name, re.IGNORECASE )
+        match = REGEX_EXERCICE.match(fichier.name)
         if not match: continue
         numero_atelier = int(match.group(1))
         numero_exercice = int(match.group(2))

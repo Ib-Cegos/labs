@@ -3,7 +3,7 @@ import json
 import yaml
 from pathlib import Path
 from datetime import datetime
-from tools import charger_structure_stage
+from tools import ( charger_structure_stage, REGEX_EXERCICE )
 
 IB_PREFIX = "iblab-"
 
@@ -29,7 +29,7 @@ def on_page_content(html, page, config, files):
 def on_page_markdown(markdown, page, config, files):
     fichier = Path(page.file.src_uri).name
     # Titre des pages d'exercices
-    match = re.fullmatch( r"a(\d+)e(\d+)\.md", fichier, re.IGNORECASE, )
+    match = REGEX_EXERCICE.match(fichier)
     if match:
         numero_atelier = int(match.group(1))
         numero_exercice = int(match.group(2))
@@ -72,14 +72,14 @@ def est_atelier_autonome(page):
 # Pagination dans les exercices
 def construire_pagination(page):
     fichier_courant = Path(page.file.src_uri).name
-    match = re.match( r"a(\d+)e(\d+)\.md$", fichier_courant, re.IGNORECASE )
+    match = REGEX_EXERCICE.match(fichier_courant)
     if not match: return ""
     numero_atelier = int(match.group(1))
     numero_exercice = int(match.group(2))
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = []
     for fichier in dossier_stage.glob( f"a{numero_atelier}e*.md" ):
-        m = re.match( r"a(\d+)e(\d+)\.md$", fichier.name, re.IGNORECASE )
+        m = REGEX_EXERCICE.match(fichier.name)
         if m: exercices.append( (int(m.group(2)), fichier.stem) )
     exercices.sort( key=lambda x: x[0] )
     if len(exercices) <= 1: return ""
@@ -246,8 +246,7 @@ def construire_panneau_parametres(page):
 
 def construire_navigation_stage(page):
     fichier_courant = Path(page.file.src_uri).name
-    if not re.match( r"a\d+e\d+\.md$", fichier_courant, re.IGNORECASE ):
-        return ""
+    if not REGEX_EXERCICE.match(fichier_courant): return ""
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = list(dossier_stage.glob("a*e*.md"))
     if len(exercices) <= 1: return ""
