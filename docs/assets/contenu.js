@@ -133,7 +133,7 @@ function ibPositionnerDerniereTache() {
     const tachesCochees = document.querySelectorAll( ".ibLabTask.done" );
     if (tachesCochees.length === 0) { return; }
     const derniereTache = tachesCochees[tachesCochees.length - 1];
-    setTimeout(() => { derniereTache.scrollIntoView({ block: "center" }); }, 100); }                    
+    setTimeout(() => { derniereTache.scrollIntoView({ block: "start" }); }, 100); }                    
 
 /* Vérification de l'environnement */
 function ibCheckEnvironment() {
