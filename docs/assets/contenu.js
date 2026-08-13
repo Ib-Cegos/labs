@@ -124,7 +124,16 @@ function ibInitTasks() {
           } else {
                 for ( let i = 0; i <= index; i++ ) {
                     tasks[i].classList.add("done");
-                    localStorage.setItem( tasks[i].id, "true" );}}});});}
+                    localStorage.setItem( tasks[i].id, "true" );}}});});
+    ibPositionnerDerniereTache()}
+
+/* Ourvrir la page sur la dernière tâche validée */
+function ibPositionnerDerniereTache() {
+    if (!window.ibIsExercise) { return; }
+    const tachesCochees = document.querySelectorAll( ".ibLabTask.done" );
+    if (tachesCochees.length === 0) { return; }
+    const derniereTache = tachesCochees[tachesCochees.length - 1];
+    setTimeout(() => { derniereTache.scrollIntoView({ block: "center" }); }, 100); }                    
 
 /* Vérification de l'environnement */
 function ibCheckEnvironment() {

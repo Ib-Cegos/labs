@@ -22,6 +22,7 @@ Fonctionnellement, en dehors de faire de la mise en place du site par mkdocs, no
 - Un panneau de navigation entre les exercice, affichable par une languette située sur le bord gauche de l'écran
 - Un système de gestion de variables, stockées dans localstorage (iblab-VARIABLE) ou VARIABLE reprend le nom de la variable sur le site (insensible à la casse). Dans les pages d'un atelier, toute mention de [VARIABLE] sera remplaçée par le contenu de la variable en question. Le contenu de la variable pourra être fixé par le rédacteur du .md (basé sur la valeur de la propriété "defaut" de l'objet variable dans l'en-tête YAML du README.MD) ou dynamiquement modifiable par l'apprenant, si l'objet VARAIBLE dans le YAML possède une propriété "lib".
 - L'affichage de la date dernière modification de chaque md (en bas à droite de la page html)
+- Le moteur détecte les erreurs de syntaxe YAML. Les erreurs détectées sont signalées visuellement dans les pages générées afin de faciliter le travail des rédacteurs.
 Des boutons fonctionnels, dans le footer fixe : chaque bouton ouvre un pop-in dont le style de la barre de titre reprend le style du bouton qui l'a ouvert. En plus d'unc croix de fermeture, chaque pop-in peut être fermé par le bouton qui l'a ouvert.
 - Un bouton "Aide" permettant l'affichage d'un panneau d'aide synthétique : le moteur est effectif mais le contenu du panneau reste à déterminer.
 - Un bouton "Notes" permettant d'anoter un exercice. les notes sont conservées et font partie de l'export/import (localstorage = iblab-note-STAGE-aXeY). Un système de notifications indique la présence de notes, sur le sommaire et la navigation latérale.
@@ -43,6 +44,7 @@ contenu.js gère les données utilisateur (localStorage, variables, progression,
 theme.css gère l'apparence du moteur.
 contenu.css gère l'apparence des contenus pédagogiques.
 Python fournit la structure HTML et les métadonnées nécessaires au JavaScript mais ne pilote pas les données utilisateur.
+Les fonctions Python réutilisables liées à l'analyse des stages, ateliers, exercices et métadonnées doivent être regroupées dans tools.py.
 Lorsqu'une nouvelle fonctionnalité est développée, privilégier :
 - Python pour la génération de structure HTML et les métadonnées ;
 - theme.js pour les interactions d'interface ;
