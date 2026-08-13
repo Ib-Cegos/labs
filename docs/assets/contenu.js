@@ -83,8 +83,8 @@ function ibClearData() {
 
 function ibImport(event) {
     const file = event.target.files[0];
-    ibClearData();
     if (!file) { return; }
+    ibClearData();
     const reader = new FileReader();
     reader.onload = function(e) {
         const data = JSON.parse( e.target.result );

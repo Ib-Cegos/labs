@@ -68,13 +68,13 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 #ibContent li { margin: .25rem 0; }
 #ibContent p { margin: .45em 0; }
 #ibContent p + ol, #ibContent p + ul { margin-top: -.3em; }
-#ibContent h2 { margin-top: 1rem; margin-bottom: .25rem; }
+#ibContent h2 { margin-top: 1rem; margin-bottom: .25rem; border-bottom: 1px solid #e5e7eb; padding-bottom: .15rem; }
 #ibContent table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
 #ibContent th { background: #f3f4f6; text-align: left; }
 #ibContent th, #ibContent td { padding: .6rem .8rem; border: 1px solid #d9d9d9; }
 #ibContent a { color: var(--ib-color-link); text-decoration: none; }
 #ibContent a:hover { text-decoration: underline; }
-#ibContent h2 { border-bottom: 1px solid #e5e7eb; padding-bottom: .15rem; }
+
 
 /* date de mise à jour de l'exercice */
 #ibPageInfo { position: fixed; right: .5rem; bottom: 80px; writing-mode: vertical-rl; transform: rotate(180deg); font-size: .70rem; color: #999; }
@@ -87,5 +87,5 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibClipboardUnavailable { color: #dc2626 !important; opacity: .7; cursor: not-allowed; }
 .ibClipboardUnavailable:hover { color: #b91c1c !important; }
 
-/* Affichage dur& estimée */
+/* Affichage dur&e estimée */
 .ibDuration { margin: .5rem 0 1rem 0; padding: .5rem .75rem; background: #f8fafc; border-left: 4px solid #94a3b8; border-radius: 4px; color: #475569; font-size: .9rem; }
