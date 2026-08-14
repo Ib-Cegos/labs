@@ -26,6 +26,7 @@ document.addEventListener(
         ibInitTasks();
         ibMajIndicateursNotes();
         ibMajIndicateursProgression();
+        ibMajProgressionExerciceCourant();
         ibInitNotes();
     });
 
@@ -126,7 +127,8 @@ function ibInitTasks() {
                 for (let i = 0;i <= index;i++) {
                     tasks[i].classList.add("done");
                     localStorage.setItem(tasks[i].id,"true");}}
-            ibMajIndicateursProgression();});});
+            ibMajIndicateursProgression();
+            ibMajProgressionExerciceCourant();});});
     ibPositionnerDerniereTache();}
 
 /* Ourvrir la page sur la dernière tâche validée */
@@ -199,7 +201,13 @@ function ibProgressionExercice(exercice) {
     for (let i = 1; i <= total; i++) {
         const key = IB_PREFIX + window.ibLabCode + "-" + exercice + "-" + i;
         if (localStorage.getItem(key) === "true") { coches++; }}
-    return Math.round((coches / total) * 100);}        
+    return Math.round((coches / total) * 100);}
+
+function ibMajProgressionExerciceCourant() {
+    if (!window.ibIsExercise) { return; }
+    if (!window.ibExerciseCode) { return; }
+    const pourcentage =ibProgressionExercice(window.ibExerciseCode);
+    document.documentElement.style.setProperty("--ib-current-progress",pourcentage + "%");}    
 
 function ibMajIndicateursProgression() {
     if (!window.ibExercises) { return; }
