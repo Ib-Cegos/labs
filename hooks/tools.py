@@ -13,6 +13,7 @@ def charger_structure_stage(dossier_stage):
         if not match: continue
         numero_atelier, numero_exercice = analyser_exercice(fichier.name)
         contenu = fichier.read_text(encoding='utf-8')
+        nb_taches_a_cocher = len(re.findall(r"^\s*\d+\.\s+",contenu,* re.MULTILINE))
         metadata = {}
         if contenu.startswith('---'):
             morceaux = contenu.split('---', 2)
@@ -27,7 +28,7 @@ def charger_structure_stage(dossier_stage):
         titre = fichier.stem
         titre_match = re.search( r'^#\s+(.+)$', contenu, re.MULTILINE )
         if titre_match: titre = titre_match.group(1).strip()
-        ateliers.setdefault( numero_atelier, [] ).append({ 'numero': numero_exercice, 'titre': titre, 'fichier': fichier.stem + '/', 'duree': metadata.get('Duree'), 'atelier_titre': metadata.get('Atelier')})
+        ateliers.setdefault( numero_atelier, [] ).append({ 'numero': numero_exercice, 'titre': titre, 'fichier': fichier.stem + '/', 'duree': metadata.get('Duree'), 'atelier_titre': metadata.get('Atelier'),'nb_taches_a_cocher': nb_taches_a_cocher})
     if YAML_ERRORS: print("YAML_ERRORS =", YAML_ERRORS)
     return ateliers
 
