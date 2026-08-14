@@ -113,22 +113,21 @@ function ibExport() {
 
 /* Gestion des tâches cliquables */    
 function ibInitTasks() {
-    const tasks = Array.from( document.querySelectorAll( ".ibLabTask" ));
-    tasks.forEach(task => { if ( localStorage.getItem(task.id) === "true" ) { task.classList.add("done"); }});
+    const tasks = Array.from(document.querySelectorAll(".ibLabTask"));
+    tasks.forEach(task => {if (localStorage.getItem(task.id) === "true") {task.classList.add("done");}});
     tasks.forEach((task, index) => {
-        task.addEventListener( "click", event => {
-            if ( event.clientX > task.getBoundingClientRect().left + ( parseFloat( getComputedStyle(task).fontSize ) * 3 )) { return; }
-            if ( task.classList.contains( "done" )) {
-                for ( let i = index; i < tasks.length; i++ ) {
+        task.addEventListener("click", event => {
+            if ( event.clientX > task.getBoundingClientRect().left +(parseFloat(getComputedStyle(task).fontSize) * 3)) {return;}
+            if (task.classList.contains("done")) {
+                for (let i = index;i < tasks.length;i++) {
                     tasks[i].classList.remove("done");
-                    localStorage.removeItem( tasks[i].id );}
-                ibMajIndicateursProgression();
-          } else {
-                for ( let i = 0; i <= index; i++ ) {
+                    localStorage.removeItem(tasks[i].id);}} 
+            else {
+                for (let i = 0;i <= index;i++) {
                     tasks[i].classList.add("done");
-                    localStorage.setItem( tasks[i].id, "true" );}
-                ibMajIndicateursProgression(); }});});}
-    ibPositionnerDerniereTache()}
+                    localStorage.setItem(tasks[i].id,"true");}}
+            ibMajIndicateursProgression();});});
+    ibPositionnerDerniereTache();}
 
 /* Ourvrir la page sur la dernière tâche validée */
 function ibPositionnerDerniereTache() {
@@ -201,15 +200,6 @@ function ibProgressionExercice(exercice) {
         const key = IB_PREFIX + window.ibLabCode + "-" + exercice + "-" + i;
         if (localStorage.getItem(key) === "true") { coches++; }}
     return Math.round((coches / total) * 100);}        
-
-/* function ibMajIndicateursProgression() {
-    if (!window.ibExercises) { return; }
-    if (!window.ibEnvironment.storage) { return; }
-    document.querySelectorAll("[data-stage][data-exercice]").forEach(element => {
-        const exercice = element.dataset.exercice;
-        const pourcentage = ibProgressionExercice(exercice);
-        element.style.setProperty( "--ib-progress", pourcentage + "%" );
-        element.classList.toggle( "ibExerciceTermine", pourcentage === 100 ); }); } */
 
 function ibMajIndicateursProgression() {
     if (!window.ibExercises) { return; }
