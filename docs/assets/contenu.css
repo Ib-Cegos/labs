@@ -7,9 +7,10 @@
 .somLab { margin-bottom: 2rem; } 
 .somLabTit { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
 .somEx { margin-bottom: 0.3rem; }
-.somExLink { text-decoration: none; }
+.somExLink { text-decoration: none; display: inline-block; padding: .2rem .4rem; border-radius: 4px; background: linear-gradient( to right, rgba(34,197,94,.18) var(--ib-progress, 0%), transparent var(--ib-progress, 0%) ); }
 .somExLink.ibHasNote { position: relative; }
 .somExLink.ibHasNote::before { content: ""; position: absolute; left: -0.5rem; top: 0.15rem; width: 4px; height: 1rem; background: var(--ib-color-notes); border-radius: 2px; }
+.somExLink.ibExerciceTermine { box-shadow: inset -4px 0 0 #16a34a; }
 .somDuree { color: #888; font-size: .9em; }
 
 /*Liste des stages sur page d'accueil*/
@@ -89,7 +90,3 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 
 /* Affichage dur&e estimée */
 .ibDuration { margin: .5rem 0 1rem 0; padding: .5rem .75rem; background: #f8fafc; border-left: 4px solid #94a3b8; border-radius: 4px; color: #475569; font-size: .9rem; }
-
-/* Affichage complétion d'un exercce */
-[data-stage][data-exercice] { background: linear-gradient( to right, rgba(22,163,74,.18) var(--ib-progress, 0%), transparent var(--ib-progress, 0%)); }
-.ibExerciceTermine { box-shadow: inset -4px 0 0 #16a34a; }

@@ -193,13 +193,27 @@ function ibProgressionExercice(exercice) {
         if (localStorage.getItem(key) === "true") { coches++; }}
     return Math.round((coches / total) * 100);}        
 
-function ibMajIndicateursProgression() {
+/* function ibMajIndicateursProgression() {
     if (!window.ibExercises) { return; }
     if (!window.ibEnvironment.storage) { return; }
     document.querySelectorAll("[data-stage][data-exercice]").forEach(element => {
         const exercice = element.dataset.exercice;
         const pourcentage = ibProgressionExercice(exercice);
         element.style.setProperty( "--ib-progress", pourcentage + "%" );
-        element.classList.toggle( "ibExerciceTermine", pourcentage === 100 );
-        });
-}
+        element.classList.toggle( "ibExerciceTermine", pourcentage === 100 ); }); } */
+
+function ibMajIndicateursProgression() {
+    if (!window.ibExercises) { return; }
+    if (!window.ibEnvironment.storage) { return; }
+    /* Navigation latérale */
+    document.querySelectorAll(".ibNavExercice").forEach(element => {
+        const exercice = element.dataset.exercice;
+        const pourcentage = ibProgressionExercice(exercice);
+        element.style.setProperty( "--ib-progress", pourcentage + "%" );
+        element.classList.toggle( "ibExerciceTermine", pourcentage === 100 );});
+    /* Sommaire */
+    document.querySelectorAll(".somExLink").forEach(element => {
+        const exercice = element.dataset.exercice;
+        const pourcentage = ibProgressionExercice(exercice);
+        element.style.setProperty( "--ib-progress", pourcentage + "%" );
+        element.classList.toggle( "ibExerciceTermine", pourcentage === 100 ); }); }
