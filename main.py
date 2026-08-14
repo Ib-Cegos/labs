@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 sys.path.append( str(Path(__file__).parent / "hooks"))
-from tools import ( charger_structure_stage, analyser_exercice, extraire_titre_atelier, REGEX_EXERCICE )
+from tools import ( charger_structure_stage, analyser_exercice, extraire_titre_atelier, charger_markdown_stage, REGEX_EXERCICE )
 
 def define_env(env):
 
@@ -45,3 +45,8 @@ def define_env(env):
             html.append( f'<li><a href="{dossier.name}/" class="stageLink">{dossier.name.upper()} - {titre}</a></li>' )
         html.append('</ul>')
         return "\n".join(html)
+
+# Test à supprimer ensuite
+stage = Path("docs/ms030")
+markdown = charger_markdown_stage(stage)
+print(markdown)

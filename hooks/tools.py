@@ -71,4 +71,29 @@ def est_atelier_autonome(page):
 def extraire_titre_atelier(exercices):
     for exercice in exercices:
         if exercice["atelier_titre"]: return exercice["atelier_titre"]
-    return None        
+    return None
+
+# Gestion de l'export/impression du stage
+def extraire_markdown_sans_yaml(fichier):
+    contenu = fichier.read_text(encoding="utf-8")
+    if contenu.startswith("---"):
+        morceaux = contenu.split("---", 2)
+        if len(morceaux) >= 3: return morceaux[2].strip()
+    return contenu.strip()
+
+def charger_markdown_stage(dossier_stage):
+    morceaux = []
+    readme = dossier_stage / "README.md"
+    if readme.exists(): morceaux.append( extraire_markdown_sans_yaml(readme) )
+    ateliers = charger_structure_stage(dossier_stage)
+    for numero_atelier in sorted(ateliers.keys()):
+        exercices = sorted( ateliers[numero_atelier], key=lambda e: e["numero"] )
+        titre_atelier = extraire_titre_atelier(exercices)
+        if titre_atelier: morceaux.append( f"\n\n## Atelier {numero_atelier} - {titre_atelier}\n" )
+        else: morceaux.append( f"\n\n## Atelier {numero_atelier}\n" )
+        for exercice in exercices:
+            fichier = ( dossier_stage / f"a{numero_atelier}e{exercice['numero']}.md" )
+            contenu = extraire_markdown_sans_yaml(fichier)
+            morceaux.append("\n")
+            morceaux.append(contenu)
+    return "\n\n".join(morceaux) 
