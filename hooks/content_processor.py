@@ -17,6 +17,18 @@ COPY_BUTTON_SVG = """
 </svg>
 """
 
+def on_files(files, config):
+    docs_dir = Path(config["docs_dir"])
+    for dossier in docs_dir.iterdir():
+        if not dossier.is_dir(): continue
+        readme = dossier / "README.md"
+        if not readme.exists(): continue
+        contenu = tools.charger_markdown_stage(dossier)
+        (dossier / "print.md").write_text(
+            contenu,
+            encoding="utf-8" )
+    return files
+
 def on_page_content(html, page, config, files):
     meta = tools.charger_meta_atelier(page)
     html = injecter_variables(html, page, meta)
@@ -116,12 +128,6 @@ def injecter_variables(html, page, meta):
     for liste_exercices in ateliers.values():
         for exercice in liste_exercices:
             exercices[ exercice["fichier"].rstrip("/") ] = exercice["nb_taches_a_cocher"]
-    stage_markdown = ""
-    if est_readme: stage_markdown = tools.charger_markdown_stage( dossier_stage )
-
-    print("DEBUG")
-    print(stage_markdown[:2000])
-
     script = (
     "<script>"
     f"window.ibLabCode = {json.dumps(code_atelier)};"
@@ -131,7 +137,6 @@ def injecter_variables(html, page, meta):
     f"window.ibExerciseCode = {json.dumps(code_exercice)};"
     f"window.ibStandaloneWorkshop = {str(atelier_autonome).lower()};"
     f"window.ibIsReadme = {str(est_readme).lower()};"
-    f"window.ibStageMarkdown = {json.dumps(stage_markdown, ensure_ascii=False)};"
     "</script>" )
     return script + html
 

@@ -82,9 +82,5 @@ function ibInitialiserNavigation() {
             localStorage.setItem( storageKey, JSON.stringify(navigation) );});});}
 
 function ibPrint() {
-    if (!window.ibStageMarkdown) {
-        alert( "Cette fonction n'est disponible que depuis la page d'accueil du stage." );
-        return; }
-    const fenetre = window.open( "", "_blank" );
-    fenetre.document.write(  `<pre>${window.ibStageMarkdown}</pre>` );
-    fenetre.document.close();}
+    alert("Fonction en cours de développement");
+}
