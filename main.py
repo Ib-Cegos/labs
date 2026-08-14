@@ -46,7 +46,13 @@ def define_env(env):
         html.append('</ul>')
         return "\n".join(html)
 
-# Test à supprimer ensuite
-stage = Path("docs/ms030")
-markdown = tools.charger_markdown_stage(stage)
-print(markdown)
+@env.macro
+def test_export_stage():
+    stage = Path("docs/ms030")
+    return (
+        "<pre>"
+        + tools.charger_markdown_stage(stage)
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+        + "</pre>"
+    )
