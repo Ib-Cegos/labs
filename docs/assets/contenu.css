@@ -42,7 +42,7 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibInlineCopyButton.ok { color: #16a34a; }
 
 /* Les checkbox des listes numérotées */
-.ibLabTask { cursor: default; }
+.ibLabTask { cursor: default; scroll-margin-top: 80px;}
 .ibLabTask.done { opacity: .7; }
 .ibLabTask::marker { content: counter(list-item) ". ☐ "; color: #666; cursor: pointer}
 .ibLabTask.done::marker { content: counter(list-item) ". ☑ "; color: #198754; }
