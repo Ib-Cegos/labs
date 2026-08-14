@@ -48,7 +48,7 @@ def define_env(env):
 
     @env.macro
     def test_export_stage():
-        stage = Path("docs/ms030")
+        stage = Path("docs/msms030")
         return (
             "<pre>"
             + tools.charger_markdown_stage(stage)
