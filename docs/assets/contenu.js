@@ -184,19 +184,22 @@ function ibMajIndicateursNotes() {
         const note = localStorage.getItem(key) ?? "";
         element.classList.toggle( "ibHasNote", note.trim().length > 0 ); });}
 
+function ibProgressionExercice(exercice) {
+    const total = window.ibExercises[exercice];
+    if (!total || total <= 0) { return 0; }
+    let coches = 0;
+    for (let i = 1; i <= total; i++) {
+        const key = IB_PREFIX + window.ibLabCode + "-" + exercice + "-" + i;
+        if (localStorage.getItem(key) === "true") { coches++; }}
+    return Math.round((coches / total) * 100);}        
+
 function ibMajIndicateursProgression() {
     if (!window.ibExercises) { return; }
     if (!window.ibEnvironment.storage) { return; }
     document.querySelectorAll("[data-stage][data-exercice]").forEach(element => {
-            const exercice = element.dataset.exercice;
-            const total = window.ibExercises[exercice];
-            if (!total || total <= 0) { return; }
-            let coches = 0;
-            for (let i = 1; i <= total; i++) {
-                const key = IB_PREFIX + window.ibLabCode + "-" + exercice + "-" + i;
-                if (localStorage.getItem(key) === "true") { coches++; }}
-            const pourcentage = Math.round((coches / total) * 100);
-            element.style.setProperty( "--ib-progress", pourcentage + "%");
-            if (pourcentage === 100) { element.classList.add("ibExerciceTermine"); }
+        const exercice = element.dataset.exercice;
+        const pourcentage = ibProgressionExercice(exercice);
+        element.style.setProperty( "--ib-progress", pourcentage + "%" );
+        element.classList.toggle( "ibExerciceTermine", pourcentage === 100 );
         });
-}     
+}
