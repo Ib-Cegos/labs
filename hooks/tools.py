@@ -96,5 +96,5 @@ def charger_markdown_stage(dossier_stage):
             morceaux.append(f"\n\n{IBLAB_PAGE_BREAK}\n")
             fichier = ( dossier_stage / f"a{numero_atelier}e{exercice['numero']}.md" )
             contenu = extraire_markdown_sans_yaml(fichier)
-    morceaux.append(contenu)
+            morceaux.append(contenu)
     return "\n\n".join(morceaux) 
