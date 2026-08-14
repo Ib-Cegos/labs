@@ -3,6 +3,7 @@ import json
 import yaml
 from pathlib import Path
 from datetime import datetime
+import inspect
 from mkdocs.structure.files import File
 import tools
 
@@ -25,8 +26,8 @@ def on_files(files, config):
         readme = dossier / "README.md"
         if not readme.exists(): continue
         contenu = tools.charger_markdown_stage(dossier)
-    print(type(files))
-    print(type(next(iter(files))))
+
+    print(inspect.signature(File))
 
 
     return files
