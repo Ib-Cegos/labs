@@ -86,12 +86,10 @@ def extraire_markdown_sans_yaml(fichier):
         if len(morceaux) >= 3: return morceaux[2].strip()
     return contenu.strip()
 
-def formater_exercice_pour_export( contenu, numero_atelier, titre_atelier, numero_exercice ):
-    titre_exercice = f"Exercice {numero_exercice}"
-    match = re.search( r"^#\s+(.+)$", contenu, re.MULTILINE )
-    if match: titre_exercice += f" - {match.group(1).strip()}"
-    contenu = decaler_titres_markdown(contenu)
-    return ( f"\n\n{IBLAB_PAGE_BREAK}\n\n# Atelier {numero_atelier} - {titre_atelier}\n\n## {titre_exercice}\n\n{contenu}" )    
+def formater_exercice_pour_export( contenu, numero_atelier, titre_atelier, numero_exercice, titre_exercice ):
+    contenu = re.sub( r"^#\s+.+?\n+", "", contenu, count=1, flags=re.MULTILINE ).lstrip()
+    contenu = decaler_titres_markdown( contenu, niveaux=2 )
+    return ( f"\n\n{IBLAB_PAGE_BREAK}\n\n# Atelier {numero_atelier} - {titre_atelier}\n\n## Exercice {numero_exercice} - {titre_exercice}\n\n{contenu}" ) 
 
 def charger_markdown_stage(dossier_stage):
     morceaux = []
