@@ -110,10 +110,17 @@ def injecter_variables(html, page, meta):
     if est_exercice: code_exercice = Path(page.file.src_uri).stem.lower()
     atelier_autonome = est_atelier_autonome(page)
     est_readme = ( fichier.lower() == "readme.md" )
+    dossier_stage = Path(page.file.abs_src_path).parent
+    ateliers = charger_structure_stage(dossier_stage)
+    exercices = {}
+    for liste_exercices in ateliers.values():
+        for exercice in liste_exercices:
+            exercices[ exercice["fichier"].rstrip("/") ] = exercice["nb_taches_a_cocher"]
     script = (
     "<script>"
     f"window.ibLabCode = {json.dumps(code_atelier)};"
     f"window.ibVariables = {json.dumps(variables, ensure_ascii=False)};"
+    f"window.ibExercises = {json.dumps(exercices)};"
     f"window.ibIsExercise = {str(est_exercice).lower()};"
     f"window.ibExerciseCode = {json.dumps(code_exercice)};"
     f"window.ibStandaloneWorkshop = {str(atelier_autonome).lower()};"
