@@ -5,6 +5,7 @@ from pathlib import Path
 
 REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
 YAML_ERRORS = []
+IBLAB_PAGE_BREAK = "<!-- IBLAB_PAGE_BREAK -->"
 
 def charger_structure_stage(dossier_stage):
     ateliers = {}
@@ -92,8 +93,8 @@ def charger_markdown_stage(dossier_stage):
         if titre_atelier: morceaux.append( f"\n\n## Atelier {numero_atelier} - {titre_atelier}\n" )
         else: morceaux.append( f"\n\n## Atelier {numero_atelier}\n" )
         for exercice in exercices:
+            morceaux.append(f"\n\n{IBLAB_PAGE_BREAK}\n")
             fichier = ( dossier_stage / f"a{numero_atelier}e{exercice['numero']}.md" )
             contenu = extraire_markdown_sans_yaml(fichier)
-            morceaux.append("\n")
-            morceaux.append(contenu)
+    morceaux.append(contenu)
     return "\n\n".join(morceaux) 
