@@ -44,7 +44,8 @@ function ibInitSettingsPanel() {
     document.getElementById( "ibSettingsClose").addEventListener( "click", () => panel.classList.remove( "ibModalOpen" ));
     document.getElementById( "ibExportButton" ).addEventListener( "click", ibExport );
     document.getElementById( "ibImportButton" ).addEventListener( "click",() => { document.getElementById( "ibImportFile" ).click(); });
-    document.getElementById( "ibImportFile" ).addEventListener( "change", ibImport );}
+    document.getElementById( "ibImportFile" ).addEventListener( "change", ibImport );
+    document.getElementById( "ibPrintButton" ).addEventListener( "click", ibPrint );}
 
 function ibInitNotesPanel() {
     const panel = document.getElementById( "ibNotesPanel" );
@@ -78,4 +79,12 @@ function ibInitialiserNavigation() {
                 atelier.open = true;
                 return; }
             navigation[cle] = atelier.open;
-            localStorage.setItem( storageKey, JSON.stringify(navigation) );});});}        
+            localStorage.setItem( storageKey, JSON.stringify(navigation) );});});}
+
+function ibPrint() {
+    if (!window.ibStageMarkdown) {
+        alert( "Cette fonction n'est disponible que depuis la page d'accueil du stage." );
+        return; }
+    const fenetre = window.open( "", "_blank" );
+    fenetre.document.write(  `<pre>${window.ibStageMarkdown}</pre>` );
+    fenetre.document.close();}

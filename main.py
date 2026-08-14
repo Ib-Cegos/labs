@@ -45,14 +45,3 @@ def define_env(env):
             html.append( f'<li><a href="{dossier.name}/" class="stageLink">{dossier.name.upper()} - {titre}</a></li>' )
         html.append('</ul>')
         return "\n".join(html)
-
-    @env.macro
-    def test_export_stage():
-        stage = Path("docs/msms030")
-        return (
-            "<pre>"
-            + tools.charger_markdown_stage(stage)
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-            + "</pre>"
-        )

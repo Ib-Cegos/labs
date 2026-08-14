@@ -116,6 +116,8 @@ def injecter_variables(html, page, meta):
     for liste_exercices in ateliers.values():
         for exercice in liste_exercices:
             exercices[ exercice["fichier"].rstrip("/") ] = exercice["nb_taches_a_cocher"]
+    stage_markdown = ""
+    if est_readme: stage_markdown = tools.charger_markdown_stage( dossier_stage )
     script = (
     "<script>"
     f"window.ibLabCode = {json.dumps(code_atelier)};"
@@ -125,6 +127,7 @@ def injecter_variables(html, page, meta):
     f"window.ibExerciseCode = {json.dumps(code_exercice)};"
     f"window.ibStandaloneWorkshop = {str(atelier_autonome).lower()};"
     f"window.ibIsReadme = {str(est_readme).lower()};"
+    f"window.ibStageMarkdown = {json.dumps(stage_markdown, ensure_ascii=False)};"
     "</script>" )
     return script + html
 
@@ -215,6 +218,7 @@ def construire_panneau_parametres(meta):
             <div class="ibSettingsActions">
                 <button id="ibExportButton" class="ibSettingsAction">💾 Exporter mes données</button>
                 <button id="ibImportButton" class="ibSettingsAction">📂 Importer ma sauvegarde</button>
+                <button id="ibPrintStageButton" class="ibSettingsAction">🖨 Imprimer le stage</button>
             </div>
         </div>
         <input type="file" id="ibImportFile" accept=".json" style="display:none">
