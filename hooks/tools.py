@@ -75,12 +75,23 @@ def extraire_titre_atelier(exercices):
     return None
 
 # Gestion de l'export/impression du stage
+def decaler_titres_markdown(contenu, niveaux=2):
+    def remplacer(match): return "#" * (len(match.group(1)) + niveaux) + " "
+    return re.sub( r"^(#{1,6})\s+", remplacer, contenu, flags=re.MULTILINE )
+
 def extraire_markdown_sans_yaml(fichier):
     contenu = fichier.read_text(encoding="utf-8")
     if contenu.startswith("---"):
         morceaux = contenu.split("---", 2)
         if len(morceaux) >= 3: return morceaux[2].strip()
     return contenu.strip()
+
+def formater_exercice_pour_export( contenu, numero_atelier, titre_atelier, numero_exercice ):
+    titre_exercice = f"Exercice {numero_exercice}"
+    match = re.search( r"^#\s+(.+)$", contenu, re.MULTILINE )
+    if match: titre_exercice += f" - {match.group(1).strip()}"
+    contenu = decaler_titres_markdown(contenu)
+    return ( f"\n\n{IBLAB_PAGE_BREAK}\n\n# Atelier {numero_atelier} - {titre_atelier}\n\n## {titre_exercice}\n\n{contenu}" )    
 
 def charger_markdown_stage(dossier_stage):
     morceaux = []
@@ -96,5 +107,6 @@ def charger_markdown_stage(dossier_stage):
             morceaux.append(f"\n\n{IBLAB_PAGE_BREAK}\n")
             fichier = ( dossier_stage / f"a{numero_atelier}e{exercice['numero']}.md" )
             contenu = extraire_markdown_sans_yaml(fichier)
+            morceaux.append( formater_exercice_pour_export( contenu, numero_atelier, titre_atelier or "", exercice["numero"]))
             morceaux.append(contenu)
     return "\n\n".join(morceaux) 
