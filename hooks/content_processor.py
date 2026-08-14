@@ -3,6 +3,7 @@ import json
 import yaml
 from pathlib import Path
 from datetime import datetime
+from mkdocs.structure.files import File
 import tools
 
 IB_PREFIX = "iblab-"
@@ -24,12 +25,10 @@ def on_files(files, config):
         readme = dossier / "README.md"
         if not readme.exists(): continue
         contenu = tools.charger_markdown_stage(dossier)
-        print(f"[PRINT] Nb fichiers avant : {len(files)}")
-        print(f"[PRINT] génération de {dossier}/print.md")
-        print(f"[PRINT] Nb fichiers après : {len(files)}")
-        (dossier / "print.md").write_text(
-            contenu,
-            encoding="utf-8" )
+    print(type(files))
+    print(type(next(iter(files))))
+
+
     return files
 
 def on_page_content(html, page, config, files):
