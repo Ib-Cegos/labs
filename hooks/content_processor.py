@@ -118,6 +118,10 @@ def injecter_variables(html, page, meta):
             exercices[ exercice["fichier"].rstrip("/") ] = exercice["nb_taches_a_cocher"]
     stage_markdown = ""
     if est_readme: stage_markdown = tools.charger_markdown_stage( dossier_stage )
+
+    print("DEBUG")
+    print(stage_markdown[:2000])
+
     script = (
     "<script>"
     f"window.ibLabCode = {json.dumps(code_atelier)};"
