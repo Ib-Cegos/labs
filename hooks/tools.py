@@ -4,6 +4,7 @@ import yaml
 from pathlib import Path
 
 REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
+REGEX_SOMMAIRE = re.compile( r"\{\{\s*sommaire\s*\(\s*\)\s*\}\}", re.IGNORECASE )
 YAML_ERRORS = []
 IBLAB_PAGE_BREAK = "<!-- IBLAB_PAGE_BREAK -->"
 
@@ -75,6 +76,18 @@ def extraire_titre_atelier(exercices):
     return None
 
 # Gestion de l'export/impression du stage
+def construire_sommaire_export(dossier_stage):
+    ateliers = charger_structure_stage(dossier_stage)
+    morceaux = ["## Sommaire\n"]
+    for numero_atelier in sorted(ateliers.keys()):
+        exercices = sorted( ateliers[numero_atelier], key=lambda e: e["numero"])
+        titre_atelier = extraire_titre_atelier(exercices)
+        if titre_atelier: morceaux.append( f"- Atelier {numero_atelier} - {titre_atelier}" )
+        else: morceaux.append( f"- Atelier {numero_atelier}" )
+        for exercice in exercices:
+            morceaux.append( f"    - Exercice {exercice['numero']} - {exercice['titre']}" )
+    return "\n".join(morceaux)
+
 def decaler_titres_markdown(contenu, niveaux=2):
     def remplacer(match): return "#" * (len(match.group(1)) + niveaux) + " "
     return re.sub( r"^(#{1,6})\s+", remplacer, contenu, flags=re.MULTILINE )
@@ -89,20 +102,24 @@ def extraire_markdown_sans_yaml(fichier):
 def formater_exercice_pour_export( contenu, numero_atelier, titre_atelier, numero_exercice, titre_exercice ):
     contenu = re.sub( r"^#\s+.+?\n+", "", contenu, count=1, flags=re.MULTILINE ).lstrip()
     contenu = decaler_titres_markdown( contenu, niveaux=2 )
-    return ( f"\n\n{IBLAB_PAGE_BREAK}\n\n# Atelier {numero_atelier} - {titre_atelier}\n\n## Exercice {numero_exercice} - {titre_exercice}\n\n{contenu}" ) 
+    return ( f"\n\n{IBLAB_PAGE_BREAK}\n\n# Atelier {numero_atelier} - {titre_atelier}\n\n## Exercice {numero_exercice} - {titre_exercice}\n\n{contenu}" )
+
+def formater_readme_export(dossier_stage):
+    readme = dossier_stage / "README.md"
+    if not readme.exists(): return ""
+    contenu = extraire_markdown_sans_yaml(readme)
+    contenu = REGEX_SOMMAIRE.sub( construire_sommaire_export(dossier_stage), contenu)
+    return contenu    
 
 def charger_markdown_stage(dossier_stage):
     morceaux = []
-    readme = dossier_stage / "README.md"
-    if readme.exists(): morceaux.append( extraire_markdown_sans_yaml(readme) )
+    morceaux.append( formater_readme_export(dossier_stage) )
     ateliers = charger_structure_stage(dossier_stage)
     for numero_atelier in sorted(ateliers.keys()):
         exercices = sorted( ateliers[numero_atelier], key=lambda e: e["numero"] )
         titre_atelier = extraire_titre_atelier(exercices)
-        if titre_atelier: morceaux.append( f"\n\n## Atelier {numero_atelier} - {titre_atelier}\n" )
-        else: morceaux.append( f"\n\n## Atelier {numero_atelier}\n" )
         for exercice in exercices:
             fichier = ( dossier_stage / f"a{numero_atelier}e{exercice['numero']}.md" )
             contenu = extraire_markdown_sans_yaml(fichier)
             morceaux.append( formater_exercice_pour_export( contenu, numero_atelier, titre_atelier or "", exercice["numero"], exercice["titre"]))
-    return "\n\n".join(morceaux) 
+    return "\n\n".join(morceaux)
