@@ -25,7 +25,9 @@ def on_files(files, config):
         readme = dossier / "README.md"
         if not readme.exists(): continue
         contenu = tools.charger_markdown_stage(dossier)
-        fichier = File(f"{dossier.name}/print.md", None, config["site_dir"], config["use_directory_urls"])
+        print_path = dossier / "print.md"
+        print_path.write_text(contenu, encoding="utf-8")
+        fichier = File(f"{dossier.name}/print.md", config["docs_dir"], config["site_dir"], config["use_directory_urls"])
         fichier.content_string = contenu
         files.append(fichier)
     return files
