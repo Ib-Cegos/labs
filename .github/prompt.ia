@@ -35,6 +35,10 @@ Cas particulier : un stage peut être composé d'un unique exercice a1e1.md. Dan
   - le README reste obligatoire pour l'introduction et les variables mais il redirige automatiquement vers a1e1 ;
   - la navigation spécifique à l'atelier est masquée ;
   - le titre de l'exercice n'est pas préfixé par "Atelier X - Exercice Y".
+Une gestion de la progression dans les exercices : 
+  - Calculée à partir des tâches cochables générées depuis les listes numérotées.
+  - Python fournit les métadonnées structurelles nécessaires (nombre de tâches par exercice) via la variable JavaScript window.ibExercises.
+  - JavaScript exploite ces métadonnées et le localStorage afin de calculer et d'afficher la progression des exercices.
 
 Toutes les données utilisateur sont stockées dans localStorage. Toutes les clés persistées commencent par : "iblab-" (L'export/import repose exclusivement sur ce préfixe.)
 

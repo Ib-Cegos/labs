@@ -25,6 +25,7 @@ document.addEventListener(
         ibInitFontSize();
         ibInitTasks();
         ibMajIndicateursNotes();
+        ibMajIndicateursProgression();
         ibInitNotes();
     });
 
@@ -121,10 +122,12 @@ function ibInitTasks() {
                 for ( let i = index; i < tasks.length; i++ ) {
                     tasks[i].classList.remove("done");
                     localStorage.removeItem( tasks[i].id );}
+                ibMajIndicateursProgression();
           } else {
                 for ( let i = 0; i <= index; i++ ) {
                     tasks[i].classList.add("done");
-                    localStorage.setItem( tasks[i].id, "true" );}}});});
+                    localStorage.setItem( tasks[i].id, "true" );}
+                ibMajIndicateursProgression(); }});});}
     ibPositionnerDerniereTache()}
 
 /* Ourvrir la page sur la dernière tâche validée */
@@ -189,3 +192,37 @@ function ibMajIndicateursNotes() {
         const key = ibNoteKey( element.dataset.stage, element.dataset.exercice );
         const note = localStorage.getItem(key) ?? "";
         element.classList.toggle( "ibHasNote", note.trim().length > 0 ); });}
+
+function ibProgressionExercice(exercice) {
+    const total = window.ibExercises[exercice];
+    if (!total || total <= 0) { return 0; }
+    let coches = 0;
+    for (let i = 1; i <= total; i++) {
+        const key = IB_PREFIX + window.ibLabCode + "-" + exercice + "-" + i;
+        if (localStorage.getItem(key) === "true") { coches++; }}
+    return Math.round((coches / total) * 100);}        
+
+/* function ibMajIndicateursProgression() {
+    if (!window.ibExercises) { return; }
+    if (!window.ibEnvironment.storage) { return; }
+    document.querySelectorAll("[data-stage][data-exercice]").forEach(element => {
+        const exercice = element.dataset.exercice;
+        const pourcentage = ibProgressionExercice(exercice);
+        element.style.setProperty( "--ib-progress", pourcentage + "%" );
+        element.classList.toggle( "ibExerciceTermine", pourcentage === 100 ); }); } */
+
+function ibMajIndicateursProgression() {
+    if (!window.ibExercises) { return; }
+    if (!window.ibEnvironment.storage) { return; }
+    /* Navigation latérale */
+    document.querySelectorAll(".ibNavExercice").forEach(element => {
+        const exercice = element.dataset.exercice;
+        const pourcentage = ibProgressionExercice(exercice);
+        element.style.setProperty( "--ib-progress", pourcentage + "%" );
+        element.classList.toggle( "ibExerciceTermine", pourcentage === 100 );});
+    /* Sommaire */
+    document.querySelectorAll(".somExLink").forEach(element => {
+        const exercice = element.dataset.exercice;
+        const pourcentage = ibProgressionExercice(exercice);
+        element.style.setProperty( "--ib-progress", pourcentage + "%" );
+        element.classList.toggle( "ibExerciceTermine", pourcentage === 100 ); }); }
