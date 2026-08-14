@@ -24,6 +24,7 @@ def on_files(files, config):
         readme = dossier / "README.md"
         if not readme.exists(): continue
         contenu = tools.charger_markdown_stage(dossier)
+        print(f"[PRINT] génération de {dossier}/print.md")
         (dossier / "print.md").write_text(
             contenu,
             encoding="utf-8" )
