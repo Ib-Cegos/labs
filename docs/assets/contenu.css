@@ -91,4 +91,5 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibDuration { margin: .5rem 0 1rem 0; padding: .5rem .75rem; background: #f8fafc; border-left: 4px solid #94a3b8; border-radius: 4px; color: #475569; font-size: .9rem; }
 
 /* Affichage complétion d'un exercce */
-[data-stage][data-exercice] { background: linear-gradient( to right, rgba(25,135,84,.15) var(--ib-progress, 0%), transparent var(--ib-progress, 0%)); }
+[data-stage][data-exercice] { background: linear-gradient( to right, rgba(22,163,74,.18) var(--ib-progress, 0%), transparent var(--ib-progress, 0%)); }
+.ibExerciceTermine { box-shadow: inset -4px 0 0 #16a34a; }

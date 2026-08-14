@@ -122,10 +122,12 @@ function ibInitTasks() {
                 for ( let i = index; i < tasks.length; i++ ) {
                     tasks[i].classList.remove("done");
                     localStorage.removeItem( tasks[i].id );}
+                ibMajIndicateursProgression();
           } else {
                 for ( let i = 0; i <= index; i++ ) {
                     tasks[i].classList.add("done");
-                    localStorage.setItem( tasks[i].id, "true" );}}});});}
+                    localStorage.setItem( tasks[i].id, "true" );}
+                ibMajIndicateursProgression(); }});});}
 
 /* Vérification de l'environnement */
 function ibCheckEnvironment() {
@@ -195,5 +197,6 @@ function ibMajIndicateursProgression() {
                 if (localStorage.getItem(key) === "true") { coches++; }}
             const pourcentage = Math.round((coches / total) * 100);
             element.style.setProperty( "--ib-progress", pourcentage + "%");
+            if (pourcentage === 100) { element.classList.add("ibExerciceTermine"); }
         });
 }     
