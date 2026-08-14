@@ -18,18 +18,6 @@ COPY_BUTTON_SVG = """
 </svg>
 """
 
-def on_files(files, config):
-    docs_dir = Path(config["docs_dir"])
-    for dossier in docs_dir.iterdir():
-        if not dossier.is_dir(): continue
-        readme = dossier / "README.md"
-        if not readme.exists(): continue
-        contenu = tools.charger_markdown_stage(dossier)
-        print_path = dossier / "print.md"
-        print_path.write_text(contenu, encoding="utf-8")
-        print(print_path.exists())
-    return files
-
 def on_page_content(html, page, config, files):
     meta = tools.charger_meta_atelier(page)
     html = injecter_variables(html, page, meta)
