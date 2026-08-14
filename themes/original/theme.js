@@ -82,5 +82,5 @@ function ibInitialiserNavigation() {
             localStorage.setItem( storageKey, JSON.stringify(navigation) );});});}
 
 function ibPrint() {
-    alert("Fonction en cours de développement");
+    window.open("../print/");
 }
