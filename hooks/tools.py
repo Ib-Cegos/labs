@@ -13,7 +13,7 @@ def charger_structure_stage(dossier_stage):
         if not match: continue
         numero_atelier, numero_exercice = analyser_exercice(fichier.name)
         contenu = fichier.read_text(encoding='utf-8')
-        nb_taches_a_cocher = len(re.findall(r"^\s*\d+\.\s+",contenu,* re.MULTILINE))
+        nb_taches_a_cocher = len(re.findall(r"^\s*\d+\.\s+",contenu, re.MULTILINE))
         metadata = {}
         if contenu.startswith('---'):
             morceaux = contenu.split('---', 2)

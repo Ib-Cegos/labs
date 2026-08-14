@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 sys.path.append( str(Path(__file__).parent / "hooks"))
-from tools import ( charger_structure_stage, analyser_exercice, extraire_titre_atelier, charger_markdown_stage, REGEX_EXERCICE )
+import tools
 
 def define_env(env):
 
@@ -11,11 +11,11 @@ def define_env(env):
     def sommaire():
         page = env.variables['page']
         dossier_stage = Path(page.file.abs_src_path).parent
-        ateliers = charger_structure_stage(dossier_stage)
+        ateliers = tools.charger_structure_stage(dossier_stage)
         html = []
         for numero_atelier in sorted(ateliers.keys()):
             exercices = sorted(ateliers[numero_atelier], key=lambda e: e['numero'])
-            titre_atelier = extraire_titre_atelier(exercices)
+            titre_atelier = tools.extraire_titre_atelier(exercices)
             html.append('<div class="somLab">')
             if titre_atelier: html.append(f'<div class="somLabTit">Atelier {numero_atelier} : {titre_atelier}</div>')
             else: html.append(f'<div class="somLabTit">Atelier {numero_atelier}</div>')
@@ -48,5 +48,5 @@ def define_env(env):
 
 # Test à supprimer ensuite
 stage = Path("docs/ms030")
-markdown = charger_markdown_stage(stage)
+markdown = tools.charger_markdown_stage(stage)
 print(markdown)
