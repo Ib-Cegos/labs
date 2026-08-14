@@ -25,6 +25,7 @@ document.addEventListener(
         ibInitFontSize();
         ibInitTasks();
         ibMajIndicateursNotes();
+        ibMajIndicateursProgression();
         ibInitNotes();
     });
 
@@ -180,3 +181,19 @@ function ibMajIndicateursNotes() {
         const key = ibNoteKey( element.dataset.stage, element.dataset.exercice );
         const note = localStorage.getItem(key) ?? "";
         element.classList.toggle( "ibHasNote", note.trim().length > 0 ); });}
+
+function ibMajIndicateursProgression() {
+    if (!window.ibExercises) { return; }
+    if (!window.ibEnvironment.storage) { return; }
+    document.querySelectorAll("[data-stage][data-exercice]").forEach(element => {
+            const exercice = element.dataset.exercice;
+            const total = window.ibExercises[exercice];
+            if (!total || total <= 0) { return; }
+            let coches = 0;
+            for (let i = 1; i <= total; i++) {
+                const key = IB_PREFIX + window.ibLabCode + "-" + exercice + "-" + i;
+                if (localStorage.getItem(key) === "true") { coches++; }}
+            const pourcentage = Math.round((coches / total) * 100);
+            element.style.setProperty( "--ib-progress", pourcentage + "%");
+        });
+}     
