@@ -19,6 +19,7 @@ COPY_BUTTON_SVG = """
 """
 
 def on_page_content(html, page, config, files):
+    if tools.est_page_print(page): return html
     meta = tools.charger_meta_atelier(page)
     html = injecter_variables(html, page, meta)
     html = ajouter_boutons_copie(html)
@@ -30,6 +31,7 @@ def on_page_content(html, page, config, files):
     return html
 
 def on_page_markdown(markdown, page, config, files):
+    if tools.est_page_print(page): return html
     fichier = Path(page.file.src_uri).name
     # Titre des pages d'exercices
     infos = tools.analyser_exercice(fichier)
@@ -53,6 +55,7 @@ def on_page_markdown(markdown, page, config, files):
     return markdown
 
 def on_page_context(context, page, config, nav):
+    if tools.est_page_print(page): return html
     fichier = Path(page.file.abs_src_path)
     context["ibLastUpdate"] = ( datetime.fromtimestamp(fichier.stat().st_mtime).strftime("%d/%m/%Y") )
     context["ibNav"] = construire_pagination(page)

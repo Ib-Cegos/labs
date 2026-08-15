@@ -123,3 +123,6 @@ def charger_markdown_stage(dossier_stage):
             contenu = extraire_markdown_sans_yaml(fichier)
             morceaux.append( formater_exercice_pour_export( contenu, numero_atelier, titre_atelier or "", exercice["numero"], exercice["titre"]))
     return "\n\n".join(morceaux)
+
+def est_page_print(page):
+    return page.file.src_uri.endswith("/print.md")
