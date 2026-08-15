@@ -84,8 +84,9 @@ function ibInitialiserNavigation() {
             localStorage.setItem( storageKey, JSON.stringify(navigation) );});});}
 
 function ibPrint() {
-    const segments = window.location.pathname.split("/");
-    const stage = window.ibLabCode;
-    const racine = "/" + segments[1] + "/";
-    window.open( racine + stage + "/print/", "_blank" );
+    let url = window.location.pathname;
+    url = url.replace( /\/print\/?$/i, "" );
+    url = url.replace( /\/a\d+e\d+\/?$/i, "" );
+    url = url.replace( /\/$/, "" );
+    window.open( url + "/print/", "_blank" );
 }
