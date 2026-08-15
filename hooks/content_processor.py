@@ -55,6 +55,7 @@ def on_page_markdown(markdown, page, config, files):
     return markdown
 
 def on_page_context(context, page, config, nav):
+    context["ibTemplate"] = "print" if tools.est_page_print(page) else "default"
     if tools.est_page_print(page): return context
     fichier = Path(page.file.abs_src_path)
     context["ibLastUpdate"] = ( datetime.fromtimestamp(fichier.stat().st_mtime).strftime("%d/%m/%Y") )

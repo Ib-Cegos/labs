@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>{{ page.title }}</title>
+
+    {% for path in config.extra_css %}
+    <linkth | url }}
+    {% endfor %}
+</head>
+
+<body class="ibPrintPage">
+
+    <main class="ibPrintContent">
+        {{ page.content }}
+    </main>
+
+</body>
+</html>
