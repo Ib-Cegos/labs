@@ -60,15 +60,17 @@ def charger_meta_atelier(page):
         return {}  
 
 # Gestion des ateliers "autonomes"
-def est_atelier_autonome(page):
-    dossier_stage = Path(page.file.abs_src_path).parent
+def est_dossier_autonome(dossier_stage):
     ateliers = charger_structure_stage(dossier_stage)
     nombre_exercices = sum(
         len(exercices)
-        for exercices in ateliers.values() )
+        for exercices in ateliers.values())
     return (
         len(ateliers) == 1
         and nombre_exercices == 1)
+
+def est_atelier_autonome(page):
+    return est_dossier_autonome( Path(page.file.abs_src_path).parent )
 
 def extraire_titre_atelier(exercices):
     for exercice in exercices:
@@ -123,6 +125,10 @@ def charger_markdown_stage(dossier_stage):
             contenu = extraire_markdown_sans_yaml(fichier)
             morceaux.append( formater_exercice_pour_export( contenu, numero_atelier, titre_atelier or "", exercice["numero"], exercice["titre"]))
     return "\n\n".join(morceaux)
+
+def charger_markdown_atelier_autonome(dossier_stage):
+    fichier = next(dossier_stage.glob("a1e1.md"))
+    return extraire_markdown_sans_yaml(fichier) 
 
 def est_page_print(page):
     return page.file.src_uri.endswith("/print.md")

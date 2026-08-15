@@ -45,7 +45,9 @@ function ibInitSettingsPanel() {
     document.getElementById( "ibExportButton" ).addEventListener( "click", ibExport );
     document.getElementById( "ibImportButton" ).addEventListener( "click",() => { document.getElementById( "ibImportFile" ).click(); });
     document.getElementById( "ibImportFile" ).addEventListener( "change", ibImport );
-    document.getElementById( "ibPrintButton" ).addEventListener( "click", ibPrint );}
+    const printButton = document.getElementById("ibPrintButton");
+    printButton.addEventListener( "click", ibPrint );
+    if ( !window.ibIsReadme && !window.ibIsExercise) { printButton.disabled = true; }}
 
 function ibInitNotesPanel() {
     const panel = document.getElementById( "ibNotesPanel" );
