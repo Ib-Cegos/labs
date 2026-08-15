@@ -82,5 +82,8 @@ function ibInitialiserNavigation() {
             localStorage.setItem( storageKey, JSON.stringify(navigation) );});});}
 
 function ibPrint() {
-    window.open("./print/");
+    const segments = window.location.pathname.split("/");
+    const stage = window.ibLabCode;
+    const racine = "/" + segments[1] + "/";
+    window.open( racine + stage + "/print/", "_blank" );
 }

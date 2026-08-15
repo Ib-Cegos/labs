@@ -3,17 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>{{ page.title }}</title>
-
-    {% for path in config.extra_css %}
-    <linkth | url }}
-    {% endfor %}
+    <link rel="stylesheet" href="/labs/assets/print.css">
 </head>
 
 <body class="ibPrintPage">
 
-    <main class="ibPrintContent">
+    <div id="ibPrintContent">
         {{ page.content }}
-    </main>
-
+    </div>
+    <script src="/labs/assets/print.js"></script>
 </body>
 </html>
