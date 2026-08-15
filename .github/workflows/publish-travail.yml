@@ -32,6 +32,8 @@ jobs:
           pip install mkdocs-material
           pip install mkdocs-macros-plugin
           pip install mkdocs-git-revision-date-localized-plugin
+          
+      - run: python generate_prints.py
 
       - run: mkdocs build
 

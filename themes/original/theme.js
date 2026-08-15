@@ -44,7 +44,10 @@ function ibInitSettingsPanel() {
     document.getElementById( "ibSettingsClose").addEventListener( "click", () => panel.classList.remove( "ibModalOpen" ));
     document.getElementById( "ibExportButton" ).addEventListener( "click", ibExport );
     document.getElementById( "ibImportButton" ).addEventListener( "click",() => { document.getElementById( "ibImportFile" ).click(); });
-    document.getElementById( "ibImportFile" ).addEventListener( "change", ibImport );}
+    document.getElementById( "ibImportFile" ).addEventListener( "change", ibImport );
+    const printButton = document.getElementById("ibPrintButton");
+    printButton.addEventListener( "click", ibPrint );
+    if ( !window.ibIsReadme && !window.ibIsExercise) { printButton.disabled = true; }}
 
 function ibInitNotesPanel() {
     const panel = document.getElementById( "ibNotesPanel" );
@@ -78,4 +81,12 @@ function ibInitialiserNavigation() {
                 atelier.open = true;
                 return; }
             navigation[cle] = atelier.open;
-            localStorage.setItem( storageKey, JSON.stringify(navigation) );});});}        
+            localStorage.setItem( storageKey, JSON.stringify(navigation) );});});}
+
+function ibPrint() {
+    let url = window.location.pathname;
+    url = url.replace( /\/print\/?$/i, "" );
+    url = url.replace( /\/a\d+e\d+\/?$/i, "" );
+    url = url.replace( /\/$/, "" );
+    window.open( url + "/print/", "_blank" );
+}

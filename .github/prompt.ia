@@ -109,4 +109,32 @@ Ressources :
 En cas de doute sur un fichier, n'hésite pas à me demander son contenu.
 Je peux te fournir l'url des fichiers impactés par l'évolution envisagée aujourdhui ou t'en copier le contenu dans ton chat.
 
-J'ésère que cette description te donne une idée assez précise du moteur. Aujourd'hui, j'ai besoin de ton aide pour mettre en place le système d'impression d'un atelier.
+Système d'impression :
+- Les pages d'impression reposent sur des fichiers print.md générés AVANT mkdocs build par generate_prints.py. 
+- Ne plus proposer de solution basée sur window.ibStageMarkdown ou sur une génération complète du document dans le navigateur.
+Architecture :
+- tools.est_dossier_autonome(dossier_stage) contient la logique métier.
+- tools.est_atelier_autonome(page) est un wrapper destiné aux hooks MkDocs.
+- tools.est_page_print(page) permet d'identifier les pages print.md.
+Templates : 
+- themes/original/main.html joue le rôle de routeur.
+- Les pages normales utilisent default.html. 
+- Les pages d'impression utilisent print.html. 
+- Les pages print.md doivent contourner les enrichissements ibLab classiques (navigation, panneaux, JS, etc.). 
+Impression : - Chaque stage dispose d'une URL /STAGE/print/ 
+- Le document imprimable est généré dans docs/STAGE/print.md 
+- Pour un stage classique, print.md contient le README suivi des exercices regroupés par atelier. 
+- Pour un atelier autonome (1 atelier, 1 exercice), le README ne doit pas apparaître dans le document imprimé ; seul l'exercice est exporté.
+Sauts de page : 
+- Le marqueur canonique est : <!-- IBLAB_PAGE_BREAK --> 
+- Ce marqueur doit rester présent dans les exports. 
+- Il représente une intention documentaire et non un choix de rendu. 
+- Son interprétation doit être réalisée par le moteur d'affichage ou d'impression. 
+ibPrint() (javascript appelée par le bouton d'impression): 
+- L'URL d'impression doit être calculée à partir de window.location.pathname. 
+- Ne pas construire l'URL à partir de window.ibLabCode (casse perdue par normalisation en minuscules). 
+État du projet : 
+- Le moteur d'impression est considéré comme opérationnel. 
+- Les prochaines évolutions doivent prioritairement concerner print.html, print.css, la mise en page papier, les sauts de page et l'ergonomie d'impression.
+
+J'ésère que cette description te donne une idée assez précise du moteur. Aujourd'hui, j'ai besoin de ton aide pour 

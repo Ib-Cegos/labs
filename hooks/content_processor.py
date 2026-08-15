@@ -3,7 +3,8 @@ import json
 import yaml
 from pathlib import Path
 from datetime import datetime
-from tools import ( charger_structure_stage, analyser_exercice, charger_meta_atelier, est_atelier_autonome, extraire_titre_atelier, REGEX_EXERCICE, YAML_ERRORS )
+from mkdocs.structure.files import File
+import tools
 
 IB_PREFIX = "iblab-"
 
@@ -18,7 +19,8 @@ COPY_BUTTON_SVG = """
 """
 
 def on_page_content(html, page, config, files):
-    meta = charger_meta_atelier(page)
+    if tools.est_page_print(page): return html
+    meta = tools.charger_meta_atelier(page)
     html = injecter_variables(html, page, meta)
     html = ajouter_boutons_copie(html)
     html = ajouter_boutons_copie_inline(html)
@@ -29,21 +31,22 @@ def on_page_content(html, page, config, files):
     return html
 
 def on_page_markdown(markdown, page, config, files):
+    if tools.est_page_print(page): return markdown
     fichier = Path(page.file.src_uri).name
     # Titre des pages d'exercices
-    infos = analyser_exercice(fichier)
+    infos = tools.analyser_exercice(fichier)
     if infos:
         numero_atelier, numero_exercice = infos
         duree = None
         dossier_stage = Path(page.file.abs_src_path).parent
-        ateliers = charger_structure_stage(dossier_stage)
+        ateliers = tools.charger_structure_stage(dossier_stage)
         for exercice in ateliers.get(numero_atelier, []):
             if exercice["numero"] == numero_exercice:
                 duree = exercice["duree"]
                 break
         bloc_duree = ""
         if duree: bloc_duree = ( f'\n\n<div class="ibDuration">⏱ Durée estimée : {duree} minutes</div>\n' )
-        if est_atelier_autonome(page): return re.sub( r"^#\s+(.+)$", r"# \1" + bloc_duree, markdown, count=1, flags=re.MULTILINE, )
+        if tools.est_atelier_autonome(page): return re.sub( r"^#\s+(.+)$", r"# \1" + bloc_duree, markdown, count=1, flags=re.MULTILINE, )
         return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1" + bloc_duree, markdown, count=1, flags=re.MULTILINE, )
     # Titre des pages README
     if fichier.upper() == "README.MD":
@@ -52,6 +55,8 @@ def on_page_markdown(markdown, page, config, files):
     return markdown
 
 def on_page_context(context, page, config, nav):
+    context["ibTemplate"] = "print" if tools.est_page_print(page) else "default"
+    if tools.est_page_print(page): return context
     fichier = Path(page.file.abs_src_path)
     context["ibLastUpdate"] = ( datetime.fromtimestamp(fichier.stat().st_mtime).strftime("%d/%m/%Y") )
     context["ibNav"] = construire_pagination(page)
@@ -62,13 +67,13 @@ def on_page_context(context, page, config, nav):
 # Pagination dans les exercices
 def construire_pagination(page):
     fichier_courant = Path(page.file.src_uri).name
-    infos = analyser_exercice(fichier_courant)
+    infos = tools.analyser_exercice(fichier_courant)
     if not infos: return ""
     numero_atelier, numero_exercice = infos
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = []
     for fichier in dossier_stage.glob( f"a{numero_atelier}e*.md" ):
-        infos = analyser_exercice(fichier.name)
+        infos = tools.analyser_exercice(fichier.name)
         if infos: _, numero_exercice_fichier = infos
         exercices.append((numero_exercice_fichier, fichier.stem))
     exercices.sort( key=lambda x: x[0] )
@@ -105,13 +110,13 @@ def injecter_variables(html, page, meta):
     variables = meta.get("Variables")
     code_atelier = (Path(page.file.src_uri).parent.name.lower())
     fichier = Path(page.file.src_uri).name
-    est_exercice = bool(analyser_exercice(fichier))
+    est_exercice = bool(tools.analyser_exercice(fichier))
     code_exercice = None
     if est_exercice: code_exercice = Path(page.file.src_uri).stem.lower()
-    atelier_autonome = est_atelier_autonome(page)
+    atelier_autonome = tools.est_atelier_autonome(page)
     est_readme = ( fichier.lower() == "readme.md" )
     dossier_stage = Path(page.file.abs_src_path).parent
-    ateliers = charger_structure_stage(dossier_stage)
+    ateliers = tools.charger_structure_stage(dossier_stage)
     exercices = {}
     for liste_exercices in ateliers.values():
         for exercice in liste_exercices:
@@ -215,6 +220,7 @@ def construire_panneau_parametres(meta):
             <div class="ibSettingsActions">
                 <button id="ibExportButton" class="ibSettingsAction">💾 Exporter mes données</button>
                 <button id="ibImportButton" class="ibSettingsAction">📂 Importer ma sauvegarde</button>
+                <button id="ibPrintButton" class="ibSettingsAction">🖨 Imprimer le stage</button>
             </div>
         </div>
         <input type="file" id="ibImportFile" accept=".json" style="display:none">
@@ -226,14 +232,14 @@ def construire_panneau_parametres(meta):
 # prévenir rédacteur d'erreur dans le YAML
 def construire_alerte_yaml(page):
     fichier_courant = str(Path(page.file.abs_src_path))
-    if not YAML_ERRORS: return ""
+    if not tools.YAML_ERRORS: return ""
     erreurs = [
         erreur
-        for erreur in YAML_ERRORS
+        for erreur in tools.YAML_ERRORS
         if erreur["fichier"] == fichier_courant]
     if not erreurs: return ""
     html = ['<div class="ibYamlWarning">','<div class="ibYamlWarningTitle">⚠ Erreur dans l\'en-tête YAM</div>']
-    for erreur in YAML_ERRORS:
+    for erreur in tools.YAML_ERRORS:
         html.append( f'<p><b>Le fichier "{Path(erreur["fichier"]).name}" contient une erreur de configuration.</b><br/>Les variables, durées ou métadonnées de l\'atelier peuvent ne pas être interprétées correctement.</p>')
         html.append( f'<pre>{erreur["erreur"]}</pre>')
     html.append('</div>')
@@ -241,15 +247,15 @@ def construire_alerte_yaml(page):
 
 def construire_navigation_stage(page):
     fichier_courant = Path(page.file.src_uri).name
-    if not REGEX_EXERCICE.match(fichier_courant): return ""
+    if not tools.REGEX_EXERCICE.match(fichier_courant): return ""
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = list(dossier_stage.glob("a*e*.md"))
     if len(exercices) <= 1: return ""
-    ateliers = charger_structure_stage(dossier_stage)
+    ateliers = tools.charger_structure_stage(dossier_stage)
     html = []
     for numero_atelier in sorted(ateliers.keys()):
         exercices = sorted( ateliers[numero_atelier], key=lambda e: e["numero"] )
-        titre_atelier = extraire_titre_atelier(exercices)
+        titre_atelier = tools.extraire_titre_atelier(exercices)
         atelier_courant = False
         for exercice in exercices:
             stem = exercice["fichier"].rstrip("/")

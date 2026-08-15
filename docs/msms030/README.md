@@ -23,3 +23,4 @@ Au fil des ateliers de ce stage, vous allez prendre l'identité de Dominique Sky
 
 L'équipe projet de Adatum a décidé de mettre en œuvre Microsoft 365  dans un projet pilote, afin de monter en compétence sur le produit et de voir les besoins métiers qui pourraient être couverts par les produits de l'offre Microsoft 365.
 {{ sommaire() }}
+
