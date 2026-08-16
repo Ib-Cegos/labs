@@ -29,10 +29,15 @@ document.querySelectorAll('.ibPrintNotes').forEach(NoteDiv => {
         NoteDiv.innerHTML = `
                 <div class="ibPrintNotesTitle">Mes notes personnelles</div>
                 <div class="ibPrintNotesContent">${localStorage.getItem(ibNoteKey(codeStage,NoteDiv.dataset.exercise)).replace(/\n/g,"<br>")}</div>`
-        nbNotes++}})
+        nbNotes++}
+    else {
+        NoteDiv.remove();}})
 if (nbNotes > 1) { notesPluriel = 's';} else { notesPluriel = ''}
-if (nbNotes < 1) { document.getElementById('ibPrintNotesSection').remove()}
+if (nbNotes < 1) { 
+    document.getElementById('ibPrintNotesSection').remove()
+    document.getElementById('prinNotesHelp').remove()}
 document.getElementById('notesSummary').innerHTML = nbNotes + ' note' + notesPluriel + ' trouvée' + notesPluriel;
+document.getElementById("includePersonalNotes").addEventListener("change", ibToglePrintNotes);
 
 /* Panneau préaparation déplaçable */
 const dialog = document.getElementById("ibPrintSetupDialog");
@@ -67,34 +72,17 @@ function ibUpdatePrintVariables(useCustomValues) {
             if (!valeur) { valeur = variable.dataset.original ?? variable.textContent; }
             variable.textContent = valeur; }); }
 
-function ibUpdatePrintNotes(includeNotes) {
-    document.querySelectorAll(".ibPrintNotes").forEach(zone => {
-            const exercice = zone.dataset.exercise;
-            if (!includeNotes) {
-                zone.hidden = true;
-                return;}
-            const notes = localStorage.getItem(`iblab-notes-${exercice}`);
-            if (!notes?.trim()) {
-                zone.hidden = true;
-                return;}
-            zone.hidden = false;
-            zone.innerHTML =
-                `
-                <div class="ibPrintNotesTitle">
-                    Mes notes personnelles
-                </div>
-
-                <div class="ibPrintNotesContent">
-                    ${notes.replace(/\n/g,"<br>")}
-                </div>`;});}
+function ibToglePrintNotes() {
+    const includeNotes = document.getElementById("includePersonalNotes").checked;
+    document.querySelectorAll(".ibPrintNotes").forEach(NoteDiv => {
+            if (includeNotes) { NoteDiv.hidden = false; }
+            else {NoteDiv.hidden = true; }});}
 
 document.getElementById("useCustomVariables").addEventListener( "change", ibRefreshPrintPreview);
-document.getElementById("includePersonalNotes").addEventListener("change", ibRefreshPrintPreview);
+
 
 function ibRefreshPrintPreview() {
     const useCustomVariables = document.getElementById("useCustomVariables").checked;
-    const includeNotes = document.getElementById("includePersonalNotes").checked;
-    ibUpdatePrintVariables( useCustomVariables );
-    ibUpdatePrintNotes( includeNotes );}
+    ibUpdatePrintVariables( useCustomVariables );}
 
 document.addEventListener("DOMContentLoaded", () => {ibRefreshPrintPreview();});    
