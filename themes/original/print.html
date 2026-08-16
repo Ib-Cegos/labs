@@ -19,7 +19,22 @@
             <button id="ibPrintSetupClose" title="Fermer">✕</button>
         </div>
         <div class="ibPrintSetupBody">
-            <p> Configurez les options d'impression du cahier d'ateliers. </p>
+            <p> Confgurez le contenu du cahier d'ateliers avant impression. </p>
+            <p>(Rappel: Les variables permettent de personnaliser les informations utilisées dans cet atelier.)</p>
+                <div class="ibPrintSetupSection"> <h3>Variables</h3>
+                    <label class="ibCheckboxContainer">
+                    <input type="checkbox" id="useCustomVariables" unchecked>
+                    Utiliser mes valeurs de variables</label>
+                </div>
+                <div class="ibPrintSetupSection">
+                    <h3>Notes personnelles</h3>
+                    <label class="ibCheckboxContainer">
+                    <input type="checkbox" id="includePersonalNotes" unchecked>
+                    Inclure mes notes personnelles</label>
+                <div id="notesSummary">
+                    0 note trouvée
+                </div>
+            </div>
             <div class="ibPrintSetupButtons">
                 <button id="ibPrintButton">Imprimer</button>
             </div>
