@@ -76,6 +76,7 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 #ibContent th, #ibContent td { padding: .6rem .8rem; border: 1px solid #d9d9d9; }
 #ibContent a { color: var(--ib-color-link); text-decoration: none; }
 #ibContent a:hover { text-decoration: underline; }
+#ibContent img { max-width: 100%; height: auto; display: block; margin: 1rem auto; }
 
 
 /* date de mise à jour de l'exercice */
