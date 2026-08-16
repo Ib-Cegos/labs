@@ -23,10 +23,11 @@ const cheminPrint = window.location.pathname.split("/").filter(Boolean);
 codeStage = (cheminPrint[cheminPrint.length - 2]).toLowerCase();
 nbNotes = 0;
 document.querySelectorAll('.ibPrintNotes').forEach(NoteDiv => {
-    if (localStorage.getItem(ibNoteKey(codeStage,NoteDiv.dataset.exercise))) {
+    const valeur = localStorage.getItem(ibNoteKey(codeStage,NoteDiv.dataset.exercise))
+    if (valeur) {
         NoteDiv.innerHTML = `
                 <div class="ibPrintNotesTitle">Mes notes personnelles</div>
-                <div class="ibPrintNotesContent">${localStorage.getItem(ibNoteKey(codeStage,NoteDiv.dataset.exercise)).replace(/\n/g,"<br>")}</div>`
+                <div class="ibPrintNotesContent">${valeur.replace(/\n/g,"<br>")}</div>`
         nbNotes++}
     else {
         NoteDiv.remove();}})
@@ -41,10 +42,10 @@ document.getElementById("includePersonalNotes").addEventListener("change", ibTog
 nbVariables = 0;
 document.querySelectorAll('.ibPrintVariable').forEach(variableDiv => {
     const nomVar = variableDiv.dataset.variable.toLowerCase();
-    const valeur = localStorage.getItem( ibVarKey(nom));
-    if (localStorage.getItem(ibVarKey(nomVar))) {
+    const valeur = localStorage.getItem( ibVarKey(nomVar));
+    if (valeur) {
         nbVariables ++;
-        variableDiv.dataset.custom=localStorage.getItem(ibVarKey(nom)); }}
+        variableDiv.dataset.custom=valeur; }});
 if (nbVariables < 1) { 
     document.getElementById('ibPrintVariablesSection').remove()
     document.getElementById('printVariablesTip').remove()}
