@@ -9,7 +9,7 @@ YAML_ERRORS = []
 IBLAB_PAGE_BREAK = "<!-- IBLAB_PAGE_BREAK -->"
 REGEX_VARIABLE = re.compile( r"\[([A-Za-z0-9_]+)\]")
 
-def preparer_variables_print(contenu):
+def preparer_variables_print(dossier_stage,contenu):
     readme = dossier_stage / "README.md"
     if not readme.exists(): return {}
     contenu = readme.read_text(encoding="utf-8")
