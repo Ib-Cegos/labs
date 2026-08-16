@@ -10,10 +10,20 @@
 </head>
 
 <body class="ibPrintPage">
-
     <div id="ibPrintContent">
         {{ page.content }}
     </div>
+    <div id="ibPrintSetupDialog">
+        <div class="ibPrintSetupHeader">Préparation du document</div>
+        <div class="ibPrintSetupBody">
+            <p> Configurez les options d'impression du cahier d'ateliers. </p>
+            <div class="ibPrintSetupButtons">
+                <button id="ibPrintButton">Imprimer</button>
+                <button id="ibClosePrintSetup">Fermer</button>
+            </div>
+        </div>
+    </div>
+    <div id="ibPrintSetupOverlay"></div>
     <script src="/labs/assets/print.js"></script>
 </body>
 </html>

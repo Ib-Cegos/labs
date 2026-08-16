@@ -220,7 +220,7 @@ def construire_panneau_parametres(meta):
             <div class="ibSettingsActions">
                 <button id="ibExportButton" class="ibSettingsAction">💾 Exporter mes données</button>
                 <button id="ibImportButton" class="ibSettingsAction">📂 Importer ma sauvegarde</button>
-                <button id="ibPrintButton" class="ibSettingsAction">🖨 Imprimer le stage</button>
+                <button id="ibPrintButton" class="ibSettingsAction">🖨 Préparer l'impression</button>
             </div>
         </div>
         <input type="file" id="ibImportFile" accept=".json" style="display:none">

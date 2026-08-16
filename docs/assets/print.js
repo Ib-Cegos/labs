@@ -7,3 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const saut = document.createElement("div");
             saut.className = "ibPageBreak";
             commentaire.parentNode.replaceChild( saut, commentaire );}});});
+
+document.getElementById("ibClosePrintSetup").addEventListener("click", () => {
+    document.getElementById("ibPrintSetupDialog").style.display = "none";
+    document.getElementById("ibPrintSetupOverlay").style.display = "none"; });
+document.getElementById("ibPrintButton").addEventListener("click", () => { window.print(); });            
