@@ -111,7 +111,7 @@ def extraire_markdown_sans_yaml(fichier):
 def formater_exercice_pour_export( contenu, numero_atelier, titre_atelier, numero_exercice, titre_exercice ):
     contenu = re.sub( r"^#\s+.+?\n+", "", contenu, count=1, flags=re.MULTILINE ).lstrip()
     contenu = decaler_titres_markdown( contenu, niveaux=2 )
-    return ( f"\n\n{IBLAB_PAGE_BREAK}\n\n# Atelier {numero_atelier} - {titre_atelier}\n\n## Exercice {numero_exercice} - {titre_exercice}\n\n{contenu}" )
+    return ( f"\n\n{IBLAB_PAGE_BREAK}\n\n# Atelier {numero_atelier} - {titre_atelier}\n\n## Exercice {numero_exercice} - {titre_exercice}\n\n<div class="ibPrintNotes" data-exercise="a{numero_atelier}e{numero_exercice}" hidden></div>\n\n{contenu}" )
 
 def formater_readme_export(dossier_stage):
     readme = dossier_stage / "README.md"
