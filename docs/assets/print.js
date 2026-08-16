@@ -22,7 +22,7 @@ document.querySelectorAll(".ibPrintVariable").forEach(variable => { variable.dat
 
 /* Insertion du contenu dans les notes */
 const cheminPrint = window.location.pathname.split("/").filter(Boolean);
-codeStage = (morceaux[morceaux.length - 2]).toLowerCase();
+codeStage = (cheminPrint[cheminPrint.length - 2]).toLowerCase();
 nbNotes = 0;
 document.querySelectorAll('.ibPrintNotes').forEach(NoteDiv => {
     if (localStorage.getItem(ibNoteKey(codeStage,NoteDiv.dataset.exercise))) {
