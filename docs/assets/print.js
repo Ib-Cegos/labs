@@ -31,7 +31,7 @@ document.querySelectorAll('.ibPrintNotes').forEach(NoteDiv => {
                 <div class="ibPrintNotesContent">${localStorage.getItem(ibNoteKey(codeStage,NoteDiv.dataset.exercise)).replace(/\n/g,"<br>")}</div>`
         nbNotes++}})
 if (nbNotes > 1) { notesPluriel = 's';} else { notesPluriel = ''}
-if (nbNotes < 1) { document?getElementById('ibPrintNotesSection').remove()}
+if (nbNotes < 1) { document.getElementById('ibPrintNotesSection').remove()}
 document.getElementById('notesSummary').innerHTML = nbNotes + ' note' + notesPluriel + ' trouvée' + notesPluriel;
 
 /* Panneau préaparation déplaçable */
