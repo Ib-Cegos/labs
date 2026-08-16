@@ -18,8 +18,6 @@ document.getElementById("ibPrintSetupClose").addEventListener("click", () => {
     document.getElementById("ibPrintSetupOverlay").style.display = "none"; });
 document.getElementById("ibPrintButton").addEventListener("click", () => { launchPrint(); });
 
-document.querySelectorAll(".ibPrintVariable").forEach(variable => { variable.dataset.original = variable.textContent;});
-
 /* Insertion du contenu dans les notes */
 const cheminPrint = window.location.pathname.split("/").filter(Boolean);
 codeStage = (cheminPrint[cheminPrint.length - 2]).toLowerCase();
@@ -35,9 +33,21 @@ document.querySelectorAll('.ibPrintNotes').forEach(NoteDiv => {
 if (nbNotes > 1) { notesPluriel = 's';} else { notesPluriel = ''}
 if (nbNotes < 1) { 
     document.getElementById('ibPrintNotesSection').remove()
-    document.getElementById('prinNotesHelp').remove()}
-document.getElementById('notesSummary').innerHTML = nbNotes + ' note' + notesPluriel + ' trouvée' + notesPluriel;
+    document.getElementById('prinNotesTip').remove()}
+else { document.getElementById('notesSummary').innerHTML = nbNotes + ' note' + notesPluriel + ' trouvée' + notesPluriel; }
 document.getElementById("includePersonalNotes").addEventListener("change", ibToglePrintNotes);
+
+/* Insertion des valeurs dans les variables */
+nbVariables = 0;
+document.querySelectorAll('.ibPrintVariable').forEach(variableDiv => {
+    const nomVar = variableDiv.dataset.variable.toLowerCase();
+    const valeur = localStorage.getItem( ibVarKey(nom));
+    if (localStorage.getItem(ibVarKey(nomVar))) {
+        nbVariables ++;
+        variableDiv.dataset.custom=localStorage.getItem(ibVarKey(nom)); }}
+if (nbVariables < 1) { 
+    document.getElementById('ibPrintVariablesSection').remove()
+    document.getElementById('printVariablesTip').remove()}
 
 /* Panneau préaparation déplaçable */
 const dialog = document.getElementById("ibPrintSetupDialog");

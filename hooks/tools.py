@@ -10,9 +10,23 @@ IBLAB_PAGE_BREAK = "<!-- IBLAB_PAGE_BREAK -->"
 REGEX_VARIABLE = re.compile( r"\[([A-Za-z0-9_]+)\]")
 
 def preparer_variables_print(contenu):
+    readme = dossier_stage / "README.md"
+    if not readme.exists(): return {}
+    contenu = readme.read_text(encoding="utf-8")
+    if not contenu.startswith("---"): return {}
+    morceaux = contenu.split("---", 2)
+    if len(morceaux) < 3: return {}
+    try: meta = yaml.safe_load(morceaux[1]) or {}
+    except yaml.YAMLError: return {}
+    variables = meta.get("Variables", {})
+    for nom, definition in variables.items():
+        valeur_defaut = definition.get( "defaut", "" )
+        contenu = re.sub( rf"\[{re.escape(nom)}\]", ( f'<span class="ibPrintVariable" data-variable="{nom.lower()}" data-default="{valeur_defaut}" data-custom="{valeur_defaut}">[{nom}]</span>' ), contenu, flags=re.IGNORECASE )
+
+    return contenu
     def remplacer(match):
         nom_variable = match.group(1)
-        return ( f'<span class="ibPrintVariable" data-variable="{nom_variable.lower()}">[{nom_variable}]</span>' )
+        return ( f'<span class="ibPrintVariable" data-variable="{nom_variable.lower()}" data-defaut="">[{nom_variable}]</span>' )
     return REGEX_VARIABLE.sub( remplacer, contenu )
 
 def charger_structure_stage(dossier_stage):
