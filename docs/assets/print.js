@@ -20,7 +20,20 @@ document.getElementById("ibPrintButton").addEventListener("click", () => { launc
 
 document.querySelectorAll(".ibPrintVariable").forEach(variable => { variable.dataset.original = variable.textContent;});
 
-/* Panneau préaparation déplçable */
+/* Insertion du contenu dans les notes */
+const cheminPrint = window.location.pathname.split("/").filter(Boolean);
+codeStage = (morceaux[morceaux.length - 2]).toLowerCase();
+nbNotes = 0;
+document.querySelectorAll('.ibPrintNotes').forEach(NoteDiv => {
+    if (localStorage.getItem(ibNoteKey(codeStage,NoteDiv.dataset.exercise))) {
+        NoteDiv.innerHTML = `
+                <div class="ibPrintNotesTitle">Mes notes personnelles</div>
+                <div class="ibPrintNotesContent">${localStorage.getItem(ibNoteKey(codeStage,NoteDiv.dataset.exercise)).replace(/\n/g,"<br>")}</div>`
+        nbNotes++}})
+if (nbNotes > 1) { notesPluriel = 's';} else { notesPluriel = ''}
+document.getElementById('notesSummary').innerHTML = nbNotes + 'note' + notesPluriel + ' trouvée' + notesPluriel;
+
+/* Panneau préaparation déplaçable */
 const dialog = document.getElementById("ibPrintSetupDialog");
 const header = dialog.querySelector(".ibPrintSetupHeader");
 const closeButton = document.getElementById("ibPrintSetupClose");
