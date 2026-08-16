@@ -7,6 +7,13 @@ REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
 REGEX_SOMMAIRE = re.compile( r"\{\{\s*sommaire\s*\(\s*\)\s*\}\}", re.IGNORECASE )
 YAML_ERRORS = []
 IBLAB_PAGE_BREAK = "<!-- IBLAB_PAGE_BREAK -->"
+REGEX_VARIABLE = re.compile( r"\[([A-Za-z0-9_]+)\]")
+
+def preparer_variables_print(contenu):
+    def remplacer(match):
+        nom_variable = match.group(1)
+        return ( f'<span class="ibPrintVariable" data-variable="{nom_variable.lower()}">[{nom_variable}]</span>' )
+    return REGEX_VARIABLE.sub( remplacer, contenu )
 
 def charger_structure_stage(dossier_stage):
     ateliers = {}

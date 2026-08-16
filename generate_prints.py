@@ -11,5 +11,6 @@ for dossier in docs.iterdir():
     if not readme.exists(): continue
     if tools.est_dossier_autonome( dossier ): contenu = (tools.charger_markdown_atelier_autonome(dossier))
     else: contenu = tools.charger_markdown_stage(dossier)
+    contenu = tools.preparer_variables_print(contenu)
     (dossier / "print.md").write_text( contenu, encoding="utf-8" )
     print(f"[PRINT] {dossier.name}/print.md généré")
