@@ -13,7 +13,7 @@ function launchPrint() {
     document.getElementById("ibPrintSetupOverlay").style.display = "none";
     window.print(); }            
 
-document.getElementById("ibClosePrintSetup").addEventListener("click", () => {
+document.getElementById("ibPrintSetupClose").addEventListener("click", () => {
     document.getElementById("ibPrintSetupDialog").style.display = "none";
     document.getElementById("ibPrintSetupOverlay").style.display = "none"; });
 document.getElementById("ibPrintButton").addEventListener("click", () => { launchPrint(); });
