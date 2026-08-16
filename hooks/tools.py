@@ -141,8 +141,7 @@ def charger_markdown_stage(dossier_stage):
 
 def charger_markdown_atelier_autonome(dossier_stage):
     fichier = next(dossier_stage.glob("a1e1.md"))
-    fichier = f'<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n' + fichier
-    return extraire_markdown_sans_yaml(fichier) 
+    return f'<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n' + extraire_markdown_sans_yaml(fichier) 
 
 def est_page_print(page):
     return page.file.src_uri.endswith("/print.md")
