@@ -18,6 +18,8 @@ document.getElementById("ibPrintSetupClose").addEventListener("click", () => {
     document.getElementById("ibPrintSetupOverlay").style.display = "none"; });
 document.getElementById("ibPrintButton").addEventListener("click", () => { launchPrint(); });
 
+document.querySelectorAll(".ibPrintVariable").forEach(variable => { variable.dataset.original = variable.textContent;});
+
 /* Panneau préaparation déplçable */
 const dialog = document.getElementById("ibPrintSetupDialog");
 const header = dialog.querySelector(".ibPrintSetupHeader");
@@ -41,3 +43,44 @@ document.addEventListener("mousemove", (e) => {
     dialog.style.top = `${e.clientY - offsetY}px`;
     dialog.style.transform = "none";});
 document.addEventListener("mouseup", () => { dragging = false; });
+
+function ibUpdatePrintVariables(useCustomValues) {
+    document.querySelectorAll(".ibPrintVariable").forEach(variable => {
+            const nom = variable.dataset.variable;
+            let valeur;
+            if (useCustomValues) {
+                valeur = localStorage.getItem(`iblab-var-${nom}` ); }
+            if (!valeur) { valeur = variable.dataset.original ?? variable.textContent; }
+            variable.textContent = valeur; }); }
+
+function ibUpdatePrintNotes(includeNotes) {
+    document.querySelectorAll(".ibPrintNotes").forEach(zone => {
+            const exercice = zone.dataset.exercise;
+            if (!includeNotes) {
+                zone.hidden = true;
+                return;}
+            const notes = localStorage.getItem(`iblab-notes-${exercice}`);
+            if (!notes?.trim()) {
+                zone.hidden = true;
+                return;}
+            zone.hidden = false;
+            zone.innerHTML =
+                `
+                <div class="ibPrintNotesTitle">
+                    Mes notes personnelles
+                </div>
+
+                <div class="ibPrintNotesContent">
+                    ${notes.replace(/\n/g,"<br>")}
+                </div>`;});}
+
+document.getElementById("useCustomVariables").addEventListener( "change", ibRefreshPrintPreview);
+document.getElementById("includePersonalNotes").addEventListener("change", ibRefreshPrintPreview);
+
+function ibRefreshPrintPreview() {
+    const useCustomVariables = document.getElementById("useCustomVariables").checked;
+    const includeNotes = document.getElementById("includePersonalNotes").checked;
+    ibUpdatePrintVariables( useCustomVariables );
+    ibUpdatePrintNotes( includeNotes );}
+
+document.addEventListener("DOMContentLoaded", () => {ibRefreshPrintPreview();});    
