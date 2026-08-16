@@ -21,13 +21,20 @@ document.getElementById("ibPrintButton").addEventListener("click", () => { launc
 /* Panneau préaparation déplçable */
 const dialog = document.getElementById("ibPrintSetupDialog");
 const header = dialog.querySelector(".ibPrintSetupHeader");
+const closeButton = document.getElementById("ibPrintSetupClose");
 let dragging = false;
 let offsetX = 0;
 let offsetY = 0;
 header.addEventListener("mousedown", (e) => {
+    closeButton.addEventListener("pointerdown", (e) => { e.stopPropagation();})
+    if (e.target.closest(".ibPrintSetupClose")) { return; }
+   const rect = dialog.getBoundingClientRect();
+    dialog.style.left = `${rect.left}px`;
+    dialog.style.top = `${rect.top}px`;
+    dialog.style.transform = "none";
     dragging = true;
-    offsetX = e.clientX - dialog.offsetLeft;
-    offsetY = e.clientY - dialog.offsetTop;});
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;});
 document.addEventListener("mousemove", (e) => {
     if (!dragging) return;
     dialog.style.left = `${e.clientX - offsetX}px`;
