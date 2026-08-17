@@ -30,6 +30,9 @@ function ibToglePrintNotes() {
             if (includeNotes) { NoteDiv.hidden = false; }
             else {NoteDiv.hidden = true; }});}
 
+/* Placer les informations d'édition sous le premier titre H1 de la page de garde */
+document.querySelector("#ibPrintContent h1")insertAdjacentElement("afterend",document.getElementById("ibPrintCoverInfo"));            
+
 /* Insertion du contenu dans les notes */
 const cheminPrint = window.location.pathname.split("/").filter(Boolean);
 let codeStage = (cheminPrint[cheminPrint.length - 2]).toLowerCase();
