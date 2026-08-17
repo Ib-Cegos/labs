@@ -155,10 +155,6 @@ def charger_markdown_stage(dossier_stage):
     if match: titre = match.group(1).strip()
     return ( construire_yaml_print(titre,dossier_stage) + contenu)
 
-# def charger_markdown_atelier_autonome(dossier_stage):
-#    fichier = next(dossier_stage.glob("a1e1.md"))
-#    return f'<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n' + preparer_variables_print(dossier_stage,extraire_markdown_sans_yaml(fichier)) 
-
 def charger_markdown_atelier_autonome(dossier_stage):
     fichier = next(dossier_stage.glob("a1e1.md"))
     contenu = extraire_markdown_sans_yaml(fichier)
@@ -181,4 +177,4 @@ def recuperer_infos_git(dossier_stage):
 
 def construire_yaml_print( titre, dossier_stage):
     infos_git = recuperer_infos_git( dossier_stage )
-    return ( "---\ntitle: {titre}\neditionDate: {infos_git['editionDate']}\ngitVersion: {infos_git['gitVersion']}\neditorName: {infos_git['editorName']}\n---\n\n")
+    return ( f"---\ntitle: {titre}\neditionDate: {infos_git['editionDate']}\ngitVersion: {infos_git['gitVersion']}\neditorName: {infos_git['editorName']}\n---\n\n")
