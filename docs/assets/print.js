@@ -44,7 +44,8 @@ document.querySelectorAll('.ibPrintNotes').forEach(NoteDiv => {
         nbNotes++}
     else {
         NoteDiv.remove();}})
-if (nbNotes > 1) { let notesPluriel = 's';} else { let notesPluriel = ''}
+let notesPluriel = ''
+if (nbNotes > 1) { notesPluriel = 's';}
 if (nbNotes < 1) { 
     document.getElementById('ibPrintNotesSection').remove()
     document.getElementById('prinNotesTip').remove()}
