@@ -39,6 +39,18 @@ if (nbNotes < 1) {
 else { document.getElementById('notesSummary').innerHTML = nbNotes + ' note' + notesPluriel + ' trouvée' + notesPluriel; }
 document.getElementById("includePersonalNotes").addEventListener("change", ibToglePrintNotes);
 
+function ibToglePrintVariables() {
+    const useCustomVariables = document.getElementById("useCustomVariables").checked;
+    document.querySelectorAll(".ibPrintVariable").forEach(varDiv => {
+            if (useCustomVariables) { varDiv.innerHTML = varDiv.dataset.custom; }
+            else {varDiv.innerHTML = varDiv.dataset.default; }});}
+
+function ibToglePrintNotes() {
+    const includeNotes = document.getElementById("includePersonalNotes").checked;
+    document.querySelectorAll(".ibPrintNotes").forEach(NoteDiv => {
+            if (includeNotes) { NoteDiv.hidden = false; }
+            else {NoteDiv.hidden = true; }});}
+
 /* Insertion des valeurs dans les variables */
 nbVariables = 0;
 document.querySelectorAll('.ibPrintVariable').forEach(variableDiv => {
@@ -51,7 +63,9 @@ document.querySelectorAll('.ibPrintVariable').forEach(variableDiv => {
 if (nbVariables < 1) { 
     document.getElementById('ibPrintVariablesSection').remove()
     document.getElementById('printVariablesTip').remove()}
-else { document.getElementById("useCustomVariables").addEventListener("change", ibToglePrintVariables); }
+else { 
+    document.getElementById("useCustomVariables").addEventListener("change", ibToglePrintVariables);
+    ibToglePrintVariables(); }
 
 /* Panneau préaparation déplaçable */
 const dialog = document.getElementById("ibPrintSetupDialog");
@@ -76,16 +90,4 @@ document.addEventListener("mousemove", (e) => {
     dialog.style.top = `${e.clientY - offsetY}px`;
     dialog.style.transform = "none";});
 document.addEventListener("mouseup", () => { dragging = false; });
-
-function ibToglePrintVariables() {
-    const useCustomVariables = document.getElementById("useCustomVariables").checked;
-    document.querySelectorAll(".ibPrintVariable").forEach(varDiv => {
-            if (useCustomVariables) { varDiv.innerHTML = varDiv.dataset.custom; }
-            else {varDiv.innerHTML = varDiv.dataset.default; }});}
-ibToglePrintVariables();      
-
-function ibToglePrintNotes() {
-    const includeNotes = document.getElementById("includePersonalNotes").checked;
-    document.querySelectorAll(".ibPrintNotes").forEach(NoteDiv => {
-            if (includeNotes) { NoteDiv.hidden = false; }
-            else {NoteDiv.hidden = true; }});}
+          
