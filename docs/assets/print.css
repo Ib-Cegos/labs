@@ -45,3 +45,13 @@ figcaption { text-align: center; font-size: .9em; }
 .ibPrintSetupSection h3 { margin: 0 0 .75rem 0; color: #2b52d6; font-size: 1.1rem; }
 .ibCheckboxContainer { display: flex; align-items: center; gap: .5rem; cursor: pointer; }
 #notesSummary { margin-top: .75rem; padding: .5rem; font-size: .9rem; font-style: italic; background-color: #eef2f7; border-radius: .25rem; }
+
+/* Anotations personnelles */
+.ibPrintNotes { position: relative; margin: 1rem 0 1.5rem 0; padding: 1rem; border: 1px solid #666; background: white; box-shadow: 3px 3px 0 #ccc; page-break-inside: avoid; }
+.ibPrintNotesTitle { font-weight: bold; display: inline-block; padding-bottom: .15rem; border-bottom: 2px dotted #666; margin-bottom: .5rem; }
+.ibPrintNotesTitle::before { content: "✏️"; font-weight: normal; }
+.ibPrintNotesContent { line-height: 1.4; font-style: italic; }
+
+/* Informations d'édition (version) */
+#ibPrintCoverInfo { width: fit-content; margin: 2rem auto; padding:.8rem 1.5rem; border: 1px solid #bbb; text-align: left; font-size: .95rem; }
+#ibPrintCoverInfo strong { color: #666; font-weight: 600; }

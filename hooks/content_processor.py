@@ -58,7 +58,10 @@ def on_page_context(context, page, config, nav):
     context["ibTemplate"] = "print" if tools.est_page_print(page) else "default"
     if tools.est_page_print(page): return context
     fichier = Path(page.file.abs_src_path)
-    context["ibLastUpdate"] = ( datetime.fromtimestamp(fichier.stat().st_mtime).strftime("%d/%m/%Y") )
+    infos_git = tools.recuperer_infos_git(fichier)
+    context["ibLastUpdateDate"] = ( f"{infos_git['editionDate']}")
+    context["iblastUpdateAuthor"] = ( f"{infos_git['editorName']}")
+    context["iblastUpdateVersion"] = ( f"{infos_git['gitVersion']}")
     context["ibNav"] = construire_pagination(page)
     context["ibNavigationTree"] = ( construire_navigation_stage(page) )
     context["ibShowNavigation"] = bool( context["ibNavigationTree"] )

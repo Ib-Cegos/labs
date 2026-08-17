@@ -1,6 +1,9 @@
 #Ici se trouvent les fonctions utilisables dans les autres scripts python
 import re
 import yaml
+import subprocess
+
+from datetime import datetime
 from pathlib import Path
 
 REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
@@ -146,11 +149,50 @@ def charger_markdown_stage(dossier_stage):
             fichier = ( dossier_stage / f"a{numero_atelier}e{exercice['numero']}.md" )
             contenu = extraire_markdown_sans_yaml(fichier)
             morceaux.append( formater_exercice_pour_export( contenu, numero_atelier, titre_atelier or "", exercice["numero"], exercice["titre"]))
-    return "\n\n".join(morceaux)
+    contenu = "\n\n".join(morceaux)
+    titre = dossier_stage.name.upper()
+    readme = dossier_stage / "README.md"
+    if readme.exists(): contenu_readme = readme.read_text( encoding="utf-8" )
+    match = re.search( r"^#\s+(.+)$", contenu_readme, re.MULTILINE )
+    if match: titre = match.group(1).strip()
+    return ( construire_yaml_print(titre,dossier_stage) + contenu)
 
 def charger_markdown_atelier_autonome(dossier_stage):
     fichier = next(dossier_stage.glob("a1e1.md"))
-    return f'<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n' + preparer_variables_print(dossier_stage,extraire_markdown_sans_yaml(fichier)) 
+    contenu = extraire_markdown_sans_yaml(fichier)
+    titre = "Cahier d'atelier"
+    titre_match = re.search( r"^#\s+(.+)$", contenu, re.MULTILINE )
+    if titre_match: titre = titre_match.group(1).strip()
+    contenu = preparer_variables_print( dossier_stage, contenu )
+    return ( construire_yaml_print(titre,dossier_stage) + '<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n' + contenu )
 
 def est_page_print(page):
     return page.file.src_uri.endswith("/print.md")
+
+def recuperer_infos_git(fichier):
+    try:
+        resultat = subprocess.run([ "git", "log", "-1", "--format=%h|%an|%ad", "--date=format:%d/%m/%Y", "--", str(fichier)], capture_output=True, text=True, check=True)
+        git_version, auteur, date_edition = ( resultat.stdout.strip().split("|", 2))
+        return { "gitVersion": git_version, "editorName": auteur, "editionDate": date_edition}
+    except Exception: return { "gitVersion": "", "editorName": "", "editionDate": "" }
+
+def recuperer_infos_git_stage(dossier_stage):
+    infos_plus_recents = { "gitVersion": "", "editorName": "", "editionDate": "" }
+    date_plus_recente = None
+    fichiers = []
+    readme = dossier_stage / "README.md"
+    if readme.exists(): fichiers.append(readme)
+    fichiers.extend( sorted( dossier_stage.glob("a*e*.md")))
+    for fichier in fichiers:
+        infos = recuperer_infos_git( fichier )
+        try:
+            date_infos = datetime.strptime( infos["editionDate"], "%d/%m/%Y" )
+            if ( date_plus_recente is None or date_infos > date_plus_recente ):
+                date_plus_recente = date_infos
+                infos_plus_recents = infos
+        except Exception: pass
+    return infos_plus_recents     
+
+def construire_yaml_print( titre, dossier_stage):
+    infos_git = recuperer_infos_git_stage( dossier_stage )
+    return ( f"---\ntitle: {titre}\neditionDate: {infos_git['editionDate']}\ngitVersion: {infos_git['gitVersion']}\neditorName: {infos_git['editorName']}\n---\n\n")
