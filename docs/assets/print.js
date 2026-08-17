@@ -51,6 +51,7 @@ document.querySelectorAll('.ibPrintVariable').forEach(variableDiv => {
 if (nbVariables < 1) { 
     document.getElementById('ibPrintVariablesSection').remove()
     document.getElementById('printVariablesTip').remove()}
+document.getElementById("useCustomVariables").addEventListener("change", ibToglePrintVariables);    
 
 /* Panneau préaparation déplaçable */
 const dialog = document.getElementById("ibPrintSetupDialog");
@@ -76,26 +77,15 @@ document.addEventListener("mousemove", (e) => {
     dialog.style.transform = "none";});
 document.addEventListener("mouseup", () => { dragging = false; });
 
-function ibUpdatePrintVariables(useCustomValues) {
-    document.querySelectorAll(".ibPrintVariable").forEach(variable => {
-            const nom = variable.dataset.variable;
-            let valeur;
-            if (useCustomValues) {
-                valeur = localStorage.getItem(`iblab-var-${nom}` ); }
-            if (!valeur) { valeur = variable.dataset.original ?? variable.textContent; }
-            variable.textContent = valeur; }); }
+function ibToglePrintVariables() {
+    const useCustomVariables = document.getElementById("useCustomVariables").checked;
+    document.querySelectorAll(".ibPrintVariable").forEach(varDiv => {
+            if (useCustomVariables) { varDiv.innerHTML = varDiv.dataset.custom; }
+            else {varDiv.innerHTML = varDiv.dataset.default; }});}
+ibToglePrintVariables();      
 
 function ibToglePrintNotes() {
     const includeNotes = document.getElementById("includePersonalNotes").checked;
     document.querySelectorAll(".ibPrintNotes").forEach(NoteDiv => {
             if (includeNotes) { NoteDiv.hidden = false; }
             else {NoteDiv.hidden = true; }});}
-
-document.getElementById("useCustomVariables").addEventListener( "change", ibRefreshPrintPreview);
-
-
-function ibRefreshPrintPreview() {
-    const useCustomVariables = document.getElementById("useCustomVariables").checked;
-    ibUpdatePrintVariables( useCustomVariables );}
-
-document.addEventListener("DOMContentLoaded", () => {ibRefreshPrintPreview();});    
