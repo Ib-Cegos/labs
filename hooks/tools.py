@@ -169,8 +169,10 @@ def est_page_print(page):
 
 def recuperer_infos_git(dossier_stage):
     try:
-        resultat = subprocess.run( ["git","log","-1","--format=%h|%an|%ad","--date=format:%d/%m/%Y",str(dossier_stage)],capture_output=True,text=True,check=True)
+        resultat = subprocess.run( ["git","log","-1","--format=%h|%an|%ad","--date=format:%d/%m/%Y",'--',str(dossier_stage)],capture_output=True,text=True,check=True)
         git_version, auteur, date_edition = (resultat.stdout.strip().split("|", 2))
+        print("CHEMIN =", dossier_stage)
+        print("RESULTAT =", resultat.stdout)
         return { "gitVersion": git_version, "editorName": auteur, "editionDate": date_edition }
     except Exception:
         return { "gitVersion": "", "editorName": "", "editionDate": "" }
