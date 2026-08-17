@@ -3,9 +3,6 @@ import re
 import yaml
 import subprocess
 from pathlib import Path
-racine_git = Path.cwd()
-print("CWD =", racine_git)
-print( "RELATIF =", Path(dossier_stage).relative_to(racine_git) )
 
 REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
 REGEX_SOMMAIRE = re.compile( r"\{\{\s*sommaire\s*\(\s*\)\s*\}\}", re.IGNORECASE )
@@ -171,6 +168,9 @@ def est_page_print(page):
     return page.file.src_uri.endswith("/print.md")
 
 def recuperer_infos_git(dossier_stage):
+    racine_git = Path.cwd()
+    print("CWD =", racine_git)
+    print( "RELATIF =", Path(dossier_stage).relative_to(racine_git) )
     chemin_git = str( Path(dossier_stage).relative_to(Path.cwd()))
     try:
         resultat = subprocess.run( ["git","log","-1","--format=%h|%an|%ad","--date=format:%d/%m/%Y",'--',chemin_git],capture_output=True,text=True,check=True)
