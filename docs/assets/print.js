@@ -51,7 +51,7 @@ document.querySelectorAll('.ibPrintVariable').forEach(variableDiv => {
 if (nbVariables < 1) { 
     document.getElementById('ibPrintVariablesSection').remove()
     document.getElementById('printVariablesTip').remove()}
-document.getElementById("useCustomVariables").addEventListener("change", ibToglePrintVariables);    
+else { document.getElementById("useCustomVariables").addEventListener("change", ibToglePrintVariables); }
 
 /* Panneau préaparation déplaçable */
 const dialog = document.getElementById("ibPrintSetupDialog");
