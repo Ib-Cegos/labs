@@ -7,6 +7,22 @@ REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
 REGEX_SOMMAIRE = re.compile( r"\{\{\s*sommaire\s*\(\s*\)\s*\}\}", re.IGNORECASE )
 YAML_ERRORS = []
 IBLAB_PAGE_BREAK = "<!-- IBLAB_PAGE_BREAK -->"
+REGEX_VARIABLE = re.compile( r"\[([A-Za-z0-9_]+)\]")
+
+def preparer_variables_print(dossier_stage,contenu):
+    readme = dossier_stage / "README.md"
+    if not readme.exists(): return contenu
+    contenu_readme = readme.read_text(encoding="utf-8")
+    if not contenu_readme.startswith("---"): return contenu
+    morceaux = contenu_readme.split("---", 2)
+    if len(morceaux) < 3: return contenu
+    try: meta = yaml.safe_load(morceaux[1]) or {}
+    except yaml.YAMLError: return contenu
+    variables = meta.get("Variables", {})
+    for nom, definition in variables.items():
+        valeur_defaut = definition.get( "defaut", "" )
+        contenu = re.sub( rf"\[{re.escape(nom)}\]", ( f'<span class="ibPrintVariable" data-variable="{nom.lower()}" data-default="{valeur_defaut}" data-custom="{valeur_defaut}">[{nom}]</span>' ), contenu, flags=re.IGNORECASE )
+    return contenu
 
 def charger_structure_stage(dossier_stage):
     ateliers = {}
@@ -104,8 +120,14 @@ def extraire_markdown_sans_yaml(fichier):
 def formater_exercice_pour_export( contenu, numero_atelier, titre_atelier, numero_exercice, titre_exercice ):
     contenu = re.sub( r"^#\s+.+?\n+", "", contenu, count=1, flags=re.MULTILINE ).lstrip()
     contenu = decaler_titres_markdown( contenu, niveaux=2 )
-    return ( f"\n\n{IBLAB_PAGE_BREAK}\n\n# Atelier {numero_atelier} - {titre_atelier}\n\n## Exercice {numero_exercice} - {titre_exercice}\n\n{contenu}" )
-
+    return (
+    f"\n\n{IBLAB_PAGE_BREAK}\n\n"
+    f"# Atelier {numero_atelier} - {titre_atelier}\n\n"
+    f"## Exercice {numero_exercice} - {titre_exercice}\n\n"
+    f'<div class="ibPrintNotes" '
+    f'data-exercise="a{numero_atelier}e{numero_exercice}" hidden></div>\n\n'
+    f"{contenu}" )
+   
 def formater_readme_export(dossier_stage):
     readme = dossier_stage / "README.md"
     if not readme.exists(): return ""
@@ -128,7 +150,7 @@ def charger_markdown_stage(dossier_stage):
 
 def charger_markdown_atelier_autonome(dossier_stage):
     fichier = next(dossier_stage.glob("a1e1.md"))
-    return extraire_markdown_sans_yaml(fichier) 
+    return f'<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n' + preparer_variables_print(dossier_stage,extraire_markdown_sans_yaml(fichier)) 
 
 def est_page_print(page):
     return page.file.src_uri.endswith("/print.md")

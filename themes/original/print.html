@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/labs/assets/print.css">
     <link rel="stylesheet" href="{{ 'theme.css' | url }}">
     <link rel="icon" href="{{ config.site_url }}assets/images/favicon.png">
+    <script src="/labs/assets/contenu.js"></script>
 </head>
 
 <body class="ibPrintPage">
@@ -19,15 +20,15 @@
             <button id="ibPrintSetupClose" title="Fermer">✕</button>
         </div>
         <div class="ibPrintSetupBody">
-            <p> Confgurez le contenu du cahier d'ateliers avant impression. <br/>
-            Les variables permettent de personnaliser les informations utilisées dans cet atelier.
-            Les notes personnelles seront ajoutées en tête de chaque exercice.</p>
-                <div class="ibPrintSetupSection"> <h3>Variables</h3>
+            <p> Confgurez le contenu du cahier d'ateliers avant impression.
+            <span id="printVariablesTip"><br/>Les variables permettent de personnaliser les informations utilisées dans cet atelier.</span>
+            <span id="prinNotesTip"><br/>Les notes personnelles seront ajoutées en tête de chaque exercice.</span></p>
+                <div class="ibPrintSetupSection" id="ibPrintVariablesSection"> <h3>Variables</h3>
                     <label class="ibCheckboxContainer">
                     <input type="checkbox" id="useCustomVariables" unchecked>
                     Utiliser mes paramètres personnels</label>
                 </div>
-                <div class="ibPrintSetupSection">
+                <div class="ibPrintSetupSection" id="ibPrintNotesSection">
                     <h3>Notes personnelles</h3>
                     <label class="ibCheckboxContainer">
                     <input type="checkbox" id="includePersonalNotes" unchecked>
