@@ -13,4 +13,3 @@ for dossier in docs.iterdir():
     else: contenu = tools.charger_markdown_stage(dossier)
     contenu = tools.preparer_variables_print(dossier,contenu)
     (dossier / "print.md").write_text( contenu, encoding="utf-8" )
-    print(repr(tools.construire_yaml_print(titre, dossier_stage)))

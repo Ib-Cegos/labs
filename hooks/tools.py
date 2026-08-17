@@ -153,6 +153,9 @@ def charger_markdown_stage(dossier_stage):
     if readme.exists(): contenu_readme = readme.read_text( encoding="utf-8" )
     match = re.search( r"^#\s+(.+)$", contenu_readme, re.MULTILINE )
     if match: titre = match.group(1).strip()
+
+    print(repr(construire_yaml_print(titre, dossier_stage)))
+
     return ( construire_yaml_print(titre,dossier_stage) + contenu)
 
 def charger_markdown_atelier_autonome(dossier_stage):
@@ -162,6 +165,9 @@ def charger_markdown_atelier_autonome(dossier_stage):
     titre_match = re.search( r"^#\s+(.+)$", contenu, re.MULTILINE )
     if titre_match: titre = titre_match.group(1).strip()
     contenu = preparer_variables_print( dossier_stage, contenu )
+
+    print(repr(construire_yaml_print(titre, dossier_stage)))
+
     return ( construire_yaml_print(titre,dossier_stage) + '<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n' + contenu )
 
 def est_page_print(page):
