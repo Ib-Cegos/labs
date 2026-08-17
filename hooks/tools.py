@@ -168,15 +168,12 @@ def est_page_print(page):
     return page.file.src_uri.endswith("/print.md")
 
 def recuperer_infos_git(dossier_stage):
-    racine_git = Path.cwd()
-    print("CWD =", racine_git)
-    print( "RELATIF =", Path(dossier_stage).relative_to(racine_git) )
-    chemin_git = str( Path(dossier_stage).relative_to(Path.cwd()))
     try:
-        resultat = subprocess.run( ["git","log","-1","--format=%h|%an|%ad","--date=format:%d/%m/%Y",'--',chemin_git],capture_output=True,text=True,check=True)
+        resultat = subprocess.run(["git", "log", "--oneline", "--", str(dossier_stage)],capture_output=True,text=True)
+        print(resultat.stdout[:500])
+
+        resultat = subprocess.run( ["git","log","-1","--format=%h|%an|%ad","--date=format:%d/%m/%Y",'--',str(dossier_stage)],capture_output=True,text=True,check=True)
         git_version, auteur, date_edition = (resultat.stdout.strip().split("|", 2))
-        print("CHEMIN =", dossier_stage)
-        print("RESULTAT =", resultat.stdout)
         return { "gitVersion": git_version, "editorName": auteur, "editionDate": date_edition }
     except Exception:
         return { "gitVersion": "", "editorName": "", "editionDate": "" }
