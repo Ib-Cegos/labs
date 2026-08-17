@@ -51,3 +51,7 @@ figcaption { text-align: center; font-size: .9em; }
 .ibPrintNotesTitle { font-weight: bold; display: inline-block; padding-bottom: .15rem; border-bottom: 2px dotted #666; margin-bottom: .5rem; }
 .ibPrintNotesTitle::before { content: "✏️"; font-weight: normal; }
 .ibPrintNotesContent { line-height: 1.4; font-style: italic; }
+
+/* Informations d'édition (version) */
+#ibPrintCoverInfo { width: fit-content; margin: 2rem auto 3rem auto; padding: 1rem 2rem; border: 1px solid #999; text-align: left; font-size: .95rem; }
+#ibPrintCoverInfo strong { color: #666; font-weight: 600; }
