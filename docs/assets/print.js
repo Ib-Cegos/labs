@@ -31,7 +31,9 @@ function ibToglePrintNotes() {
             else {NoteDiv.hidden = true; }});}
 
 /* Placer les informations d'édition sous le premier titre H1 de la page de garde */
-document.querySelector("#ibPrintContent h1")insertAdjacentElement("afterend",document.getElementById("ibPrintCoverInfo"));            
+const h1 = document.querySelector("#ibPrintContent h1");
+const infos = document.getElementById("ibPrintCoverInfo");
+if (h1 && infos) { h1.insertAdjacentElement("afterend", infos); }       
 
 /* Insertion du contenu dans les notes */
 const cheminPrint = window.location.pathname.split("/").filter(Boolean);

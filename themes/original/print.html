@@ -43,16 +43,10 @@
         </div>
     </div>
     <div id="ibPrintCoverInfo">
-    <div>
-        <strong>Édition :</strong> {{ editionDate }}
+    <div><strong>Édition :</strong> {{ page.meta.editionDate }}</div>
+    <div><strong>Version Git :</strong> {{ page.meta.gitVersion }}</div>
+    <div><strong>Dernière révision :</strong> {{ page.meta.editorName }}</div>
     </div>
-    <div>
-        <strong>Version Git :</strong> {{ gitVersion }}
-    </div>
-    <div>
-        <strong>Dernière révision :</strong> {{ editorName }}
-    </div>
-</div>
     <div id="ibPrintSetupOverlay"></div>
     <script src="/labs/assets/print.js"></script>
 </body>
