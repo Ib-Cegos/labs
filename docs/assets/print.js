@@ -18,11 +18,23 @@ document.getElementById("ibPrintSetupClose").addEventListener("click", () => {
     document.getElementById("ibPrintSetupOverlay").style.display = "none"; });
 document.getElementById("ibPrintButton").addEventListener("click", () => { launchPrint(); });
 
+function ibToglePrintVariables() {
+    const useCustomVariables = document.getElementById("useCustomVariables").checked;
+    document.querySelectorAll(".ibPrintVariable").forEach(varDiv => {
+            if (useCustomVariables) { varDiv.textContent = varDiv.dataset.custom; }
+            else {varDiv.textContent = varDiv.dataset.default; }});}
+
+function ibToglePrintNotes() {
+    const includeNotes = document.getElementById("includePersonalNotes").checked;
+    document.querySelectorAll(".ibPrintNotes").forEach(NoteDiv => {
+            if (includeNotes) { NoteDiv.hidden = false; }
+            else {NoteDiv.hidden = true; }});}
+
 /* Insertion du contenu dans les notes */
 const cheminPrint = window.location.pathname.split("/").filter(Boolean);
-codeStage = (cheminPrint[cheminPrint.length - 2]).toLowerCase();
+let codeStage = (cheminPrint[cheminPrint.length - 2]).toLowerCase();
 window.ibLabCode = codeStage
-nbNotes = 0;
+let nbNotes = 0;
 document.querySelectorAll('.ibPrintNotes').forEach(NoteDiv => {
     const valeur = localStorage.getItem(ibNoteKey(codeStage,NoteDiv.dataset.exercise))
     if (valeur) {
@@ -32,31 +44,19 @@ document.querySelectorAll('.ibPrintNotes').forEach(NoteDiv => {
         nbNotes++}
     else {
         NoteDiv.remove();}})
-if (nbNotes > 1) { notesPluriel = 's';} else { notesPluriel = ''}
+if (nbNotes > 1) { let notesPluriel = 's';} else { let notesPluriel = ''}
 if (nbNotes < 1) { 
     document.getElementById('ibPrintNotesSection').remove()
     document.getElementById('prinNotesTip').remove()}
-else { document.getElementById('notesSummary').innerHTML = nbNotes + ' note' + notesPluriel + ' trouvée' + notesPluriel; }
-document.getElementById("includePersonalNotes").addEventListener("change", ibToglePrintNotes);
-
-function ibToglePrintVariables() {
-    const useCustomVariables = document.getElementById("useCustomVariables").checked;
-    document.querySelectorAll(".ibPrintVariable").forEach(varDiv => {
-            if (useCustomVariables) { varDiv.innerHTML = varDiv.dataset.custom; }
-            else {varDiv.innerHTML = varDiv.dataset.default; }});}
-
-function ibToglePrintNotes() {
-    const includeNotes = document.getElementById("includePersonalNotes").checked;
-    document.querySelectorAll(".ibPrintNotes").forEach(NoteDiv => {
-            if (includeNotes) { NoteDiv.hidden = false; }
-            else {NoteDiv.hidden = true; }});}
+else {
+    document.getElementById('notesSummary').innerHTML = nbNotes + ' note' + notesPluriel + ' trouvée' + notesPluriel; 
+    document.getElementById("includePersonalNotes").addEventListener("change", ibToglePrintNotes);}
 
 /* Insertion des valeurs dans les variables */
-nbVariables = 0;
+let nbVariables = 0;
 document.querySelectorAll('.ibPrintVariable').forEach(variableDiv => {
     const nomVar = variableDiv.dataset.variable.toLowerCase();
     const valeur = localStorage.getItem( ibVarKey(nomVar));
-    console.log(nomVar + ibVarKey(nomVar) + valeur);
     if (valeur) {
         nbVariables ++;
         variableDiv.dataset.custom=valeur; }});
