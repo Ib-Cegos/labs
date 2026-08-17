@@ -43,6 +43,7 @@ nbVariables = 0;
 document.querySelectorAll('.ibPrintVariable').forEach(variableDiv => {
     const nomVar = variableDiv.dataset.variable.toLowerCase();
     const valeur = localStorage.getItem( ibVarKey(nomVar));
+    console.log(nomVar + ibVarKey(nomVar) + valeur);
     if (valeur) {
         nbVariables ++;
         variableDiv.dataset.custom=valeur; }});
