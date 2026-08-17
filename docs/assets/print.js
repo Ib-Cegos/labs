@@ -21,6 +21,7 @@ document.getElementById("ibPrintButton").addEventListener("click", () => { launc
 /* Insertion du contenu dans les notes */
 const cheminPrint = window.location.pathname.split("/").filter(Boolean);
 codeStage = (cheminPrint[cheminPrint.length - 2]).toLowerCase();
+window.ibLabCode = codeStage
 nbNotes = 0;
 document.querySelectorAll('.ibPrintNotes').forEach(NoteDiv => {
     const valeur = localStorage.getItem(ibNoteKey(codeStage,NoteDiv.dataset.exercise))
