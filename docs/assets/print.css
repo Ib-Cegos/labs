@@ -48,8 +48,6 @@ figcaption { text-align: center; font-size: .9em; }
 
 /* Anotations personnelles */
 .ibPrintNotes { position: relative; margin: 1rem 0 1.5rem 0; padding: 1rem; border: 1px solid #666; background: white; box-shadow: 3px 3px 0 #ccc; page-break-inside: avoid; }
-/* Coin replié */
-.ibPrintNotes::after { content: ""; position: absolute; top: 0; right: 0; width: 14px; height: 14px; background: linear-gradient( 135deg, white 50%, #d0d0d0 50% ); border-left: 1px solid #888; border-bottom: 1px solid #888; }
-.ibPrintNotesTitle { font-weight: bold; margin-bottom: .5rem; padding-bottom: .25rem; border-bottom: 1px dotted #888; }
+.ibPrintNotesTitle { font-weight: bold; display: inline-block; padding-bottom: .15rem; border-bottom: 2px dotted #666; margin-bottom: .5rem; }
 .ibPrintNotesTitle::before { content: "✏️"; font-weight: normal; }
 .ibPrintNotesContent { line-height: 1.4; font-style: italic; }

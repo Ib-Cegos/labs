@@ -148,9 +148,18 @@ def charger_markdown_stage(dossier_stage):
             morceaux.append( formater_exercice_pour_export( contenu, numero_atelier, titre_atelier or "", exercice["numero"], exercice["titre"]))
     return "\n\n".join(morceaux)
 
+# def charger_markdown_atelier_autonome(dossier_stage):
+#    fichier = next(dossier_stage.glob("a1e1.md"))
+#    return f'<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n' + preparer_variables_print(dossier_stage,extraire_markdown_sans_yaml(fichier)) 
+
 def charger_markdown_atelier_autonome(dossier_stage):
     fichier = next(dossier_stage.glob("a1e1.md"))
-    return f'<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n' + preparer_variables_print(dossier_stage,extraire_markdown_sans_yaml(fichier)) 
+    contenu = extraire_markdown_sans_yaml(fichier)
+    titre = "Cahier d'atelier"
+    titre_match = re.search( r"^#\s+(.+)$", contenu, re.MULTILINE )
+    if titre_match: titre = titre_match.group(1).strip()
+    contenu = preparer_variables_print( dossier_stage, contenu )
+    return ( f'---\nitle: {titre}\n---\n\n<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n{contenu}' )
 
 def est_page_print(page):
     return page.file.src_uri.endswith("/print.md")
