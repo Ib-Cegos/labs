@@ -171,9 +171,9 @@ def est_page_print(page):
 
 def recuperer_infos_git(fichier):
     try:
-        fichier = env.conf['docs_dir'] + '\\' + fichier
         print(fichier)
         resultat = subprocess.run([ "git", "log", "-1", "--format=%h|%an|%ad", "--date=format:%d/%m/%Y", "--follow", "--", str(fichier)], capture_output=True, text=True, check=True)
+        print(resultat)
         git_version, auteur, date_edition = ( resultat.stdout.strip().split("|", 2))
         return { "gitVersion": git_version, "editorName": auteur, "editionDate": date_edition}
     except Exception: return { "gitVersion": "", "editorName": "", "editionDate": "" }
