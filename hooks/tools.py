@@ -183,17 +183,16 @@ def recuperer_infos_git_stage(dossier_stage):
     fichiers = []
     readme = dossier_stage / "README.md"
     if readme.exists(): fichiers.append(readme)
-    fichiers.extend( sorted( dossier_stage.glob("a*e*.md")))
+    fichiers.extend(sorted(dossier_stage.glob("a*e*.md")))
     for fichier in fichiers:
-        infos = recuperer_infos_git( fichier )
+        infos = recuperer_infos_git(fichier)
         print("[DEBUG] infos_git =", infos)
-        try:
-            date_infos = datetime.strptime( infos["editionDate"], "%d/%m/%Y" )
-            if ( date_plus_recente is None or date_infos > date_plus_recente ):
-                date_plus_recente = date_infos
-                infos_plus_recents = infos
-        except Exception: pass
-    return infos_plus_recents     
+        date_infos = infos["editionDateCalc"]
+        if date_infos is None: continue
+        if ( date_plus_recente is None or date_infos > date_plus_recente ):
+            date_plus_recente = date_infos
+            infos_plus_recents = infos
+    return infos_plus_recents
 
 def construire_yaml_print( titre, dossier_stage):
     infos_git = recuperer_infos_git_stage( dossier_stage )
@@ -215,6 +214,7 @@ def recuperer_infos_git(fichier):
     response = requests.get( url, headers=headers, params=params, timeout=30 )
     response.raise_for_status()
     commits = response.json()
-    if not commits: return  { "gitVersion": 'none', "editorName": 'none', "editionDate": 'none'}
+    if not commits: return  { "gitVersion": 'none', "editorName": 'none', "editionDate": 'none', "editionDateCalc": None}
     commit = commits[0]
-    return { "gitVersion": commit['sha'][:7], "editorName": commit["commit"]["author"]["name"], "editionDate": commit["commit"]["author"]["date"]}
+    edition_date_calc = datetime.strptime( commit["commit"]["author"]["date"], "%Y-%m-%dT%H:%M:%SZ" )
+    return { "gitVersion": commit['sha'][:7], "editorName": commit["commit"]["author"]["name"], "editionDate": edition_date_calc.strftime("%d/%m/%Y"), "editionDateCalc": edition_date_calc}
