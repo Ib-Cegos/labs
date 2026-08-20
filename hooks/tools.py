@@ -7,12 +7,6 @@ import requests
 from datetime import datetime
 from pathlib import Path
 
-@dataclass
-class CommitInfo:
-    sha: str
-    author_name: str
-    commit_date: str
-
 REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
 REGEX_SOMMAIRE = re.compile( r"\{\{\s*sommaire\s*\(\s*\)\s*\}\}", re.IGNORECASE )
 YAML_ERRORS = []
