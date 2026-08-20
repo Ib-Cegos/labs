@@ -80,7 +80,7 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 
 
 /* date de mise à jour de l'exercice */
-#ibPageInfo { position: fixed; right: .5rem; bottom: 80px; writing-mode: vertical-rl; transform: rotate(180deg); font-size: .70rem; color: #999; }
+#ibPageInfo { position: fixed; right: .5rem; bottom: 80px; writing-mode: vertical-rl; transform: rotate(180deg); font-size: .70rem; color: #999; cursor: default; user-select: none; }
 
 /* Désactivation des fonctions si prérequis indisponibles */
 .ibSettingsAction:disabled { opacity: .5; cursor: not-allowed; }
