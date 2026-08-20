@@ -4,7 +4,7 @@ import yaml
 import subprocess
 import os
 import requests
-from datclasses import dataclass
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
