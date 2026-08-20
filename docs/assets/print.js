@@ -1,12 +1,16 @@
+/* Mise en place des sauts de page */
 document.addEventListener("DOMContentLoaded", () => {
-    const walker = document.createTreeWalker( document.body, NodeFilter.SHOW_COMMENT );
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_COMMENT);
     const commentaires = [];
     while (walker.nextNode()) { commentaires.push(walker.currentNode); }
     commentaires.forEach(commentaire => {
-        if ( commentaire.nodeValue.trim() === "IBLAB_PAGE_BREAK" ) {
-            const saut = document.createElement("div");
-            saut.className = "ibPageBreak";
-            commentaire.parentNode.replaceChild( saut, commentaire );}});});
+        const valeur = commentaire.nodeValue.trim();
+        if (!valeur.startsWith("IBLAB_PAGE_BREAK")) { return; }
+        const saut = document.createElement("div");
+        saut.className = "ibPageBreak";
+        const morceaux = valeur.split("|");
+        if (morceaux.length > 1) { saut.id = morceaux[1]; }
+        commentaire.parentNode.replaceChild( saut, commentaire );});});
 
 function launchPrint() {
     document.getElementById("ibPrintSetupDialog").style.display = "none";

@@ -10,7 +10,7 @@ from pathlib import Path
 REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
 REGEX_SOMMAIRE = re.compile( r"\{\{\s*sommaire\s*\(\s*\)\s*\}\}", re.IGNORECASE )
 YAML_ERRORS = []
-IBLAB_PAGE_BREAK = "<!-- IBLAB_PAGE_BREAK -->"
+IBLAB_PAGE_BREAK_PREFIX = "IBLAB_PAGE_BREAK"
 REGEX_VARIABLE = re.compile( r"\[([A-Za-z0-9_]+)\]")
 
 def preparer_variables_print(dossier_stage,contenu):
@@ -107,7 +107,7 @@ def construire_sommaire_export(dossier_stage):
         if titre_atelier: morceaux.append( f"- Atelier {numero_atelier} - {titre_atelier}" )
         else: morceaux.append( f"- Atelier {numero_atelier}" )
         for exercice in exercices:
-            morceaux.append( f"    - Exercice {exercice['numero']} - {exercice['titre']}" )
+            morceaux.append( f"    - <a class='ibPrintTocLink' href='#a{numero_atelier}e{exercice['numero']}'>Exercice {exercice['numero']} - {exercice['titre']}</a>" )
     return "\n".join(morceaux)
 
 def decaler_titres_markdown(contenu, niveaux=2):
@@ -125,7 +125,7 @@ def formater_exercice_pour_export( contenu, numero_atelier, titre_atelier, numer
     contenu = re.sub( r"^#\s+.+?\n+", "", contenu, count=1, flags=re.MULTILINE ).lstrip()
     contenu = decaler_titres_markdown( contenu, niveaux=2 )
     return (
-    f"\n\n{IBLAB_PAGE_BREAK}\n\n"
+    f"<!-- {IBLAB_PAGE_BREAK_PREFIX}|a{numero_atelier}e{numero_exercice} -->"
     f"# Atelier {numero_atelier} - {titre_atelier}\n\n"
     f"## Exercice {numero_exercice} - {titre_exercice}\n\n"
     f'<div class="ibPrintNotes" '
