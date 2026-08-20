@@ -179,7 +179,6 @@ def recuperer_infos_git_stage(dossier_stage):
     fichiers.extend(sorted(dossier_stage.glob("a*e*.md")))
     for fichier in fichiers:
         infos = recuperer_infos_git(fichier)
-        print("[DEBUG] infos_git =", infos)
         date_infos = infos["editionDateCalc"]
         if date_infos is None: continue
         if ( date_plus_recente is None or date_infos > date_plus_recente ):
