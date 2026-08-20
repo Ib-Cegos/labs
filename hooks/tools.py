@@ -2,9 +2,17 @@
 import re
 import yaml
 import subprocess
-
+import os
+import requests
+from datclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+
+@dataclass
+class CommitInfo:
+    sha: str
+    author_name: str
+    commit_date: str
 
 REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
 REGEX_SOMMAIRE = re.compile( r"\{\{\s*sommaire\s*\(\s*\)\s*\}\}", re.IGNORECASE )
@@ -169,22 +177,6 @@ def charger_markdown_atelier_autonome(dossier_stage):
 def est_page_print(page):
     return page.file.src_uri.endswith("/print.md")
 
-def recuperer_infos_git(fichier):
-    try:
-        print(get_git_root())
-        print(fichier)
-        resultat = subprocess.run([ "git", "log", "-1", "--format=%h|%an|%ad", "--date=format:%d/%m/%Y", "--follow", "--", str(fichier)], capture_output=True, text=True, check=True)
-        print(resultat)
-        git_version, auteur, date_edition = ( resultat.stdout.strip().split("|", 2))
-        return { "gitVersion": git_version, "editorName": auteur, "editionDate": date_edition}
-    except Exception: return { "gitVersion": "", "editorName": "", "editionDate": "" }
-
-def get_git_root():
-    try:
-        result = subprocess.run(["git", "rev-parse", "--show-toplevel"],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,check=True)
-        return result.stdout.strip()
-    except subprocess.CalledProcessError: return None
-
 def recuperer_infos_git_stage(dossier_stage):
     infos_plus_recents = { "gitVersion": "", "editorName": "", "editionDate": "" }
     date_plus_recente = None
@@ -205,3 +197,17 @@ def recuperer_infos_git_stage(dossier_stage):
 def construire_yaml_print( titre, dossier_stage):
     infos_git = recuperer_infos_git_stage( dossier_stage )
     return ( f"---\ntitle: {titre}\neditionDate: {infos_git['editionDate']}\ngitVersion: {infos_git['gitVersion']}\neditorName: {infos_git['editorName']}\n---\n\n")
+
+def recuperer_infos_git(fichier):
+    #Récupérer les informations d'un commit par l'api github
+    token = os.environ["GITHUB_TOKEN"]
+    owner, repo = os.environ["GITHUB_REPOSITORY"].split("/")
+    url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+    headers = { "Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" }
+    params = { "path": fichier, "per_page": 1 }
+    response = requests.get( url, headers=headers, params=params, timeout=30 )
+    response.raise_for_status()
+    commits = response.json()
+    if not commits: return  { "gitVersion": 'none', "editorName": 'none', "editionDate": 'none'}
+    commit = commits[0]
+    return { "gitVersion": commit['sha'][:7], "editorName": commit["commit"]["author"]["name"], "editionDate": commit["commit"]["author"]["date"]}
