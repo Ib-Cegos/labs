@@ -171,12 +171,19 @@ def est_page_print(page):
 
 def recuperer_infos_git(fichier):
     try:
+        print(get_git_root())
         print(fichier)
         resultat = subprocess.run([ "git", "log", "-1", "--format=%h|%an|%ad", "--date=format:%d/%m/%Y", "--follow", "--", str(fichier)], capture_output=True, text=True, check=True)
         print(resultat)
         git_version, auteur, date_edition = ( resultat.stdout.strip().split("|", 2))
         return { "gitVersion": git_version, "editorName": auteur, "editionDate": date_edition}
     except Exception: return { "gitVersion": "", "editorName": "", "editionDate": "" }
+
+def get_git_root():
+    try:
+        result = subprocess.run(["git", "rev-parse", "--show-toplevel"],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,check=True)
+        return result.stdout.strip()
+    except subprocess.CalledProcessError: return None
 
 def recuperer_infos_git_stage(dossier_stage):
     infos_plus_recents = { "gitVersion": "", "editorName": "", "editionDate": "" }
