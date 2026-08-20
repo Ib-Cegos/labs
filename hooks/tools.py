@@ -206,6 +206,9 @@ def recuperer_infos_git(fichier):
     headers = { "Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" }
     params = { "path": fichier, "per_page": 1 }
     response = requests.get( url, headers=headers, params=params, timeout=30 )
+    print(f"[DEBUG] path transmis à GitHub : '{fichier}'")
+    print(response.status_code)
+    print(response.text)
     response.raise_for_status()
     commits = response.json()
     if not commits: return  { "gitVersion": 'none', "editorName": 'none', "editionDate": 'none'}
