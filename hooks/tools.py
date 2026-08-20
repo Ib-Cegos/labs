@@ -200,6 +200,12 @@ def construire_yaml_print( titre, dossier_stage):
 
 def recuperer_infos_git(fichier):
     #Récupérer les informations d'un commit par l'api github
+    fichier = Path(fichier)
+    workspace = Path(os.environ["GITHUB_WORKSPACE"])
+    try:
+        fichier = str(fichier.relative_to(workspace))
+    except ValueError:
+        fichier = str(fichier)
     token = os.environ["GITHUB_TOKEN"]
     owner, repo = os.environ["GITHUB_REPOSITORY"].split("/")
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
