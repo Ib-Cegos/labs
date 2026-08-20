@@ -1,5 +1,5 @@
 /* Mise en place des sauts de page */
-Document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_COMMENT);
     const commentaires = [];
     while (walker.nextNode()) { commentaires.push(walker.currentNode); }
