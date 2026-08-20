@@ -107,7 +107,7 @@ def construire_sommaire_export(dossier_stage):
         if titre_atelier: morceaux.append( f"- Atelier {numero_atelier} - {titre_atelier}" )
         else: morceaux.append( f"- Atelier {numero_atelier}" )
         for exercice in exercices:
-            morceaux.append( f"    - <a class='ibprintTocLink' href='#a{numero_atelier}e{exercice['numero']}'>Exercice {exercice['numero']} - {exercice['titre']}</a>" )
+            morceaux.append( f"    - <a class='ibPrintTocLink' href='#a{numero_atelier}e{exercice['numero']}'>Exercice {exercice['numero']} - {exercice['titre']}</a>" )
     return "\n".join(morceaux)
 
 def decaler_titres_markdown(contenu, niveaux=2):
