@@ -4,7 +4,6 @@ import yaml
 import subprocess
 import os
 import requests
-from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
@@ -199,22 +198,34 @@ def construire_yaml_print( titre, dossier_stage):
     return ( f"---\ntitle: {titre}\neditionDate: {infos_git['editionDate']}\ngitVersion: {infos_git['gitVersion']}\neditorName: {infos_git['editorName']}\n---\n\n")
 
 def recuperer_infos_git(fichier):
-    #Récupérer les informations d'un commit par l'api github
     fichier = Path(fichier)
-    workspace = Path(os.environ["GITHUB_WORKSPACE"])
+    # Cas 1 : GitHub Actions
+    if ( "GITHUB_TOKEN" in os.environ and "GITHUB_REPOSITORY" in os.environ):
+        workspace = Path(os.environ.get("GITHUB_WORKSPACE", fichier.parent ))
+        try:
+            fichier_github = str(fichier.relative_to(workspace))
+        except ValueError: fichier_github = str(fichier)
+        token = os.environ["GITHUB_TOKEN"]
+        owner, repo = os.environ["GITHUB_REPOSITORY"].split("/")
+        url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+        headers = { "Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" }
+        params = { "path": fichier_github, "per_page": 1 }
+        try:
+            response = requests.get( url, headers=headers, params=params, timeout=30)
+            response.raise_for_status()
+            commits = response.json()
+            if commits:
+                commit = commits[0]
+                edition_date_calc = datetime.strptime( commit["commit"]["author"]["date"], "%Y-%m-%dT%H:%M:%SZ" )
+                return {"gitVersion": commit["sha"][:7], "editorName": commit["commit"]["author"]["name"], "editionDate": edition_date_calc.strftime("%d/%m/%Y"), "editionDateCalc": edition_date_calc}
+        except Exception as e: print(f"[DEBUG] récupération GitHub API pour '{fichier}' : {e}")
+    # Cas 2 : Git local (MkDocs local ou GitHub Desktop)
     try:
-        fichier = str(fichier.relative_to(workspace))
-    except ValueError:
-        fichier = str(fichier)
-    token = os.environ["GITHUB_TOKEN"]
-    owner, repo = os.environ["GITHUB_REPOSITORY"].split("/")
-    url = f"https://api.github.com/repos/{owner}/{repo}/commits"
-    headers = { "Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" }
-    params = { "path": fichier, "per_page": 1 }
-    response = requests.get( url, headers=headers, params=params, timeout=30 )
-    response.raise_for_status()
-    commits = response.json()
-    if not commits: return  { "gitVersion": 'none', "editorName": 'none', "editionDate": 'none', "editionDateCalc": None}
-    commit = commits[0]
-    edition_date_calc = datetime.strptime( commit["commit"]["author"]["date"], "%Y-%m-%dT%H:%M:%SZ" )
-    return { "gitVersion": commit['sha'][:7], "editorName": commit["commit"]["author"]["name"], "editionDate": edition_date_calc.strftime("%d/%m/%Y"), "editionDateCalc": edition_date_calc}
+        sha = subprocess.check_output(["git", "log", "-n", "1", "--format=%h", "--", str(fichier)], text=True).strip()
+        auteur = subprocess.check_output(["git", "log", "-n", "1", "--format=%an", "--", str(fichier)], text=True ).strip()
+        date_git = subprocess.check_output(["git", "log", "-n", "1", "--format=%aI", "--", str(fichier)], text=True ).strip()
+        edition_date_calc = datetime.fromisoformat( date_git.replace("Z", "+00:00") )
+        return { "gitVersion": sha, "editorName": auteur, "editionDate": edition_date_calc.strftime("%d/%m/%Y"), "editionDateCalc": edition_date_calc }
+    except Exception as e: print(f"[DEBUG] récupération GIT local pour '{fichier}' : {e}")
+    # Cas 3 : aucune information disponible
+    return { "gitVersion": "none", "editorName": "none", "editionDate": "none", "editionDateCalc": None }
