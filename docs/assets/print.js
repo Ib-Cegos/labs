@@ -12,8 +12,8 @@ commentaires.forEach(commentaire => {
     saut.className = "ibPageBreak";
     const morceaux = valeur.split("|");
     if (morceaux.length > 1) { saut.id = morceaux[1]; }
-    commentaire.parentNode.replaceChild( saut, commentaire );});});
-    
+    commentaire.parentNode.replaceChild( saut, commentaire );});
+
 /* Test numéros de page */
 document.querySelectorAll(".ibPageBreak").forEach(div => {
     const page = Math.floor( div.offsetTop / pageHeight ) + 1;
