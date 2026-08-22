@@ -25,7 +25,7 @@ def preparer_variables_print(dossier_stage,contenu):
     variables = meta.get("Variables", {})
     for nom, definition in variables.items():
         valeur_defaut = definition.get( "defaut", "" )
-        contenu = re.sub( rf"\[{re.escape(nom)}\][[{nom}],[{valeur_defaut}]]", contenu, flags=re.IGNORECASE )
+        contenu = re.sub( rf"\[{re.escape(nom)}\]", f"[[{nom}],[{valeur_defaut}]]", contenu, flags=re.IGNORECASE)
     return contenu
 
 def charger_structure_stage(dossier_stage):
