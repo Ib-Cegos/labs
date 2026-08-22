@@ -12,12 +12,16 @@ Variables:
         lib: Domaine DNS de l'entreprise
         defaut: labXXXXX
         aide: Peut être trouvé sous le nom "Lab Domain" dans l'onglet "DNS" du volet de gauche de votre environnement goDeploy.
+    defaultPass:
+        defaut: Pa55w.rd
     userPass:
         defaut: ibForm@tion
+    365Licence:
+        defaut: Microsoft 365 E5 (no Teams)
 ---
 
 # Administration de Microsoft 365
-L'entreprise Adatum héberge actuellement un environnement informatique *classique*, dans ses datacenters, qui comporte diverses applications historiques (comme Microsoft Exchange par exemple). L'entreprise a cependant récemment acquis un abonnement Microsoft 365, voyant ici l'opportunité d'un déploiement hybride et d'un rapprochement des applications du Cloud.  
+L'entreprise Adatum héberge actuellement un environnement informatique *classique* (dans ses datacenters) qui comporte diverses applications historiques (comme Microsoft Exchange par exemple). L'entreprise a cependant récemment acquis un abonnement Microsoft 365, y voyant l'opportunité d'un déploiement hybride et d'un rapprochement des applications du Cloud.  
 
 Au fil des ateliers de ce stage, vous allez prendre l'identité de Dominique Skyetson, membre de l'équipe d'administration IT de Adatum.
 

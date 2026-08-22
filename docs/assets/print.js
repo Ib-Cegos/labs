@@ -1,16 +1,23 @@
 /* Mise en place des sauts de page */
-document.addEventListener("DOMContentLoaded", () => {
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_COMMENT);
-    const commentaires = [];
-    while (walker.nextNode()) { commentaires.push(walker.currentNode); }
-    commentaires.forEach(commentaire => {
-        const valeur = commentaire.nodeValue.trim();
-        if (!valeur.startsWith("IBLAB_PAGE_BREAK")) { return; }
-        const saut = document.createElement("div");
-        saut.className = "ibPageBreak";
-        const morceaux = valeur.split("|");
-        if (morceaux.length > 1) { saut.id = morceaux[1]; }
-        commentaire.parentNode.replaceChild( saut, commentaire );});});
+const PAGE_HEIGHTS = { A4: 1122 };
+const pageHeight = PAGE_HEIGHTS.A4;
+
+const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_COMMENT);
+const commentaires = [];
+while (walker.nextNode()) { commentaires.push(walker.currentNode); }
+commentaires.forEach(commentaire => {
+    const valeur = commentaire.nodeValue.trim();
+    if (!valeur.startsWith("IBLAB_PAGE_BREAK")) { return; }
+    const saut = document.createElement("div");
+    saut.className = "ibPageBreak";
+    const morceaux = valeur.split("|");
+    if (morceaux.length > 1) { saut.id = morceaux[1]; }
+    commentaire.parentNode.replaceChild( saut, commentaire );});});
+    
+/* Test numéros de page */
+document.querySelectorAll(".ibPageBreak").forEach(div => {
+    const page = Math.floor( div.offsetTop / pageHeight ) + 1;
+    console.log( div.id, page ); });    
 
 function launchPrint() {
     document.getElementById("ibPrintSetupDialog").style.display = "none";
@@ -61,15 +68,6 @@ if (nbNotes < 1) {
 else {
     document.getElementById('notesSummary').innerHTML = nbNotes + ' note' + notesPluriel + ' trouvée' + notesPluriel; 
     document.getElementById("includePersonalNotes").addEventListener("change", ibToglePrintNotes);}
-
-/* Insertion des valeurs dans les variables 
-let nbVariables = 0;
-document.querySelectorAll('.ibPrintVariable').forEach(variableDiv => {
-    const nomVar = variableDiv.dataset.variable.toLowerCase();
-    const valeur = localStorage.getItem( ibVarKey(nomVar));
-    if (valeur) {
-        nbVariables ++;
-        variableDiv.dataset.custom=valeur; }}); */
 
 /* Insertion des valeurs dans les variables */
 let nbVariables = 0;
