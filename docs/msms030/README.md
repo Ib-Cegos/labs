@@ -36,4 +36,4 @@ L'équipe projet de Adatum a décidé de mettre en œuvre Microsoft 365  dans un
     - L'exercice 2 de l'atelier 2 est dispensable
     - L'atelier 3 est dispensable.
     - Les tâches 2 et 3 de l'atelier 4, exercice 1 sont dispensables
-    - Si vous souhaitez maximiser vos chances de constater les résultats de l'atelier 10, vous pouvez le réaliser en avance, car son résultat nécessite une latence importante.
+    - Si vous souhaitez maximiser vos chances de constater les résultats de l'atelier 10, vous pouvez le réaliser en avance, car son résultat nécessite un délai d'attente importante.
