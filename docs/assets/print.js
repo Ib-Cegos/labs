@@ -62,14 +62,24 @@ else {
     document.getElementById('notesSummary').innerHTML = nbNotes + ' note' + notesPluriel + ' trouvée' + notesPluriel; 
     document.getElementById("includePersonalNotes").addEventListener("change", ibToglePrintNotes);}
 
-/* Insertion des valeurs dans les variables */
+/* Insertion des valeurs dans les variables 
 let nbVariables = 0;
 document.querySelectorAll('.ibPrintVariable').forEach(variableDiv => {
     const nomVar = variableDiv.dataset.variable.toLowerCase();
     const valeur = localStorage.getItem( ibVarKey(nomVar));
     if (valeur) {
         nbVariables ++;
-        variableDiv.dataset.custom=valeur; }});
+        variableDiv.dataset.custom=valeur; }}); */
+
+/* Insertion des valeurs dans les variables */
+let nbVariables = 0;
+const regexVariables = /\[\[([^\]]+)\],\[([^\]]*)\]\]/gi;
+document.querySelectorAll("#ibPrintContent *").forEach(element => {
+    if (!element.innerHTML) { return; }
+    element.innerHTML = element.innerHTML.replace( regexVariables, (match, nomVar, valeurDefaut) => {
+        nbVariables++;
+        const valeurCustom = localStorage.getItem(ibVarKey(nomVar.toLowerCase())) || valeurDefaut;
+        return `<span class="ibPrintVariable" data-variable="${nomVar.toLowerCase()}" data-default="${valeurDefaut}" data-custom="${valeurCustom}">[${nomVar}]</span>`; });})
 if (nbVariables < 1) { 
     document.getElementById('ibPrintVariablesSection').remove()
     document.getElementById('printVariablesTip').remove()}
