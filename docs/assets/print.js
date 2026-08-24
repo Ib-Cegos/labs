@@ -1,7 +1,3 @@
-/* Mise en place des sauts de page */
-const PAGE_HEIGHTS = { A4: 1122 };
-const pageHeight = PAGE_HEIGHTS.A4;
-
 const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_COMMENT);
 const commentaires = [];
 while (walker.nextNode()) { commentaires.push(walker.currentNode); }
