@@ -14,29 +14,26 @@ commentaires.forEach(commentaire => {
     if (morceaux.length > 1) { saut.id = morceaux[1]; }
     commentaire.parentNode.replaceChild( saut, commentaire );});
 
-/* Test numéros de page */
+/* Test numéros de page
 document.querySelectorAll(".ibPageBreak").forEach(div => {
     const page = Math.floor( div.offsetTop / pageHeight ) + 1;
-    console.log( div.id, page ); });
+    console.log( div.id, page ); }); */
     
 window.addEventListener("beforeprint", () => {
 
     console.clear();
-    console.log("===== BEFORE PRINT =====");
 
-    document.querySelectorAll(".ibPageBreak")
-        .forEach(pageBreak => {
+    console.log(
+        "Largeur document :",
+        document.getElementById("ibPrintContent").offsetWidth
+    );
 
-            const rect = pageBreak.getBoundingClientRect();
+    console.log(
+        "Hauteur document :",
+        document.getElementById("ibPrintContent").scrollHeight
+    );
 
-            console.log(
-                pageBreak.id,
-                rect.top,
-                pageBreak.offsetTop
-            );
-        });
-});    
-
+});
 function launchPrint() {
     document.getElementById("ibPrintSetupDialog").style.display = "none";
     document.getElementById("ibPrintSetupOverlay").style.display = "none";
