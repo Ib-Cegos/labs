@@ -61,3 +61,5 @@ figcaption { text-align: center; font-size: .9em; }
 /* Sommaire */
 .ibPrintTocLink { color: inherit; text-decoration: none; display: inline-block; margin: .1rem 0;}
 .ibPrintTocLink:hover { text-decoration: underline; }
+
+#ibPageInfo::before { content: "Page=" counter(page) "/" counter(pages); }

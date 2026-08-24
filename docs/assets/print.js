@@ -10,31 +10,17 @@ commentaires.forEach(commentaire => {
     if (morceaux.length > 1) { saut.id = morceaux[1]; }
     commentaire.parentNode.replaceChild( saut, commentaire );});
 
-/* Test numéros de page
-document.querySelectorAll(".ibPageBreak").forEach(div => {
-    const page = Math.floor( div.offsetTop / pageHeight ) + 1;
-    console.log( div.id, page ); }); */
-    
-const totalPages = 75;
-const pageHeight =
-document.getElementById("ibPrintContent").scrollHeight
-/
-totalPages;
+/* Test numéros de page */
+window.addEventListener("beforeprint", () => {
 
-document
-    .querySelectorAll(".ibPageBreak")
-    .forEach(el => {
+    console.log(
+        getComputedStyle(
+            document.getElementById("ibPageInfo"),
+            "::before"
+        ).content
+    );
 
-        const page =
-            Math.floor(
-                el.offsetTop / pageHeight
-            ) + 1;
-
-        console.log(
-            el.id,
-            page
-        );
-    });
+});
 
 
 
