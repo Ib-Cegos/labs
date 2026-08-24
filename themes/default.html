@@ -2,7 +2,8 @@
 <head>
     <meta charset="utf-8">
     <title>{{ page.title }}</title>
-    <link rel="stylesheet" href="{{ 'theme.css' | url }}">
+    <script>window.ibTheme = "original";</script>
+    <link id="ibThemeCss" rel="stylesheet" href="{{ config.site_url }}/assets/themes/original.css">
     <link rel="stylesheet" href="{{ config.site_url }}assets/contenu.css">
     <link rel="icon" href="{{ config.site_url }}assets/images/favicon.png">
 </head>
@@ -93,5 +94,5 @@
 </aside>
 {% endif %}
 <script src="{{ config.site_url }}assets/contenu.js"></script>
-<script src="{{ 'theme.js' | url }}"></script>
+<script src="{{ config.site_url}}/assets/interface.js"></script>
 </body></html>
