@@ -19,26 +19,26 @@ document.querySelectorAll(".ibPageBreak").forEach(div => {
     const page = Math.floor( div.offsetTop / pageHeight ) + 1;
     console.log( div.id, page ); }); */
     
-window.addEventListener("beforeprint", () => {
+const totalPages = 75;
+const pageHeight =
+document.getElementById("ibPrintContent").scrollHeight
+/
+totalPages;
 
-    const content =
-        document.getElementById("ibPrintContent");
+document
+    .querySelectorAll(".ibPageBreak")
+    .forEach(el => {
 
-    console.log(
-        "scrollHeight",
-        content.scrollHeight
-    );
+        const page =
+            Math.floor(
+                el.offsetTop / pageHeight
+            ) + 1;
 
-    document
-        .querySelectorAll(".ibPageBreak")
-        .forEach(el => {
-
-            console.log(
-                el.id,
-                el.offsetTop
-            );
-        });
-});
+        console.log(
+            el.id,
+            page
+        );
+    });
 
 
 
