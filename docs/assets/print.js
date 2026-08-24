@@ -11,7 +11,9 @@ commentaires.forEach(commentaire => {
     commentaire.parentNode.replaceChild( saut, commentaire );});
 
 /* Test numéros de page */
-window.addEventListener("beforeprint", () => {
+function dumpCounters(label) {
+
+    console.log(label);
 
     console.log(
         getComputedStyle(
@@ -19,9 +21,33 @@ window.addEventListener("beforeprint", () => {
             "::before"
         ).content
     );
+}
 
-});
+window.addEventListener(
+    "beforeprint",
+    () => dumpCounters("BEFORE")
+);
 
+window.addEventListener(
+    "afterprint",
+    () => dumpCounters("AFTER")
+);
+
+window.addEventListener(
+    "afterprint",
+    () => {
+
+        document
+            .querySelectorAll(".ibPageBreak")
+            .forEach(el => {
+
+                console.log(
+                    el.id,
+                    el.offsetTop
+                );
+            });
+    }
+);
 
 
 function launchPrint() {
