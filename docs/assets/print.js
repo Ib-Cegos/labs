@@ -17,7 +17,25 @@ commentaires.forEach(commentaire => {
 /* Test numéros de page */
 document.querySelectorAll(".ibPageBreak").forEach(div => {
     const page = Math.floor( div.offsetTop / pageHeight ) + 1;
-    console.log( div.id, page ); });    
+    console.log( div.id, page ); });
+    
+window.addEventListener("beforeprint", () => {
+
+    console.clear();
+    console.log("===== BEFORE PRINT =====");
+
+    document.querySelectorAll(".ibPageBreak")
+        .forEach(pageBreak => {
+
+            const rect = pageBreak.getBoundingClientRect();
+
+            console.log(
+                pageBreak.id,
+                rect.top,
+                pageBreak.offsetTop
+            );
+        });
+});    
 
 function launchPrint() {
     document.getElementById("ibPrintSetupDialog").style.display = "none";
