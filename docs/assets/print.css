@@ -25,33 +25,11 @@ figcaption { text-align: center; font-size: .9em; }
 
 /* Mise en page papier */
 @media print {
-    @page { size: A4; maring: 12mm; 
+    @page { size: A4; margin: 12mm; 
             @bottom-center { content: "Page " counter(page) " / " counter(pages); font-size: .8rem;}}
     body { margin: 12mm; }
     .ibPageBreak { margin: 0; border: none; height: 0; page-break-before: always; break-before: page; }
     #ibPrintSetupDialog, #ibPrintSetupOverlay { display: none !important; }
-}
-
-@media print {
-
-    @page {
-
-        size: A4;
-
-        margin: 12mm;
-
-        @bottom-center {
-
-            content:
-                "Page "
-                counter(page)
-                " / "
-                counter(pages);
-
-        }
-
-    }
-
 }
 
 /* Panneau de préparation d'impression */
