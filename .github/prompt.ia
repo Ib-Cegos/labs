@@ -159,4 +159,4 @@ print.html
 print.js
 Le document imprimable doit rester majoritairement préparé côté Python afin de limiter la complexité du JavaScript.
 
-J'ésère que cette description te donne une idée assez précise du moteur. Aujourd'hui, j'ai besoin de ton aide pour débugger la fontion derécupération des informations du log Git d'un fichier
+J'ésère que cette description te donne une idée assez précise du moteur. Dans mon message suivant, je vais maintenant t'indiquer l'objet de notre session de travail aujourd'hui.
