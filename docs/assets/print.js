@@ -21,19 +21,27 @@ document.querySelectorAll(".ibPageBreak").forEach(div => {
     
 window.addEventListener("beforeprint", () => {
 
-    console.clear();
+    const content =
+        document.getElementById("ibPrintContent");
 
     console.log(
-        "Largeur document :",
-        document.getElementById("ibPrintContent").offsetWidth
+        "scrollHeight",
+        content.scrollHeight
     );
 
-    console.log(
-        "Hauteur document :",
-        document.getElementById("ibPrintContent").scrollHeight
-    );
+    document
+        .querySelectorAll(".ibPageBreak")
+        .forEach(el => {
 
+            console.log(
+                el.id,
+                el.offsetTop
+            );
+        });
 });
+
+
+
 function launchPrint() {
     document.getElementById("ibPrintSetupDialog").style.display = "none";
     document.getElementById("ibPrintSetupOverlay").style.display = "none";
