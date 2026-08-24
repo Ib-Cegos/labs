@@ -5,7 +5,7 @@ copyright: ib Cegos
 theme:
   name: mkdocs
   language: fr
-  custom_dir: themes/original
+  custom_dir: themes
 
 hooks:
   - hooks/content_processor.py
