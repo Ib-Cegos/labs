@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <title>{{ page.title }}</title>
-    <link rel="stylesheet" href="/labs/assets/contenu.css">
-    <link rel="stylesheet" href="/labs/assets/print.css">
-    <link rel="stylesheet" href="{{ 'theme.css' | url }}">
+    <link rel="stylesheet" href="{{ config.site_url }}assets/contenu.css">
+    <link rel="stylesheet" href="{{ config.site_url }}assets/print.css">
+    <link rel="stylesheet" href="{{ 'original/theme.css' | url }}">
     <link rel="icon" href="{{ config.site_url }}assets/images/favicon.png">
-    <script src="/labs/assets/contenu.js"></script>
+    <script src="{{ config.site_url }}assets/contenu.js"></script>
 </head>
 
 <body class="ibPrintPage">
@@ -46,6 +46,6 @@
     <strong>© ib Cegos</strong> - Dérnière mise à jour le {{ page.meta.editionDate }} (version {{ page.meta.gitVersion }}, par {{ page.meta.editorName }})
     </div>
     <div id="ibPrintSetupOverlay"></div>
-    <script src="/labs/assets/print.js"></script>
+    <script src="{{ config.site_url }}assets/print.js"></script>
 </body>
 </html>
