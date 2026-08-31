@@ -17,14 +17,14 @@ Lorsqu'un exercice contient déjà des notes personnelles que vous avez saisies,
 
 # Navigation
 
-En cliquant sur l'onglet <div class= "ibNavigationTab">Navigation</div>, vous ouvrez le panneau de navigation.
+En cliquant sur l'onglet <span class= "ibNavigationTab">Navigation</span>, vous ouvrez le panneau de navigation.
 Le panneau Navigation permet de suivre votre progression et d'accéder rapidement aux exercices du stage.
 <div class="ibHasNote"><div class="ibNavExRef">Dans la navigation, une barre jaune indique un exercice pour lequel vous avez saisi des notes personnelles.</div></div>
 
 # Contenu
 
-A droite de certains champs, se trouve un bouton de copie <button class="ibCopyButton ibHelpCopyButton">{{ ibHelpContent }}</button> qui permet de copier le contenu du cadre dans votre presse-papier.
-Dans le contenu des ateliers, vous pouvez identifier le contenu des variables personnelles qui sont affichées <span class="ibVariable">ainsi</span>.
+A droite de certains champs, se trouve un bouton de copie <button class="ibCopyButton ibHelpCopyButton">{{ IB_COPY_BUTTON }}</button> qui permet de copier le contenu du cadre dans votre presse-papier.
+Dans le contenu des ateliers, vous pouvez identifier le contenu des variables personnelles qui sont affichées <span class="ibVariable" data-variable="ainsi">ainsi</span>.
 
 Pour faciliter le suivi de vos opérations dans l'exercice, il vous est conseillé de cliquer sur le <li class="ibLabTask"> numéro</li> d'une tâche.
 Ainsi, par la suite, un numéro <li class="ibLabTask done"> coché</li> représente une tâche que vous avez déjà effectuée.
