@@ -26,5 +26,5 @@ Le panneau Navigation permet de suivre votre progression et d'accéder rapidemen
 A droite de certains champs, se trouve un bouton de copie {{ IB_COPY_BUTTON }} qui permet de copier le contenu du cadre dans votre presse-papier.
 Dans le contenu des ateliers, vous pouvez identifier le contenu des variables personnelles qui sont affichées <span class="ibVariable" data-variable="ainsi">ainsi</span>.
 
-Pour faciliter le suivi de vos opérations dans l'exercice, il vous est conseillé de cliquer sur le <li class="ibLabTask"> numéro</li> d'une tâche.
-Ainsi, par la suite, un numéro <li class="ibLabTask done"> coché</li> représente une tâche que vous avez déjà effectuée.
+Pour faciliter le suivi de vos opérations dans l'exercice, il vous est conseillé de cliquer sur le <li class="iblabTaskHelp"> numéro</li> d'une tâche.
+Ainsi, par la suite, un numéro <li class="iblabTaskHelp done"> coché</li> représente une tâche que vous avez déjà effectuée.
