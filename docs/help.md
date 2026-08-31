@@ -18,7 +18,7 @@ Le panneau Navigation permet de suivre votre progression et d'accéder rapidemen
 <div class="ibHasNote"><div class="ibNavExRef">Dans la navigation, une barre jaune indique un exercice pour lequel vous avez saisi des notes personnelles.</div></div>
 
 # Contenu
-A droite de certains champs, se trouve un bouton de copie {{ IB_COPY_BUTTON }} qui permet de copier le contenu du cadre dans votre presse-papier.  
-Dans le contenu des ateliers, vous pouvez identifier le contenu des variables personnelles qui sont affichées <span class="ibVariable" data-variable="ainsi">ainsi</span>.  
-Pour faciliter le suivi de vos opérations dans l'exercice, il vous est conseillé de cliquer sur le <span class="iblabTaskHelp"> numéro</span> d'une tâche.  
-Ainsi, par la suite, un numéro <span class="iblabTaskHelp done"> coché</span> représente une tâche que vous avez déjà effectuée.
+- A droite de certains champs, se trouve un bouton de copie {{ IB_COPY_BUTTON }} qui permet de copier le contenu du cadre dans votre presse-papier.  
+- Dans le contenu des ateliers, vous pouvez identifier le contenu des variables personnelles qui sont affichées <span class="ibVariable" data-variable="ainsi">ainsi</span>.  
+- Pour faciliter le suivi de vos opérations dans l'exercice, il vous est conseillé de cliquer sur le <span class="iblabTaskHelp"> numéro</span> d'une tâche.  
+- Ainsi, par la suite, un numéro <span class="iblabTaskHelp done"> coché</span> représente une tâche que vous avez déjà effectuée.
