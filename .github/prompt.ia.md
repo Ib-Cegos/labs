@@ -354,6 +354,12 @@ print.html
     ↓
 print.js
 
+La préparation d'impression permet de modifier dynamiquement le document (notes personnelles, variables personnalisées, options d'impression).
+La pagination finale dépend donc du document réellement affiché au moment de l'impression et non uniquement des sources Markdown.
+ - La pagination automatique du sommaire a été étudiée.
+ - Aucune solution simple et robuste n'a été retenue.
+ - Le sujet n'est plus considéré comme prioritaire.
+
 ---
 
 ## URL
@@ -421,29 +427,19 @@ Une page de garde affiche :
 
 ## Sauts de page
 
-Le marqueur canonique est :
+Les marqueurs d'exercice utilisent désormais : <!-- IBLAB_PAGE_BREAK|aXeY -->
 
-```html
-<!-- IBLAB_PAGE_BREAK -->
-```
+et deviennent : <div class="ibPageBreak" id="aXeY"></div> dans le DOM.
 
-Il représente une intention documentaire.
-Il ne doit pas être supprimé.
-Les marqueurs d'exercice utilisent désormais :
+Ces ancres sont utilisées :
+- pour la navigation dans les documents imprimés ;
+- pour les liens du sommaire imprimé ;
+- pour l'identification des exercices lors de la préparation du document.
 
-```html
-<!-- IBLAB_PAGE_BREAK|aXeY -->
-```
-
-et deviennent :
-
-```html
-<div class="ibPageBreak" id="aXeY"></div>
-```
-
-dans le DOM.
-Ces ancres servent notamment aux travaux en cours sur la pagination automatique du sommaire.
-
+La pagination automatique du sommaire a fait l'objet de plusieurs expérimentations
+(offsetTop, beforeprint, afterprint, compteurs CSS, Paged.js, Vivliostyle).
+Aucune solution simple, robuste et compatible avec l'architecture actuelle n'a été retenue à ce jour.
+Le moteur ne cherche donc pas actuellement à récupérer les numéros de page réels produits par Chromium.
 ---
 
 # Principes d'architecture

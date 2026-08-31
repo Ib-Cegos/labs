@@ -1,6 +1,7 @@
 import re
 import json
 import yaml
+import markdown
 from pathlib import Path
 from datetime import datetime
 from mkdocs.structure.files import File
@@ -65,6 +66,7 @@ def on_page_context(context, page, config, nav):
     context["ibNav"] = construire_pagination(page)
     context["ibNavigationTree"] = ( construire_navigation_stage(page) )
     context["ibShowNavigation"] = bool( context["ibNavigationTree"] )
+    context["ibHelpContent"] = charger_aide()
     return context
 
 # Pagination dans les exercices
@@ -278,3 +280,10 @@ def construire_navigation_stage(page):
             html.append( f'<a class="ibNavExercice{courant}" data-stage="{code_stage}" data-exercice="{stem}" href="../{stem}/"><div class="ibNavExRef">Exercice {numero_exercice}</div><div class="ibNavExTitre">{titre}</div></a>' )
         html.append('</details>')
     return "".join(html)
+
+def charger_aide():
+    fichier = Path("docs/help.md")
+    if not fichier.exists():
+        return ( "<p>Le fichier d'aide est introuvable.</p>"  )
+    contenu = fichier.read_text(encoding="utf-8")
+    return markdown.markdown( contenu, extensions=["tables", "fenced_code"])
