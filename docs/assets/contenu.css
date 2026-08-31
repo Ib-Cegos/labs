@@ -43,11 +43,12 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 .ibInlineCopyButton.ok { color: #16a34a; }
 
 /* Les checkbox des listes numérotées */
-.ibLabTask, .iblabTaskHelp { cursor: default; scroll-margin-top: 80px;}
-.iblabTaskHelp {display: inline;}
+.ibLabTask { cursor: default; scroll-margin-top: 80px;}
 .ibLabTask.done, .iblabTaskHelp.done { opacity: .7; }
-.ibLabTask::marker, .iblabTaskHelp::marker { content: counter(list-item) ". ☐ "; color: #666; cursor: pointer}
-.ibLabTask.done::marker, .iblabTaskHelp.done::marker { content: counter(list-item) ". ☑ "; color: #198754; }
+.ibLabTask::marker { content: counter(list-item) ". ☐ "; color: #666; cursor: pointer}
+.iblabTaskHelp::before { content:  "☐ "; color: #666; }
+.ibLabTask.done::marker { content: counter(list-item) ". ☑ "; color: #198754; }
+.iblabTaskHelp.done::before { content: " ☑ "; color: #198754; }
 
 /* Gestion des variables */
 .ibVariable { border-bottom: 1px dotted #005fb8; }
