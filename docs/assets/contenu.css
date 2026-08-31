@@ -31,6 +31,7 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 /* Gestion des boutons de copie de code */
 .ibCodeBlock { position: relative; }
 .ibCopyButton { position: absolute; top: .5rem; right: .5rem; width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center; border: 1px solid #dbe3ea; border-radius: 6px; background: rgba(255,255,255,.90); cursor: pointer; color: #64748b; transition: color .2s ease, border-color .2s ease, background-color .2s ease, transform .15s ease; }
+#ibHelpContent .ibHelpCopyButton { position: static !important; display: inline-flex !important; }
 .ibCopyButton:hover { color: #2563eb; border-color: #2563eb; background: white; transform: translateY(-1px); }
 .ibCopyButton svg { width: 1.15rem; height: 1.15rem; fill: currentColor; stroke: currentColor; }
 .ibCopyButton.ok { color: #16a34a; border-color: #16a34a; background: #f0fdf4; }
