@@ -88,6 +88,7 @@ L'objectif est de faire varier principalement l'apparence et non la structure HT
 │   │   └── themes
 │   │       └── original.css
 │   ├── INDEX.md
+│   ├── help.md
 │   ├── ms503
 │   └── msms030
 │
@@ -283,7 +284,11 @@ Chaque panneau :
 
 ## Aide
 Panneau d'aide synthétique.
-Le mécanisme existe mais le contenu reste à enrichir.
+## Aide intégrée
+L'aide affichée par le bouton « Aide » est maintenue dans : docs/help.md
+Ce document est considéré comme du contenu pédagogique et non comme une ressource technique.
+Son contenu est converti en HTML puis injecté dans la fenêtre d'aide pendant le build.
+L'objectif est que son évolution puisse être réalisée par un rédcteur sans modification du JavaScript ou du template HTML.
 
 ---
 
@@ -354,6 +359,12 @@ print.html
     ↓
 print.js
 
+La préparation d'impression permet de modifier dynamiquement le document (notes personnelles, variables personnalisées, options d'impression).
+La pagination finale dépend donc du document réellement affiché au moment de l'impression et non uniquement des sources Markdown.
+ - La pagination automatique du sommaire a été étudiée.
+ - Aucune solution simple et robuste n'a été retenue.
+ - Le sujet n'est plus considéré comme prioritaire.
+
 ---
 
 ## URL
@@ -421,29 +432,19 @@ Une page de garde affiche :
 
 ## Sauts de page
 
-Le marqueur canonique est :
+Les marqueurs d'exercice utilisent désormais : <!-- IBLAB_PAGE_BREAK|aXeY -->
 
-```html
-<!-- IBLAB_PAGE_BREAK -->
-```
+et deviennent : <div class="ibPageBreak" id="aXeY"></div> dans le DOM.
 
-Il représente une intention documentaire.
-Il ne doit pas être supprimé.
-Les marqueurs d'exercice utilisent désormais :
+Ces ancres sont utilisées :
+- pour la navigation dans les documents imprimés ;
+- pour les liens du sommaire imprimé ;
+- pour l'identification des exercices lors de la préparation du document.
 
-```html
-<!-- IBLAB_PAGE_BREAK|aXeY -->
-```
-
-et deviennent :
-
-```html
-<div class="ibPageBreak" id="aXeY"></div>
-```
-
-dans le DOM.
-Ces ancres servent notamment aux travaux en cours sur la pagination automatique du sommaire.
-
+La pagination automatique du sommaire a fait l'objet de plusieurs expérimentations
+(offsetTop, beforeprint, afterprint, compteurs CSS, Paged.js, Vivliostyle).
+Aucune solution simple, robuste et compatible avec l'architecture actuelle n'a été retenue à ce jour.
+Le moteur ne cherche donc pas actuellement à récupérer les numéros de page réels produits par Chromium.
 ---
 
 # Principes d'architecture
@@ -466,6 +467,7 @@ apparence
 Avant de créer un nouveau mécanisme :
 
 - vérifier qu'un mécanisme similaire n'existe pas déjà ;
+- rechercher en priorité les composants, styles ou mécanismes déjà présents dans ibLab avant de créer un nouveau composant ;
 - privilégier l'extension de l'existant ;
 - éviter les systèmes parallèles.
 
@@ -479,6 +481,8 @@ Avant de créer un nouveau mécanisme :
 - Sauvegarde automatique des données importantes.
 - Interactions compréhensibles sans documentation.
 - Les contraintes techniques doivent être masquées aux rédacteurs et aux apprenants.
+- Lorsqu'un élément de l'interface doit être expliqué dans la documentation ou dans l'aide, privilégier la réutilisation des composants HTML/CSS existants plutôt que des captures d'écran.
+- Les démonstrations présentes dans l'aide doivent suivre automatiquement les thèmes graphiques.
 
 ---
 
