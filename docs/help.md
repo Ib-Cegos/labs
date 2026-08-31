@@ -2,7 +2,7 @@
 
 ## Paramètres
 
-Le panneau Paramètres permet :
+Le bouton <button class="ibActionButton ibButtonSettings">⚙ Paramètres</button> ouvre une fenêtre qui vous permet :
 
 - de personnaliser les variables du stage ;
 - d'exporter vos données ;
@@ -11,7 +11,7 @@ Le panneau Paramètres permet :
 
 ## Notes
 
-Chaque exercice peut être annoté.
+Le bouton <button class="ibActionButton ibButtonNotes">📝 Notes</button> permet d'ajouter des notes personnelles à chaque exercice.
 
 Les notes sont enregistrées automatiquement dans votre navigateur.
 
