@@ -88,6 +88,7 @@ L'objectif est de faire varier principalement l'apparence et non la structure HT
 │   │   └── themes
 │   │       └── original.css
 │   ├── INDEX.md
+│   ├── help.md
 │   ├── ms503
 │   └── msms030
 │
@@ -283,7 +284,11 @@ Chaque panneau :
 
 ## Aide
 Panneau d'aide synthétique.
-Le mécanisme existe mais le contenu reste à enrichir.
+## Aide intégrée
+L'aide affichée par le bouton « Aide » est maintenue dans : docs/help.md
+Ce document est considéré comme du contenu pédagogique et non comme une ressource technique.
+Son contenu est converti en HTML puis injecté dans la fenêtre d'aide pendant le build.
+L'objectif est que son évolution puisse être réalisée par un rédcteur sans modification du JavaScript ou du template HTML.
 
 ---
 
@@ -462,6 +467,7 @@ apparence
 Avant de créer un nouveau mécanisme :
 
 - vérifier qu'un mécanisme similaire n'existe pas déjà ;
+- rechercher en priorité les composants, styles ou mécanismes déjà présents dans ibLab avant de créer un nouveau composant ;
 - privilégier l'extension de l'existant ;
 - éviter les systèmes parallèles.
 
@@ -475,6 +481,8 @@ Avant de créer un nouveau mécanisme :
 - Sauvegarde automatique des données importantes.
 - Interactions compréhensibles sans documentation.
 - Les contraintes techniques doivent être masquées aux rédacteurs et aux apprenants.
+- Lorsqu'un élément de l'interface doit être expliqué dans la documentation ou dans l'aide, privilégier la réutilisation des composants HTML/CSS existants plutôt que des captures d'écran.
+- Les démonstrations présentes dans l'aide doivent suivre automatiquement les thèmes graphiques.
 
 ---
 
