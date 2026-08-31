@@ -19,7 +19,7 @@ Lorsqu'un exercice contient déjà des notes personnelles que vous avez saisies,
 
 En cliquant sur l'onglet <div class= "ibNavigationTab">Navigation</div>, vous ouvrez le panneau de navigation.
 Le panneau Navigation permet de suivre votre progression et d'accéder rapidement aux exercices du stage.
-<div class="ibNavExRef ibHasNote">Dans la navigation, une barre jaune indique un exercice pour lequel vous avez saisi des notes personnelles.</div>
+<div class="ibHasNote"><div class="ibNavExRef">Dans la navigation, une barre jaune indique un exercice pour lequel vous avez saisi des notes personnelles.</div></div>
 
 # Contenu
 

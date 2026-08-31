@@ -67,7 +67,6 @@ def on_page_context(context, page, config, nav):
     context["ibNavigationTree"] = ( construire_navigation_stage(page) )
     context["ibShowNavigation"] = bool( context["ibNavigationTree"] )
     context["ibHelpContent"] = charger_aide()
-    context["ibCopyButtonSvg"] = COPY_BUTTON_SVG
     return context
 
 # Pagination dans les exercices
@@ -287,4 +286,5 @@ def charger_aide():
     if not fichier.exists():
         return ( "<p>Le fichier d'aide est introuvable.</p>"  )
     contenu = fichier.read_text(encoding="utf-8")
+    contenu = contenu.replace( "{{ IB_COPY_BUTTON }}", f'<button class="ibCopyButton ibHelpCopyButton">{COPY_BUTTON_SVG}</button>' )
     return markdown.markdown( contenu, extensions=["tables", "fenced_code"])
