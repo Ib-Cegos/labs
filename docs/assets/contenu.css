@@ -44,6 +44,7 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 
 /* Les checkbox des listes numérotées */
 .ibLabTask, .iblabTaskHelp { cursor: default; scroll-margin-top: 80px;}
+.iblabTaskHelp {display: inline;}
 .ibLabTask.done, .iblabTaskHelp.done { opacity: .7; }
 .ibLabTask::marker, .iblabTaskHelp::marker { content: counter(list-item) ". ☐ "; color: #666; cursor: pointer}
 .ibLabTask.done::marker, .iblabTaskHelp.done::marker { content: counter(list-item) ". ☑ "; color: #198754; }

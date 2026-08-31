@@ -23,7 +23,7 @@ Le panneau Navigation permet de suivre votre progression et d'accéder rapidemen
 
 # Contenu
 
-A droite de certains champs, se trouve un bouton de copie <button class="ibCopyButton ibHelpCopyButton">{{ IB_COPY_BUTTON }}</button> qui permet de copier le contenu du cadre dans votre presse-papier.
+A droite de certains champs, se trouve un bouton de copie {{ IB_COPY_BUTTON }} qui permet de copier le contenu du cadre dans votre presse-papier.
 Dans le contenu des ateliers, vous pouvez identifier le contenu des variables personnelles qui sont affichées <span class="ibVariable" data-variable="ainsi">ainsi</span>.
 
 Pour faciliter le suivi de vos opérations dans l'exercice, il vous est conseillé de cliquer sur le <li class="ibLabTask"> numéro</li> d'une tâche.

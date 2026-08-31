@@ -89,6 +89,7 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibNavigationContent { padding: 1rem; overflow-y: auto; height: 100%; }
 
 .ibHasNote .ibNavExRef { position: relative; }
+#ibHelpContent .ibHasNote .ibNavExRef { font-weight: unset; line-height: unset; }
 .ibHasNote .ibNavExRef::before { content: ""; position: absolute; left: -0.5rem; top: 0; width: 4px; height: 100%; background: var(--ib-color-notes); border-radius: 2px; }
 
 /* Navigation latérale dans l'atelier */
