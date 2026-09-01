@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environnement virtuel
+.venv/
+
+# Génération locale
+docs/*/print.md
+
+# VS Code
+.vscode/
