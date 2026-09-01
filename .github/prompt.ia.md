@@ -1,5 +1,5 @@
 # Présentation du projet
-J'ai développé une application web nommée **ibLab** dont l'objectif est d'héberger et d'enrichir les consignes d'ateliers de formation.  
+J'ai développé une application web nommée **ibCAN** (anciennement ibLab) dont l'objectif est d'héberger et d'enrichir les consignes d'ateliers de formation.
 Les contenus pédagogiques sont rédigés en Markdown par des formateurs qui ne sont ni développeurs ni spécialistes du web. Le moteur doit donc masquer autant que possible la complexité technique et enrichir automatiquement les contenus.  
 Le projet est basé sur **MkDocs** mais une partie importante de la logique est assurée par des scripts Python et JavaScript développés spécifiquement pour ibLab.  
 Le dépôt est public : https://github.com/ib-Cegos/labs  
@@ -102,6 +102,8 @@ L'objectif est de faire varier principalement l'apparence et non la structure HT
 │   └── print.html
 │
 ├── generate_prints.py
+├── requirements.txt
+├── start-ibCAN.ps1
 └── main.py
 
 ---
@@ -287,8 +289,22 @@ Panneau d'aide synthétique.
 ## Aide intégrée
 L'aide affichée par le bouton « Aide » est maintenue dans : docs/help.md
 Ce document est considéré comme du contenu pédagogique et non comme une ressource technique.
-Son contenu est converti en HTML puis injecté dans la fenêtre d'aide pendant le build.
-L'objectif est que son évolution puisse être réalisée par un rédcteur sans modification du JavaScript ou du template HTML.
+Son contenu est converti en HTML puis injecté dans la fenêtre d'aide pendant le build ( L'objectif est que son évolution puisse être réalisée par un rédcteur sans modification du JavaScript ou du template HTML ).
+L'aide est désormais considérée comme une fonctionnalité stable du produit qui couvre actuellement :
+
+- Navigation
+- Contenu
+- Notes
+- Paramètres
+- Impression
+
+L'aide doit rester synthétique: Il s'agit d'une aide utilisateur et non d'un tutoriel détaillé.
+Lorsqu'un élément de l'interface doit être présenté dans l'aide :
+
+- privilégier la réutilisation des composants HTML/CSS existants ;
+- éviter les captures d'écran lorsque cela est possible ;
+- faire en sorte que les exemples suivent automatiquement les thèmes visuels ;
+- éviter de recréer un composant spécifique à l'aide lorsqu'un composant équivalent existe déjà dans l'application.
 
 ---
 
@@ -373,7 +389,8 @@ Chaque stage dispose de "/STAGE/print/"
 ---
 
 ## Génération
-Les fichiers "pint.md" sont générés avant le build mkdocs par "generate_prints.py"
+Les fichiers "print.md" sont générés avant le build MkDocs par generate_prints.py.
+Les fichiers print.md sont considérés comme des artefacts de génération, ils ne constituent pas une source documentaire et n'ont pas vocation à être maintenus manuellement.
 
 ---
 
@@ -483,6 +500,8 @@ Avant de créer un nouveau mécanisme :
 - Les contraintes techniques doivent être masquées aux rédacteurs et aux apprenants.
 - Lorsqu'un élément de l'interface doit être expliqué dans la documentation ou dans l'aide, privilégier la réutilisation des composants HTML/CSS existants plutôt que des captures d'écran.
 - Les démonstrations présentes dans l'aide doivent suivre automatiquement les thèmes graphiques.
+- L'aide intégrée doit privilégier : composants réels ==> composants dérivés ==> illustrations spécifiques
+- La documentation utilisateur doit expliquer l'usage et les bénéfices d'une fonctionnalité avant d'en détailler le fonctionnement.
 
 ---
 
@@ -493,5 +512,25 @@ Avant de créer un nouveau mécanisme :
 - Préférer plusieurs petits commits validables à une grosse évolution.
 - Lorsqu'un code est fourni dans ce chat, toujours échapper les caractères `&lt;` afin d'éviter qu'ils soient interprétés par l'interface web.
 - En cas de doute sur un fichier, demander son contenu avant de proposer une évolution importante.
+
+# Environnement local
+
+Le projet peut désormais être exécuté localement sous Windows.
+Outils installés :
+
+- GitHub Desktop
+- VS Code
+- Python
+
+Le script **start-ibCAN.ps1** permet de :
+
+- créer automatiquement l'environnement Python (.venv) s'il n'existe pas ;
+- installer les dépendances définies dans requirements.txt ;
+- générer les fichiers print.md ;
+- lancer mkdocs serve;
+- Ouvrir le navigateur pour test en local.
+
+Le cycle de travail peut désormais être enligne (vscodeweb) ou VS Code ==> Ctrl+S ==> Actualisation du navigateur local ==> Validation visuelle locale ==> Commit Git ==> Push GitHub  
+En local, les évolutions visuelles doivent être testées en priorité sur l'environnement local avant publication via GitHub Pages.
 
 Dans mon message suivant, je vais maintenant t'indiquer l'objet de notre session de travail du jour.
