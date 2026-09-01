@@ -1,0 +1,6 @@
+mkdocs
+mkdocs-macros-plugin
+pymdown-extensions
+PyYAML
+requests
+markdown
