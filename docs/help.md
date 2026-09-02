@@ -31,6 +31,8 @@ Le bouton <span class="ibActionButton ibSettingsButton">⚙ Paramètres</span> o
 
 - de **personnaliser les variables** du stage.  
     (Si certaines variables personnelles ne sont pas encore renseignées, une pastille de notification apparaît sur le bouton <span class="ibActionButton ibSettingsButton ibNotification">⚙ Paramètres</span>.)
+- de **personnaliser la taille** d'affichage des textes contenu :  
+    En sélectionnant la taille de police, le contenu affiché à l'écran est dynamiquement modifié et votre sélection conservée dans votre navigateur.
 - d'**exporter vos données** : toutes vos données (telles que vos notes personnelles, vos variables personnalisées et votre progression) sont stokées localement dans votre navigateur.  
     En cliquant sur le bouton <span class="ibExportButton ibSettingsAction">💾 Exporter mes données</span> vous pouvez sauvegarder un fichier *.json* contenant toutes ces informations.
     Ce fichier pourra être réimporté par la suite pour reprendre votre stage dans un autre navigateur/une autre machine ou après une perte d'informations par le navigateur.  

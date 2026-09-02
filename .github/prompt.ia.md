@@ -313,6 +313,7 @@ Une notification signale les variables encore non renseignées.
 
 ### Taille d'affichage
 Persistée dans "iblab-font-size"
+La taille de police pouvant être modifiée par le lecteur, tous les autres styles dans le css devront être exprimés en "em" et non en "rem".
 
 ---
 

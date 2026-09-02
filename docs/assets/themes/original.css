@@ -24,14 +24,14 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibHeader::after, .ibHelpCurrentProgress::after { content: ""; position: absolute; left: 0; bottom: 0; height: 4px; width: var(--ib-current-progress); background: #22c55e; transition: width .3s ease; }
 .ibHelpCurrentProgress::after {width: 60%;}
 .ibHelpCurrentProgress { position: relative; height: 4px; }
-#ibHeaderTitle { font-size: 1.4rem; font-weight: 600; letter-spacing: .02em; }
-#ibHeaderBrand { color: var(--ib-color-discret); font-size: 1rem; font-weight: 500; }
+#ibHeaderTitle { font-size: 1.4em; font-weight: 600; letter-spacing: .02em; }
+#ibHeaderBrand { color: var(--ib-color-discret); font-size: 1em; font-weight: 500; }
 #ibFooter { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; background: var(--ib-color-header); color: var(--ib-color-header-text); border-top: 1px solid var(--ib-color-border); z-index: 1000; box-sizing: border-box; }
 #ibFooterTools { color: var(--ib-color-action); }
 #ibFooterNavigation { display: flex; align-items: center; justify-content: center; gap: .5rem; }
-#ibFooterNavigation a { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; text-decoration: none; color: white; border-radius: 6px; font-size: 1.1rem; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); transition: all .2s ease; }
+#ibFooterNavigation a { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; text-decoration: none; color: white; border-radius: 6px; font-size: 1.1em; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); transition: all .2s ease; }
 #ibFooterNavigation a:hover { background: rgba(255,255,255,.28); border-color: rgba(255,255,255,.45); }
-#ibFooterCorporate { color: var(--ib-color-discret); font-size: .9rem; }
+#ibFooterCorporate { color: var(--ib-color-discret); font-size: .9em; }
 #ibFooterCorporate a { color: var(--ib-color-discret); text-decoration: none; }
 #ibFooterCorporate a:hover { color: white; }
 #ibContent { margin-top:50px; margin-bottom: 50px; padding: 2rem; background: var(--ib-color-content); width:auto ; margin-left: var(--ib-content-margin); margin-right: var(--ib-content-margin); }
@@ -40,7 +40,7 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 /* Boutons d'action */
 .ibNotification { position: relative; }
 .ibNotification::after { content: ""; position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; }
-.ibActionButton { border: none; border-radius: 6px; padding: .45rem .9rem; color: white; cursor: pointer; font-size: .95rem; transition: background-color .2s ease, transform .15s ease; }
+.ibActionButton { border: none; border-radius: 6px; padding: .45rem .9rem; color: white; cursor: pointer; font-size: .95em; transition: background-color .2s ease, transform .15s ease; }
 .ibActionButton:hover { background: rgba(255,255,255,.10); border-color: var(--ib-color-header-text); }
 #ibHelpContent .ibActionButton {pointer-events: none; cursor: inherit; margin: .15rem .35 rem;}
 #ibSettingsButton,.ibSettingsButton { background: var(--ib-color-settings); }
@@ -58,12 +58,12 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibNotesDelete svg { width: 1.4rem; height: 1.4rem; display: block; }
 #ibNotesDelete:hover:not(:disabled) { color: #dc2626; }
 .ibNotesLabel { font-weight: 600; margin-bottom: .5rem; color: #444; }
-.ibNotesIntro { font-size: .9rem; color: #666; margin-bottom: 1rem; }
+.ibNotesIntro { font-size: .9em; color: #666; margin-bottom: 1rem; }
 .ibNotesStatus { margin-top: .75rem; padding-top: .5rem; text-align: right; font-size: .85em; color: #6b7280; font-style: italic; border-top: 1px solid #eee; }
 #ibNotesTextarea { width: 100%; min-height: 300px; padding: 1rem; border: 1px solid #d9d9d9; border-radius: 10px; background: #fffef7; box-shadow: inset 0 1px 3px rgba(0,0,0,.05); font-family: inherit; font-size: 1rem; line-height: 1.5; resize: vertical; box-sizing: border-box; }
 
 /* Navigation entre les exercices */
-.navSom { justify-self: center; font-weight: 500; width: 2.4rem !important; font-size: 1rem; }
+.navSom { justify-self: center; font-weight: 500; width: 2.4rem !important; font-size: 1em; }
 .navPrev { justify-self: start; font-weight: 400;}
 .navNext { justify-self: end; font-weight: 400;}
 
@@ -73,15 +73,15 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 .ibHelpHeader { background: var(--ib-color-help);}
 .ibModalOpen { opacity: 1; pointer-events: auto;transform: translate(-50%, -50%) scale(1); border-color: #005fb8; }
 .ibModalContent { flex: 1; overflow-y: auto; padding: 1rem; background: white; }
-.ibModalHeader  { flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; padding: .8rem 1rem; border-bottom: 1px solid #ccc; font-size: 1.25rem; font-weight: 600; color: #ccc;}
-.ibModalClose { border: none; background: transparent; cursor: pointer; font-size: 1.6rem; line-height: 1; color: white; }
+.ibModalHeader  { flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; padding: .8rem 1rem; border-bottom: 1px solid #ccc; font-size: 1.25em; font-weight: 600; color: #ccc;}
+.ibModalClose { border: none; background: transparent; cursor: pointer; font-size: 1.6em; line-height: 1; color: white; }
 .ibModalClose:hover {opacity: .8;}
 @media (max-width: 1200px) { .ibModal { left: 50%; width: 80%; }}
 @media (max-width: 768px) { .ibModal { left: 50%; top: 50%; width: 90%; height: 60vh; }}
 
 /* Contenu de l'aide et des paramètres */
 .ibSettingsActions { display: flex; gap: 1rem; margin-bottom: 1rem; }
-.ibSettingsAction { flex: 1; padding: .75rem; border: 1px solid #ccc; border-radius: .4rem; background: white; cursor: pointer; text-align: center; font-size: 1rem; }
+.ibSettingsAction { flex: 1; padding: .75rem; border: 1px solid #ccc; border-radius: .4rem; background: white; cursor: pointer; text-align: center; font-size: 1em; }
 .ibSettingsAction:hover { background: #f5f5f5; }
 #ibHelpContent h1 { display: flex; align-items: center; gap: .5rem; color: var(--ib-color-header); margin-top: 2rem; margin-bottom: 1rem; }
 #ibHelpContent h1::before { content: "";  width: 6px; height: 1.2em; border-radius: 3px; background: var(--ib-color-help); }
@@ -89,7 +89,7 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibHelpContent .ibSettingsAction { flex: none; width: auto; display: inline-flex; align-items: center; pointer-events: none; cursor: inherit; margin: .15rem .35rem;}
 
 /* Panneau de navigation latéral */
-#ibNavigationTab, .ibNavigationTab { position: absolute; left: 100%; top: 60px; writing-mode: vertical-rl; transform: rotate(180deg); padding: .75rem .5rem; border-radius: 8px 0 0 8px; cursor: pointer; z-index: 1100; user-select: none; font-size: .9rem; font-weight: 600; box-shadow: 2px 2px 8px rgba(0,0,0,.12); background: var(--ib-color-navigation); color: var(--ib-color-navigation-text); }
+#ibNavigationTab, .ibNavigationTab { position: absolute; left: 100%; top: 60px; writing-mode: vertical-rl; transform: rotate(180deg); padding: .75rem .5rem; border-radius: 8px 0 0 8px; cursor: pointer; z-index: 1100; user-select: none; font-size: .9em; font-weight: 600; box-shadow: 2px 2px 8px rgba(0,0,0,.12); background: var(--ib-color-navigation); color: var(--ib-color-navigation-text); }
 #ibHelpContent .ibNavigationTab { position: static !important; display: inline-block !important; writing-mode: initial !important; transform: none !important; display: inline-flex !important; vertical-align: middle;}
 #ibNavigationPanel { position: fixed; left: -320px; top: 60px; bottom: 60px; width: 320px; background: #f8fbff; border-right: 1px solid #dbe3ea; box-shadow: 4px 0 12px rgba(0,0,0,.15); transition: left .3s ease; z-index: 1000; }
 #ibNavigationPanel.open { left: 0; }
@@ -105,21 +105,21 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 .ibNavExerciceHelp { display: block; padding:unset; margin:unset; background: linear-gradient( to right,  rgba(34,197,94,.18) var(--ib-progress, 0%), transparent var(--ib-progress, 0%)); }
 .ibNavExercice.ibExerciceTermine, .ibNavExerciceHelp.ibExerciceTermine { box-shadow: inset -4px 0 0 #16a34a; }
 .ibNavExRef { font-weight: 500; line-height: 1.2; }
-.ibNavExTitre { font-size: .85rem; color: #6b7280; line-height: 1.25; margin-top: .05rem; }
+.ibNavExTitre { font-size: .85em; color: #6b7280; line-height: 1.25; margin-top: .05rem; }
 .ibNavExercice:hover { background: #eef5ff; }
 .ibNavCurrent { background: #dbeafe; color: #1e40af; }
 .ibNavCurrent .ibNavExRef, .ibNavCurrent .ibNavExTitre { color: inherit; }
 .ibNavCurrent .ibNavExRef { font-weight: 600; }
 .ibNavAtelierHeader { display: flex; align-items: flex-start; gap: .35rem; cursor: pointer; list-style: none; }
 .ibNavAtelierHeader::-webkit-details-marker { display: none; }
-.ibNavAtelierHeader::before { content: "▶"; color: var(--ib-color-header); font-size: .8rem; margin-top: .15rem; transition: transform .2s ease; }
+.ibNavAtelierHeader::before { content: "▶"; color: var(--ib-color-header); font-size: .8em; margin-top: .15rem; transition: transform .2s ease; }
 .ibNavAtelier[open] .ibNavAtelierHeader::before { transform: rotate(90deg); }
 .ibNavAtelierText { display: flex; flex-direction: column; }
 .ibNavAtelierRef { font-weight: 600; color: var(--ib-color-header); line-height: 1.2; }
-.ibNavAtelierTitre { font-size: .85rem; color: #6b7280; line-height: 1.2; }
+.ibNavAtelierTitre { font-size: .85em; color: #6b7280; line-height: 1.2; }
 
 /* Erreur YAML - information pour rédacteur */
 .ibYamlWarning { margin: 2rem auto; padding: 1rem; max-width: 900px; width: 90%; border: 2px solid #c62828; border-radius: 8px; background: #ffebee; color: #b71c1c; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
-.ibYamlWarningTitle { text-align: center; font-weight: bold; font-size: 1.25rem; margin-bottom: 1rem; }
+.ibYamlWarningTitle { text-align: center; font-weight: bold; font-size: 1.25em; margin-bottom: 1rem; }
 .ibYamlWarning p { margin: 0.5rem 0; }
 .ibYamlWarningDetail { margin-top: 1rem; padding: 0.75rem; background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; overflow-x: auto; white-space: pre-wrap; }

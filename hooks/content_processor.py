@@ -215,10 +215,10 @@ def construire_panneau_parametres(meta):
             <div class="ibDisplayEditor">
             <label for="ibFontSize">📝 Taille du texte</label>
             <select id="ibFontSize" class="ibDisplayInput">
-                <option value="0.95rem">Petite</option>
+                <option value=".7rem">Petite</option>
                 <option value="1rem">Normale</option>
-                <option value="1.1rem">Grande</option>
-                <option value="1.2rem">Très grande</option></select>
+                <option value="1.3rem">Grande</option>
+                <option value="1.6rem">Très grande</option></select>
             <div class="ibVariableHelp">Modifie la taille du texte affiché dans les ateliers.</div></div></div>
         <div class="ibSettingsSection">
             <div class="ibSettingsSectionTitle">Sauvegarde</div>
