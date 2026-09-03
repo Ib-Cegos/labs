@@ -3,59 +3,12 @@ const commentaires = [];
 while (walker.nextNode()) { commentaires.push(walker.currentNode); }
 commentaires.forEach(commentaire => {
     const valeur = commentaire.nodeValue.trim();
-    if (!valeur.startsWith("IBLAB_PAGE_BREAK")) { return; }
+    if (!valeur.startsWith("IBCAN_PAGE_BREAK")) { return; }
     const saut = document.createElement("div");
     saut.className = "ibPageBreak";
     const morceaux = valeur.split("|");
     if (morceaux.length > 1) { saut.id = morceaux[1]; }
     commentaire.parentNode.replaceChild( saut, commentaire );});
-
-/* Test numéros de page */
-function ibComputePages() {
-
-    const content = document.getElementById("ibPrintContent");
-
-    if (!content) {
-        return;
-    }
-
-    const scrollHeight = content.scrollHeight;
-
-    /*
-       1191 = valeur observée sur msms030
-
-       89354 px / 75 pages ≈ 1191 px/page
-    */
-    const estimatedPageHeight = 1191;
-
-    const estimatedTotalPages =
-        Math.ceil(scrollHeight / estimatedPageHeight);
-
-    console.log("scrollHeight =", scrollHeight);
-    console.log("estimatedTotalPages =", estimatedTotalPages);
-
-    document
-        .querySelectorAll(".ibPageBreak")
-        .forEach(el => {
-
-            const page =
-                Math.floor(
-                    el.offsetTop
-                    /
-                    (scrollHeight / estimatedTotalPages)
-                ) + 1;
-
-            console.log(
-                el.id,
-                page
-            );
-        });
-}
-
-window.addEventListener(
-    "beforeprint",
-    ibComputePages
-);
 
 function launchPrint() {
     document.getElementById("ibPrintSetupDialog").style.display = "none";

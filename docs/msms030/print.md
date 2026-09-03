@@ -61,7 +61,7 @@ L'équipe projet de Adatum a décidé de mettre en œuvre Microsoft 365  dans un
     - Les tâches 2 et 3 de l'atelier 4, exercice 1 sont dispensables
     - Si vous souhaitez maximiser vos chances de constater les résultats de l'atelier 10, vous pouvez le réaliser en avance, car son résultat nécessite un délai d'attente importante.
 
-<!-- IBLAB_PAGE_BREAK|a1e1 --># Atelier 1 - Découverte du tenant Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a1e1 --># Atelier 1 - Découverte du tenant Microsoft 365
 
 ## Exercice 1 - Prise en main de l'environnement
 
@@ -159,7 +159,7 @@ Dans cette tâche, vous allez vérifier l'état de santé du service Microsoft 3
 1. Cliquez sur une ligne représentant un problème pour observer le détail des informations fournies par l'éditeur sur ce problème et son état actuel de prise en charge et/ou de résolution.
 1. Après avoir observé les détails d'un problème, cliquez sur le **X** en haut à droite pour le fermer et n'hésitez pas à aller en observer d'autres.
 
-<!-- IBLAB_PAGE_BREAK|a1e2 --># Atelier 1 - Découverte du tenant Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a1e2 --># Atelier 1 - Découverte du tenant Microsoft 365
 
 ## Exercice 2 - Ajout d'un domaine DNS d'entreprise
 
@@ -214,7 +214,7 @@ Dans cette tâche vous allez ajouter le domaine DNS d'entreprise à votre tenant
 1. Si tous les enregistrements DNS attendus ont été correctement crées, la page **Domain setup is complete** devrait apparaître (Dans le cas contraire, merci de vérifier les enregistrement DNS manquant/erronés indiqués sur la page **Add DNS records** qui s'est réaffichée, avant de cliquer de nouveau sur **Continue**). Cliquez sur **Done**.
 1. Vous allez être renvoyé vers la page **Domains** dans laquelle la colonne **status** pour votre DNS d'entreprise ([[godeployDomain],[labXXXXX]].godeploylabs.com) devrait afficher **Healthy**.
 
-<!-- IBLAB_PAGE_BREAK|a1e3 --># Atelier 1 - Découverte du tenant Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a1e3 --># Atelier 1 - Découverte du tenant Microsoft 365
 
 ## Exercice 3 - Visite des portails administratifs 365
 
@@ -285,7 +285,7 @@ Sans prendre trop de temps (vous y reviendrez plus tard dans ce stage), vous all
 1. Parcourez le **Microsoft Purview**, en sélectionnant chaque entrée de son menu de navigation. Consultez les informations disponibles pour chaque entrée et parcourez les onglets (le cas échéant).
 1. Une fois terminée votre visite du *Microsoft Purview*, fermez l'onglet du navigateur dans lequel vous l'avez ouvert (laissez le navigateur et les autres onglets ouverts).
 
-<!-- IBLAB_PAGE_BREAK|a2e1 --># Atelier 2 - Gestion des utilisateurs et des groupes Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a2e1 --># Atelier 2 - Gestion des utilisateurs et des groupes Microsoft 365
 
 ## Exercice 1 - Gestion des utilisateurs avec le centre d'administration Microsoft 365
 
@@ -460,7 +460,7 @@ Dans cette tâche, vous allez vérifier l'impact des changements que vous avez f
 1. Dans le panneau **Unblock sign-in** qui apparait, la case à cocher **Block this user from signing in** est cochée. Décochez cette case avant de cliquer sur **Save changes**.
 1. Une fois le message vert de confirmation apparu indiquant que le compte de Alan Yoo est désormais débloqué, cliquez sur le **X** en haut à droite afin de fermer le panneau **Unblock sign in**.
 
-<!-- IBLAB_PAGE_BREAK|a2e2 --># Atelier 2 - Gestion des utilisateurs et des groupes Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a2e2 --># Atelier 2 - Gestion des utilisateurs et des groupes Microsoft 365
 
 ## Exercice 2 - Gestion des stratégies de mots de passe Microsoft 365
 
@@ -521,7 +521,7 @@ Vous allez désormais vous connecter avec le compte de Dominique pour sécuriser
 
 	> Référez-vous à la procédure précédemment mentionnée pour toutes vos connexions ultérieures avec le compte de Dominique.
 
-<!-- IBLAB_PAGE_BREAK|a2e3 --># Atelier 2 - Gestion des utilisateurs et des groupes Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a2e3 --># Atelier 2 - Gestion des utilisateurs et des groupes Microsoft 365
 
 ## Exercice 3 - Gestion des groupes
 
@@ -589,7 +589,7 @@ En tant que Dominique Skyetson, vous souhaitez désormais mettre en oeuvre les g
 1. Dans la liste des **Active users**, vérifiez que les 2 membres du groupe supprimé, **Ada Russel** et **Alan Yoo**, sont toujours présents dans la liste.
 1. Vous venez donc de vérifier que la suppression d'un groupe ne supprime pas ses membres.
 
-<!-- IBLAB_PAGE_BREAK|a2e4 --># Atelier 2 - Gestion des utilisateurs et des groupes Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a2e4 --># Atelier 2 - Gestion des utilisateurs et des groupes Microsoft 365
 
 ## Exercice 4 - Gestion des utilisateurs et des groupes avec Windows PowerShell
 
@@ -799,7 +799,7 @@ Vous allez d'ailleurs en profiter pour modifier le timing de notification de cet
 
 1. Conservez la session ouverte sur la machine virtuelle LON-CL1, réduisez l'outil **Administrator : Windows Powershell** dans la barre des tâches et maximisez la fenêtre de votre navigateur Internet pour l'exercice suivant.
 
-<!-- IBLAB_PAGE_BREAK|a2e5 --># Atelier 2 - Gestion des utilisateurs et des groupes Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a2e5 --># Atelier 2 - Gestion des utilisateurs et des groupes Microsoft 365
 
 ## Exercice 5 - Délégation d'administration
 
@@ -912,7 +912,7 @@ Répétez les étapes vues précédemment pour débloquer le compte de Leila. (N
 1. Dans le panneau **Unblock sign-in**, la case à cocher **Block this user from signing in** est actuellement cochée. Décochez-la puis cliquez sur **Save changes**.
 1. Une fois que le compte de Leila a été débloqué, cliquez sur le **X** en haut à droite pour fermer le panneau **Unblock sign-in**.
 
-<!-- IBLAB_PAGE_BREAK|a3e1 --># Atelier 3 - Connectivité à Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a3e1 --># Atelier 3 - Connectivité à Microsoft 365
 
 ## Exercice 1 - Utilisation de Microsoft 365 connectivity analyzer
 
@@ -959,7 +959,7 @@ vous allez maintenant uiliser l'outil *Microsoft Test Connectivity* pour vérifi
 Chaque étape a une mention **Test Steps** que vous pouvez utiliser pour consulter des opérations détaillées. 
 1. Fermez votre navigateur Internet.
 
-<!-- IBLAB_PAGE_BREAK|a4e1 --># Atelier 4 - Configuration de la synchronisation d'identités
+<!-- IBCAN_PAGE_BREAK|a4e1 --># Atelier 4 - Configuration de la synchronisation d'identités
 
 ## Exercice 1 - Préparation de la synchronisation d'identités
 
@@ -1022,7 +1022,7 @@ Dans cette tâche vous allez appréhender l'utilisation d'un script powerShell p
 1. Cliquez sur **OK** pour valider le changement.
 1. Fermez l'outil **Active Directory Administrative Center**, vous êtes prêt à mettre en place la synchronisation.
 
-<!-- IBLAB_PAGE_BREAK|a4e2 --># Atelier 4 - Configuration de la synchronisation d'identités
+<!-- IBCAN_PAGE_BREAK|a4e2 --># Atelier 4 - Configuration de la synchronisation d'identités
 
 ## Exercice 2 - Mise en oeuvre de la synchronisation d'identités
 
@@ -1178,7 +1178,7 @@ Dans cette tâche, vous allez forcer volontairement la synchronisation entre l'A
 
 1. Une fois votre vérification effectuée, fermez la fenêtre d'affichage des membres du groupe.
 
-<!-- IBLAB_PAGE_BREAK|a4e3 --># Atelier 4 - Configuration de la synchronisation d'identités
+<!-- IBCAN_PAGE_BREAK|a4e3 --># Atelier 4 - Configuration de la synchronisation d'identités
 
 ## Exercice 3 - Activation de la jonction de domaine hybride
 
@@ -1261,7 +1261,7 @@ Dans cette tâche, vous allez utiliser l'assistant de configuration de Entra Con
 	
 1. Fermez l'application **Mail** et déconnectez-vous de LON-CL1 avec le compte de beth comme déjà réalisé précédemment.
 
-<!-- IBLAB_PAGE_BREAK|a5e1 --># Atelier 5 - Déploiement de Microsoft 365 Apps
+<!-- IBCAN_PAGE_BREAK|a5e1 --># Atelier 5 - Déploiement de Microsoft 365 Apps
 
 ## Exercice 1 - Déploiement de Microsoft 365 apps for enterprise
 
@@ -1366,7 +1366,7 @@ Dans la tâche précédente, vous vous êtes connecté avec le compte de Alan Yo
 1. Fermez Word.
 1. Laissez votre navigateur ouvert en vue de l'exercice suivant.
 
-<!-- IBLAB_PAGE_BREAK|a5e2 --># Atelier 5 - Déploiement de Microsoft 365 Apps
+<!-- IBCAN_PAGE_BREAK|a5e2 --># Atelier 5 - Déploiement de Microsoft 365 Apps
 
 ## Exercice 2 - Déploiement de Microsoft 365 apps via MDM
 
@@ -1444,7 +1444,7 @@ Dans cette tâche, Beth Burke va vérifier que l'ordinateur est enrôlé pour le
 1. Patientez quelques minutes, pour vérifier que la suite Microsoft 365 apps a été installée sur LON-CL1.
 1. Fermez la session de Beth sur LON-CL1
 
-<!-- IBLAB_PAGE_BREAK|a6e1 --># Atelier 6 - Configuration des services Exchange Online
+<!-- IBCAN_PAGE_BREAK|a6e1 --># Atelier 6 - Configuration des services Exchange Online
 
 ## Exercice 1 - Paramètres de transport des messages
 
@@ -1584,7 +1584,7 @@ Dans cette tâche, vous allez tester les nouvelles règles de transport que vous
 1. Dans la colonne **Event**, constatez la présence des évènements **Transport rule** qui ont appliqué le message d'avertissement et rerouté le message vers la boite de Dominique Skyetson.
 1. Cliquez sur le **X** de fermeture en haut à droite du panneau.
 
-<!-- IBLAB_PAGE_BREAK|a6e2 --># Atelier 6 - Configuration des services Exchange Online
+<!-- IBCAN_PAGE_BREAK|a6e2 --># Atelier 6 - Configuration des services Exchange Online
 
 ## Exercice 2 - Configuration de la protection de la messagerie
 
@@ -1663,7 +1663,7 @@ Dans cette dernière tâche, vous allez activer **Defender for Office** pour Sha
 > Malheureusement, il nous est impossible de créer un environnement d'ateliers dans lequel vous pourriez tester les stratégies que vous venez de créer. Pour ce faire, il vous faudrait vous envoyer un message contenant une cyber-attaque qui ne serait pas préalablement détectée par les antivirus de l'environnement Microsoft 365.  
 > Ceci étant dit, après avoir crée une stratégie *Safe Attachments* dans un environnement de production, une bonne manière de constater son bon fonctionnement peut être la consultation des rapports de Defender for office dans le portail. Pour plus d'information sur leur utilisation, vous pouvez consulter la section suivante de la documentation : [View Defender for Office 365 reports in the Microsoft 365 Defender portal](https://learn.microsoft.com/microsoft-365/security/office-365-security/reports-defender-for-office-365).
 
-<!-- IBLAB_PAGE_BREAK|a6e3 --># Atelier 6 - Configuration des services Exchange Online
+<!-- IBCAN_PAGE_BREAK|a6e3 --># Atelier 6 - Configuration des services Exchange Online
 
 ## Exercice 3 - Configuration des stratégies d'accès client
 
@@ -1742,7 +1742,7 @@ Dans cette tâche, vous allez configurer une stratégie de boite aux lettres acc
 1. Dans le champ **Password recycle count**, entrez une valeur de **5**.
 1. Cliquez sur **Save** et fermez le panneau **Edit mobile device mailbox policy** une fois vos changements sauvegardés.
 
-<!-- IBLAB_PAGE_BREAK|a7e1 --># Atelier 7 - Déploiement de Microsoft Teams
+<!-- IBCAN_PAGE_BREAK|a7e1 --># Atelier 7 - Déploiement de Microsoft Teams
 
 ## Exercice 1 - Configuration de Microsoft Teams
 
@@ -1982,7 +1982,7 @@ Dominique Skyetson va, pour finir cet atelier, configurer un certain nombre de c
 1. Cliquez sur le bouton **Save.**
 1. Dans la boite de dialogue **Changes will take time to take effect**, cliquez sur **Confirm**.
 
-<!-- IBLAB_PAGE_BREAK|a8e1 --># Atelier 8 - Configuration de Sharepoint Online
+<!-- IBCAN_PAGE_BREAK|a8e1 --># Atelier 8 - Configuration de Sharepoint Online
 
 ## Exercice 1 - Configuration des paramètres de SharePoint Online
 
@@ -2028,7 +2028,7 @@ Dans cet exercice, Dominique va commencer par modifier les paramètres génériq
 1. Cliquez sur **OK**.
 1. Fermez les deux derniers onglets ouverts dans votre navigateur Internet, laissant les portails **Microsoft 365 admin center** et **Sharepoint admin center** ouverts pour l'exercice suivant.
 
-<!-- IBLAB_PAGE_BREAK|a8e2 --># Atelier 8 - Configuration de Sharepoint Online
+<!-- IBCAN_PAGE_BREAK|a8e2 --># Atelier 8 - Configuration de Sharepoint Online
 
 ## Exercice 2 - Configuration de sites SharePoint Online
 
@@ -2138,7 +2138,7 @@ Dans cette tâche, Alan Yoo, en tant qu'administrateur du site Sharepoint de la 
 1. Le site **Training** s'ouvre, confirmant que Elvis Cress y a accès après que l'administrateur du site lui ait donné accès.
 1. Fermez la session de navigation privée de Elvis Cress.
 
-<!-- IBLAB_PAGE_BREAK|a8e3 --># Atelier 8 - Configuration de Sharepoint Online
+<!-- IBCAN_PAGE_BREAK|a8e3 --># Atelier 8 - Configuration de Sharepoint Online
 
 ## Exercice 3 - Partage externe dans Sharepoint Online
 
@@ -2199,7 +2199,7 @@ Dans l'exercice précédent, vous avez créé un site pour le service formation 
 
 1. Vérifiez que vous pouvez modifier le contenu du document, en surveillant la marque de sauvegarde à droite de son nom après avoir fait quelques modifications dedans.
 
-<!-- IBLAB_PAGE_BREAK|a9e1 --># Atelier 9 - Autres outils Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a9e1 --># Atelier 9 - Autres outils Microsoft 365
 
 ## Exercice 1 - Viva Engage
 
@@ -2255,7 +2255,7 @@ Dans cette tâche, vous allez vous connecter à *Viva Engage* avec le compte de 
 	
 1. Fermez l'onglet **Viva Engage - Feed** pour terminer cet exercice.
 
-<!-- IBLAB_PAGE_BREAK|a9e2 --># Atelier 9 - Autres outils Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a9e2 --># Atelier 9 - Autres outils Microsoft 365
 
 ## Exercice 2 - OneDrive for Business
 
@@ -2356,7 +2356,7 @@ Maintenant que la synchronisation de fichiers est activée avec *OneDrive for Bu
 1. Dans la boite de dialogue **Stop sharing?**, cliquez de nouveau sur **Stop sharing**.
 1. Fermez la boite de dialogue **Manage Access**. Notez que, dans la liste des fichier, la colonne **Sahring** est repassée à **Private** (si ce n'est pas le cas automatiquement, rafraichissez la page du navigateur Internet).
 
-<!-- IBLAB_PAGE_BREAK|a10e1 --># Atelier 10 - Sécurité et conformité dans Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a10e1 --># Atelier 10 - Sécurité et conformité dans Microsoft 365
 
 ## Exercice 1 - Création de labels de sensibilité
 
@@ -2492,7 +2492,7 @@ Dominique a, pour finir, décidé de tester la publication de labels de données
 1. Dans la liste des stratégies, la stratégie **Adatum-Classified Policy** que vous avez créé dans le portail est affichée. Cliquez sur le bouton **Refresh** dans la barre de menu au-dessus de la liste.
 1. Vous devriez désormais trouver dans la liste des stratégies celle nommée **Adatum-Secret policy** que vous venez de créer en PowerShell.
 
-<!-- IBLAB_PAGE_BREAK|a11e1 --># Atelier 11 - Surveillance et dépannage de Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a11e1 --># Atelier 11 - Surveillance et dépannage de Microsoft 365
 
 ## Exercice 1 - Etat de santé du service Microsoft 365
 
@@ -2535,7 +2535,7 @@ Dans cet exercice, Dominique va visualiser les informations d'état de santé du
 
 	> Dans le contexte de votre atelier, de nombreux rapports contiendront peu ou pas d'information, du fait du peu d'interaction des utilisateurs Adatum avec l'environnement pilote...
 
-<!-- IBLAB_PAGE_BREAK|a11e2 --># Atelier 11 - Surveillance et dépannage de Microsoft 365
+<!-- IBCAN_PAGE_BREAK|a11e2 --># Atelier 11 - Surveillance et dépannage de Microsoft 365
 
 ## Exercice 2 - SDépannage de flux de messages
 

@@ -78,7 +78,7 @@ Commençons par découvrir ce que voit concrètement un stagiaire lorsqu'il util
     - <a class='ibPrintTocLink' href='#a10e4'>Exercice 4 - FAQ - Sauvegarde et restauration</a>
     - <a class='ibPrintTocLink' href='#a10e5'>Exercice 5 - FAQ - Conception d'ateliers</a>
 
-<!-- IBLAB_PAGE_BREAK|a1e1 --># Atelier 1 - 
+<!-- IBCAN_PAGE_BREAK|a1e1 --># Atelier 1 - 
 
 ## Exercice 1 - Présentation générale d'ibLab
 
@@ -127,7 +127,7 @@ Lorsque vous rédigez un atelier, gardez les objectifs suivants à l'esprit :
 
 Les chapitres suivants expliquent comment tirer parti des outils mis à disposition pour atteindre ces objectifs.
 
-<!-- IBLAB_PAGE_BREAK|a1e2 --># Atelier 1 - 
+<!-- IBCAN_PAGE_BREAK|a1e2 --># Atelier 1 - 
 
 ## Exercice 2 - Ce que voit le stagiaire
 
@@ -189,7 +189,7 @@ Cela réduit considérablement les erreurs de saisie et accélère les travaux p
 
 En tant que rédacteur, il est donc recommandé de fournir des commandes complètes et directement exploitables.
 
-<!-- IBLAB_PAGE_BREAK|a1e3 --># Atelier 1 - 
+<!-- IBCAN_PAGE_BREAK|a1e3 --># Atelier 1 - 
 
 ## Exercice 3 - Structure d'un atelier
 
@@ -257,7 +257,7 @@ Préférez :
 
 Un exercice bien découpé est généralement plus facile à maintenir et plus confortable à suivre pour le stagiaire.
 
-<!-- IBLAB_PAGE_BREAK|a2e1 --># Atelier 2 - 
+<!-- IBCAN_PAGE_BREAK|a2e1 --># Atelier 2 - 
 
 ## Exercice 1 - Déclaration des variables
 
@@ -372,7 +372,7 @@ Variables:
 
 Cette déclaration suffit à rendre les variables disponibles dans l'ensemble de l'atelier.
 
-<!-- IBLAB_PAGE_BREAK|a2e2 --># Atelier 2 - 
+<!-- IBCAN_PAGE_BREAK|a2e2 --># Atelier 2 - 
 
 ## Exercice 2 - Variables visibles et variables internes
 
@@ -463,7 +463,7 @@ N'utilisez une variable visible que lorsqu'une modification par le stagiaire pr�
 
 Si une valeur n'a pas vocation à être modifiée durant l'atelier, préférez une variable interne.
 
-<!-- IBLAB_PAGE_BREAK|a3e1 --># Atelier 3 - 
+<!-- IBCAN_PAGE_BREAK|a3e1 --># Atelier 3 - 
 
 ## Exercice 1 - Utilisation des variables dans les contenus
 
@@ -552,7 +552,7 @@ la modification est immédiatement visible dans l'ensemble de l'atelier.
 
 Le rédacteur n'a aucune action particulière à réaliser pour obtenir ce comportement.
 
-<!-- IBLAB_PAGE_BREAK|a3e2 --># Atelier 3 - 
+<!-- IBCAN_PAGE_BREAK|a3e2 --># Atelier 3 - 
 
 ## Exercice 2 - Bonnes pratiques d'utilisation des variables
 
@@ -654,7 +654,7 @@ urlApplication
 
 Une convention cohérente améliore grandement la lisibilité du README.
 
-<!-- IBLAB_PAGE_BREAK|a4e1 --># Atelier 4 - 
+<!-- IBCAN_PAGE_BREAK|a4e1 --># Atelier 4 - 
 
 ## Exercice 1 - Le panneau Paramètres
 
@@ -715,7 +715,7 @@ Le formateur doit retenir que le panneau Paramètres constitue l'endroit normal 
 
 Il est généralement inutile de demander au stagiaire de modifier manuellement le contenu des exercices.
 
-<!-- IBLAB_PAGE_BREAK|a4e2 --># Atelier 4 - 
+<!-- IBCAN_PAGE_BREAK|a4e2 --># Atelier 4 - 
 
 ## Exercice 2 - Les variables dans le panneau Paramètres
 
@@ -810,7 +810,7 @@ Non.
 
 Les informations sont conservées et automatiquement restaurées lors d'une visite ultérieure.
 
-<!-- IBLAB_PAGE_BREAK|a4e3 --># Atelier 4 - 
+<!-- IBCAN_PAGE_BREAK|a4e3 --># Atelier 4 - 
 
 ## Exercice 3 - Exporter mes données
 
@@ -863,7 +863,7 @@ Elle permet uniquement de conserver les informations utilisées par la plateform
 
 En cas de doute, il est recommandé d'encourager les stagiaires à réaliser régulièrement une exportation.
 
-<!-- IBLAB_PAGE_BREAK|a4e4 --># Atelier 4 - 
+<!-- IBCAN_PAGE_BREAK|a4e4 --># Atelier 4 - 
 
 ## Exercice 4 - Importer ma sauvegarde
 
@@ -925,7 +925,7 @@ La restauration agit uniquement sur les données utilisées par la plateforme ib
 
 Elle ne modifie jamais les ressources du laboratoire lui-même.
 
-<!-- IBLAB_PAGE_BREAK|a6e1 --># Atelier 6 - 
+<!-- IBCAN_PAGE_BREAK|a6e1 --># Atelier 6 - 
 
 ## Exercice 1 - Checklists et suivi de progression
 
@@ -973,7 +973,7 @@ En cas d'interruption d'un atelier, il est possible de demander au stagiaire de 
 
 La plateforme se charge de restaurer automatiquement sa progression.
 
-<!-- IBLAB_PAGE_BREAK|a7e1 --># Atelier 7 - 
+<!-- IBCAN_PAGE_BREAK|a7e1 --># Atelier 7 - 
 
 ## Exercice 1 - Blocs de code et copie des commandes
 
@@ -1041,7 +1041,7 @@ ping srv01.[nomEntreprise]
 
 Le contenu sera automatiquement adapté aux paramètres du stagiaire.
 
-<!-- IBLAB_PAGE_BREAK|a8e1 --># Atelier 8 - 
+<!-- IBCAN_PAGE_BREAK|a8e1 --># Atelier 8 - 
 
 ## Exercice 1 - Images et illustrations
 
@@ -1087,7 +1087,7 @@ Essayez de conserver :
 
 Cela améliore l'expérience de lecture et donne une impression de professionnalisme.
 
-<!-- IBLAB_PAGE_BREAK|a8e2 --># Atelier 8 - 
+<!-- IBCAN_PAGE_BREAK|a8e2 --># Atelier 8 - 
 
 ## Exercice 2 - Maintenance des illustrations
 
@@ -1118,7 +1118,7 @@ Une bonne description textuelle vieillit souvent mieux qu'une capture d'écran.
 
 Les images doivent compléter le texte et non s'y substituer.
 
-<!-- IBLAB_PAGE_BREAK|a9e1 --># Atelier 9 - 
+<!-- IBCAN_PAGE_BREAK|a9e1 --># Atelier 9 - 
 
 ## Exercice 1 - Atelier complet commenté - Présentation
 
@@ -1140,7 +1140,7 @@ Nous allons analyser :
 
 À la fin de cette lecture, vous disposerez d'un modèle réutilisable pour vos propres ateliers.
 
-<!-- IBLAB_PAGE_BREAK|a9e2 --># Atelier 9 - 
+<!-- IBCAN_PAGE_BREAK|a9e2 --># Atelier 9 - 
 
 ## Exercice 2 - Atelier complet commenté - Le README
 
@@ -1255,7 +1255,7 @@ reste utilisable dans les exercices mais n'apparaît pas dans le panneau Paramè
 
 Cette approche permet de conserver certaines informations techniques sans encombrer l'interface utilisateur.
 
-<!-- IBLAB_PAGE_BREAK|a9e3 --># Atelier 9 - 
+<!-- IBCAN_PAGE_BREAK|a9e3 --># Atelier 9 - 
 
 ## Exercice 3 - Atelier complet commenté - Premier exercice
 
@@ -1305,7 +1305,7 @@ Sans variables, le rédacteur devrait modifier manuellement tous les exercices c
 
 Avec les variables, il suffit de modifier une seule valeur dans le panneau Paramètres.
 
-<!-- IBLAB_PAGE_BREAK|a9e4 --># Atelier 9 - 
+<!-- IBCAN_PAGE_BREAK|a9e4 --># Atelier 9 - 
 
 ## Exercice 4 - Atelier complet commenté - Utilisation dans les commandes
 
@@ -1351,7 +1351,7 @@ ping srv01.contoso.local
 
 Cette approche simplifie considérablement la maintenance de l'atelier.
 
-<!-- IBLAB_PAGE_BREAK|a9e5 --># Atelier 9 - 
+<!-- IBCAN_PAGE_BREAK|a9e5 --># Atelier 9 - 
 
 ## Exercice 5 - Atelier complet commenté - Vue du stagiaire
 
@@ -1377,7 +1377,7 @@ Cette simplicité constitue l'un des objectifs principaux d'ibLab.
 
 La complexité est gérée par la plateforme afin de permettre au rédacteur de se concentrer sur le contenu pédagogique.
 
-<!-- IBLAB_PAGE_BREAK|a9e6 --># Atelier 9 - 
+<!-- IBCAN_PAGE_BREAK|a9e6 --># Atelier 9 - 
 
 ## Exercice 6 - Atelier complet commenté - Ce qu'il faut retenir
 
@@ -1421,7 +1421,7 @@ Cette approche permet :
 
 Pour la majorité des ateliers, cette structure constitue un excellent point de départ.
 
-<!-- IBLAB_PAGE_BREAK|a10e1 --># Atelier 10 - 
+<!-- IBCAN_PAGE_BREAK|a10e1 --># Atelier 10 - 
 
 ## Exercice 1 - FAQ - Variables
 
@@ -1495,7 +1495,7 @@ reste utilisable dans l'ensemble de l'atelier.
 
 Elle est simplement cachée dans le panneau Paramètres.
 
-<!-- IBLAB_PAGE_BREAK|a10e2 --># Atelier 10 - 
+<!-- IBCAN_PAGE_BREAK|a10e2 --># Atelier 10 - 
 
 ## Exercice 2 - FAQ - Panneau Paramètres
 
@@ -1535,7 +1535,7 @@ La plateforme gère actuellement des variables déclaratives.
 
 Il est recommandé de stocker directement la valeur souhaitée dans le fichier README.
 
-<!-- IBLAB_PAGE_BREAK|a10e3 --># Atelier 10 - 
+<!-- IBCAN_PAGE_BREAK|a10e3 --># Atelier 10 - 
 
 ## Exercice 3 - FAQ - Sauvegarde et restauration
 
@@ -1579,7 +1579,7 @@ Les données déjà présentes pour l'atelier sont remplacées par celles conten
 
 Le stagiaire retrouve ainsi l'état enregistré lors de l'export.
 
-<!-- IBLAB_PAGE_BREAK|a10e4 --># Atelier 10 - 
+<!-- IBCAN_PAGE_BREAK|a10e4 --># Atelier 10 - 
 
 ## Exercice 4 - FAQ - Sauvegarde et restauration
 
@@ -1623,7 +1623,7 @@ Les données déjà présentes pour l'atelier sont remplacées par celles conten
 
 Le stagiaire retrouve ainsi l'état enregistré lors de l'export.
 
-<!-- IBLAB_PAGE_BREAK|a10e5 --># Atelier 10 - 
+<!-- IBCAN_PAGE_BREAK|a10e5 --># Atelier 10 - 
 
 ## Exercice 5 - FAQ - Conception d'ateliers
 

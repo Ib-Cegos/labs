@@ -6,7 +6,7 @@ async function ibCopy(text, button) {
     button.classList.add("ok");
     setTimeout( () => button.classList.remove("ok"), 1500 );}
 
-const IB_PREFIX = "iblab-";
+const IB_PREFIX = "ibCAN-";
 
 function ibVarKey(variable) {
     return (IB_PREFIX + window.ibLabCode + "-" + variable.toLowerCase());}
@@ -23,6 +23,7 @@ document.addEventListener(
         ibCheckEnvironment();
         ibInitVariables();
         ibInitFontSize();
+        ibInitTheme();
         ibInitTasks();
         ibMajIndicateursNotes();
         ibMajIndicateursProgression();
@@ -35,14 +36,36 @@ function ibInitFontSize() {
     if (!window.ibEnvironment.storage) { return; }
     const select = document.getElementById( "ibFontSize" );
     if (!select) { return; }
-    const valeur = localStorage.getItem( "iblab-font-size" ) ?? "1rem";
+    const valeur = localStorage.getItem( IB_PREFIX + "font-size" ) ?? "1rem";
     select.value = valeur;
     document.documentElement.style.setProperty( "--ib-content-font-size", valeur );
     select.addEventListener( "change", () => {
-        localStorage.setItem( "iblab-font-size", select.value );
+        localStorage.setItem( IB_PREFIX + "font-size", select.value );
         document.documentElement.style.setProperty( "--ib-content-font-size", select.value);});}
 
-/* Gestion des variabmes */
+/* Gestion des thèmes dynamiques */
+function ibInitTheme() {
+    if (!window.ibEnvironment.storage) { return; }
+    const select = document.getElementById("ibTheme");
+    if (!select) { return; }
+    let theme = localStorage.getItem( IB_PREFIX + "theme" );
+    if (!theme) {
+        if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) { theme = "sombre"; }
+        else { theme = "original"; }
+        localStorage.setItem( IB_PREFIX + "theme", theme );}
+    if (!select.querySelector(`option[value="${theme}"]`)) { theme = "original"; }
+    select.value = theme;
+    ibApplyTheme(theme);
+    select.addEventListener( "change", () => {
+        localStorage.setItem( IB_PREFIX + "theme", select.value );
+        ibApplyTheme( select.value );});}
+
+function ibApplyTheme(theme) {
+    const css = document.getElementById("ibThemeCss");
+    if (!css) { return; }
+    css.href = css.href.replace( /assets\/themes\/[^\/]+\.css$/, `assets/themes/${theme}.css` );}
+
+/* Gestion des variables */
 function ibInitVariables() {
     if (!window.ibVariables) { return; }
     if (!window.ibEnvironment.storage) { return; }
@@ -106,7 +129,7 @@ function ibExport() {
     const date = new Date().toISOString().slice(0,10);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `iblab-${date}.json`;
+    a.download = `ibCAN-${date}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -143,7 +166,7 @@ function ibPositionnerDerniereTache() {
 function ibCheckEnvironment() {
     function testStorage() {
         try {
-            const test = "__iblab_test__";
+            const test = "__ibCAN_test__";
             localStorage.setItem(test, test);
             localStorage.removeItem(test);
             return true; }

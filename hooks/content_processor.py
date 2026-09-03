@@ -7,7 +7,7 @@ from datetime import datetime
 from mkdocs.structure.files import File
 import tools
 
-IB_PREFIX = "iblab-"
+IB_PREFIX = "ibCAN-"
 
 COPY_BUTTON_SVG = """
 <svg viewBox="-1 0 20 20">
@@ -181,12 +181,19 @@ def ajouter_boutons_copie_inline(html):
     for i, bloc in enumerate(blocs_pre): html = html.replace( f"%%PRE_BLOCK_{i}%%", bloc )
     return html
 
+def nom_theme(nom):
+    return nom.replace("-", " ").title()
+
 def construire_panneau_parametres(meta):
     variables = meta.get("Variables", {})
     variables_visibles = {
         nom: definition
         for nom, definition in variables.items()
         if definition.get("lib")}
+    themes = tools.lister_themes()
+    options = "".join(
+        f'<option value="{theme}">{nom_theme(theme).capitalize()}</option>'
+        for theme in themes )
     contenu = """
 <aside id="ibSettingsPanel" class="ibModal">
     <div class="ibSettingsHeader ibModalHeader"><span>⚙ Paramètres</span><button id="ibSettingsClose" class="ibModalClose" title="Fermer">✕</button></div>
@@ -196,7 +203,7 @@ def construire_panneau_parametres(meta):
         contenu += """
         <div class="ibVariablesIntro">
             Les variables ci-dessous permettent de personnaliser les informations utilisées dans cet atelier.
-            (Toute modification est automatiquement enregistrée et répercutée dans les exercices.)
+            (Toute modification est automatiquement enregistrée et répercutée dans tous les exercices de votre stage.)
         </div>
 """
     for nom, definition in variables_visibles.items():
@@ -209,17 +216,24 @@ def construire_panneau_parametres(meta):
             <div class="ibVariableHelp">{definition.get("aide", "")}</div>
         </div>
 """
-    contenu += """
+    contenu += f"""
         <div class="ibSettingsSection">
             <div class="ibSettingsSectionTitle">Affichage</div>
             <div class="ibDisplayEditor">
-            <label for="ibFontSize">📝 Taille du texte</label>
-            <select id="ibFontSize" class="ibDisplayInput">
-                <option value=".7rem">Petite</option>
-                <option value="1rem">Normale</option>
-                <option value="1.3rem">Grande</option>
-                <option value="1.6rem">Très grande</option></select>
-            <div class="ibVariableHelp">Modifie la taille du texte affiché dans les ateliers.</div></div></div>
+                <label for="ibFontSize">📝 Taille du texte</label>
+                <select id="ibFontSize" class="ibDisplayInput">
+                    <option value=".7rem">Petite</option>
+                    <option value="1rem">Normale</option>
+                    <option value="1.3rem">Grande</option>
+                    <option value="1.6rem">Très grande</option></select>
+                <div class="ibVariableHelp">Modifie la taille du texte affiché dans les ateliers.</div>
+                <label for="ibTheme">🎨 Thème</label>
+                <select id="ibTheme" class="ibDisplayInput">
+                    {options}
+                </select>
+                <div class="ibVariableHelp">Modifie l'apparence d'affichage de ibCAN.</div>
+            </div>
+        </div>
         <div class="ibSettingsSection">
             <div class="ibSettingsSectionTitle">Sauvegarde</div>
             <div class="ibSettingsActions">

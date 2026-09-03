@@ -29,14 +29,16 @@
 # Paramètres
 Le bouton <span class="ibActionButton ibSettingsButton">⚙ Paramètres</span> ouvre une fenêtre qui vous permet :
 
-- de **personnaliser les variables** du stage.  
+- de **personnaliser les variables** utilisées dans le stage.  
     (Si certaines variables personnelles ne sont pas encore renseignées, une pastille de notification apparaît sur le bouton <span class="ibActionButton ibSettingsButton ibNotification">⚙ Paramètres</span>.)
-- de **personnaliser la taille** d'affichage des textes contenu :  
-    En sélectionnant la taille de police, le contenu affiché à l'écran est dynamiquement modifié et votre sélection conservée dans votre navigateur.
-- d'**exporter vos données** : toutes vos données (telles que vos notes personnelles, vos variables personnalisées et votre progression) sont stokées localement dans votre navigateur.  
+- de **personnaliser l'affichage** :
+    - En modifiant la *taille du texte*, le contenu affiché à l'écran est dynamiquement modifié.
+    - En sélectionnant le *thème* graphique de ibCAN.  
+    Les modifications sont appliquées immédiatement et conservées dans votre navigateur pour les prochaines visites.
+- d'**exporter vos données** : toutes vos informations personnelles (notes, variables, progression et préférences) sont stockées localement dans votre navigateur.  
     En cliquant sur le bouton <span class="ibExportButton ibSettingsAction">💾 Exporter mes données</span> vous pouvez sauvegarder un fichier *.json* contenant toutes ces informations.
     Ce fichier pourra être réimporté par la suite pour reprendre votre stage dans un autre navigateur/une autre machine ou après une perte d'informations par le navigateur.  
-    Il vous est donc conseillé d'<u>exporter régulièrement vos données</u>, après avoir terminé un exercice ou pour reprendre votre travail sur un autre navigateur par exemple.
+    Il vous est donc conseillé d'*exporter régulièrement vos données*, après avoir terminé un exercice ou pour reprendre votre travail sur un autre navigateur par exemple.
 - d'**importer une sauvegarde** :
     en cliquant sur le bouton <span class="ibImportButton ibSettingsAction">📂 Importer ma sauvegarde</span>, vous pourrez sélectionner le fichier *.json* préalablement sauvegardé pour effacer toutes les valeurs locales de votre navigateur concernant ce stage et les remplacer par celles contenues dans le fichier.
 - d'**imprimer** tous les ateliers du stage :

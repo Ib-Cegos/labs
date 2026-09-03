@@ -10,8 +10,18 @@ from pathlib import Path
 REGEX_EXERCICE = re.compile( r"a(\d+)e(\d+)\.md$", re.IGNORECASE )
 REGEX_SOMMAIRE = re.compile( r"\{\{\s*sommaire\s*\(\s*\)\s*\}\}", re.IGNORECASE )
 YAML_ERRORS = []
-IBLAB_PAGE_BREAK_PREFIX = "IBLAB_PAGE_BREAK"
+IBCAN_PAGE_BREAK_PREFIX = "IBCAN_PAGE_BREAK"
 REGEX_VARIABLE = re.compile( r"\[([A-Za-z0-9_]+)\]")
+
+def lister_themes():
+    dossier = Path("docs/assets/themes")
+    themes = []
+    if (dossier / "original.css").exists(): themes.append("original")
+    for fichier in sorted(dossier.glob("*.css")):
+        nom = fichier.stem
+        if nom == "original": continue
+        themes.append(nom)
+    return themes
 
 def preparer_variables_print(dossier_stage,contenu):
     readme = dossier_stage / "README.md"
@@ -126,7 +136,7 @@ def formater_exercice_pour_export( contenu, numero_atelier, titre_atelier, numer
     contenu = re.sub( r"^#\s+.+?\n+", "", contenu, count=1, flags=re.MULTILINE ).lstrip()
     contenu = decaler_titres_markdown( contenu, niveaux=2 )
     return (
-    f"<!-- {IBLAB_PAGE_BREAK_PREFIX}|a{numero_atelier}e{numero_exercice} -->"
+    f"<!-- {IBCAN_PAGE_BREAK_PREFIX}|a{numero_atelier}e{numero_exercice} -->"
     f"# Atelier {numero_atelier} - {titre_atelier}\n\n"
     f"## Exercice {numero_exercice} - {titre_exercice}\n\n"
     f'<div class="ibPrintNotes" '

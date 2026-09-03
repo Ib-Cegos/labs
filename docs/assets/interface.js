@@ -60,17 +60,17 @@ function ibInitNavigationPanel() {
     const panel = document.getElementById( "ibNavigationPanel" );
     const tab = document.getElementById( "ibNavigationTab" );
     if (!panel || !tab) {
-        if (window.ibEnvironment.storage) { localStorage.setItem("ibNavigationOpen","false") }
+        if (window.ibEnvironment.storage) { sessionStorage.setItem("ibNavigationOpen","false") }
         return; }
-    if ( localStorage.getItem( "ibNavigationOpen" ) === "true" ) { panel.classList.add("open"); }
+    if ( sessionStorage.getItem( "ibNavigationOpen" ) === "true" ) { panel.classList.add("open"); }
     tab.addEventListener( "click", () => {
         panel.classList.toggle("open");
-        localStorage.setItem( "ibNavigationOpen", panel.classList.contains( "open" )); }); }    
+        sessionStorage.setItem( "ibNavigationOpen", panel.classList.contains( "open" )); }); }    
 
 function ibInitialiserNavigation() {
     const storageKey = "ibNavContent";
     let navigation = {};
-    try { navigation = JSON.parse( localStorage.getItem(storageKey) || "{}" ); }
+    try { navigation = JSON.parse( sessionStorage.getItem(storageKey) || "{}" ); }
     catch { navigation = {}; }
     document.querySelectorAll(".ibNavAtelier").forEach(atelier => {
         const cle = atelier.dataset.stage + "-a" + atelier.dataset.atelier;
@@ -81,7 +81,7 @@ function ibInitialiserNavigation() {
                 atelier.open = true;
                 return; }
             navigation[cle] = atelier.open;
-            localStorage.setItem( storageKey, JSON.stringify(navigation) );});});}
+            sessionStorage.setItem( storageKey, JSON.stringify(navigation) );});});}
 
 function ibPrint() {
     let url = window.location.pathname;
