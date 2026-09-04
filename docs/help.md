@@ -8,6 +8,7 @@
     - <span class="ibHasNote"><span class="ibNavExRef">Une barre jaune indique la présence de notes personnelles.</span></span>  
     - <span class="ibNavExerciceHelp ibExerciceTermine" style="--ib-progress: 100%;">Une barre verte s'affiche à droite d'un exercice est terminé.</span>  
     - Le comportement de ces éléments (qui est repris dans le sommaire du stage) dépend des cases que vous avez coché dans le contenu de l'exercice.
+- Certains exercices peuvent comporter une illustration qui peut vous être utile à tout moment. Dans ce cas, cliquez sur l'onglet <span class="ibIllustrationTab">Illustration</span> qui apparaît sur le bord droit de l'écran.
 
 # Contenu
 
@@ -55,6 +56,9 @@ Le bouton <span class="ibActionButton ibSettingsButton">⚙ Paramètres</span> o
 - Si les ateliers à imprimer contiennent des variables customisables, vous pouvez :
     - Décocher la case **Utiliser mes paramètres personnels** pour utiliser les valeurs par défaut.
     - Cocher la case **Utiliser mes paramètres personnles** pour remplacer les valeurs par défaut du document par celles que vous avez saisies.
+- Si les ateliers à imprimer contiennent des illustrations sur certains exercices, vous pouvez :
+    - Décocher la case **Inclure les illustrations des exercices** pour ne pas inclure ces images d'illustration.
+    - Cocher la case **Inclure les illustrations des exercices** pour pour que les images d'illusatration des exerices soient incluses dans l'impression.    
 - Si vous avez saisi des notes personnelles dans certains exercices, leur nombre est indiqué dans la fenêtre de préparation.
     - Cochez la case **Inclure mes notes personnelles** pour insérer ces notes directement dans le document imprimé, au début de chaque exercice concerné.
 - Une fois la préparation terminée, utilisez la fonction d'impression de votre navigateur pour imprimer le document ou l'enregistrer au format PDF.

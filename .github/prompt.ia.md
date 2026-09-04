@@ -6,6 +6,7 @@ L'objectif est de fournir une expérience de lecture enrichie et interactive tou
 Parmi les fonctionnalités actuellement prises en charge :
 
 - enrichissement automatique des contenus ;
+- Possibilité d'insérer une illustration pour chaque exercice;
 - personnalisation des variables pédagogiques ;
 - suivi de progression ;
 - notes personnelles ;
@@ -51,6 +52,7 @@ Principales responsabilités :
 - analyser les exercices ;
 - reconstruire l'organisation logique des ateliers ;
 - générer les structures HTML nécessaires ;
+- insérer l'image d'illustration le cas échéant;
 - fournir les métadonnées nécessaires au JavaScript ;
 - générer les panneaux enrichis (paramètres, navigation, aide, etc.) ;
 - générer automatiquement certaines données injectées dans les pages ;
@@ -98,6 +100,7 @@ Gestion spécifique de l'impression :
 - préparation d'impression ;
 - variables imprimables ;
 - notes imprimables ;
+- illustrations imprimables;
 - personnalisation du document ;
 - mise à jour dynamique du contenu avant impression.
 
@@ -293,6 +296,7 @@ Chaque dossier de stage contient :
 
 - un README.md ;
 - un ou plusieurs exercices `aXeY.md`.
+- une image d'illustration par exercice (optionnelle) `aXeY.png`
 
 Exemples : "ms503/", "sms030/", "az104/", "ms102/"
 
@@ -310,6 +314,7 @@ Responsable de :
 - l'ajout des boutons de copie ;
 - la génération de la navigation ;
 - l'intégration de l'aide ;
+- détection et intégration des illustrations d'exercices ;
 - la génération de certains composants HTML.
 
 #### tools.py
@@ -321,6 +326,7 @@ Responsabilités :
 - détection des ateliers ;
 - génération des exports d'impression ;
 - accès aux informations Git ;
+- détection automatique des illustrations associées aux exercices ;
 - fonctions utilitaires communes.
 
 ---
@@ -404,8 +410,7 @@ Cette approche permet :
 ---
 
 ## Exercice
-Chaque exercice est contenu dans un fichier nommé "aXeY.md"
-où X = numéro de l'atelier et Y = numéro de l'exercice.
+Chaque exercice est contenu dans un fichier nommé "aXeY.md" où X = numéro de l'atelier et Y = numéro de l'exercice.
 Exemples : "a1e1.md", "a1e2.md", "a2e1.md", "a3e4.md"
 Le moteur utilise cette convention de nommage pour :
 
@@ -415,6 +420,12 @@ Le moteur utilise cette convention de nommage pour :
 - produire les exports d'impression.
 
 Chaque exercice constitue l'unité pédagogique élémentaire du système.
+
+## Illustrations d'exercice
+Chaque exercice peut être accompagné d'une illustration associée automatiquement par le moteur.
+Le moteur recherche les images portant le même nom que l'exercice : aXeY.png
+Lorsqu'une illustration est détectée, un panneau latéral Illustration est ajouté sur le bord droit de l'écran (le panneau s'adapte automatiquement aux dimensions de l'image)
+La détection des illustrations est entièrement automatique et ne nécessite aucune métadonnée supplémentaire dans les fichiers Markdown.
 
 ---
 
@@ -1075,6 +1086,16 @@ Cette fonctionnalité permet de produire :
 - un support personnel enrichi ;
 - un document de révision ;
 - une archive complète du travail réalisé.
+
+---
+
+## Illustrations
+Les illustrations associées aux exercices peuvent être intégrées au document imprimé  : 
+
+- insertion automatique sous les notes personnelles de l'exercice ;
+- habillage spécifique via `print.css` ;
+- inclusion optionnelle lors de la préparation d'impression ;
+- comptabilisation des illustrations disponibles dans la fenêtre de préparation.
 
 ---
 

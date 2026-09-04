@@ -20,6 +20,10 @@ document.getElementById("ibPrintSetupClose").addEventListener("click", () => {
     document.getElementById("ibPrintSetupOverlay").style.display = "none"; });
 document.getElementById("ibPrintButton").addEventListener("click", () => { launchPrint(); });
 
+function ibTogglePrintIllustrations() {
+    const includeIllustrations = document.getElementById( "includeIllustrations" ).checked;
+    document.querySelectorAll(".ibPrintIllustration").forEach(div => { div.hidden = !includeIllustrations; });}
+
 function ibToglePrintVariables() {
     const useCustomVariables = document.getElementById("useCustomVariables").checked;
     document.querySelectorAll(".ibPrintVariable").forEach(varDiv => {
@@ -35,7 +39,18 @@ function ibToglePrintNotes() {
 /* Placer les informations d'édition sous le premier titre H1 de la page de garde */
 const h1 = document.querySelector("#ibPrintContent h1");
 const infos = document.getElementById("ibPrintCoverInfo");
-if (h1 && infos) { h1.insertAdjacentElement("afterend", infos); }       
+if (h1 && infos) { h1.insertAdjacentElement("afterend", infos); }
+
+/* Compteur d'illustrations */
+const illustrations = document.querySelectorAll(".ibPrintIllustration");
+const nbIllustrations = illustrations.length;
+let illustrationsPluriel = "";
+if (nbIllustrations > 1) { illustrationsPluriel = "s"; }
+if (nbIllustrations < 1) { document.getElementById("ibPrintIllustrationsSection").remove(); }
+else {
+    document.getElementById("illustrationsSummary").innerHTML = nbIllustrations + " illustration" + illustrationsPluriel + " trouvée" + illustrationsPluriel;
+    document.getElementById("includeIllustrations").addEventListener( "change", ibTogglePrintIllustrations );
+    ibTogglePrintIllustrations();}
 
 /* Insertion du contenu dans les notes */
 const cheminPrint = window.location.pathname.split("/").filter(Boolean);

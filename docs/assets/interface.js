@@ -8,9 +8,22 @@ document.addEventListener(
         ibInitHelpPanel();
         ibInitNotesPanel();
         ibInitNavigationPanel();
+        ibInitIllustrationPanel();
         ibInitialiserNavigation();
 
     });
+
+function ibResizeIllustrationPanel() {
+    const panel = document.getElementById("ibIllustrationPanel");
+    const image = document.getElementById("ibIllustrationImage");
+    if (!panel || !image) { return; }
+    const largeurMax = window.innerWidth * 0.90;
+    const hauteurMax = (window.innerHeight - 120) * 0.95;
+    const ratio = image.naturalWidth / image.naturalHeight;
+    const largeurSelonHauteur = hauteurMax * ratio;
+    const largeur = Math.min( image.naturalWidth + 32, largeurSelonHauteur + 32, largeurMax );
+    panel.style.width = `${Math.round(largeur)}px`;
+    if (!panel.classList.contains("open")) { panel.style.right = `-${Math.round(largeur)}px`; }}    
 
 function ibMajBoutonParametres() {
     const bouton = document.getElementById("ibSettingsButton");
@@ -65,7 +78,33 @@ function ibInitNavigationPanel() {
     if ( sessionStorage.getItem( "ibNavigationOpen" ) === "true" ) { panel.classList.add("open"); }
     tab.addEventListener( "click", () => {
         panel.classList.toggle("open");
-        sessionStorage.setItem( "ibNavigationOpen", panel.classList.contains( "open" )); }); }    
+        sessionStorage.setItem( "ibNavigationOpen", panel.classList.contains( "open" )); }); }
+
+function ibInitIllustrationPanel() {
+    const panel = document.getElementById("ibIllustrationPanel");
+    const tab = document.getElementById("ibIllustrationTab");
+    if (!panel || !tab) { 
+        sessionStorage.removeItem( IB_PREFIX + "illustration-context" );
+        return; }
+    const context = sessionStorage.getItem( IB_PREFIX + "illustration-context" );
+    if ( context && context !== window.ibExerciseCode ) { sessionStorage.removeItem( IB_PREFIX + "illustration-context" ); }
+    /* Retailler le panneau selon la taille de l'image si nécessaire */
+    const image = document.getElementById( "ibIllustrationImage" );
+    if (image) {
+         if (image.complete) { ibResizeIllustrationPanel(); }
+        image.addEventListener( "load", ibResizeIllustrationPanel );
+        window.addEventListener( "resize", ibResizeIllustrationPanel ); }
+    if ( sessionStorage.getItem( IB_PREFIX + "illustration-context" ) === window.ibExerciseCode ) { 
+        panel.classList.add("open");
+        panel.style.right = "0"; }
+    tab.addEventListener("click", () => {
+        panel.classList.toggle("open");
+        if (panel.classList.contains("open")) { 
+            sessionStorage.setItem( IB_PREFIX + "illustration-context", window.ibExerciseCode ); 
+            panel.style.right = "0"; }
+        else { 
+            sessionStorage.removeItem( IB_PREFIX + "illustration-context" ); 
+            panel.style.right = `-${panel.offsetWidth}px`; }});}
 
 function ibInitialiserNavigation() {
     const storageKey = "ibNavContent";

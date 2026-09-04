@@ -67,6 +67,12 @@ def on_page_context(context, page, config, nav):
     context["ibNavigationTree"] = ( construire_navigation_stage(page) )
     context["ibShowNavigation"] = bool( context["ibNavigationTree"] )
     context["ibHelpContent"] = charger_aide()
+    illustration = False
+    infos = tools.analyser_exercice( Path(page.file.src_uri).name )
+    if infos: illustration = tools.trouver_illustration_exercice( page.file.abs_src_path )
+    context["ibIllustrationFound"] = bool(illustration)
+    context["ibIllustrationUrl"] = ""
+    if illustration: context["ibIllustrationUrl"] = ( "../" + illustration.name )
     return context
 
 # Pagination dans les exercices

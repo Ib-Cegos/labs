@@ -67,6 +67,8 @@ L'équipe projet de Adatum a décidé de mettre en œuvre Microsoft 365  dans un
 
 <div class="ibPrintNotes" data-exercise="a1e1" hidden></div>
 
+<div class="ibPrintIllustration"><img src="../a1e1.jpg" alt="Illustration de l'exercice"></div>
+
 Dans ce premier exercice, vous allez commencer par visiter le tenant 365 dans le projet pilote.  
 Certaines informations d'identification que vous récupèrerez lors de ce premier exercice seront utilisées dans l'ensemble des ateliers et exercices du stage.  
 
@@ -165,6 +167,8 @@ Dans cette tâche, vous allez vérifier l'état de santé du service Microsoft 3
 
 <div class="ibPrintNotes" data-exercise="a1e2" hidden></div>
 
+<div class="ibPrintIllustration"><img src="../a1e2.png" alt="Illustration de l'exercice"></div>
+
 Adatum a acheté un nouveau nom de domaine DNS pour son projet pilote (fourni par goDeploy) qui soit utilisable sur Internet.
 
 Adatum gère directement les enregistrements de ses domaines DNS. Pour que ce domaine soit utilisable sur le tenant, il va vous falloir passer par un assistant de configuration et créer les enregistrements DNS attendus. C'est ce que vous allez réaliser dans ce second exercice.
@@ -219,6 +223,8 @@ Dans cette tâche vous allez ajouter le domaine DNS d'entreprise à votre tenant
 ## Exercice 3 - Visite des portails administratifs 365
 
 <div class="ibPrintNotes" data-exercise="a1e3" hidden></div>
+
+<div class="ibPrintIllustration"><img src="../a1e3.png" alt="Illustration de l'exercice"></div>
 
 Maintenant que le tenant du projet pilote 365 de Adatum est complètement créé, vous pouvez commencer à utiliser l'environnement Microsoft 365. Dans cet exercice, vous allez visiter divers portails administratifs les plus utiles pour le quotidien d'un administrateur 365 afin de commencer à vous familiariser avec leur contenu et leur navigation.
 

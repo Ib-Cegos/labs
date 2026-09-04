@@ -13,6 +13,15 @@ YAML_ERRORS = []
 IBCAN_PAGE_BREAK_PREFIX = "IBCAN_PAGE_BREAK"
 REGEX_VARIABLE = re.compile( r"\[([A-Za-z0-9_]+)\]")
 
+def trouver_illustration_exercice(fichier_exercice):
+    # Une seule illustration est autorisée par exercice.
+    # La première extension trouvée dans cette liste est utilisée.
+    fichier_exercice = Path(fichier_exercice)
+    for extension in ( ".png", ".jpg", ".jpeg", ".webp", ".svg", ".bmp" ):
+        illustration = ( fichier_exercice.parent / f"{fichier_exercice.stem}{extension}" )
+        if illustration.exists(): return illustration
+    return False
+
 def lister_themes():
     dossier = Path("docs/assets/themes")
     themes = []
@@ -132,15 +141,19 @@ def extraire_markdown_sans_yaml(fichier):
         if len(morceaux) >= 3: return morceaux[2].strip()
     return contenu.strip()
 
-def formater_exercice_pour_export( contenu, numero_atelier, titre_atelier, numero_exercice, titre_exercice ):
+def formater_exercice_pour_export( contenu, fichier_exercice, numero_atelier, titre_atelier, numero_exercice, titre_exercice ):
     contenu = re.sub( r"^#\s+.+?\n+", "", contenu, count=1, flags=re.MULTILINE ).lstrip()
     contenu = decaler_titres_markdown( contenu, niveaux=2 )
+    illustration = trouver_illustration_exercice( fichier_exercice )
+    bloc_illustration = ""
+    if illustration: bloc_illustration = ( f'<div class="ibPrintIllustration"><img src="../{illustration.name}" alt="Illustration de l\'exercice"></div>\n\n' )
     return (
     f"<!-- {IBCAN_PAGE_BREAK_PREFIX}|a{numero_atelier}e{numero_exercice} -->"
     f"# Atelier {numero_atelier} - {titre_atelier}\n\n"
     f"## Exercice {numero_exercice} - {titre_exercice}\n\n"
     f'<div class="ibPrintNotes" '
     f'data-exercise="a{numero_atelier}e{numero_exercice}" hidden></div>\n\n'
+    f'{bloc_illustration}'
     f"{contenu}" )
    
 def formater_readme_export(dossier_stage):
@@ -160,7 +173,7 @@ def charger_markdown_stage(dossier_stage):
         for exercice in exercices:
             fichier = ( dossier_stage / f"a{numero_atelier}e{exercice['numero']}.md" )
             contenu = extraire_markdown_sans_yaml(fichier)
-            morceaux.append( formater_exercice_pour_export( contenu, numero_atelier, titre_atelier or "", exercice["numero"], exercice["titre"]))
+            morceaux.append( formater_exercice_pour_export( contenu, fichier, numero_atelier, titre_atelier or "", exercice["numero"], exercice["titre"]))
     contenu = "\n\n".join(morceaux)
     titre = dossier_stage.name.upper()
     readme = dossier_stage / "README.md"

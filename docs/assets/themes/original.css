@@ -128,12 +128,23 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 #ibHelpContent h1:first-of-type { margin-top: 0; }
 #ibHelpContent .ibSettingsAction { flex: none; width: auto; display: inline-flex; align-items: center; pointer-events: none; cursor: inherit; margin: .15rem .35rem;}
 
-/* Panneau de navigation latéral */
-#ibNavigationTab, .ibNavigationTab { position: absolute; left: 100%; top: 60px; writing-mode: vertical-rl; transform: rotate(180deg); padding: .75rem .5rem; border-radius: 8px 0 0 8px; cursor: pointer; z-index: 1100; user-select: none; font-size: .9em; font-weight: 600; box-shadow: 2px 2px 8px rgba(0,0,0,.12); background: var(--ib-color-navigation); color: var(--ib-color-navigation-text); }
-#ibHelpContent .ibNavigationTab { position: static !important; display: inline-block !important; writing-mode: initial !important; transform: none !important; display: inline-flex !important; vertical-align: middle;}
-#ibNavigationPanel { position: fixed; left: -320px; top: 60px; bottom: 60px; width: 320px; background: var(--ib-navigation-panel-background); border-right: 1px solid var(--ib-navigation-panel-border); box-shadow: 4px 0 12px var(--ib-navigation-panel-shadow); transition: left .3s ease; z-index: 1000; }
+/* Panneaux latéraux */
+#ibNavigationPanel, #ibIllustrationPanel { position: fixed; top: 60px;  background: var(--ib-navigation-panel-background); z-index: 1000; }
+#ibNavigationContent,#ibIllustrationContent { padding: 1rem; height: 100%; box-sizing: border-box; }
+#ibNavigationTab, #ibIllustrationTab, .ibNavigationTab, .ibIllustrationTab { position: absolute; top: 60px; writing-mode: vertical-rl; padding: .75rem .5rem; cursor: pointer; z-index: 1100; user-select: none; font-size: .9em; font-weight: 600; background: var(--ib-color-navigation); color: var(--ib-color-navigation-text); }
+/* Navigation */
+#ibNavigationPanel { width: 320px; left: -320px; bottom: 60px; border-right: 1px solid var(--ib-navigation-panel-border); transition: left .3s ease; box-shadow: 0 0 12px var(--ib-navigation-panel-shadow);}
+#ibNavigationContent {overflow-y: auto;}
 #ibNavigationPanel.open { left: 0; }
-#ibNavigationContent { padding: 1rem; overflow-y: auto; height: 100%; box-sizing: border-box; }
+#ibNavigationTab,.ibNavigationTab { left: 100%; transform: rotate(180deg); border-radius: 8px 0 0 8px; box-shadow: 2px 2px 8px rgba(0,0,0,.12);}
+/* Illustration */
+#ibIllustrationPanel { position: fixed; top: 60px; right: -900px; width: 50vw; min-width: 320px; background: var(--ib-navigation-panel-background); border-left: 1px solid var(--ib-navigation-panel-border); box-shadow: -4px 0 12px var(--ib-navigation-panel-shadow); overflow: visible; }
+#ibIllustrationPanel.open { right: 0; }
+#ibIllustrationTab,.ibIllustrationTab { right: 100%; border-radius: 8px 0 0 8px; box-shadow: -2px 2px 8px rgba(0,0,0,.12);}
+#ibIllustrationContent { position: relative; display: flex; justify-content: center; align-items: flex-start; overflow: auto; }
+#ibIllustrationZoom { position: absolute; top: .75rem; right: .75rem; text-decoration: none; font-size: 1.25rem; padding: .25rem .5rem; border-radius: 6px; background: rgba(255,255,255,.85); z-index: 10; }
+#ibIllustrationImage { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+#ibHelpContent .ibNavigationTab,#ibHelpContent .ibIllustrationTab  { position: static !important; writing-mode: initial !important; transform: none !important; display: inline-flex !important; vertical-align: middle; border-radius: 8px 8px 0 0;}
 
 .ibHasNote .ibNavExRef { position: relative; }
 #ibHelpContent .ibHasNote .ibNavExRef { font-weight: unset; line-height: unset; }

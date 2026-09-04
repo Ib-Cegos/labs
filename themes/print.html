@@ -23,7 +23,8 @@
             <p> Confgurez le contenu du cahier d'ateliers avant impression.
             <span id="printVariablesTip"><br/>Les variables permettent de personnaliser les informations utilisées dans cet atelier.</span>
             <span id="prinNotesTip"><br/>Les notes personnelles seront ajoutées en tête de chaque exercice.</span></p>
-                <div class="ibPrintSetupSection" id="ibPrintVariablesSection"> <h3>Variables</h3>
+                <div class="ibPrintSetupSection" id="ibPrintVariablesSection">
+                    <h3>Variables</h3>
                     <label class="ibCheckboxContainer">
                     <input type="checkbox" id="useCustomVariables" unchecked>
                     Utiliser mes paramètres personnels</label>
@@ -33,10 +34,15 @@
                     <label class="ibCheckboxContainer">
                     <input type="checkbox" id="includePersonalNotes" unchecked>
                     Inclure mes notes personnelles</label>
-                <div id="notesSummary">
-                    0 note trouvée
+                    <div id="notesSummary">0 note trouvée</div>
                 </div>
-            </div>
+                <div class="ibPrintSetupSection" id="ibPrintIllustrationsSection">
+                    <h3>Illustrations</h3>
+                    <label class="ibCheckboxContainer">
+                    <input type="checkbox" id="includeIllustrations" unchecked>
+                    Inclure les illustrations des exercices</label>
+                    <div id="illustrationsSummary">0 illustration trouvée</div>
+                </div>
             <div class="ibPrintSetupButtons">
                 <button id="ibPrintButton">Imprimer</button>
             </div>

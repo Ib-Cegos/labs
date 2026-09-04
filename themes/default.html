@@ -72,7 +72,17 @@
     <div id="ibNotesStatus" class="ibNotesStatus">Sauvegarde automatique ✓</div>
 </div>
 </aside>
-``
+
+{% if ibIllustrationFound %}
+<aside id="ibIllustrationPanel">
+    <div id="ibIllustrationTab">Illustration</div>
+    <div id="ibIllustrationContent">
+        <a id="ibIllustrationZoom" href="{{ ibIllustrationUrl }}" target="_blank" title="Ouvrir l'image dans un nouvel onglet">🔍</a>
+        <img id="ibIllustrationImage" src="{{ ibIllustrationUrl }}" alt="Illustration de l'exercice">
+    </div>
+</aside>
+{% endif %}
+
 {% if ibShowNavigation %}
 <aside id="ibNavigationPanel">
     <div id="ibNavigationTab">
