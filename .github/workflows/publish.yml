@@ -38,6 +38,8 @@ jobs:
           pip install mkdocs-git-revision-date-localized-plugin
           
       - run: python generate_prints.py
+
+      - run: python ibCANwriter_export.py
       
       - run: mkdocs build
 

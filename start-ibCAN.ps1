@@ -15,6 +15,10 @@ python generate_prints.py
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Erreur lors de la génération des documents d'impression."
     exit 1 }
+python ibCANwriter_export.py
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Erreur lors de la génération des exports JSON."
+    exit 1 }    
 Start-Job {
     do {
         Start-Sleep -Milliseconds 500

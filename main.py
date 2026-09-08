@@ -42,6 +42,6 @@ def define_env(env):
             contenu = readme.read_text(encoding="utf-8")
             match = re.search(r"^#\s+(.+)$", contenu, re.MULTILINE)
             if match: titre = match.group(1).strip()
-            html.append( f'<li><a href="{dossier.name}/" class="stageLink">{dossier.name.upper()} - {titre}</a></li>' )
+            html.append( f'<li><a href="{dossier.name}/" class="stageLink">{dossier.name.upper()} - {titre}</a> - (<a href="{dossier.name}/{dossier.name}.json" download>Export JSON</a>)</li>' )
         html.append('</ul>')
         return "\n".join(html)

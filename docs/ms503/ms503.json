@@ -1,0 +1,24 @@
+{
+    "Titre": "Windows Server 2016 / 2019 / 2022 / 2025 – Active Directory",
+    "Auteur": "",
+    "Variables": {},
+    "Introduction": "{{ sommaire() }}",
+    "Reference": "ms503",
+    "Ateliers": [
+        {
+            "Id": 1,
+            "Titre": "",
+            "Exercices": [
+                {
+                    "Titre": "",
+                    "Atelier": "Installation d'Active Directory",
+                    "Duree": 60,
+                    "Contenu": "",
+                    "titre": "Promotion du premier contrôleur de domaine",
+                    "contenu": "# Scénario\nDans ce premier exercice, vous allez",
+                    "id": 1
+                }
+            ]
+        }
+    ]
+}
