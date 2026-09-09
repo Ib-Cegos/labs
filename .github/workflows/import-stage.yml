@@ -1,0 +1,39 @@
+name: Import des JSON
+
+on:
+  push:
+    branches:
+      - main
+      - travail
+    paths:
+      - 'ibCANwriter/**/*.json'
+
+jobs:
+  import-stage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install pyyaml
+      - name: Import stages
+        run: |
+          python ibCANwriter/import.py
+      - name: Commit generated markdown
+        run: |
+          git config user.name "ibCAN Import Bot"
+          git config user.email "actions@github.com"
+          git add docs/
+          if git diff --cached --quiet; then
+            echo "No changes detected"
+          else
+            git commit -m "Import stage(s) from JSON"
+            git push
+          fi

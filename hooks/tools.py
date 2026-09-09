@@ -32,20 +32,14 @@ def lister_themes():
         themes.append(nom)
     return themes
 
-def preparer_variables_print(dossier_stage,contenu):
-    readme = dossier_stage / "README.md"
-    if not readme.exists(): return contenu
-    contenu_readme = readme.read_text(encoding="utf-8")
-    if not contenu_readme.startswith("---"): return contenu
-    morceaux = contenu_readme.split("---", 2)
-    if len(morceaux) < 3: return contenu
-    try: meta = yaml.safe_load(morceaux[1]) or {}
-    except yaml.YAMLError: return contenu
+def preparer_variables_print(dossier_stage, contenu):
+    meta = lire_meta_stage(dossier_stage)
+    if not meta: return contenu
     variables = meta.get("Variables", {})
     for nom, definition in variables.items():
-        valeur_defaut = definition.get( "defaut", "" )
-        if definition.get("lib"): contenu = re.sub( rf"\[{re.escape(nom)}\]", f"[[{nom}],[{valeur_defaut}]]", contenu, flags=re.IGNORECASE )
-        else: contenu = re.sub( rf"\[{re.escape(nom)}\]", valeur_defaut, contenu, flags=re.IGNORECASE )
+        valeur_defaut = definition.get("defaut", "")
+        if definition.get("lib"): contenu = re.sub(rf"\[{re.escape(nom)}\]",f"[[{nom}],[{valeur_defaut}]]",contenu,flags=re.IGNORECASE)
+        else: contenu = re.sub(rf"\[{re.escape(nom)}\]",valeur_defaut,contenu,flags=re.IGNORECASE)
     return contenu
 
 def charger_structure_stage(dossier_stage):
@@ -79,25 +73,31 @@ def analyser_exercice(nom_fichier):
     if not match: return None
     return ( int(match.group(1)), int(match.group(2)) )
 
-def charger_meta_atelier(page):
+def lire_meta_stage(dossier_stage):
     try:
-        fichier = Path("docs") / page.file.src_uri
-        readme = fichier.parent / "README.md"
+        readme = Path(dossier_stage) / "README.md"
         if not readme.exists(): return {}
-        contenu = readme.read_text( encoding="utf-8" )
+        contenu = readme.read_text(encoding="utf-8")
         if not contenu.startswith("---"): return {}
         morceaux = contenu.split("---", 2)
         if len(morceaux) < 3: return {}
-        try:
-            meta = yaml.safe_load(morceaux[1])
-            return meta or {}
-        except yaml.YAMLError as erreur:
-            erreur_yaml = {"fichier": str(fichier), "erreur": str(erreur)}
-            if erreur_yaml not in YAML_ERRORS: YAML_ERRORS.append(erreur_yaml)
-            return {}
+        meta = yaml.safe_load(morceaux[1]) or {}
+        return meta
+    except yaml.YAMLError as erreur:
+        erreur_yaml = {"fichier": str(readme),"erreur": str(erreur)}
+        if erreur_yaml not in YAML_ERRORS: YAML_ERRORS.append(erreur_yaml)
+        return {}
     except Exception as erreur:
-        print( f"Erreur lecture méta atelier : {erreur}" )
-        return {}  
+        print( f"Erreur lecture méta stage : {erreur}")
+        return {}
+
+def charger_meta_atelier(page):
+    try:
+        fichier = Path("docs") / page.file.src_uri
+        return lire_meta_stage(fichier.parent)
+    except Exception as erreur:
+        print(f"Erreur lecture méta atelier : {erreur}")
+        return {} 
 
 # Gestion des ateliers "autonomes"
 def est_dossier_autonome(dossier_stage):
@@ -210,9 +210,12 @@ def recuperer_infos_git_stage(dossier_stage):
             infos_plus_recents = infos
     return infos_plus_recents
 
-def construire_yaml_print( titre, dossier_stage):
-    infos_git = recuperer_infos_git_stage( dossier_stage )
-    return ( f"---\ntitle: {titre}\neditionDate: {infos_git['editionDate']}\ngitVersion: {infos_git['gitVersion']}\neditorName: {infos_git['editorName']}\n---\n\n")
+def construire_yaml_print(titre, dossier_stage):
+    infos_git = recuperer_infos_git_stage(dossier_stage)
+    meta = lire_meta_stage(dossier_stage)
+    auteur = (meta.get("Auteur") or meta.get("auteur") or "")
+    if auteur : return (f"---\ntitle: {titre}\neditionDate: {infos_git['editionDate']}\ngitVersion: {infos_git['gitVersion']}\nauteur: {auteur}\n---\n\n")
+    else: return (f"---\ntitle: {titre}\neditionDate: {infos_git['editionDate']}\ngitVersion: {infos_git['gitVersion']}\n---\n\n")
 
 def recuperer_infos_git(fichier):
     fichier = Path(fichier)
@@ -238,10 +241,10 @@ def recuperer_infos_git(fichier):
         except Exception as e: print(f"[DEBUG] récupération GitHub API pour '{fichier}' : {e}")
     # Cas 2 : Git local (MkDocs local ou GitHub Desktop)
     try:
-        sha = subprocess.check_output(["git", "log", "-n", "1", "--format=%h", "--", str(fichier)], text=True).strip()
-        auteur = subprocess.check_output(["git", "log", "-n", "1", "--format=%an", "--", str(fichier)], text=True ).strip()
+        sha = (subprocess.check_output(["git", "log", "-n", "1", "--format=%h", "--", str(fichier)],text=True).strip() or "initiale")
+        auteur = (subprocess.check_output(["git", "log", "-n", "1", "--format=%an", "--", str(fichier)],text=True ).strip() or "ibCANWriter")
         date_git = subprocess.check_output(["git", "log", "-n", "1", "--format=%aI", "--", str(fichier)], text=True ).strip()
-        edition_date_calc = datetime.fromisoformat( date_git.replace("Z", "+00:00") )
+        edition_date_calc = (datetime.now() if not date_git else datetime.fromisoformat(date_git.replace("Z", "+00:00")))
         return { "gitVersion": sha, "editorName": auteur, "editionDate": edition_date_calc.strftime("%d/%m/%Y"), "editionDateCalc": edition_date_calc }
     except Exception as e: print(f"[DEBUG] récupération GIT local pour '{fichier}' : {e}")
     # Cas 3 : aucune information disponible

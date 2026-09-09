@@ -9,7 +9,9 @@
 </head>
 <body>
 <header id="ibHeader">
-    <div id="ibHeaderTitle">{{ page.title }}</div>
+    <div id="ibHeaderTitle" 
+    {% if ibStageAuthor %} title="Auteur : {{ ibStageAuthor }}" {% endif %}
+    >{{ page.title }}</div>
     <div id="ibHeaderBrand">
         Cahier d'Atelier Numérique
     </div>

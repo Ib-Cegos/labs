@@ -3,6 +3,8 @@ J'ai développé une application web nommée **ibCAN** (anciennement ibLab) dont
 Les contenus pédagogiques sont rédigés en Markdown par des formateurs qui ne sont ni développeurs ni spécialistes du web. Le moteur doit donc masquer autant que possible la complexité technique et enrichir automatiquement les contenus générés.
 Le projet est basé sur **MkDocs** mais une partie importante de la logique est assurée par des scripts **Python**, **JavaScript** et **CSS** développés spécifiquement pour ibCAN.
 L'objectif est de fournir une expérience de lecture enrichie et interactive tout en conservant Markdown comme source documentaire principale.
+ibCAN dispose désormais également d'un mécanisme d'import/export JSON permettant de reconstruire intégralement un stage à partir d'un modèle de données intermédiaire.
+Ce format JSON constitue la base d'un futur outil compagnon nommé **ibCANWriter**, destiné à simplifier la rédaction des ateliers et à réduire les connaissances requises en Markdown pour les contributeurs.
 Parmi les fonctionnalités actuellement prises en charge :
 
 - enrichissement automatique des contenus ;
@@ -171,6 +173,10 @@ L'objectif est de faire varier l'apparence sans modifier :
 
 Le système de thèmes est désormais considéré comme une fonctionnalité stable de l'architecture ibCAN.
 
+## Architecture documentaire
+
+Le moteur ibCAN manipule désormais trois représentations d'un même contenu : JSON ibCANWriter <==> MArkdown ibCAN ==>HTML publié
+
 ---
 
 # Structure du dépôt
@@ -193,6 +199,11 @@ Le système de thèmes est désormais considéré comme une fonctionnalité stab
 │   ├── help.md
 │   ├── ms503
 │   └── msms030
+|
+├── ibCANWriter
+│   ├── export.py
+│   ├── import.py
+│   └── *.json
 │
 ├── hooks
 │   ├── content_processor.py
@@ -300,6 +311,20 @@ Chaque dossier de stage contient :
 
 Exemples : "ms503/", "sms030/", "az104/", "ms102/"
 
+### docs/STAGE/STAGE.json
+Chaque stage possède également un export JSON généré automatiquement.
+
+Exemple :
+
+```text
+docs/
+└── msms030/
+    ├── README.md
+    ├── a1e1.md
+    ├── a1e2.md
+    └── msms030.json
+```
+
 ---
 
 ### hooks/
@@ -365,7 +390,6 @@ Responsabilités :
 
 ### main.py
 Point d'entrée Python appelé par MkDocs pour participer au processus de génération du site.
-``
 
 ---
 
@@ -391,6 +415,7 @@ Le README :
 - contient le titre du stage (premier `#`) ;
 - contient éventuellement une introduction ;
 - déclare les variables du stage dans son YAML ;
+- peut contenir la propriété "auteur" dans son YAML (auquel cas, celui-ci est affiché par survol du titre d'atelier/exercice)
 - peut contenir des informations générales sur le stage ;
 - ne contient pas le sommaire du stage, celui-ci étant généré automatiquement.
 
@@ -483,6 +508,55 @@ Cette reconstruction alimente ensuite :
 - les différents panneaux de l'interface utilisateur.
 
 L'objectif est de limiter au maximum la quantité d'informations structurelles que les rédacteurs doivent maintenir manuellement.
+
+## Modèle JSON
+Le modèle documentaire peut être représenté sous la forme :
+
+```text
+Stage
+├── Métadonnées
+├── Variables
+├── Introduction
+└── Ateliers
+     └── Exercices
+```
+
+Exemple : 
+
+     {
+    "Reference": "msms030",
+    "Titre": "...",
+    "Auteur": "...",
+    "Variables": {},
+    "Introduction": "...",
+    "Ateliers": [
+        {
+            "Id": 1,
+            "Titre": "...",
+            "Exercices": [
+                {
+                    "Id": 1,
+                    "Titre": "...",
+                    "Duree": 20,
+                    "Contenu": "..."
+                }
+            ]
+        }
+    ]
+}
+```
+Ce modèle est considéré comme la base de travail d'ibCANWriter.
+
+# ibCANWriter
+ibCANWriter est un projet compagnon d'ibCAN dont l'objectif est de simplifier la rédaction des stages.
+Il ne publie pas de contenu et ne remplace pas ibCAN.
+Son rôle est de fournir :
+
+- un modèle JSON de travail ;
+- des outils d'import/export ;
+- à terme une interface de rédaction assistée.
+
+Le principe est : README.md + aXeY.md ==> export.py ==> STAGE.json ==> ibCANWriter ==> STAGE.json ==> import.py ==> README.md + aXeY.md
 
 ---
 
@@ -776,8 +850,10 @@ Le moteur exploite Git afin d'afficher des informations d'édition pertinentes.
 Informations actuellement exposées :
 
 - date d'édition ;
-- auteur ;
+- dernier contributeur ;
 - version (hash Git court).
+
+Ces informations sont distinctes de la propriété documentaire `Auteur` qui désigne l'auteur principal du stage.
 
 ### Consultation
 Les informations affichées doivent correspondre au fichier Markdown actuellement consulté.
@@ -1102,11 +1178,12 @@ Les illustrations associées aux exercices peuvent être intégrées au document
 ## Métadonnées d'édition
 Une page de garde affiche les informations d'édition du document :
 
+- auteur principal du stage ;
 - date d'édition ;
-- version Git ;
-- auteur de la dernière révision.
+- version Git.
 
 Ces informations sont calculées automatiquement à partir des métadonnées Git utilisées par le moteur.
+L'auteur principal est lu dans le YAML du README via la propriété `Auteur`(Cette information est distincte du dernier contributeur Git).
 Pour un document imprimé, les informations affichées doivent correspondre au fichier le plus récemment modifié parmi tous ceux composant l'export.
 
 ---

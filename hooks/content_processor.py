@@ -63,6 +63,8 @@ def on_page_context(context, page, config, nav):
     context["ibLastUpdateDate"] = ( f"{infos_git['editionDate']}")
     context["iblastUpdateAuthor"] = ( f"{infos_git['editorName']}")
     context["iblastUpdateVersion"] = ( f"{infos_git['gitVersion']}")
+    meta = tools.charger_meta_atelier(page)
+    context["ibStageAuthor"] = (meta.get("Auteur") or meta.get("auteur") or "")
     context["ibNav"] = construire_pagination(page)
     context["ibNavigationTree"] = ( construire_navigation_stage(page) )
     context["ibShowNavigation"] = bool( context["ibNavigationTree"] )

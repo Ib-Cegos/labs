@@ -19,10 +19,10 @@ def importer_exercice(fichier):
             print(f"Erreur YAML : {e}")
     titre_match = re.search(r"^#\s+(.*)$",markdown,re.MULTILINE)
     if titre_match:
-        resultat["titre"] = (titre_match.group(1).strip())
-        resultat["contenu"] = (markdown[titre_match.end():].strip())
+        resultat["Titre"] = (titre_match.group(1).strip())
+        resultat["Contenu"] = (markdown[titre_match.end():].strip())
     else:
-        resultat["contenu"] = markdown.strip()
+        resultat["Contenu"] = markdown.strip()
     return resultat
 
 def importer_ateliers(stage_path):
@@ -34,8 +34,8 @@ def importer_ateliers(stage_path):
         atelier_id = int(match.group(1))
         exercice_id = int(match.group(2))
         exercice = importer_exercice(fichier)
-        titre_atelier = exercice.pop("atelier", "")
-        exercice["id"] = exercice_id
+        titre_atelier = exercice.pop("Atelier", "")
+        exercice["Id"] = exercice_id
         if atelier_id not in ateliers:
             ateliers[atelier_id] = {"Id": atelier_id,"Titre": titre_atelier,"Exercices": []}
         elif not ateliers[atelier_id]["Titre"] and titre_atelier: ateliers[atelier_id]["Titre"] = titre_atelier
@@ -82,8 +82,12 @@ def lire_readme(stage_path: str) -> dict:
         resultat["Introduction"] = markdown.strip()
     return resultat
 
-catalogue = importer_stages("docs")
-for stage in catalogue["Stages"]:
-    chemin_json = ( Path("docs") / stage["Reference"] / f"{stage['Reference']}.json" )
-    with open( chemin_json,"w",encoding="utf-8") as f:
-        json.dump(stage,f,ensure_ascii=False,indent=4)
+def main():
+    catalogue = importer_stages("docs")
+    for stage in catalogue["Stages"]:
+        chemin_json = ( Path("docs") / stage["Reference"] / f"{stage['Reference']}.json" )
+        with open( chemin_json,"w",encoding="utf-8") as f:
+            json.dump(stage,f,ensure_ascii=False,indent=4)
+
+if __name__ == "__main__":
+    main()

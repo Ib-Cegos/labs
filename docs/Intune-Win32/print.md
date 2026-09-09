@@ -2,7 +2,6 @@
 title: Installation d'une application Windows Win32 via Intune
 editionDate: 17/08/2026
 gitVersion: d06ca7d
-editorName: Renaud
 ---
 
 <div class="ibPrintNotes" data-exercise="a1e1" hidden></div>

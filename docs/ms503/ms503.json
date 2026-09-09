@@ -7,16 +7,13 @@
     "Ateliers": [
         {
             "Id": 1,
-            "Titre": "",
+            "Titre": "Installation d'Active Directory",
             "Exercices": [
                 {
-                    "Titre": "",
-                    "Atelier": "Installation d'Active Directory",
+                    "Titre": "Promotion du premier contrôleur de domaine",
                     "Duree": 60,
-                    "Contenu": "",
-                    "titre": "Promotion du premier contrôleur de domaine",
-                    "contenu": "# Scénario\nDans ce premier exercice, vous allez",
-                    "id": 1
+                    "Contenu": "# Scénario\nDans ce premier exercice, vous allez",
+                    "Id": 1
                 }
             ]
         }

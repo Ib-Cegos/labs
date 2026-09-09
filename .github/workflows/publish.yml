@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - travail
+    paths-ignore:
+      - 'ibCANwriter/**'
 
 permissions:
   contents: read
@@ -39,7 +41,7 @@ jobs:
           
       - run: python generate_prints.py
 
-      - run: python ibCANwriter_export.py
+      - run: python ibCANwriter/export.py
       
       - run: mkdocs build
 

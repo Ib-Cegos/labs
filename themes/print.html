@@ -49,7 +49,7 @@
         </div>
     </div>
     <div id="ibPrintCoverInfo">
-    <strong>© ib Cegos</strong> - Dérnière mise à jour le {{ page.meta.editionDate }} (version {{ page.meta.gitVersion }}, par {{ page.meta.editorName }})
+    © {% if page.meta.auteur %}{{ page.meta.auteur }} pour {% endif %}<strong>ib Cegos</strong> - Dernière mise à jour le {{ page.meta.editionDate }} (version {{ page.meta.gitVersion }})
     </div>
     <div id="ibPrintSetupOverlay"></div>
     <div id="ibPageInfo"></div>

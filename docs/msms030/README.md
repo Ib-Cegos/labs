@@ -18,6 +18,7 @@ Variables:
         defaut: ibForm@tion
     365Licence:
         defaut: Microsoft 365 E5 (no Teams)
+Auteur: Renaud Wangler
 ---
 
 # Administration de Microsoft 365
