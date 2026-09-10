@@ -1,0 +1,32 @@
+:root {
+  --ib-color-export: #16a34a;
+  --ib-color-export-hover: #15803d;
+}
+#writerMain { display: flex; overflow: hidden;}
+#writerEditor { flex: 1; overflow-y: auto;}
+#writerPreview { width: 400px; }
+.ibActionButton { background: var(--ib-color-writer); }
+.ibActionButton:hover { background: var(--ib-color-writer-hover); }
+#btnExport {background: var(--ib-color-export);}
+#btnExport:hover { background-color: var(--ib-color-export-hover); }
+#ibHeader  Input { background: rgba(255,255,255,.80);; color: var(--ib-input-text); border: 1px solid var(--ib-input-border); border-radius: 8px; padding: .5rem .75rem; font-size: 1rem; }
+#stageTitle { flex: 1; font-size: 1.1rem; font-weight: 600; margin-right: 10px;margin-left: 10px;}
+#stageReference { width: 120px; }
+#stageAuthor { width: 250px; }
+#writerNavigation { height: 100%;; padding: 1rem; border-right: 1px solid var(--ib-navigation-panel-border); background: var(--ib-navigation-panel-background); overflow-y: auto; }
+#writerNavIntroduction {cursor: pointer;}
+.writerNavAtelier { display: block; font-weight: 600; margin-top: .5rem;}
+.writerNavExercice { display: block; padding-left: 1.5rem; cursor: pointer;}
+.writerNavSelected { background: var(--ib-nav-current-background); color: var(--ib-nav-current-text); border-radius: 6px; }
+#ExerciceHeader { display: none; gap: .5rem; align-items: center; margin-bottom: .5rem; padding: .5rem; background: color-mix(in srgb, var(--ib-color-header) 30%, transparent);}
+#ExerciceHeader label { font-size: 1rem; font-weight: 600; }
+#ExerciceHeader input { font-size: 1.05rem; padding: 0.25rem 0.5rem; }
+#writerAtelierTitle { width: 25%; }
+#writerExerciceTitle {flex: 1;}
+#writerExerciceDuree {width: 80px;}
+#writerContenu { width: 100%; height: 100%; resize: none; border: none; outline: none; font-family: inherit; font-size: 1rem; padding: 1rem; background: transparent;}
+#ibWriterDialogOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9999; justify-content: center; align-items: center;}
+#ibWriterDialog { min-width: 500px; max-width: 800px; min-height: 200px; background: var(--ib-modal-background); border: 1px solid var(--ib-modal-border); border-radius: 8px; display: flex; flex-direction: column; }
+#ibWriterDialogTitle { padding: .5rem; background: var(--ib-color-header); color: var(--ib-modal-header-text); font-weight: 600; }
+#ibWriterDialogContent { flex: 1; padding: 1rem; overflow-y: auto; }
+#ibWriterDialogButtons { padding: .5rem; border-top: 1px solid var(--ib-modal-border); display: flex; justify-content: flex-end; gap: .5rem; }

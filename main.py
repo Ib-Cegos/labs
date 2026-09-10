@@ -54,6 +54,7 @@ def define_env(env):
             match = re.search(r"^#\s+(.+)$",contenu,re.MULTILINE)
             if match: titre = match.group(1).strip()
             auteur_html = (f'par {auteur} - ' if auteur else "")
-            html.append( f'<li><a href="{dossier.name}/" class="stageLink">{dossier.name.upper()} - {titre}</a> - ({auteur_html}<a href="{dossier.name}/{dossier.name}.json" download>Export JSON</a>)</li>' )
+            html.append( f'<li><a href="{dossier.name}/" class="stageLink">{dossier.name.upper()} - {titre}</a> - '
+                         f'({auteur_html}<a href="{dossier.name}/{dossier.name}.json" download class= "ibWriterExport">Exporter</a> / <a class="ibWriterModify" data-json="{dossier.name}/{dossier.name}.json">Modifier</a>)</li>' )
         html.append('</ul>')
         return "\n".join(html)

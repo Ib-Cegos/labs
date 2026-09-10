@@ -10,8 +10,37 @@ document.addEventListener(
         ibInitNavigationPanel();
         ibInitIllustrationPanel();
         ibInitialiserNavigation();
-
+        const newButton = document.getElementById("ibWriterNewButton");
+        const openButton = document.getElementById("ibWriterOpenButton");
+        document.querySelectorAll(".ibWriterModify").forEach(lien => {
+            lien.addEventListener("click", () => {modifierStage(lien.dataset.json)})})
+        const writerFile = document.getElementById("ibWriterFile");
+        if (newButton) { newButton.addEventListener("click", () => { 
+            localStorage.removeItem(IB_PREFIX + "writerStage");
+            localStorage.removeItem(IB_PREFIX + "writerCurrent");
+            window.location.href = "writer/";});}
+        if (openButton && writerFile) {
+            openButton.addEventListener("click", () => {writerFile.click();});
+            writerFile.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                const stage = JSON.parse(reader.result)
+                const current = {Atelier : 0, Exercice : 0, Contenu : stage.Introduction}
+                localStorage.setItem(IB_PREFIX + "writerStage", reader.result);
+                localStorage.setItem(IB_PREFIX + "writerCurrent", JSON.stringify(current));
+                window.location.href = "writer/";};
+            reader.readAsText(file);});}
     });
+
+async function modifierStage(url) {
+    const response = await fetch(url);
+    const json = await response.text();
+    localStorage.setItem(IB_PREFIX + "writerStage", json);
+    const stage = JSON.parse(json);
+    localStorage.setItem(IB_PREFIX + "writerCurrent",JSON.stringify({ Atelier : 0, Exercice : 0, Contenu : stage.Introduction }));
+    window.location.href = "./writer/"; }
 
 function ibResizeIllustrationPanel() {
     const panel = document.getElementById("ibIllustrationPanel");
@@ -127,5 +156,5 @@ function ibPrint() {
     url = url.replace( /\/print\/?$/i, "" );
     url = url.replace( /\/a\d+e\d+\/?$/i, "" );
     url = url.replace( /\/$/, "" );
-    window.open( url + "/print/", "_blank" );
-}
+    window.open( url + "/print/", "_blank" );}
+

@@ -28,7 +28,14 @@
 <footer id="ibFooter">
 <div id="ibFooterTools">
     <button class="ibActionButton" id="ibSettingsButton">⚙ Paramètres</button>
+    {% if page.file.src_uri|lower == 'index.md' %}
+    <button class="ibActionButton writerButton" id="ibWriterNewButton">🞦 Nouveau stage</button>
+    <button class="ibActionButton writerButton" id="ibWriterOpenButton">✎ Modifier un stage</button>
+    <input type="file" id="ibWriterFile" accept=".json" style="display:none">
+    <span id="ibNotesButton"></span>
+    {% else %}
     <button class="ibActionButton" id="ibNotesButton">📝 Notes</button>
+    {% endif %}
     <button class="ibActionButton" id="ibHelpButton">❓ Aide</button>
 </div>
     <div id="ibFooterNavigation">

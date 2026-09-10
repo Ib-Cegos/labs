@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Edition d'un stage</title>
+    <link rel="stylesheet" href="../assets/contenu.css">
+    <link rel="stylesheet" href="../assets/themes/original.css">
+    <link rel="stylesheet" href="../writer/writer.css">
+    <link rel="icon" href="../assets/images/favicon.png">
+</head>
+<body>
+<header id="ibHeader">
+    <input id="stageReference" placeholder="Référence">
+    <input id="stageTitle" placeholder="Titre du stage">
+    <input id="stageAuthor" placeholder="Auteur">
+</header>
+<main id="writerMain">
+    <nav id="writerNavigation">
+    </nav>
+    <section id="writerEditor">
+        <div id="ExerciceHeader">
+            <label for="writerAtelierTitle">Atelier :</label>
+            <input id="writerAtelierTitle">
+            <label for="writerExerciceTitle">Exercice :</label>
+            <input id="writerExerciceTitle">
+            <label for="writerExerciceLength">Durée :</label>
+            <input id="writerExerciceLength">
+        </div>
+        <textarea id="writerContenu"></textarea>
+    </section>
+    <aside id="writerPreview">
+    </aside>
+</main>
+<footer id="ibFooter">
+    <button id="btnAddAtelier" class="ibActionButton">+ Atelier</button>
+    <button id="btnAddExercice" class="ibActionButton">+ Exercice</button>
+    <button id="btnAddSommaire" class="ibActionButton">+ Sommaire</button>
+    <button id="btnVariables" class="ibActionButton">Variables</button>
+    <button id="btnExport" class="ibActionButton">Export JSON</button>
+</footer>
+<!-- Boîte de dialogue ibCANWriter -->
+<div id="ibWriterDialogOverlay">
+    <div id="ibWriterDialog">
+        <div id="ibWriterDialogTitle">Titre</div>
+        <div id="ibWriterDialogContent"></div>
+        <div id="ibWriterDialogButtons"></div>
+    </div>
+</div>
+<script src="../writer/writer.js"></script>
+</body></html>

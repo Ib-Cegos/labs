@@ -13,6 +13,7 @@
   --ib-color-action: #60a5fa;
   --ib-color-settings: #1d4ed8; --ib-color-settings-hover: #2563eb;
   --ib-color-help: #4b5563; --ib-color-help-hover: #6b7280;
+  --ib-color-writer: #7c3aed; --ib-color-writer-hover: #6d28d9;
   --ib-notification-color: #ef4444;
   --ib-delete-action-color: #dc2626;
   --ib-disabled-action-color: #b71c1c; --ib-disabled-action-hover-color: #c62828;
@@ -81,15 +82,19 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 .ibNotification { position: relative; }
 .ibNotification::after { content: ""; position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--ib-notification-color); }
 .ibActionButton { border: none; border-radius: 6px; padding: .45rem .9rem; color: var(--ib-action-button); cursor: pointer; font-size: .95em; transition: background-color .2s ease, transform .15s ease; }
-.ibActionButton:hover { background: var(--ib-action-button-hover-background); border-color: var(--ib-color-header-text); }
+.ibActionButton:hover { background: var(--ib-action-button-hover-background); border-color: var(--ib-color-header-text); transform: translateY(-1px);}
 #ibHelpContent .ibActionButton {pointer-events: none; cursor: inherit; margin: .15rem .35 rem;}
 #ibSettingsButton,.ibSettingsButton { background: var(--ib-color-settings); }
-#ibSettingsButton:hover { background: var(--ib-color-settings-hover); transform: translateY(-1px); }
+#ibSettingsButton:hover { background: var(--ib-color-settings-hover); }
 #ibHelpButton { background: var(--ib-color-help); }
-#ibHelpButton:hover { background: var(--ib-color-help-hover); transform: translateY(-1px); }
+#ibHelpButton:hover { background: var(--ib-color-help-hover); }
 #ibNotesButton,.ibNotesButton { background: var(--ib-color-notes); color: var(--ib-notes-text); }
-#ibNotesButton:hover { background: var(--ib-color-notes-hover); color: var(--ib-notes-text); transform: translateY(-1px); }
+#ibNotesButton:hover { background: var(--ib-color-notes-hover); color: var(--ib-notes-text); }
 #ibNotesButton:disabled { opacity: .50; cursor: default; transform: none; }
+.writerButton {  background: var(--ib-color-writer); }
+.writerButton:hover { background: var(--ib-color-writer-hover); }
+.ibWriterExport, .ibWriterModify {color: var(--ib-color-writer) !important; cursor: pointer; font-size: 0.85em !important; opacity: 0.75 !important;}
+.ibWriterExport:hover, .ibWriterModify:hover {color: var(--ib-color-writer-hover) !important; opacity: 1 !important;}
 .ibNotesHeader { background: var(--ib-color-notes); color: var(--ib-notes-text); }
 .ibNotesHeader span { color: var(--ib-notes-text); }
 .ibNotesHeader .ibModalClose { color: var(--ib-notes-text); }
