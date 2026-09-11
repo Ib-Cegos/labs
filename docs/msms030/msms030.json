@@ -1,6 +1,6 @@
 {
     "Titre": "Administration de Microsoft 365",
-    "Auteur": "",
+    "Auteur": "Renaud Wangler",
     "Variables": {
         "onMicrosoftDomain": {
             "lib": "Préfixe du tenant",

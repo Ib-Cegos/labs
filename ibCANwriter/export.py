@@ -68,7 +68,7 @@ def lire_readme(stage_path: str) -> dict:
         markdown = yaml_match.group(2)
         try:
             metadata = yaml.safe_load(yaml_content) or {}
-            resultat["Auteur"] = metadata.get( "auteur", "" )
+            resultat["Auteur"] = metadata.get( "Auteur", "" )
             resultat["Variables"] = metadata.get( "Variables", {} )
         except Exception as e: print ( f"Erreur YAML : {e}" )
     # Extraction du premier H1

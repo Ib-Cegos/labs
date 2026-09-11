@@ -3,8 +3,10 @@
   --ib-color-export-hover: #15803d;
 }
 #writerMain { display: flex; overflow: hidden;}
-#writerEditor { flex: 1; overflow-y: auto;}
-#writerPreview { width: 400px; }
+#writerMain.previewOpen #writerEditor { width: 50%; }
+#writerMain.previewOpen #writerPreview { width: 50%; }
+#writerEditor {flex: 1; min-width: 0; display: flex; flex-direction: column;}
+#writerPreview {width: 0; overflow: hidden; transition: width .25s ease;}
 .ibActionButton { background: var(--ib-color-writer); }
 .ibActionButton:hover { background: var(--ib-color-writer-hover); }
 #btnExport {background: var(--ib-color-export);}
@@ -13,7 +15,7 @@
 #stageTitle { flex: 1; font-size: 1.1rem; font-weight: 600; margin-right: 10px;margin-left: 10px;}
 #stageReference { width: 120px; }
 #stageAuthor { width: 250px; }
-#writerNavigation { height: 100%;; padding: 1rem; border-right: 1px solid var(--ib-navigation-panel-border); background: var(--ib-navigation-panel-background); overflow-y: auto; }
+#writerNavigation { flex-shrink: 0; width: 230px; padding: 1rem; border-right: 1px solid var(--ib-navigation-panel-border); background: var(--ib-navigation-panel-background); overflow-y: auto; }
 #writerNavIntroduction {cursor: pointer;}
 .writerNavAtelier { display: block; font-weight: 600; margin-top: .5rem;}
 .writerNavExercice { display: block; padding-left: 1.5rem; cursor: pointer;}
@@ -23,10 +25,26 @@
 #ExerciceHeader input { font-size: 1.05rem; padding: 0.25rem 0.5rem; }
 #writerAtelierTitle { width: 25%; }
 #writerExerciceTitle {flex: 1;}
-#writerExerciceDuree {width: 80px;}
-#writerContenu { width: 100%; height: 100%; resize: none; border: none; outline: none; font-family: inherit; font-size: 1rem; padding: 1rem; background: transparent;}
+#writerExerciceLength {width: 80px;}
+#writerContenu {flex: 1; min-height: 0; width: 100%; box-sizing: border-box; resize: none; border: none; outline: none; padding: 1rem; overflow-y: auto; overflow-x: hidden;}
 #ibWriterDialogOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9999; justify-content: center; align-items: center;}
-#ibWriterDialog { min-width: 500px; max-width: 800px; min-height: 200px; background: var(--ib-modal-background); border: 1px solid var(--ib-modal-border); border-radius: 8px; display: flex; flex-direction: column; }
-#ibWriterDialogTitle { padding: .5rem; background: var(--ib-color-header); color: var(--ib-modal-header-text); font-weight: 600; }
-#ibWriterDialogContent { flex: 1; padding: 1rem; overflow-y: auto; }
+.ibModal { opacity: 1; }
+.ibModalHeader {background-color: var(--ib-color-writer); color: var(--ib-action-button); cursor: move; user-select: none;}
 #ibWriterDialogButtons { padding: .5rem; border-top: 1px solid var(--ib-modal-border); display: flex; justify-content: flex-end; gap: .5rem; }
+.ibModalSmall { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.97); width: 25%; height: 25vh;}
+#ibWriterDialogButtons Button { min-width: 100px; padding: .5rem 1rem; border: none; border-radius: 6px; cursor: pointer; background: var(--ib-color-writer); color: white; font-weight: 600; }
+#ibWriterDialogButtons Button:hover {opacity: .9;}
+.ibDialogButtonDelete { background: #dc2626 !important;}
+
+.ibWriterStyleHandle {cursor: move; user-select: none; color: var(--ib-action-button); font-weight: bold;}
+#ibWriterStyleBar { position: fixed; z-index: 9999; display: none; align-items: center; gap: .35rem; padding: .5rem; background: var(--ib-color-writer); border: 2px solid color-mix(in srgb, var(--ib-color-writer) 70%,white);border-radius: .75rem;box-shadow:0 4px 12px rgba(0,0,0,.25);}
+.ibWriterStyleHandle { color: var(--ib-action-button); font-weight: bold; cursor: move; user-select: none; padding-right: .25rem; border-right: 1px solid rgba(255,255,255,.25);}
+#ibWriterStyleBar button { min-width: 32px; height: 32px; border: none; border-radius: 6px; background: rgba(255,255,255,.75); color: #222; cursor: pointer;transition: background .15s ease, transform .15s ease; margin: 0; padding: 0 .45rem;}
+#ibWriterStyleBar button:hover { background: rgba(255,255,255,.92); transform: translateY(-1px); }
+#ibWriterStyleBar button:active { transform: translateY(0); }
+#ibWriterStyleClose { background: transparent !important; color: white; font-size: 1.4rem; min-width: auto; padding: 0 .25rem;}
+.ibMissing { background-color: rgba(255, 128, 128, .15) !important; border-color: rgba(255, 100, 100, .5) !important; }
+.ibDeleteButton { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; padding: 0; border: none; border-radius: 50%; background: #dc2626; color: white; cursor: pointer; font-size: .9rem; font-weight: bold; transition: .15s; }
+.ibDeleteButton:hover { background: #b91c1c; transform: scale(1.05); }
+
+

@@ -20,8 +20,10 @@
         <div id="ExerciceHeader">
             <label for="writerAtelierTitle">Atelier :</label>
             <input id="writerAtelierTitle">
+            <button id="btnDeleteAtelier" class="ibDeleteButton" title="Supprimer l'atelier">✖</button>
             <label for="writerExerciceTitle">Exercice :</label>
             <input id="writerExerciceTitle">
+            <button id="btnDeleteExercice" class="ibDeleteButton" title="Supprimer l'exercice">✖</button>
             <label for="writerExerciceLength">Durée :</label>
             <input id="writerExerciceLength">
         </div>
@@ -35,15 +37,35 @@
     <button id="btnAddExercice" class="ibActionButton">+ Exercice</button>
     <button id="btnAddSommaire" class="ibActionButton">+ Sommaire</button>
     <button id="btnVariables" class="ibActionButton">Variables</button>
+    <button id="btnStyle" class="ibActionButton">Style</button>
+    <button id="btnPreview" class="ibActionButton">Aperçu</button>
     <button id="btnExport" class="ibActionButton">Export JSON</button>
 </footer>
 <!-- Boîte de dialogue ibCANWriter -->
 <div id="ibWriterDialogOverlay">
-    <div id="ibWriterDialog">
-        <div id="ibWriterDialogTitle">Titre</div>
-        <div id="ibWriterDialogContent"></div>
-        <div id="ibWriterDialogButtons"></div>
+<aside id="ibWriterDialog" class="ibModal">
+    <div class="ibModalHeader">
+        <span id="ibWriterDialogTitle">Titre</span>
+        <button id="ibWriterDialogClose" class="ibModalClose" title="Fermer">✕</button>
     </div>
+    <div id="ibWriterDialogContent" class="ibModalContent"></div>
+    <div id="ibWriterDialogButtons"></div>
+</aside>
+</div>
+<!-- Barre de Styles ibCAN -->
+ <div id="ibWriterStyleBar">
+    <span class="ibWriterStyleHandle"> ✎ </span>
+    <button title="Titre">T1</button>
+    <button title="Sous-titre">T2</button>
+    <button title="Tâche numérotée">1.</button>
+    <button title="Puce">•</button>
+    <button title="Ligne/Bloc de code">Code</button>
+    <button title="Lien">🔗</button>
+    <button title="Image/Illustration">🖼️</button>
+    <button title="Gras"><b>B</b></button>
+    <button title="Italique"><i>I</i></button>
+    <button title="Variables">[ ]</button>
+    <button id="ibWriterStyleClose" class="ibModalClose" title="Fermer">✕</button>
 </div>
 <script src="../writer/writer.js"></script>
 </body></html>
