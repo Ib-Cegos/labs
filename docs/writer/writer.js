@@ -76,6 +76,12 @@ const dialog = {
     close() {
         document.getElementById("ibWriterDialogOverlay").style.display = "none";}};
 
+function getAtelierLabel(atelier) {
+    return atelier.Titre ? `Atelier ${atelier.Id} : ${atelier.Titre}` : `Atelier ${atelier.Id}`;}
+
+function getExerciceLabel(exercice) {
+    return exercice.Titre ? `Exercice ${exercice.Id} : ${exercice.Titre}` : `Exercice ${exercice.Id}`;}        
+
 function exporterStage() {
     majStage();
     const json = JSON.stringify(Stage,null,2);
@@ -103,15 +109,24 @@ function majStage() {
     storage.write('Stage', Stage); }
 
 function renumberStage() {
+    /* Renumérotation des exercices/ateliers du stage (après ajout/Suppression/déplacement) et mise à jour de l'Id Current */
     Stage.Ateliers.forEach((atelier, atelierIndex) => {
         atelier.Id = atelierIndex + 1;
-        atelier.Exercices.forEach((exercice, exerciceIndex) => {exercice.Id = exerciceIndex + 1;});});}    
+        atelier.Exercices.forEach((exercice, exerciceIndex) => {exercice.Id = exerciceIndex + 1;});});
+    for (const atelier of Stage.Ateliers) {
+        const exercice = atelier.Exercices.find(e => e._restoreCurrent);
+        if (exercice) {
+            Current.Atelier = atelier.Id;
+            Current.Exercice = exercice.Id;
+            delete exercice._restoreCurrent;
+            storage.write('Current',Current);
+        break;}}}
 
 function construireNavigation() {
     const nav = document.getElementById("writerNavigation");
     let html = '<div id ="writerNavIntroduction">Introduction</div>';
     Stage.Ateliers.forEach(atelier => {
-        html += `<div class="writerNavAtelier">📂 Atelier ${atelier.Id}</div>`;
+        html += `<div class="writerNavAtelier" data-atelier="${atelier.Id}">📂 Atelier ${atelier.Id}</div>`;
         atelier.Exercices.forEach(exercice => {
             html += `<div class="writerNavExercice" data-atelier="${atelier.Id}" data-exercice="${exercice.Id}">📄 Exercice ${exercice.Id}</div>`;});});
     nav.innerHTML = html;
@@ -219,7 +234,27 @@ function deleteAtelier() {
 function confirmDeleteAtelier() {
     const atelier =getCurrentAtelier();
     dialog.show("Supprimer l'atelier",
-        `<p>Supprimer "${`Atelier ${atelier.Id} : ${atelier.Titre}` || `Atelier ${atelier.Id}`}" ?</p><p>Tous les exercices de cet atelier seront supprimés.</p>`, [{label : "Annuler", action : () => dialog.close()},{label : "Supprimer", className : "ibDialogButtonDelete", action : () => {deleteAtelier(); dialog.close();}}],"small");}     
+        `<p>Supprimer "${getAtelierLabel(atelier)}" ?</p><p>Tous les exercices de cet atelier seront supprimés.</p>`, [{label : "Annuler", action : () => dialog.close()},{label : "Supprimer", className : "ibDialogButtonDelete", action : () => {deleteAtelier(); dialog.close();}}],"small");}
+function moveAtelier(aSource,aTarget,before = false, confirmed = false) {
+    if (aSource === aTarget) return;
+    const atelier = Stage.Ateliers[aSource];
+    const target = Stage.Ateliers[aTarget];
+    const position = before ? "avant" : "après";
+    if (!confirmed) {
+        dialog.show("Déplacer l'atelier", `Déplacer "${getAtelierLabel(atelier)}" ${position} "${getAtelierLabel(target)}" ?`, [{label : "Annuler", action : () => {dialog.close();}},{label : "Déplacer",action : () => {dialog.close(); moveAtelier(aSource,aTarget,before,true)}}],"small");
+        return;}
+    const exercice = getCurrentExercice();
+    if (exercice) exercice._restoreCurrent = true;
+    let insertIndex = aTarget;
+    if (!before) { insertIndex++; }
+    if (aSource < aTarget) insertIndex--;
+    Stage.Ateliers.splice(aSource, 1);
+    Stage.Ateliers.splice(insertIndex, 0, atelier);
+    renumberStage();
+    chargerExercice();
+    storage.write("Stage", Stage);
+    construireNavigation();
+    afficherExercice();}
 
 /* Ajout / Suppression / déplacement des Exercices */
 function addExercice() {
@@ -249,7 +284,35 @@ function deleteExercice() {
     afficherExercice();}
 function confirmDeleteExercice() {
     const exercice = getCurrentExercice();
-    dialog.show("Supprimer l'exercice",`<p>Supprimer "${`Exercice ${exercice.Id} : ${exercice.Titre}` || `Exercice ${exercice.Id}`}" ?</p><p>Cette action est définitive.</p>`, [{label : "Annuler", action : () => dialog.close()}, {label : "Supprimer",className: "ibDialogButtonDelete", action : () => { deleteExercice(); dialog.close(); }}], 'small');}
+    dialog.show("Supprimer l'exercice",`<p>Supprimer "${getExerciceLabel(exercice)}" ?</p>`, [{label : "Annuler", action : () => dialog.close()}, {label : "Supprimer",className: "ibDialogButtonDelete", action : () => { deleteExercice(); dialog.close(); }}], 'small');}
+function moveExercice(aSource, aTarget, eSource, eTarget, before = false, confirmed = false) {
+    if (aSource === aTarget && eSource === eTarget) return;
+    const atelierSource = Stage.Ateliers[aSource];
+    const atelierTarget = Stage.Ateliers[aTarget];
+    const exercice = atelierSource.Exercices[eSource];
+    const target = atelierTarget.Exercices[eTarget];
+    const position = before ? "avant" : "après";
+    const deleteSourceAtelier = aSource !== aTarget && atelierSource.Exercices.length === 1;
+    let message = `Déplacer "${getExerciceLabel(exercice)}" ${position} "${getExerciceLabel(target)}"`;
+    if (aSource !== aTarget) {message += ` dans "${getAtelierLabel(atelierTarget)}"`;}
+    message += " ?";
+    if (deleteSourceAtelier) {message += "<br><br><b>L'atelier source vide sera automatiquement supprimé.</b>";}
+    if (!confirmed) {
+        dialog.show("Déplacer l'exercice", message, [{label: "Annuler", action: () => dialog.close()},{label: "Déplacer", action: () => {dialog.close();moveExercice(aSource,aTarget,eSource,eTarget,before,true);}}], "small");
+        return;}
+    const current = getCurrentExercice();
+    if (current) current._restoreCurrent = true; 
+    let insertIndex = eTarget;
+    if (!before) insertIndex++;
+    if ( aSource === aTarget && eSource < eTarget ) insertIndex--;
+    atelierSource.Exercices.splice(eSource, 1);
+    atelierTarget.Exercices.splice(insertIndex, 0, exercice);
+    if (aSource !== aTarget && atelierSource.Exercices.length === 0) Stage.Ateliers.splice(aSource, 1);
+    renumberStage();
+    chargerExercice();
+    storage.write("Stage", Stage);
+    construireNavigation();
+    afficherExercice();}
 
 /* Chargement initial de la page */
 let Stage = storage.read('Stage',{ Titre: "", "Auteur": "", "Variables": {}, "Introduction": "", "Reference": "", "Ateliers": [{ "Id": 1, "Titre": "", "Exercices": [{ "Id": 1, "Titre": "", "Contenu": "", "Duree": "" }]}]});
