@@ -17,7 +17,8 @@
 #stageAuthor { width: 250px; }
 #writerNavigation { flex-shrink: 0; width: 230px; padding: 1rem; border-right: 1px solid var(--ib-navigation-panel-border); background: var(--ib-navigation-panel-background); overflow-y: auto; }
 #writerNavIntroduction {cursor: pointer;}
-.writerNavAtelier { display: block; font-weight: 600; margin-top: .5rem;}
+.writerNavAtelier { display: block; font-weight: 600; margin-top: .5rem; cursor: grab;}
+.writerNavAtelier:active { cursor: grabbing; }
 .writerNavExercice { display: block; padding-left: 1.5rem; cursor: pointer;}
 .writerNavSelected { background: var(--ib-nav-current-background); color: var(--ib-nav-current-text); border-radius: 6px; }
 #ExerciceHeader { display: none; gap: .5rem; align-items: center; margin-bottom: .5rem; padding: .5rem; background: color-mix(in srgb, var(--ib-color-header) 30%, transparent);}
@@ -47,4 +48,7 @@
 .ibDeleteButton { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; padding: 0; border: none; border-radius: 50%; background: #dc2626; color: white; cursor: pointer; font-size: .9rem; font-weight: bold; transition: .15s; }
 .ibDeleteButton:hover { background: #b91c1c; transform: scale(1.05); }
 
-
+.writerNavDropBefore {border-top: 3px solid var(--ib-color-writer);}
+.writerNavDropAfter {border-bottom: 3px solid var(--ib-color-writer);}
+.writerNavDropBefore {background: linear-gradient(to bottom, color-mix(in srgb, var(--ib-color-writer) 25%, transparent) 0%, color-mix(in srgb, var(--ib-color-writer) 25%, transparent) 50%, transparent 50%, transparent 100%); transition: background-color .1s ease;}
+.writerNavDropAfter {background: linear-gradient(to bottom, transparent 0%, transparent 50%, color-mix(in srgb, var(--ib-color-writer) 25%, transparent) 50%, color-mix(in srgb, var(--ib-color-writer) 25%, transparent) 100%); transition: background-color .1s ease;}

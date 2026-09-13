@@ -1,4 +1,5 @@
 const IB_PREFIX = "ibCAN-";
+let DragData = null;
 
 /* Simplifcation des lecture-excriture dans le localStorage */
 const storage = {
@@ -80,7 +81,10 @@ function getAtelierLabel(atelier) {
     return atelier.Titre ? `Atelier ${atelier.Id} : ${atelier.Titre}` : `Atelier ${atelier.Id}`;}
 
 function getExerciceLabel(exercice) {
-    return exercice.Titre ? `Exercice ${exercice.Id} : ${exercice.Titre}` : `Exercice ${exercice.Id}`;}        
+    return exercice.Titre ? `Exercice ${exercice.Id} : ${exercice.Titre}` : `Exercice ${exercice.Id}`;}
+    
+function clearDropIndicators(element) {
+    element.classList.remove("writerNavDropBefore", "writerNavDropAfter");}
 
 function exporterStage() {
     majStage();
@@ -126,16 +130,62 @@ function construireNavigation() {
     const nav = document.getElementById("writerNavigation");
     let html = '<div id ="writerNavIntroduction">Introduction</div>';
     Stage.Ateliers.forEach(atelier => {
-        html += `<div class="writerNavAtelier" data-atelier="${atelier.Id}">📂 Atelier ${atelier.Id}</div>`;
+        html += `<div class="writerNavAtelier" data-atelier="${atelier.Id}" draggable="true">📂 Atelier ${atelier.Id}</div>`;
         atelier.Exercices.forEach(exercice => {
-            html += `<div class="writerNavExercice" data-atelier="${atelier.Id}" data-exercice="${exercice.Id}">📄 Exercice ${exercice.Id}</div>`;});});
+            html += `<div class="writerNavExercice" data-atelier="${atelier.Id}" data-exercice="${exercice.Id}" draggable="true">📄 Exercice ${exercice.Id}</div>`;});});
     nav.innerHTML = html;
     document.getElementById("writerNavIntroduction").addEventListener("click", () => {selectIntroduction();});
     document.querySelectorAll(".writerNavExercice").forEach(lien => {
         lien.addEventListener("click", () => {
             const atelier = parseInt(lien.dataset.atelier);
             const exercice = parseInt(lien.dataset.exercice);
-            selectExercice(atelier,exercice);});});}
+            selectExercice(atelier,exercice);});
+        lien.addEventListener("dragstart", event => {DragData = {type: "exercice", aSource : parseInt(lien.dataset.atelier) -1, eSource : parseInt(lien.dataset.exercice) -1};});
+        lien.addEventListener("dragover", event => {
+            if (DragData.type !== "exercice") return;
+            event.preventDefault();
+            const rect = lien.getBoundingClientRect();
+            const eTarget = parseInt(lien.dataset.exercice) - 1;
+            const aTarget = parseInt(lien.dataset.atelier) - 1;
+            if ( DragData.aSource === aTarget && DragData.eSource === eTarget) {
+                clearDropIndicators(element);
+                return;}
+            const before = event.clientY < rect.top + rect.height / 2;
+            clearDropIndicators(lien);
+            lien.classList.add(before ? "writerNavDropBefore" : "writerNavDropAfter");        });
+        lien.addEventListener("drop", event => {
+            if (DragData.type !== "exercice") return;
+            event.preventDefault();
+            const eTarget = parseInt(lien.dataset.exercice) - 1;
+            const aTarget = parseInt(lien.dataset.atelier) - 1;
+            const rect = lien.getBoundingClientRect();
+            const before = event.clientY < rect.top + rect.height / 2;
+            clearDropIndicators(lien);
+            moveExercice(DragData.aSource, aTarget, DragData.eSource, eTarget, before);});
+        lien.addEventListener("dragleave", () => {clearDropIndicators(lien);});});
+    document.querySelectorAll(".writerNavAtelier").forEach(element => {
+        element.addEventListener("dragstart", event => {
+            DragData = {type: "atelier", source : parseInt(element.dataset.atelier) -1};});
+        element.addEventListener("dragover", event => {
+            if (DragData.type !== "atelier") return;
+            event.preventDefault();
+            const rect = element.getBoundingClientRect();
+            const target = parseInt(element.dataset.atelier) - 1;
+            if (DragData.source === target) {
+                clearDropIndicators(element);
+                return;}
+            const before = event.clientY < rect.top + rect.height / 2;
+            clearDropIndicators(element);
+            element.classList.add(before ? "writerNavDropBefore" : "writerNavDropAfter");        });
+        element.addEventListener("drop", event => {
+            if (DragData.type !== "atelier") return;
+            event.preventDefault();
+            const target = parseInt(element.dataset.atelier) - 1;
+            const rect = element.getBoundingClientRect();
+            const before = event.clientY < rect.top + rect.height / 2;
+            clearDropIndicators(element);
+            moveAtelier(DragData.source,target,before);});
+        element.addEventListener("dragleave", () => {clearDropIndicators(element);});});}
 
 /* Adaptation du contenu aux header et footer */
 function resizeWriter() {
@@ -369,3 +419,7 @@ if (!sessionStorage.getItem(IB_PREFIX + "WriterStyleLeft")) {
     sessionStorage.setItem(IB_PREFIX + "WriterStyleTop",(rectStyleButton.top - styleBar.offsetHeight + 12)+"px");
     styleBar.style.display = "none"; }
 makeDraggable("ibWriterStyleBar",".ibWriterStyleHandle","Style");
+/* Initialisation (nettoyage sur drop dans le vide) du DragNDrop */
+document.addEventListener("dragend", () => {
+    document.querySelectorAll( ".writerNavDropBefore,.writerNavDropAfter" ).forEach(element => {
+        clearDropIndicators(element);});});
