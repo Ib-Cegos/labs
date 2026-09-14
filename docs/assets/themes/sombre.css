@@ -1,167 +1,56 @@
 :root {
   /* COULEURS GLOBALES */
-  --ib-accent-color: #4aa3ff;
-  --ib-success-color: #22c55e;
-  --ib-color-content: #1e1e1e;
-  --ib-color-border: #404040;
-  --ib-text-secondary: #b0b0b0;
-  --ib-text-disabled: #7a7a7a;
-  --ib-color-text: #e5e5e5;
-  --ib-section-title-color: #f5f5f5;
-
+  --ib-accent-color: #4aa3ff; --ib-success-color: #22c55e; --ib-color-content: #1e1e1e; --ib-color-border: #404040; --ib-text-secondary: #b0b0b0;
+  --ib-text-disabled: #7a7a7a; --ib-color-text: #e5e5e5; --ib-section-title-color: #f5f5f5;
   /* EN-TÊTE ET PIED DE PAGE */
-  --ib-color-header: #2a2d2e;
-  --ib-color-header-text: #f5f5f5;
-  --ib-color-discret: rgba(255,255,255,.60);
-
-  --ib-footer-text: #f5f5f5;
-  --ib-footer-navigation-background: rgba(255,255,255,.08);
-  --ib-footer-navigation-border: rgba(255,255,255,.15);
-  --ib-footer-navigation-hover-background: rgba(255,255,255,.16);
-  --ib-footer-navigation-hover-border: rgba(255,255,255,.30);
-
+  --ib-color-header: #2a2d2e; --ib-color-header-text: #f5f5f5; --ib-color-discret: rgba(255,255,255,.60);
+  --ib-footer-text: #f5f5f5; --ib-footer-navigation-background: rgba(255,255,255,.08); --ib-footer-navigation-border: rgba(255,255,255,.15); --ib-footer-navigation-hover-background: rgba(255,255,255,.16); --ib-footer-navigation-hover-border: rgba(255,255,255,.30);
   --ib-content-margin: 1.5rem;
-
   /* BOUTONS ET ACTIONS */
-  --ib-action-button: #ffffff;
-  --ib-action-button-hover-background: rgba(255,255,255,.10);
-
-  --ib-color-link: #5fa8ff;
-
-  --ib-color-action: #7cc4ff;
-
-  --ib-color-settings: #375a7f;
-  --ib-color-settings-hover: #456b93;
-
-  --ib-color-help: #4b5563;
-  --ib-color-help-hover: #6b7280;
-
-  --ib-color-writer: #7c3aed;
-  --ib-color-writer-hover: #6d28d9;
-
+  --ib-action-button: #ffffff; --ib-action-button-hover-background: rgba(255,255,255,.10);
+  --ib-color-link: #5fa8ff; --ib-color-action: #7cc4ff;
+  --ib-color-settings: #375a7f; --ib-color-settings-hover: #456b93;
+  --ib-color-help: #4b5563; --ib-color-help-hover: #6b7280;
+  --ib-color-writer: #7c3aed; --ib-color-writer-hover: #6d28d9;
+  --ib-color-export: #16a34a; --ib-color-export-hover: #15803d;
   --ib-notification-color: #b45353;
-
   --ib-delete-action-color: #ef4444;
-
-  --ib-disabled-action-color: #ef4444;
-  --ib-disabled-action-hover-color: #f87171;
-
+  --ib-disabled-action-color: #ef4444; --ib-disabled-action-hover-color: #f87171;
   /* NAVIGATION */
-  --ib-color-navigation: #1f3a5f;
-  --ib-color-navigation-text: #dbeafe;
-
-  --ib-navigation-panel-background: #252526;
-  --ib-navigation-panel-border: #404040;
-  --ib-navigation-panel-shadow: rgba(0,0,0,.40);
-
-  --ib-nav-exercice-text: #e0e0e0;
-  --ib-nav-exercice-title: #b0b0b0;
-  --ib-nav-exercice-hover: #2d3748;
-
-  --ib-nav-current-background: #1f3a5f;
-  --ib-nav-current-text: #dbeafe;
-
+  --ib-color-navigation: #1f3a5f; --ib-color-navigation-text: #dbeafe;
+  --ib-navigation-panel-background: #252526; --ib-navigation-panel-border: #404040; --ib-navigation-panel-shadow: rgba(0,0,0,.40);
+  --ib-nav-exercice-text: #e0e0e0; --ib-nav-exercice-title: #b0b0b0; --ib-nav-exercice-hover: #2d3748; --ib-nav-current-background: #1f3a5f; --ib-nav-current-text: #dbeafe;
   /* PROGRESSION */
-  --ib-progress-background: rgba(34,197,94,.10);
-  --ib-progress-current: #15803d;
-
+  --ib-progress-background: rgba(34,197,94,.10); --ib-progress-current: #15803d;
   /* MODALES */
-  --ib-modal-background: #252526;
-  --ib-modal-border: #555555;
-  --ib-modal-shadow: rgba(0,0,0,.50);
-  --ib-modal-active-border: #3b9cff;
-
-  --ib-modal-header-border: #404040;
-  --ib-modal-header-text: #f5f5f5;
-
+  --ib-modal-background: #252526; --ib-modal-border: #555555; --ib-modal-shadow: rgba(0,0,0,.50); --ib-modal-active-border: #3b9cff;
+  --ib-modal-header-border: #404040; --ib-modal-header-text: #f5f5f5;
   /* NOTES PERSONNELLES */
-  --ib-color-notes: #b38f00;
-  --ib-color-notes-hover: #c9a100;
-  --ib-notes-text: #ffffff;
-
-  --ib-notes-label: #d0d0d0;
-  --ib-notes-intro: #b0b0b0;
-  --ib-notes-status: #9ca3af;
-  --ib-notes-status-border: #404040;
-
-  --ib-notes-textarea-text: #e5e5e5;
-  --ib-notes-textarea-background: #1c1c1c;
-  --ib-notes-textarea-border: #666666;
-  --ib-notes-textarea-shadow: rgba(0,0,0,.25);
-
+  --ib-color-notes: #b38f00; --ib-color-notes-hover: #c9a100; --ib-notes-text: #ffffff;
+  --ib-notes-label: #d0d0d0; --ib-notes-intro: #b0b0b0; --ib-notes-status: #9ca3af; --ib-notes-status-border: #404040;
+  --ib-notes-textarea-text: #e5e5e5; --ib-notes-textarea-background: #1c1c1c; --ib-notes-textarea-border: #666666; --ib-notes-textarea-shadow: rgba(0,0,0,.25);
   /* PARAMÈTRES ET ÉDITEURS */
-  --ib-settings-action-background: #444444;
-  --ib-settings-action-border: #707070;
-  --ib-settings-action-hover-background: #555555;
-  --ib-settings-action-text: #f0f0f0;
-  
-
-  --ib-display-editor-background: #1f2937;
-  --ib-display-editor-border: #374151;
-
-  --ib-input-background: #2d2d2d;
-  --ib-input-border: #555555;
-  --ib-input-focus-shadow: rgba(59,156,255,.20);
-
-  --ib-disabled-background: #3a3a3a;
-  --ib-disabled-text: #7a7a7a;
-
+  --ib-settings-action-background: #444444; --ib-settings-action-border: #707070; --ib-settings-action-hover-background: #555555; --ib-settings-action-text: #f0f0f0; --ib-display-editor-background: #1f2937; --ib-display-editor-border: #374151;
+  --ib-input-background: #2d2d2d; --ib-input-border: #555555; --ib-input-focus-shadow: rgba(59,156,255,.20);
+  --ib-disabled-background: #3a3a3a; --ib-disabled-text: #7a7a7a;
   --ib-input-text: #e5e5e5;
-
   /* VARIABLES PERSONNELLES */
-  --ib-variable-border: #3b9cff;
-
-  --ib-variable-intro-background: #1f2937;
-
-  --ib-variable-editor-background: #252526;
-  --ib-variable-editor-border: #404040;
-
+  --ib-variable-border: #3b9cff; --ib-variable-intro-background: #1f2937;
+  --ib-variable-editor-background: #252526; --ib-variable-editor-border: #404040;
   --ib-variable-label: #f5f5f5;
-
-  --ib-variable-help-background: #2d3748;
-  --ib-variable-help-text: #c0c0c0;
-
+  --ib-variable-help-background: #2d3748; --ib-variable-help-text: #c0c0c0;
   /* CONTENU PÉDAGOGIQUE */
-  --ib-note-background: #233246;
-
-  --ib-title-border: #404040;
-
-  --ib-table-header-background: #2d2d2d;
-  --ib-table-border: #555555;
-
-  --ib-code-background: #2d2d2d;
-  --ib-code-text: #c084fc;
-
-  --ib-pre-border: #404040;
-  --ib-pre-shadow: rgba(255,255,255,.03);
-
-  --ib-copy-button-background: rgba(45,45,45,.95);
-  --ib-copy-button-border: #555555;
-  --ib-copy-button-text: #c0c0c0;
-  --ib-copy-button-hover: #5fa8ff;
-  --ib-copy-button-hover-background: #3a3a3a;
-  --ib-copy-button-ok-background: #15351f;
-
+  --ib-note-background: #233246; --ib-title-border: #404040; --ib-table-header-background: #2d2d2d; --ib-table-border: #555555;
+  --ib-code-background: #2d2d2d; --ib-code-text: #c084fc;
+  --ib-pre-border: #404040; --ib-pre-shadow: rgba(255,255,255,.03);
+  --ib-copy-button-background: rgba(45,45,45,.95); --ib-copy-button-border: #555555; --ib-copy-button-text: #c0c0c0; --ib-copy-button-hover: #5fa8ff; --ib-copy-button-hover-background: #3a3a3a; --ib-copy-button-ok-background: #15351f;
   --ib-inline-copy-text: #9ca3af;
-
   /* ALERTES ET ERREURS */
-  --ib-warning-background: #3a2a12;
-  --ib-warning-border: #f59e0b;
-  --ib-warning-text: #fde68a;
-
-  --ib-error-background: #3b1f1f;
-  --ib-error-border: #ef4444;
-  --ib-error-text: #fca5a5;
-
-  --ib-error-detail-background: rgba(255,255,255,.04);
-  --ib-error-detail-border: rgba(255,255,255,.10);
-
+  --ib-warning-background: #3a2a12; --ib-warning-border: #f59e0b; --ib-warning-text: #fde68a;
+  --ib-error-background: #3b1f1f; --ib-error-border: #ef4444; --ib-error-text: #fca5a5;
+  --ib-error-detail-background: rgba(255,255,255,.04); --ib-error-detail-border: rgba(255,255,255,.10);
   /* MÉTADONNÉES */
-  --ib-duration-background: #252526;
-  --ib-duration-border: #64748b;
-  --ib-duration-text: #cbd5e1;
-
-  --ib-task-pending: #b0b0b0;
+  --ib-duration-background: #252526; --ib-duration-border: #64748b; --ib-duration-text: #cbd5e1; --ib-task-pending: #b0b0b0;
 }
 
 /* Structure générale */

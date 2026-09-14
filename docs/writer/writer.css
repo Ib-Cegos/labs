@@ -1,7 +1,3 @@
-:root {
-  --ib-color-export: #16a34a;
-  --ib-color-export-hover: #15803d;
-}
 #writerMain { display: flex; overflow: hidden;}
 #writerEditor {flex: 1; min-width: 0; display: flex; flex-direction: column;}
 .ibActionButton { background: var(--ib-color-writer); }
@@ -51,6 +47,6 @@
 .writerNavDropAfter {background: linear-gradient(to bottom, transparent 0%, transparent 50%, color-mix(in srgb, var(--ib-color-writer) 25%, transparent) 50%, color-mix(in srgb, var(--ib-color-writer) 25%, transparent) 100%); transition: background-color .1s ease;}
 
 #previewContent {padding: 2rem; margin: auto; margin-top:40px;margin-bottom: 40px;}
-.previewExercice {position: relative; top: 60px;}
+#ExerciceHeader.preview {position: relative; top: 60px; background: color-mix(in srgb, var(--ib-color-writer) 30%, transparent);}
 #ibHeader.preview {background-color: var(--ib-color-writer);}
 #ibFooter.preview {justify-content: center; align-items: center; background-color: var(--ib-color-writer);}

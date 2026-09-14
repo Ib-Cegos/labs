@@ -17,6 +17,7 @@
   --ib-notification-color: #ef4444;
   --ib-delete-action-color: #dc2626;
   --ib-disabled-action-color: #b71c1c; --ib-disabled-action-hover-color: #c62828;
+  --ib-color-export: #16a34a; --ib-color-export-hover: #15803d;
   /* NAVIGATION */
   --ib-color-navigation: #dbeafe; --ib-color-navigation-text: #1e3a8a;
   --ib-navigation-panel-background: #f8fbff; --ib-navigation-panel-border: #dbe3ea; --ib-navigation-panel-shadow: rgba(0,0,0,.15);
