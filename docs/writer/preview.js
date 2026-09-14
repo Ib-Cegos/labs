@@ -17,7 +17,6 @@ function renderPreview() {
         document.getElementById("writerExerciceLength").value = exercice?.Duree || "";}
     document.getElementById("previewContent").innerHTML = marked.parse(Current?.Contenu || "");
 }
-
  
 renderPreview();
 

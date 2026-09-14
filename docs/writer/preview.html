@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../writer/writer.css">
 </head>
 <body>
-    <header id="ibHeader">
+    <header id="ibHeader" class="preview">
         <input id="stageReference" placeholder="Référence" readonly>
         <input id="stageTitle" placeholder="Titre du stage" readonly>
         <input id="stageAuthor" placeholder="Auteur" readonly>
@@ -22,9 +22,7 @@
             <input id="writerExerciceLength" readonly>
     </div>
     <div id="previewContent"></div>
-    <footer id="ibFooter">
-        <a id="btnEditor" class="ibActionButton" href="#" onclick="window.opener.focus();">Édition</button>
-    </footer>
+    <footer id="ibFooter" class="preview">Le contenu de cette fenêtre est mis à jour dynamiquement depuis vos éditions...</footer>
     <script src="../assets/common.js"></script>
     <script src="marked.min.js"></script>
     <script src="preview.js"></script>

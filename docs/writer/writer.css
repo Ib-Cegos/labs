@@ -52,3 +52,5 @@
 
 #previewContent {padding: 2rem; margin: auto; margin-top:40px;margin-bottom: 40px;}
 .previewExercice {position: relative; top: 60px;}
+#ibHeader.preview {background-color: var(--ib-color-writer);}
+#ibFooter.preview {justify-content: center; align-items: center; background-color: var(--ib-color-writer);}
