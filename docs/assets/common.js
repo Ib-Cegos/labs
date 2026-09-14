@@ -1,15 +1,22 @@
 const IB_PREFIX = "ibCAN-";
 
-function renumberStage() {
-    /* Renumérotation des exercices/ateliers du stage (après ajout/Suppression/déplacement) et mise à jour de l'Id Current */
-    Stage.Ateliers.forEach((atelier, atelierIndex) => {
-        atelier.Id = atelierIndex + 1;
-        atelier.Exercices.forEach((exercice, exerciceIndex) => {exercice.Id = exerciceIndex + 1;});});
-    for (const atelier of Stage.Ateliers) {
-        const exercice = atelier.Exercices.find(e => e._restoreCurrent);
-        if (exercice) {
-            Current.Atelier = atelier.Id;
-            Current.Exercice = exercice.Id;
-            delete exercice._restoreCurrent;
-            storage.write('Current',Current);
-        break;}}}
+/* Simplifcation des lecture-excriture dans le localStorage */
+const storage = {
+    read(key, defaultValue = null) {
+        const value = localStorage.getItem(IB_PREFIX + "writer" + key);
+        if (value === null) {
+            localStorage.setItem(IB_PREFIX + "writer" + key, JSON.stringify(defaultValue));
+            return defaultValue; }
+        try { return JSON.parse(value); }
+        catch { return value; }},
+    write(key, value) {
+        localStorage.setItem(IB_PREFIX + "writer" + key, JSON.stringify(value));},
+    remove(key) {
+        localStorage.removeItem(IB_PREFIX + "writer" + key);}};
+
+function getCurrentAtelier() {
+    return Stage.Ateliers.find(a => a.Id == Current.Atelier);}
+function getCurrentExercice() {
+    const atelier = getCurrentAtelier();
+    if (!atelier) return null;
+    return atelier.Exercices.find(e => e.Id == Current.Exercice);}        

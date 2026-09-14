@@ -3,10 +3,7 @@
   --ib-color-export-hover: #15803d;
 }
 #writerMain { display: flex; overflow: hidden;}
-#writerMain.previewOpen #writerEditor { width: 50%; }
-#writerMain.previewOpen #writerPreview { width: 50%; }
 #writerEditor {flex: 1; min-width: 0; display: flex; flex-direction: column;}
-#writerPreview {width: 0; overflow: hidden; transition: width .25s ease;}
 .ibActionButton { background: var(--ib-color-writer); }
 .ibActionButton:hover { background: var(--ib-color-writer-hover); }
 #btnExport {background: var(--ib-color-export);}
@@ -52,3 +49,6 @@
 .writerNavDropAfter {border-bottom: 3px solid var(--ib-color-writer);}
 .writerNavDropBefore {background: linear-gradient(to bottom, color-mix(in srgb, var(--ib-color-writer) 25%, transparent) 0%, color-mix(in srgb, var(--ib-color-writer) 25%, transparent) 50%, transparent 50%, transparent 100%); transition: background-color .1s ease;}
 .writerNavDropAfter {background: linear-gradient(to bottom, transparent 0%, transparent 50%, color-mix(in srgb, var(--ib-color-writer) 25%, transparent) 50%, color-mix(in srgb, var(--ib-color-writer) 25%, transparent) 100%); transition: background-color .1s ease;}
+
+#previewContent {padding: 2rem; margin: auto; margin-top:40px;margin-bottom: 40px;}
+.previewExercice {position: relative; top: 60px;}

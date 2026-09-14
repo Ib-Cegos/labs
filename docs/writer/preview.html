@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Aperçu ibCAN</title>
+    <link rel="stylesheet" href="../assets/contenu.css">
+    <link rel="stylesheet" href="../assets/themes/original.css">
+    <link rel="stylesheet" href="../writer/writer.css">
+</head>
+<body>
+    <header id="ibHeader">
+        <input id="stageReference" placeholder="Référence" readonly>
+        <input id="stageTitle" placeholder="Titre du stage" readonly>
+        <input id="stageAuthor" placeholder="Auteur" readonly>
+    </header>
+    <div id="ExerciceHeader" class="previewExercice">
+            <label for="writerAtelierTitle">Atelier :</label>
+            <input id="writerAtelierTitle" readonly>
+            <label for="writerExerciceTitle">Exercice :</label>
+            <input id="writerExerciceTitle" readonly>
+            <label for="writerExerciceLength">Durée :</label>
+            <input id="writerExerciceLength" readonly>
+    </div>
+    <div id="previewContent"></div>
+    <footer id="ibFooter">
+        <button id="btnEditor" class="ibActionButton">Édition</button>
+    </footer>
+    <script src="../assets/common.js"></script>
+    <script src="preview.js"></script>
+</body>
+</html>
