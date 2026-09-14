@@ -1,4 +1,3 @@
-const IB_PREFIX = "ibCAN-";
 let DragData = null;
 
 /* Simplifcation des lecture-excriture dans le localStorage */
@@ -112,20 +111,6 @@ function majStage() {
         exercice.Contenu = Current.Contenu; }
     storage.write('Stage', Stage); }
 
-function renumberStage() {
-    /* Renumérotation des exercices/ateliers du stage (après ajout/Suppression/déplacement) et mise à jour de l'Id Current */
-    Stage.Ateliers.forEach((atelier, atelierIndex) => {
-        atelier.Id = atelierIndex + 1;
-        atelier.Exercices.forEach((exercice, exerciceIndex) => {exercice.Id = exerciceIndex + 1;});});
-    for (const atelier of Stage.Ateliers) {
-        const exercice = atelier.Exercices.find(e => e._restoreCurrent);
-        if (exercice) {
-            Current.Atelier = atelier.Id;
-            Current.Exercice = exercice.Id;
-            delete exercice._restoreCurrent;
-            storage.write('Current',Current);
-        break;}}}
-
 function construireNavigation() {
     const nav = document.getElementById("writerNavigation");
     let html = '<div id ="writerNavIntroduction">Introduction</div>';
@@ -148,7 +133,7 @@ function construireNavigation() {
             const eTarget = parseInt(lien.dataset.exercice) - 1;
             const aTarget = parseInt(lien.dataset.atelier) - 1;
             if ( DragData.aSource === aTarget && DragData.eSource === eTarget) {
-                clearDropIndicators(element);
+                clearDropIndicators(lien);
                 return;}
             const before = event.clientY < rect.top + rect.height / 2;
             clearDropIndicators(lien);
@@ -366,6 +351,7 @@ function moveExercice(aSource, aTarget, eSource, eTarget, before = false, confir
 
 /* Chargement initial de la page */
 let Stage = storage.read('Stage',{ Titre: "", "Auteur": "", "Variables": {}, "Introduction": "", "Reference": "", "Ateliers": [{ "Id": 1, "Titre": "", "Exercices": [{ "Id": 1, "Titre": "", "Contenu": "", "Duree": "" }]}]});
+renumberStage();
 let Current = storage.read ('Current', {Atelier : 0, Exercice : 0, Contenu : Stage.Introduction});
 document.getElementById("stageReference").value = Stage.Reference || "";
 document.getElementById("stageReference").addEventListener("input", () => {

@@ -6,8 +6,6 @@ async function ibCopy(text, button) {
     button.classList.add("ok");
     setTimeout( () => button.classList.remove("ok"), 1500 );}
 
-const IB_PREFIX = "ibCAN-";
-
 function ibVarKey(variable) {
     return (IB_PREFIX + window.ibLabCode + "-" + variable.toLowerCase());}
 
