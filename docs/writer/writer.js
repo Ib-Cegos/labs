@@ -2,7 +2,7 @@ let DragData = null;
 let previewWindow = null;
 
 function openPreview() {
-    if (!previewWindow || previewWindow.closed) {previewWindow = window.open("preview.html","ibCAN - Preview","width=1200,height=800,resizable=yes");}
+    if (!previewWindow || previewWindow.closed) {previewWindow = window.open("preview.html","Preview","width=1200,height=800,resizable=yes");}
     else {previewWindow.focus();}}
 
 /* Déplacement des éléments dans la page */
@@ -390,8 +390,6 @@ document.getElementById("btnExport").addEventListener("click", exporterStage);
 document.getElementById("btnDeleteExercice").addEventListener("click", confirmDeleteExercice);
 document.getElementById("btnDeleteAtelier").addEventListener("click", confirmDeleteAtelier);
 document.getElementById("btnPreview").addEventListener("click", openPreview);
-window.addEventListener("message", event => {
-    if (event.data === "focusWriter") window.focus();});
     
 /* Initialisation de la gestion des fenêtres modales */
 makeDraggable("ibWriterDialog",".ibModalHeader","Dialog");

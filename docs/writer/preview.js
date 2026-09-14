@@ -15,16 +15,12 @@ function renderPreview() {
         document.getElementById("writerAtelierTitle").value = atelier?.Titre || "";
         document.getElementById("writerExerciceTitle").value = exercice?.Titre || "";
         document.getElementById("writerExerciceLength").value = exercice?.Duree || "";}
-
-    document.getElementById("previewContent").textContent = Current?.Contenu || "";
+    document.getElementById("previewContent").innerHTML = marked.parse(Current?.Contenu || "");
 }
 
-function focusWriter() {
-    if (window.opener && !window.opener.closed) {
-        window.opener.postMessage("focusWriter","*");}}
-  
+ 
 renderPreview();
 
 window.addEventListener("storage", event => {
     if (event.key === IB_PREFIX + "writerCurrent" || event.key === IB_PREFIX + "writerStage") renderPreview();});
-document.getElementById("btnEditor").addEventListener("click", focusWriter);
+/*document.getElementById("btnEditor").addEventListener("click", focusWriter);*/
