@@ -1,17 +1,18 @@
 from pathlib import Path
 import json
 
-IBCANWRITER_DIR = Path("ibCANWriter")
+WRITER_DIR = Path("writer")
 DOCS_DIR = Path("docs")
 
 def generer_yaml_readme(stage):
     variables = stage.get("Variables", {})
-    if not variables:  return ""
-    yaml_lines = ["---", "Variables:"]
-    for nom, variable in variables.items():
-        yaml_lines.append(f"    {nom}:")
-        for cle, valeur in variable.items():
-            yaml_lines.append(f"        {cle}: {valeur}")
+    yaml_lines = ["---", f"Auteur: {stage["Auteur"]}"]
+    if variables:
+        yaml_lines.append("Variables:")
+        for nom, variable in variables.items():
+            yaml_lines.append(f"    {nom}:")
+            for cle, valeur in variable.items():
+                yaml_lines.append(f"        {cle}: {valeur}")
     yaml_lines.append("---")
     return "\n".join(yaml_lines)
 
@@ -25,6 +26,7 @@ def generer_readme(stage):
     contenu.append("")
     introduction = stage.get("Introduction","").strip()
     if introduction: contenu.append(introduction)
+    print(contenu)
     return "\n".join(contenu)
 
 def generer_exercice(exercice, titre_atelier=None):
@@ -64,7 +66,7 @@ def importer_stage(json_file):
             fichier.write_text(generer_exercice(exercice, titre_atelier),encoding="utf-8")
 
 def main():
-    for json_file in sorted(IBCANWRITER_DIR.glob("*.json")):
+    for json_file in sorted(WRITER_DIR.glob("*.json")):
         importer_stage(json_file)
         try:
             json_file.unlink()

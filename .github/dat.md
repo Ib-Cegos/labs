@@ -4,8 +4,17 @@ Les contenus pédagogiques sont rédigés en Markdown par des formateurs qui ne 
 Le projet est basé sur **MkDocs** mais une partie importante de la logique est assurée par des scripts **Python**, **JavaScript** et **CSS** développés spécifiquement pour ibCAN.
 L'objectif est de fournir une expérience de lecture enrichie et interactive tout en conservant Markdown comme source documentaire principale.
 ibCAN dispose désormais également d'un mécanisme d'import/export JSON permettant de reconstruire intégralement un stage à partir d'un modèle de données intermédiaire.
-Ce format JSON constitue la base d'un futur outil compagnon nommé **ibCANWriter**, destiné à simplifier la rédaction des ateliers et à réduire les connaissances requises en Markdown pour les contributeurs.
-Parmi les fonctionnalités actuellement prises en charge :
+Ce format JSON constitue la base d'un outil compagnon nommé ibCANWriter, destiné à simplifier la rédaction des ateliers et à réduire les connaissances requises en Markdown pour les contributeurs.
+
+ibCANWriter est désormais capable :
+
+- d'éditer un stage complet à partir du modèle JSON ;
+- d'ajouter et supprimer des ateliers  et des exercices ;
+- de réorganiser la structure du stage (par Drag & Drop) ;
+- de prévisualiser en temps réel le rendu Markdown ;
+- d'importer et exporter le modèle JSON intermédiaire utilisé par ibCAN.
+
+Parmi les fonctionnalités actuellement prises en charge dans ibCAN:
 
 - enrichissement automatique des contenus ;
 - Possibilité d'insérer une illustration pour chaque exercice;
@@ -175,7 +184,15 @@ Le système de thèmes est désormais considéré comme une fonctionnalité stab
 
 ## Architecture documentaire
 
-Le moteur ibCAN manipule désormais trois représentations d'un même contenu : JSON ibCANWriter <==> MArkdown ibCAN ==>HTML publié
+Le moteur ibCAN manipule désormais trois représentations d'un même contenu : JSON Writer <==> Markdown ibCAN ==> HTML publié
+Le modèle JSON est devenu le modèle documentaire pivot :
+
+- export Markdown vers JSON via export.py ;
+- édition dans ibCANWriter ;
+- import JSON vers Markdown via import.py ;
+- publication HTML via MkDocs.
+
+Cette séparation permet de dissocier totalement les outils d'édition de la chaîne de publication.
 
 ---
 
@@ -200,7 +217,7 @@ Le moteur ibCAN manipule désormais trois représentations d'un même contenu : 
 │   ├── ms503
 │   └── msms030
 |
-├── ibCANWriter
+├── writer
 │   ├── export.py
 │   ├── import.py
 │   └── *.json
@@ -545,18 +562,56 @@ Exemple :
     ]
 }
 ```
-Ce modèle est considéré comme la base de travail d'ibCANWriter.
+Ce modèle est considéré comme la base de travail du writer.
 
-# ibCANWriter
-ibCANWriter est un projet compagnon d'ibCAN dont l'objectif est de simplifier la rédaction des stages.
-Il ne publie pas de contenu et ne remplace pas ibCAN.
-Son rôle est de fournir :
+### Règles d'identification
 
-- un modèle JSON de travail ;
-- des outils d'import/export ;
-- à terme une interface de rédaction assistée.
+Les propriétés Id des ateliers et exercices représentent leur ordre logique dans le stage.
+Les identifiants ne constituent pas des clés techniques permanentes.
+Après chaque ajout, suppression ou déplacement , les ateliers et exercices sont renumérotés ( Cette opération est assurée par la fonction renumberStage() utilisée par le Writer).
 
-Le principe est : README.md + aXeY.md ==> export.py ==> STAGE.json ==> ibCANWriter ==> STAGE.json ==> import.py ==> README.md + aXeY.md
+# Writer
+Le Writer est un projet compagnon d'ibCAN destiné à simplifier la création et la maintenance des stages.
+Il ne publie pas directement les contenus mais manipule le modèle JSON intermédiaire utilisé par ibCAN.
+Fonctionnalités actuellement disponibles :
+
+- édition de l'introduction ;
+- édition des ateliers ;
+- édition des exercices ;
+- ajout d'ateliers ;
+- ajout d'exercices ;
+- suppression d'ateliers ;
+- suppression d'exercices ;
+- renumérotation automatique de la structure ;
+- déplacement des ateliers par Drag & Drop ;
+- déplacement des exercices par Drag & Drop ;
+- validation visuelle des champs obligatoires ;
+- import/export JSON ;
+- prévisualisation Markdown temps réel.
+
+L'objectif du Writer est de permettre à un formateur de produire ou maintenir un stage sans connaissance particulière de Markdown, HTML ou Git.
+Le principe est : README.md + aXeY.md ==> export.py ==> STAGE.json ==> writer ==> STAGE.json ==> import.py ==> README.md + aXeY.md
+
+## Architecture du Writer
+
+Le Writer repose sur deux fenêtres synchronisées : writer.html (édition) et preview.html (prévisualisation).
+Les deux fenêtres partagent le même modèle de données via le localStorage.
+Architecture : Stage ==> localStorage ==> Preview
+La prévisualisation est mise à jour automatiquement grâce à l'événement JavaScript "storage"
+Les contenus Markdown sont rendus localement dans la fenêtre de prévisualisation via la bibliothèque Marked.
+
+## Prévisualisation
+
+Le Writer dispose d'une fenêtre de prévisualisation indépendante.
+Fonctionnalités :
+
+- rendu Markdown temps réel ;
+- synchronisation automatique avec l'éditeur ;
+- synchronisation du défilement ;
+- réutilisation du style ibCAN ;
+- mise à jour sans rechargement manuel.
+
+La prévisualisation constitue l'environnement principal de validation du rendu produit par le rédacteur. Sans être 100% fidèle à ibCAN, elle se veut représentative du résultat.
 
 ---
 
@@ -1331,6 +1386,9 @@ La documentation utilisateur doit expliquer : Usage => Bénéfices => Fonctionne
 - En cas de doute sur un fichier, demander son contenu avant de proposer une évolution importante.
 - Lorsqu'une évolution touche plusieurs couches (Python, JavaScript, CSS), conserver la séparation des responsabilités décrite précédemment.
 - Lorsqu'une évolution visuelle est proposée, privilégier une validation locale avant publication.
+- privilégier les mécanismes déjà présents dans ibCAN lors du développement du Writer ;
+- privilégier les composants réutilisables (modales, stockage, validation, Drag & Drop) ;
+- maintenir la compatibilité entre le modèle JSON du Writer et les scripts import/export.
 
 ---
 

@@ -6,7 +6,7 @@ on:
       - main
       - travail
     paths:
-      - 'ibCANwriter/**/*.json'
+      - 'writer/**/*.json'
 
 jobs:
   import-stage:
@@ -25,7 +25,7 @@ jobs:
           pip install pyyaml
       - name: Import stages
         run: |
-          python ibCANwriter/import.py
+          python writer/import.py
       - name: Commit generated markdown
         run: |
           git config user.name "ibCAN Import Bot"

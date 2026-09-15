@@ -20,7 +20,7 @@
 #writerAtelierTitle { width: 25%; }
 #writerExerciceTitle {flex: 1;}
 #writerExerciceLength {width: 80px;}
-#writerContenu {flex: 1; min-height: 0; width: 100%; box-sizing: border-box; resize: none; border: none; outline: none; padding: 1rem; overflow-y: auto; overflow-x: hidden;}
+#writerContenu {flex: 1; min-height: 0; width: 100%; box-sizing: border-box; resize: none; border: none; outline: none; padding: 1rem; overflow-y: auto; overflow-x: hidden; background: var(--ib-color-content); font-family: "Segoe UI", sans-serif; font-size: var(--ib-content-font-size); line-height: 1.6; }
 #ibWriterDialogOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9999; justify-content: center; align-items: center;}
 .ibModal { opacity: 1; }
 .ibModalHeader {background-color: var(--ib-color-writer); color: var(--ib-action-button); cursor: move; user-select: none;}
@@ -50,3 +50,21 @@
 #ExerciceHeader.preview {position: relative; top: 60px; background: color-mix(in srgb, var(--ib-color-writer) 30%, transparent);}
 #ibHeader.preview {background-color: var(--ib-color-writer);}
 #ibFooter.preview {justify-content: center; align-items: center; background-color: var(--ib-color-writer);}
+.somExLink {color: var(--ib-color-link);}
+
+/* Modale des variables */
+.variableTable {width: 100%; border-collapse: collapse;}
+.variableRow td, .variableRowInfo td {padding: .35rem .5rem; }
+.variableRow { align-items: center; gap: .5rem; width: 100%; padding: .25rem .5rem; border-radius: 4px;}
+.variableName {flex: 2;font-weight:bold;color: var(--ib-color-writer);}
+.variableDefault {flex: 3;}
+.variableEditable {width: 4rem;}
+.variableActions {width: 2rem;}
+.variableRowEdit {background: rgba(255,255,255,.1);}
+.variableRowInfo td { padding-left: 2rem; font-size: .9rem; padding-bottom: 12px;}
+.variableLib { font-weight: bold; }
+.variableHelp {font-style: italic; opacity: .8;}
+.variableOdd td { background-color: #ececec; }
+.variableEven td { background-color: #ffffff; }
+.variableRow:hover, .variableRowInfo:hover { background-color: #e9d5ff; }
+button.variableStyle, button.variableEdit {border : none;background: transparent; cursor: pointer; font-size: 1.5rem;}

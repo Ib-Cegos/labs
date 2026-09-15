@@ -242,7 +242,7 @@ def recuperer_infos_git(fichier):
     # Cas 2 : Git local (MkDocs local ou GitHub Desktop)
     try:
         sha = (subprocess.check_output(["git", "log", "-n", "1", "--format=%h", "--", str(fichier)],text=True).strip() or "initiale")
-        auteur = (subprocess.check_output(["git", "log", "-n", "1", "--format=%an", "--", str(fichier)],text=True ).strip() or "ibCANWriter")
+        auteur = (subprocess.check_output(["git", "log", "-n", "1", "--format=%an", "--", str(fichier)],text=True ).strip() or "writer")
         date_git = subprocess.check_output(["git", "log", "-n", "1", "--format=%aI", "--", str(fichier)], text=True ).strip()
         edition_date_calc = (datetime.now() if not date_git else datetime.fromisoformat(date_git.replace("Z", "+00:00")))
         return { "gitVersion": sha, "editorName": auteur, "editionDate": edition_date_calc.strftime("%d/%m/%Y"), "editionDateCalc": edition_date_calc }

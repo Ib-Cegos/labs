@@ -150,23 +150,29 @@ def ajouter_checkboxes(html, page):
     stage = Path(page.file.src_uri).parent.name
     fichier = Path(page.file.src_uri).stem
     compteur = 0
-    dans_ol = False
+    niveau_ol = 0
     def remplacer(match):
         nonlocal compteur
-        nonlocal dans_ol
+        nonlocal niveau_ol
         balise = match.group(0)
         if balise.lower().startswith("<ol"):
-            dans_ol = True
+            niveau_ol += 1
+            return balise
+        if balise.lower().startswith("<ul") and niveau_ol > 0:
+            niveau_ol += 1
+            return balise
+        if balise.lower().startswith("</ul") and niveau_ol >0:
+            niveau_ol -= 1
             return balise
         if balise.lower().startswith("</ol"):
-            dans_ol = False
+            niveau_ol -= 1
             return balise
-        if balise.lower().startswith("<li") and dans_ol:
+        if balise.lower().startswith("<li") and niveau_ol == 1:
             compteur += 1
             identifiant = ( f"{IB_PREFIX}{stage}-{fichier}-{compteur}" )
             return ( f'<li class="ibLabTask" id="{identifiant}">' )
         return balise
-    return re.sub( r'</?ol[^>]*>|<li[^>]*>', remplacer, html, flags=re.IGNORECASE )
+    return re.sub( r'</?(?:ol|ul)[^>]*>|<li[^>]*>', remplacer, html, flags=re.IGNORECASE )
 
 def ajouter_boutons_copie(html):
     pattern = re.compile( r'(<pre.*?</pre>)', re.DOTALL )

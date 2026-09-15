@@ -1,9 +1,12 @@
 let DragData = null;
 let previewWindow = null;
+let scrollTimer = null;
 
 function openPreview() {
-    if (!previewWindow || previewWindow.closed) {previewWindow = window.open("preview.html","Preview","width=1200,height=800,resizable=yes");}
-    else {previewWindow.focus();}}
+    if (!previewWindow || previewWindow.closed) previewWindow = window.open("preview.html","Preview","width=1200,height=800,resizable=yes");
+    else previewWindow.focus();
+    // Attendre un peu que la preview soit chargée
+    setTimeout(() => { syncPreviewScroll();}, 500);}
 
 /* Déplacement des éléments dans la page */
 function makeDraggable(elementId, handleSelector, storageKey) {
@@ -67,6 +70,17 @@ const dialog = {
     close() {
         document.getElementById("ibWriterDialogOverlay").style.display = "none";}};
 
+/* Synchonisation de la consultation de la preview */
+function syncPreviewScroll() {
+    if (!previewWindow || previewWindow.closed) return;
+    const maxScroll = textareaSync.scrollHeight - textareaSync.clientHeight;
+    const percent = maxScroll > 0 ? textareaSync.scrollTop / maxScroll : 0;
+    previewWindow.postMessage({ type: "scroll", percent: percent }, "*");}
+function syncCursor() {
+    if (!previewWindow || previewWindow.closed) return;
+    const percent = textareaSync.selectionStart / textareaSync.value.length;
+    previewWindow.postMessage({type: "cursor", percent}, "*");}
+
 function getAtelierLabel(atelier) {
     return atelier.Titre ? `Atelier ${atelier.Id} : ${atelier.Titre}` : `Atelier ${atelier.Id}`;}
 
@@ -94,7 +108,6 @@ function majStage() {
         const exercice = atelier.Exercices.find(e => e.Id == Current.Exercice);
         exercice.Contenu = Current.Contenu; }
     storage.write('Stage', Stage); }
-
 
 function renumberStage() {
     /* Renumérotation des exercices/ateliers du stage (après ajout/Suppression/déplacement) et mise à jour de l'Id Current */
@@ -195,7 +208,8 @@ function afficherExercice() {
         if ( lien.dataset.atelier != Current.Atelier || lien.dataset.exercice != Current.Exercice) { lien.classList.remove("writerNavSelected");}
         else {lien.classList.add("writerNavSelected");}});
     if (Current.Atelier == 0) {
-        document.getElementById("btnAddSommaire").style.display = "flex";
+        if (Stage.Ateliers.length == 1 && Stage.Ateliers[0].Exercices.length == 1) document.getElementById("btnAddSommaire").style.display = "none";
+        else document.getElementById("btnAddSommaire").style.display = "flex";
         document.getElementById("btnAddExercice").style.display = "none";
         document.getElementById("writerNavIntroduction").classList.add("writerNavSelected");
         document.getElementById("ExerciceHeader").style.display = "none";
@@ -219,6 +233,48 @@ function afficherExercice() {
     document.querySelectorAll("#ibHeader input, #ExerciceHeader input").forEach(field => validateField(field));
     document.getElementById("writerContenu").value = Current.Contenu;}
 
+function toggleVariableType(name,button) {
+    const variable = Stage.Variables[name];
+    const infoRow = document.getElementById("variableInfo-" + name);
+    if (variable.lib !== undefined) {
+        variable.draftLib = variable.lib;
+        delete variable.lib;
+        if (infoRow) infoRow.style.display = "none";
+        button.textContent = "🔒"; }
+    else {
+        if (!variable.draftLib) variable.lib = "Libellé";
+        else {
+            variable.lib = variable.draftLib;
+            delete variable.draftLib;}
+        if (!variable.aide) variable.aide = "Texte d'aide";
+        if (infoRow) infoRow.style.display = "table-row";
+        button.textContent = "👤";}
+    infoRow.innerHTML = `<td colspan="5"><div class="variableLib">${variable.lib}</div><div class="variableHelp">${variable.aide}</diV></td>`;
+    storage.write("Stage", Stage);}
+
+function editVariable(name = null) {
+    let dialogTitle = "Modifier une variable"
+    if (name === null) {
+        dialogTitle= "Ajout d'une variable"
+    }
+    else {
+        
+    }
+    const variable = Stage.Variables[name];
+    dialog.show(dialogTitle, 'formulaire HTML...', [{label : "Enregistrer", action : dialog.close()}, {label : "Annuler",action : () => openVariables()}, {label : "Fermer",action : () => dialog.close()}]);
+}
+
+function openVariables() {
+    let html = '<table class="variableTable"><tbody>';
+    Object.entries(Stage.Variables).forEach(([name, variable], index) => {
+        const rowStyle = index % 2 === 0 ? "variableOdd" : "variableEven";
+            
+        html += `<tr class="variableRow ${rowStyle}"><td class= "variableName">${name}</td><td class="variableDefault">${variable.defaut || ""}</td><td class="variableEditable"><button class="variableStyle" onclick="toggleVariableType('${name}',this)">${variable.lib ? '👤' : '🔒'}</button></td><td class="variableActions"><button class="variableEdit" onclick="editVariable('${name}');">✏️</button></td><td class="variableActions"><button class="ibDeleteButton" title="Supprimer la variable '${name}'" style="display: flex;">✖</button></td></tr>`;
+        html += `<tr class="variableRowInfo ${rowStyle}" id ="variableInfo-${name}" style="display:${variable.lib ? 'table-row' : 'none'}"><td colspan="5"><div class="variableLib">${variable.lib}</div><div class="variableHelp">${variable.aide}</diV></td></tr>`;
+    });
+    html += '</tbody></table>';
+    dialog.show("Variables", html, [{label : "Ajouter", action : () => editVariable() }, { label : "Fermer", action : () => dialog.close()}]);}
+
 function selectExercice(atelier, exercice) {
     if (atelier == Current.Atelier && exercice == Current.Exercice) return;
     majStage();
@@ -234,9 +290,6 @@ function selectIntroduction() {
     Current.Exercice = 0;
     chargerExercice();
     afficherExercice(); }
-
-function togglePreview() {
-    document.getElementById("writerMain").classList.toggle("previewOpen");}
 
 function validateField(field) {
     field.classList.toggle("ibMissing",field.value.trim() === "");}
@@ -348,7 +401,34 @@ function moveExercice(aSource, aTarget, eSource, eTarget, before = false, confir
     construireNavigation();
     afficherExercice();}
 
+function insertSommaire() {
+    if (Current.Atelier != 0) return;
+    const marqueur = "{{ Sommaire() }}";
+    const regexSommaire = /\{\{\s*sommaire\s*\(\s*\)\s*\}\}/i;
+    let position = textareaSync.selectionStart;
+    if (position == null) position = textareaSync.value.length;
+    let contenu = textareaSync.value;
+    const match = contenu.match(regexSommaire);
+    let anciennePosition = -1;
+    if (match) {
+        anciennePosition = match.index;
+        contenu = contenu.replace(regexSommaire, ""); }
+    if (anciennePosition >= 0) {
+        contenu = contenu.replace(marqueur,"");
+        if (anciennePosition < position) positionCorrigee = position - marqueur.length;
+        else positionCorrigee = position;}
+    else positionCorrigee = position;
+    contenu = contenu.slice(0, positionCorrigee) + marqueur + contenu.slice(positionCorrigee);
+    textareaSync.value = contenu;
+    Current.Contenu = contenu;
+    Stage.Introduction = contenu;
+    storage.write("Current", Current);
+    storage.write("Stage", Stage);
+    textareaSync.dispatchEvent(new Event("input"));
+    textareaSync.focus();}
+
 /* Chargement initial de la page */
+const textareaSync = document.getElementById("writerContenu")
 let Stage = storage.read('Stage',{ Titre: "", "Auteur": "", "Variables": {}, "Introduction": "", "Reference": "", "Ateliers": [{ "Id": 1, "Titre": "", "Exercices": [{ "Id": 1, "Titre": "", "Contenu": "", "Duree": "" }]}]});
 renumberStage();
 let Current = storage.read ('Current', {Atelier : 0, Exercice : 0, Contenu : Stage.Introduction});
@@ -380,12 +460,14 @@ document.getElementById("writerExerciceTitle").addEventListener("input", event =
 document.getElementById("writerExerciceLength").addEventListener("input", event => {
         getCurrentExercice().Duree = event.target.value;
         storage.write("Stage", Stage);});
-document.getElementById("writerContenu").addEventListener("input", event => {
+textareaSync.addEventListener("input", event => {
         Current.Contenu = event.target.value;
         storage.write("Current",Current);});
-/* Initialisation des boutons */        
+/* Initialisation des boutons */
+document.getElementById("btnAddSommaire").addEventListener("click",insertSommaire);      
 document.getElementById("btnAddAtelier").addEventListener("click", addAtelier);
 document.getElementById("btnAddExercice").addEventListener("click", addExercice);
+document.getElementById("btnVariables").addEventListener("click", openVariables);
 document.getElementById("btnExport").addEventListener("click", exporterStage);
 document.getElementById("btnDeleteExercice").addEventListener("click", confirmDeleteExercice);
 document.getElementById("btnDeleteAtelier").addEventListener("click", confirmDeleteAtelier);
@@ -410,3 +492,10 @@ makeDraggable("ibWriterStyleBar",".ibWriterStyleHandle","Style");
 document.addEventListener("dragend", () => {
     document.querySelectorAll( ".writerNavDropBefore,.writerNavDropAfter" ).forEach(element => {
         clearDropIndicators(element);});});
+/* Synchonisation de la lecture avec fenêtre preview */
+textareaSync.addEventListener("scroll", () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {syncPreviewScroll();}, 50);});
+textareaSync.addEventListener("keyup", syncCursor);
+textareaSync.addEventListener("click", syncCursor);
+textareaSync.addEventListener("mouseup", syncCursor);
