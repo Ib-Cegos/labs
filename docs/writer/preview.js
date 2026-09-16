@@ -1,6 +1,27 @@
 let Stage = storage.read("Stage");
 let Current = storage.read("Current");
+let PreviewShowVariableValues = sessionStorage.getItem("PreviewShowVariableValues") === 'true';
 const openerOrigin = opener.location;
+
+function replaceVariables(content) {
+    Object.entries(Stage.Variables).forEach(([name, variable]) => {
+        const regex = new RegExp(`\\[${name}\\]`, "gi");
+        content = content.replace(regex, `<span class="ibVariable" title="${variable.lib || ""}">${PreviewShowVariableValues ? variable.defaut || "" : '['+name+']'}</span>`);});
+    return content;}
+
+function variableButton() {
+    const variButton = document.getElementById("btnPreviewVariables");
+    if (PreviewShowVariableValues) {
+        variButton.innerText = 'abc → [ ]';
+        variButton.title = 'Afficher les noms de variables.';}
+    else {
+        variButton.innerText = '[ ] → abc';
+        variButton.title = 'Afficher les valeurs des variables.';}}
+
+function toggleShowVariables() {
+    PreviewShowVariableValues = !PreviewShowVariableValues;
+    sessionStorage.setItem("PreviewShowVariableValues",PreviewShowVariableValues);
+    renderPreview();}
 
 function renderPreview() {
     Current = storage.read("Current");
@@ -18,6 +39,8 @@ function renderPreview() {
         document.getElementById("writerExerciceLength").value = exercice?.Duree || "";}
     let contenu = Current.Contenu
     if (Current.Atelier === 0) contenu = contenu.replace(/\{\{\s*sommaire\s*\(\s*\)\s*\}\}/i, buildSommaire());
+    variableButton();
+    contenu = replaceVariables(contenu);
     document.getElementById("ibContent").innerHTML = marked.parse(contenu);}
 
 function buildSommaire() {

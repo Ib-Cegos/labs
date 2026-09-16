@@ -252,24 +252,107 @@ function toggleVariableType(name,button) {
     infoRow.innerHTML = `<td colspan="5"><div class="variableLib">${variable.lib}</div><div class="variableHelp">${variable.aide}</diV></td>`;
     storage.write("Stage", Stage);}
 
+function refreshVariableEditor() {
+    const editable = document.getElementById("variableEditable").checked;
+    document.getElementById("variableEditableFields").style.display = editable ? "block" : "none";
+    document.querySelector('label[for="variableDefault"]').innerHTML=editable ? 'Valeur par défaut' : 'Valeur';
+    if (editable) {
+        if (!document.getElementById("variableLib").value) document.getElementById("variableLib").value = "Libellé";
+        if (!document.getElementById("variableHelp").value) document.getElementById("variableHelp").value = "";} }
+
+function saveVariable() {
+    /* Ajouter les éventuels mots interdits comme noms de variables ligne suivante */
+    const reservedNames = [ "sommaire"];
+    const variName = document.getElementById("variableName");
+    const variLib = document.getElementById("variableLib");
+    const editable = document.getElementById("variableEditable").checked;
+    const oldName = (variName.dataset.oldname || "").toLowerCase();
+    const newName = variName.value.toLowerCase();
+    const variableExists = Object.keys(Stage.Variables).some(v => v.toLowerCase() === newName);
+    let saveError = false;
+    variName.classList.remove('ibMissing');
+    variName.title = "";
+    variLib.title = "";
+    variLib.classList.remove('ibMissing');
+    if (variableExists && oldName !== newName) {
+        variName.classList.add('ibMissing');
+        variName.title = "Le nom d'une variable doit être unique dans le stage.";
+        saveError=true;}
+    if (reservedNames.includes(variName.value.toLowerCase())) {
+        variName.classList.add('ibMissing');
+        variName.title=`Désolé, le terme ${variName.value} est réservé !`;
+        saveError=true}
+    if (!variName.value.trim() ) {
+        variName.classList.add('ibMissing');
+        variName.title="Le nom ne peut être vide !";
+        saveError=true}
+    if (!/^[A-Za-z][A-Za-z0-9-]*$/.test(variName.value)) {
+        variName.classList.add('ibMissing');
+        variName.title="Le nom doit commencer par une lettre et ne contenir que des lettres, des tirets '-' et des chiffres.";
+        saveError=true;}
+    if (editable && !variLib.value.trim()) {
+        variLib.classList.add('ibMissing');
+        variLib.title = "Une variable éditable doit posséder un libellé.";
+        saveError=true;}
+    if (saveError) return;
+    let vari = {
+        name : variName.value,
+        defaut : document.getElementById("variableDefault").value,
+        lib : variLib.value,
+        aide : document.getElementById("variableHelp").value}
+    if (!editable) delete vari.lib;
+    if (variName.dataset.oldname && variName.dataset.oldname !== variName.value) delete Stage.Variables[variName.dataset.oldname];
+    Stage.Variables[vari.name] = vari;
+    storage.write("Stage", Stage);
+    openVariables();}
+
+    function deleteVariable(name) {
+    html =  `<p>Supprimer la variable "${name}" ?</p>`
+    const regex = new RegExp(`\\[${name}\\]`,"gi");
+    const token = `[${name}]`;
+    let count = 0;
+    if (Stage.Introduction) {
+        const matches = Stage.Introduction.match(regex);
+        if (matches) {
+            count += matches.length;
+            const countLib = "l'introduction";}}
+    Stage.Ateliers.forEach(atelier => {
+        atelier.Exercices.forEach(exercice => {
+            const matches = exercice.Contenu.match(regex);
+            if (matches) {
+                count += matches.length;
+                const countLib = `l'exerice ${exercice.Id} de l'atelier ${atelier.Id}`}});});
+    if (count == 1) html += `<p>Attention, l'occurence du terme [${name}] dans ${countLib} du stage ne sera pas supprimée...</p>`;
+    if (count > 1) html += `<p>Attention, les ${count} occurences du terme [${name}] dans les ateliers du stage ne seront pas supprimées...</p>`;
+    dialog.show("Suppression",html, [{label : "Annuler", action : () => openVariables()}, {label : "Supprimer", action : () => { delete Stage.Variables[name]; storage.write("Stage",Stage); openVariables();}, className : "ibDialogButtonDelete"}],'small');}    
+
 function editVariable(name = null) {
+    let vari = null;
     let dialogTitle = "Modifier une variable"
     if (name === null) {
-        dialogTitle= "Ajout d'une variable"
-    }
+        dialogTitle= "Ajout d'une variable";
+        vari = {name : '', defaut : '', aide: ''};}
     else {
-        
-    }
-    const variable = Stage.Variables[name];
-    dialog.show(dialogTitle, 'formulaire HTML...', [{label : "Enregistrer", action : dialog.close()}, {label : "Annuler",action : () => openVariables()}, {label : "Fermer",action : () => dialog.close()}]);
-}
+        vari = Stage.Variables[name];
+        vari.name = name;}
+    const variableForm = `
+    <div class="variableEditor">
+        <div class="variableField"><label>Nom</label><input id="variableName" value="${vari.name}" onchange="document.getElementById('variableNameSample').innerText=this.value;" data-oldname="${vari.name}">
+            <span class="variableHint">Le nom doit être unique, commencer par une lettre et ne contenir que des caractères alphanumériques. Il sera utilisé dans le contenu sous la forme [<span id="variableNameSample">${vari.name}</span>].</span></div>
+        <div class="variableField"><label for="variableDefault">Valeur${vari.lib ? ' par défaut' : ''}</label><input id="variableDefault" value="${vari.defaut}"></div>
+        <div class="variableEditableCheck"><input type="checkbox" id="variableEditable" ${vari.lib ? 'checked' : ''} onchange = "refreshVariableEditor();"><label for="variableEditable">Variable éditable 👤</label></div>
+        <div id="variableEditableFields" style="display:${vari.lib ? 'block' : 'none'};">
+            <div class="variableField"><label>Libellé</label><input id="variableLib" value="${vari.lib || 'Libellé'}"></div>
+            <div class="variableField"><label>Aide</label><textarea id="variableHelp">${vari.aide || ''}</textarea></div>
+        </div></div>`;
+    dialog.show(dialogTitle, variableForm, [{label : "Enregistrer", action : () => saveVariable()}, {label : "Annuler",action : () => openVariables()}, {label : "Fermer",action : () => dialog.close()}]);
+    setTimeout(() => document.getElementById("variableName")?.focus(),0);}
 
 function openVariables() {
     let html = '<table class="variableTable"><tbody>';
     Object.entries(Stage.Variables).forEach(([name, variable], index) => {
         const rowStyle = index % 2 === 0 ? "variableOdd" : "variableEven";
-            
-        html += `<tr class="variableRow ${rowStyle}"><td class= "variableName">${name}</td><td class="variableDefault">${variable.defaut || ""}</td><td class="variableEditable"><button class="variableStyle" onclick="toggleVariableType('${name}',this)">${variable.lib ? '👤' : '🔒'}</button></td><td class="variableActions"><button class="variableEdit" onclick="editVariable('${name}');">✏️</button></td><td class="variableActions"><button class="ibDeleteButton" title="Supprimer la variable '${name}'" style="display: flex;">✖</button></td></tr>`;
+        html += `<tr class="variableRow ${rowStyle}"><td class= "variableName">${name}</td><td class="variableDefault">${variable.defaut || ""}</td><td class="variableEditable"><button class="variableStyle" onclick="toggleVariableType('${name}',this)">${variable.lib ? '👤' : '🔒'}</button></td><td class="variableActions"><button class="variableEdit" onclick="editVariable('${name}');">✏️</button></td><td class="variableActions"><button class="ibDeleteButton" title="Supprimer la variable '${name}'" style="display: flex;" onclick="deleteVariable('${name}');">✖</button></td></tr>`;
         html += `<tr class="variableRowInfo ${rowStyle}" id ="variableInfo-${name}" style="display:${variable.lib ? 'table-row' : 'none'}"><td colspan="5"><div class="variableLib">${variable.lib}</div><div class="variableHelp">${variable.aide}</diV></td></tr>`;
     });
     html += '</tbody></table>';

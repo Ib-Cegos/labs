@@ -434,7 +434,7 @@ Le README :
 - déclare les variables du stage dans son YAML ;
 - peut contenir la propriété "auteur" dans son YAML (auquel cas, celui-ci est affiché par survol du titre d'atelier/exercice)
 - peut contenir des informations générales sur le stage ;
-- ne contient pas le sommaire du stage, celui-ci étant généré automatiquement.
+- Le README peut contenir le marqueur "{{ sommaire() }}" qui est interprété par ibCAN et remplacé par le sommaire dynamique du stage.
 
 Le README constitue la source documentaire principale du stage.
 
@@ -544,7 +544,16 @@ Exemple :
     "Reference": "msms030",
     "Titre": "...",
     "Auteur": "...",
-    "Variables": {},
+    "Variables": {
+        "onMicrosoftDomain": {
+            "lib": "Préfixe du tenant",
+            "defaut": "wwlxxxxx",
+            "aide": "Préfixe utilisé pour le tenant Microsoft 365."
+        },
+        "MODPassword": {
+            "defaut": "MOD Admin Password"
+        }
+    },
     "Introduction": "...",
     "Ateliers": [
         {
@@ -587,7 +596,11 @@ Fonctionnalités actuellement disponibles :
 - déplacement des exercices par Drag & Drop ;
 - validation visuelle des champs obligatoires ;
 - import/export JSON ;
-- prévisualisation Markdown temps réel.
+- prévisualisation Markdown temps réel;
+- gestion complète des variables du stage ;
+- prévisualisation du sommaire dynamique ;
+- prévisualisation des variables du stage ;
+- affichage des variables en mode auteur ou mode rendu ;
 
 L'objectif du Writer est de permettre à un formateur de produire ou maintenir un stage sans connaissance particulière de Markdown, HTML ou Git.
 Le principe est : README.md + aXeY.md ==> export.py ==> STAGE.json ==> writer ==> STAGE.json ==> import.py ==> README.md + aXeY.md
@@ -600,6 +613,40 @@ Architecture : Stage ==> localStorage ==> Preview
 La prévisualisation est mise à jour automatiquement grâce à l'événement JavaScript "storage"
 Les contenus Markdown sont rendus localement dans la fenêtre de prévisualisation via la bibliothèque Marked.
 
+## Gestion des variables
+
+Le Writer permet l'ajout, la modification et la suppression des variables du stage.
+Les variables sont stockées dans "Stage.Variables"
+Structure :
+
+{
+    "NomVariable": {
+        "defaut": "...",
+        "lib": "...",
+        "aide": "..."
+    }
+}
+
+La présence de la propriété "lib" détermine si une variable est éditable par le stagiaire.
+Variables éditables : affichées avec l'icône 👤, possèdent un libellé, peuvent posséder un texte d'aide
+Variables fixes : affichées avec l'icône 🔒, possèdent uniquement une valeur par défaut
+
+### Validation des variables
+Avant enregistrement :
+
+- le nom est obligatoire ;
+- le nom doit être unique dans le stage ;
+- la vérification est insensible à la casse ;
+- le nom doit respecter l'expression : "^[A-Za-z][A-Za-z0-9_]*$"
+- certains noms peuvent être réservés ;
+- une variable éditable doit posséder un libellé.
+
+### Suppression des variables
+
+Avant suppression, le Writer recherche les occurrences de la variable dans le contenu du stage.
+Le dialogue de confirmation indique le nom de la variable et le nombre d'occurrences détectées (La recherche est insensible à la casse).
+La suppression de la variable ne modifie pas automatiquement les contenus Markdown qui l'utilisent.
+
 ## Prévisualisation
 
 Le Writer dispose d'une fenêtre de prévisualisation indépendante.
@@ -609,7 +656,11 @@ Fonctionnalités :
 - synchronisation automatique avec l'éditeur ;
 - synchronisation du défilement ;
 - réutilisation du style ibCAN ;
-- mise à jour sans rechargement manuel.
+- interprétation du marqueur {{ sommaire() }} ;
+- remplacement des variables du stage ;
+- affichage optionnel du nom ou de la valeur des variables ;
+- mise à jour sans rechargement manuel;
+- Deux modes de rendu des variables : Mode auteur ([NomVariable]) et mode rendu (ValeurParDefaut)
 
 La prévisualisation constitue l'environnement principal de validation du rendu produit par le rédacteur. Sans être 100% fidèle à ibCAN, elle se veut représentative du résultat.
 
