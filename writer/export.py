@@ -28,7 +28,7 @@ def importer_exercice(fichier):
 def importer_ateliers(stage_path):
     stage = Path(stage_path)
     ateliers = {}
-    for fichier in stage.glob("*.md"):
+    for fichier in sorted(stage.glob("*.md")):
         match = re.match(r"a(\d+)e(\d+)\.md$",fichier.name,re.IGNORECASE)
         if not match: continue
         atelier_id = int(match.group(1))
@@ -40,7 +40,10 @@ def importer_ateliers(stage_path):
             ateliers[atelier_id] = {"Id": atelier_id,"Titre": titre_atelier,"Exercices": []}
         elif not ateliers[atelier_id]["Titre"] and titre_atelier: ateliers[atelier_id]["Titre"] = titre_atelier
         ateliers[atelier_id]["Exercices"].append(exercice)
-    return sorted(ateliers.values(),key=lambda a: a["Id"])
+    ateliers_tries = sorted(ateliers.values(),key=lambda a: a["Id"])
+    for atelier in ateliers_tries:
+        atelier["Exercices"] = sorted(atelier["Exercices"],key=lambda e: e["Id"])
+    return ateliers_tries
 
 def importer_stages(repertoire_docs: str):
     docs = Path(repertoire_docs)

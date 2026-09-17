@@ -121,7 +121,12 @@ function renumberStage() {
             Current.Exercice = exercice.Id;
             delete exercice._restoreCurrent;
             storage.write('Current',Current);
-        break;}}}    
+        break;}}}
+
+function sortStage() {
+    Stage.Ateliers.sort((a, b) => a.Id - b.Id);
+    Stage.Ateliers.forEach(atelier => {
+        atelier.Exercices.sort((a, b) => a.Id - b.Id);});}
 
 function construireNavigation() {
     const nav = document.getElementById("writerNavigation");
@@ -513,6 +518,7 @@ function insertSommaire() {
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")
 let Stage = storage.read('Stage',{ Titre: "", "Auteur": "", "Variables": {}, "Introduction": "", "Reference": "", "Ateliers": [{ "Id": 1, "Titre": "", "Exercices": [{ "Id": 1, "Titre": "", "Contenu": "", "Duree": "" }]}]});
+sortStage();
 renumberStage();
 let Current = storage.read ('Current', {Atelier : 0, Exercice : 0, Contenu : Stage.Introduction});
 document.getElementById("stageReference").value = Stage.Reference || "";

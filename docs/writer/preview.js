@@ -40,8 +40,9 @@ function renderPreview() {
     let contenu = Current.Contenu
     if (Current.Atelier === 0) contenu = contenu.replace(/\{\{\s*sommaire\s*\(\s*\)\s*\}\}/i, buildSommaire());
     variableButton();
+    contenu = marked.parse(contenu);
     contenu = replaceVariables(contenu);
-    document.getElementById("ibContent").innerHTML = marked.parse(contenu);}
+    document.getElementById("ibContent").innerHTML = contenu;}
 
 function buildSommaire() {
     let html = "";
