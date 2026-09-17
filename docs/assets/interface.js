@@ -18,6 +18,8 @@ document.addEventListener(
         if (newButton) { newButton.addEventListener("click", () => { 
             localStorage.removeItem(IB_PREFIX + "writerStage");
             localStorage.removeItem(IB_PREFIX + "writerCurrent");
+            session.remove("Undo");
+            session.remove("Redo");
             window.location.href = "writer/";});}
         if (openButton && writerFile) {
             openButton.addEventListener("click", () => {writerFile.click();});
@@ -30,6 +32,8 @@ document.addEventListener(
                 const current = {Atelier : 0, Exercice : 0, Contenu : stage.Introduction}
                 localStorage.setItem(IB_PREFIX + "writerStage", reader.result);
                 localStorage.setItem(IB_PREFIX + "writerCurrent", JSON.stringify(current));
+                session.remove("Undo");
+                session.remove("Redo");
                 window.location.href = "writer/";};
             reader.readAsText(file);});}
     });
@@ -40,6 +44,8 @@ async function modifierStage(url) {
     localStorage.setItem(IB_PREFIX + "writerStage", json);
     const stage = JSON.parse(json);
     localStorage.setItem(IB_PREFIX + "writerCurrent",JSON.stringify({ Atelier : 0, Exercice : 0, Contenu : stage.Introduction }));
+    session.remove("Undo");
+    session.remove("Redo");
     window.location.href = "./writer/"; }
 
 function ibResizeIllustrationPanel() {

@@ -1,6 +1,64 @@
 let DragData = null;
 let previewWindow = null;
 let scrollTimer = null;
+let UndoStack = [];
+let RedoStack = [];
+const UndoLimit = 20;
+
+function undoLastAction() {
+    const state = UndoStack.pop();
+    if (!state) return;
+    RedoStack.push({ action: state.action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd});
+    if (RedoStack.length > UndoLimit) RedoStack.shift();
+    session.write("Undo",UndoStack);
+    session.write("Redo",RedoStack);
+    Current.Atelier = state.atelier;
+    Current.Exercice = state.exercice;
+    chargerExercice();
+    afficherExercice();
+    textareaSync.value = state.text;
+    textareaSync.focus();
+    textareaSync.setSelectionRange(state.start, state.end);
+    Current.Contenu = state.text;
+    refreshUndoButtons();
+    refreshEditor();}
+
+function redoLastAction() {
+    const state = RedoStack.pop();
+    if (!state) return;
+    UndoStack.push({ action: state.action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd});
+    session.write("Undo",UndoStack);
+    session.write("Redo",RedoStack);
+    Current.Atelier = state.atelier;
+    Current.Exercice = state.exercice;
+    chargerExercice();
+    afficherExercice();
+    textareaSync.value = state.text;
+    textareaSync.focus();
+    textareaSync.setSelectionRange(state.start, state.end);
+    Current.Contenu = state.text;
+    refreshUndoButtons();
+    refreshEditor();}    
+
+function saveUndoState(action = "") {
+    RedoStack = [];
+    UndoStack.push({action: action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd});
+    if (UndoStack.length > UndoLimit) UndoStack.shift();
+    session.write("Undo",UndoStack);
+    session.write("Redo",RedoStack);
+    refreshUndoButtons();}
+
+function refreshUndoButtons() {
+    const undo = document.getElementById("btnUndo");
+    const redo = document.getElementById("btnRedo");
+    if (UndoStack.length === 0) undo.style.display = "none";
+    else {
+        undo.style.display = "flex";
+        undo.title = `Annuler : ${UndoStack.at(-1).action}`;}
+    if (RedoStack.length === 0) redo.style.display = "none";
+    else {
+        redo.style.display = "flex";
+        redo.title = `Refaire : ${RedoStack.at(-1).action}`;}} 
 
 function openPreview() {
     if (!previewWindow || previewWindow.closed) previewWindow = window.open("preview.html","Preview","width=1200,height=800,resizable=yes");
@@ -205,6 +263,9 @@ function chargerExercice() {
     else {
         const exercice = getCurrentExercice();
         if (exercice) { Current.Contenu = exercice.Contenu; }}
+    UndoStack = session.read("Undo", []);
+    RedoStack = session.read("Redo", []);
+    refreshUndoButtons();
     storage.write("Current", Current);}
 
 function afficherExercice() {
@@ -309,27 +370,28 @@ function saveVariable() {
     if (variName.dataset.oldname && variName.dataset.oldname !== variName.value) delete Stage.Variables[variName.dataset.oldname];
     Stage.Variables[vari.name] = vari;
     storage.write("Stage", Stage);
+    updateStyleBar();
     openVariables();}
 
-    function deleteVariable(name) {
-    html =  `<p>Supprimer la variable "${name}" ?</p>`
+function deleteVariable(name) {
+    let html =  `<p>Supprimer la variable "${name}" ?</p>`
     const regex = new RegExp(`\\[${name}\\]`,"gi");
-    const token = `[${name}]`;
     let count = 0;
+    let countLib = null;
     if (Stage.Introduction) {
         const matches = Stage.Introduction.match(regex);
         if (matches) {
             count += matches.length;
-            const countLib = "l'introduction";}}
+            countLib = "l'introduction";}}
     Stage.Ateliers.forEach(atelier => {
         atelier.Exercices.forEach(exercice => {
             const matches = exercice.Contenu.match(regex);
             if (matches) {
                 count += matches.length;
-                const countLib = `l'exerice ${exercice.Id} de l'atelier ${atelier.Id}`}});});
+                countLib = `l'exerice ${exercice.Id} de l'atelier ${atelier.Id}`}});});
     if (count == 1) html += `<p>Attention, l'occurence du terme [${name}] dans ${countLib} du stage ne sera pas supprimée...</p>`;
     if (count > 1) html += `<p>Attention, les ${count} occurences du terme [${name}] dans les ateliers du stage ne seront pas supprimées...</p>`;
-    dialog.show("Suppression",html, [{label : "Annuler", action : () => openVariables()}, {label : "Supprimer", action : () => { delete Stage.Variables[name]; storage.write("Stage",Stage); openVariables();}, className : "ibDialogButtonDelete"}],'small');}    
+    dialog.show("Suppression",html, [{label : "Annuler", action : () => openVariables()}, {label : "Supprimer", action : () => { delete Stage.Variables[name]; storage.write("Stage",Stage); updateStyleBar(); openVariables();}, className : "ibDialogButtonDelete"}],'small');}    
 
 function editVariable(name = null) {
     let vari = null;
@@ -362,6 +424,15 @@ function openVariables() {
     });
     html += '</tbody></table>';
     dialog.show("Variables", html, [{label : "Ajouter", action : () => editVariable() }, { label : "Fermer", action : () => dialog.close()}]);}
+
+function updateStyleBar() {
+    const btn = document.getElementById("styleBarVarButton");
+    const variables = Object.keys(Stage.Variables || {});
+    btn.dataset.variableCount = variables.length;
+    if (variables.length === 0) btn.style.display = "none";
+    else btn.style.display = "";
+    if (variables.length === 1) btn.title = `Insérer [${variables[0]}]`;
+    else btn.title = "Insérer une variable";}    
 
 function selectExercice(atelier, exercice) {
     if (atelier == Current.Atelier && exercice == Current.Exercice) return;
@@ -507,13 +578,228 @@ function insertSommaire() {
         else positionCorrigee = position;}
     else positionCorrigee = position;
     contenu = contenu.slice(0, positionCorrigee) + marqueur + contenu.slice(positionCorrigee);
+    saveUndoState("Ajout / Modification du Sommaire sur la page d'Introduction");
     textareaSync.value = contenu;
     Current.Contenu = contenu;
     Stage.Introduction = contenu;
     storage.write("Current", Current);
     storage.write("Stage", Stage);
-    textareaSync.dispatchEvent(new Event("input"));
+    refreshEditor();
     textareaSync.focus();}
+
+/* Gestion de la barre de style/insert */
+function refreshEditor() {
+    textareaSync.dispatchEvent(new Event("input"));}
+
+function getSelectedTextInfo() {
+    textareaSync.focus();
+    const start = textareaSync.selectionStart;
+    const end = textareaSync.selectionEnd;
+    const text = textareaSync.value;
+    let selected = text.substring(start, end);
+    // Retire les espaces de fin
+    const trimmed = selected.trimEnd();
+    const spaces = selected.substring(trimmed.length);
+    // Nombre d'astérisques en début et fin de sélection
+    const leadingStars = (trimmed.match(/^\*+/)?.[0].length) || 0;
+    const trailingStars = (trimmed.match(/\*+$/)?.[0].length) || 0;
+    // Nombre d'astérisques à conserver
+    const keepStars = Math.min(leadingStars, trailingStars);
+    // Contenu sans les astérisques excédentaires
+    const content = trimmed.substring(leadingStars, trimmed.length - trailingStars);
+    // Reconstitution équilibrée
+    selected = "*".repeat(keepStars) + content + "*".repeat(keepStars);
+    return {start, end, text, selected, spaces};}
+
+function toggleBold() {
+    const { start, end, text, selected, spaces } = getSelectedTextInfo();
+    if (!selected) {
+        saveUndoState("Ajout d'un marqueur Gras");
+        textareaSync.setRangeText("****", start, end, "end");
+        textareaSync.selectionStart = start + 2;
+        textareaSync.selectionEnd = start + 2;
+        refreshEditor();
+        return;}
+    const tripleBefore = text.substring(start - 3, start);
+    const tripleAfter  = text.substring(end, end + 3);
+    const doubleBefore = text.substring(start - 2, start);
+    const doubleAfter  = text.substring(end, end + 2);
+    if (tripleBefore === "***" && tripleAfter === "***") {
+        // ***texte*** -> *texte*
+        saveUndoState("Suppression du marqueur Gras");
+        textareaSync.setRangeText("*" + selected + "*" + spaces, start - 3, end + 3, "end");
+        textareaSync.selectionStart = start - 2;
+        textareaSync.selectionEnd = start - 2 + selected.length;}
+    else if (doubleBefore === "**" && doubleAfter === "**") {
+        // **texte** -> texte
+        saveUndoState("Suppression du marqueur Gras");
+        textareaSync.setRangeText(selected + spaces, start - 2, end + 2, "end");
+        textareaSync.selectionStart = start - 2;
+        textareaSync.selectionEnd = start - 2 + selected.length;}
+    else {
+        // texte -> **texte** ou *texte* -> ***texte***
+        saveUndoState("Mise en Gras du texte");
+        textareaSync.setRangeText("**" + selected + "**" + spaces, start, end, "end");
+        textareaSync.selectionStart = start + 2;
+        textareaSync.selectionEnd = start + 2 + selected.length;}
+    refreshEditor();}
+    
+function toggleItalic() {
+    const { start, end, text, selected, spaces } = getSelectedTextInfo();
+    if (!selected) {
+        saveUndoState("Ajout d'un marqueur Italique");
+        textareaSync.setRangeText("**", start, end, "end");
+        textareaSync.selectionStart = start + 1;
+        textareaSync.selectionEnd = start + 1;
+        refreshEditor();
+        return;}
+    const tripleBefore = text.substring(start - 3, start);
+    const tripleAfter  = text.substring(end, end + 3);
+    const doubleBefore = text.substring(start - 2, start);
+    const doubleAfter  = text.substring(end, end + 2);
+    const singleBefore = text.substring(start - 1, start);
+    const singleAfter  = text.substring(end, end + 1);
+    if (tripleBefore === "***" && tripleAfter === "***") {
+        // ***texte*** -> **texte**
+        saveUndoState("Suppression du marqueur Italique");
+        textareaSync.setRangeText("**" + selected + "**" + spaces, start - 3, end + 3, "end");
+        textareaSync.selectionStart = start - 1;
+        textareaSync.selectionEnd = start - 1 + selected.length;}
+    else if (singleBefore === "*" && singleAfter === "*" && !(doubleBefore === "**" && doubleAfter === "**")) {
+        // *texte* -> texte
+        saveUndoState("Suppression du marqueur Italique");
+        textareaSync.setRangeText(selected + spaces, start - 1, end + 1, "end");
+        textareaSync.selectionStart = start - 1;
+        textareaSync.selectionEnd = start - 1 + selected.length;}
+    else {
+        // texte -> *texte* ou **texte** -> ***texte***
+        saveUndoState("Mise en Italique d'un texte");
+        textareaSync.setRangeText("*" + selected + "*" + spaces, start, end, "end");
+        textareaSync.selectionStart = start + 1;
+        textareaSync.selectionEnd = start + 1 + selected.length;}
+    refreshEditor();}
+
+function ensureBlankLines(start, end, content) {
+    const text = textareaSync.value;
+    const before = text.substring(0, start);
+    const after  = text.substring(end);
+    let prefix = "";
+    let suffix = "";
+    if (before.length > 0) {
+        const breaks = (before.match(/\n*$/)?.[0].length) || 0;
+        if (breaks < 2) prefix = "\n".repeat(2 - breaks);}
+    if (after.length > 0) {
+        const breaks = (after.match(/^\n*/)?.[0].length) || 0;
+        if (breaks < 2) suffix = "\n".repeat(2 - breaks);}
+    return prefix + content + suffix;}
+
+function toggleCode() {
+    textareaSync.focus();
+    const start = textareaSync.selectionStart;
+    const end = textareaSync.selectionEnd;
+    const text = textareaSync.value;
+    const selected = text.substring(start, end);
+    // Aucune sélection -> bloc vide
+    if (!selected) {
+        saveUndoState("Ajout d'un bloc de code");
+        const block = ensureBlankLines(start, end, "```\n\n```" );
+        textareaSync.setRangeText(block, start, end, "end");
+        const pos = start + block.indexOf("\n") + 1;
+        textareaSync.selectionStart = pos;
+        textareaSync.selectionEnd = pos;
+        refreshEditor();
+        return;}
+    // Plusieurs lignes => bloc
+    if (selected.includes("\n")) {
+        saveUndoState("Transformation d'un texte en bloc de code");
+        const block = ensureBlankLines(start, end, "```\n" + selected + "\n```");
+        textareaSync.setRangeText(block, start, end, "end");
+        textareaSync.selectionStart = start;
+        textareaSync.selectionEnd = start + block.length;
+        refreshEditor();
+        return;}
+    // Une seule ligne => inline
+    const before = text.substring(start - 1, start);
+    const after = text.substring(end, end + 1);
+    if (before === "`" && after === "`") {
+        saveUndoState("Transformation d'un texte en code");
+        textareaSync.setRangeText(selected, start - 1, end + 1, "end" );
+        textareaSync.selectionStart = start - 1;
+        textareaSync.selectionEnd = start - 1 + selected.length;}
+    else {
+        saveUndoState("Transformation d'un texte en code");
+        textareaSync.setRangeText("`" + selected + "`", start, end, "end");
+        textareaSync.selectionStart = start + 1;
+        textareaSync.selectionEnd = start + 1 + selected.length;}
+    refreshEditor();}
+
+function setHeading(level) {
+    textareaSync.focus();
+    const prefix = "#".repeat(level) + " ";
+    const pos = textareaSync.selectionStart;
+    const text = textareaSync.value;
+    const lineStart = text.lastIndexOf("\n", pos - 1) + 1;
+    let lineEnd = text.indexOf("\n", pos);
+    if (lineEnd === -1) lineEnd = text.length;
+    let line = text.substring(lineStart, lineEnd);
+    // retire un éventuel niveau existant
+    line = line.replace(/^#{2,3}\s+/, "");
+    const newLine = prefix + line;
+    saveUndoState(`Transformation d'une ligne en ${level === 2 ? 'Titre de section' : 'Titre de sous-section'} `);
+    textareaSync.setRangeText(newLine, lineStart, lineEnd, "end");
+    textareaSync.selectionStart = lineStart + prefix.length;
+    textareaSync.selectionEnd = lineStart + prefix.length;
+    refreshEditor();}
+
+function transformLines(transformer, isolateBlock = false) {
+    textareaSync.focus();
+    const start = textareaSync.selectionStart;
+    const end = textareaSync.selectionEnd;
+    const text = textareaSync.value;
+    const blockStart = text.lastIndexOf("\n", start - 1) + 1;
+    let blockEnd;
+    if (start === end) blockEnd = text.indexOf("\n", start);
+    else blockEnd = text.indexOf("\n", end);
+    if (blockEnd === -1) blockEnd = text.length;
+    const block = text.substring(blockStart, blockEnd);
+    const result = transformer(block);
+    const finalContent = isolateBlock ? ensureBlankLines(blockStart, blockEnd, result) : result;
+    textareaSync.setRangeText(finalContent, blockStart, blockEnd, "end");
+    const delta = finalContent.length - block.length;
+    if (start === end) {
+        textareaSync.selectionStart = start + delta;
+        textareaSync.selectionEnd = start + delta;}
+    else {
+        textareaSync.selectionStart = start;
+        textareaSync.selectionEnd = end + delta;}
+    refreshEditor();}
+
+function toggleBulletList() {
+    saveUndoState("Ajout/supression d'une liste à puces");
+    transformLines(block => {
+        return block.split("\n").map(line => {
+                if (!line.trim()) return line;
+                // suppression d'une puce existante
+                if (/^\s*-\s/.test(line)) return line.replace(/^(\s*)-\s/, "$1");
+                // conversion depuis une liste numérotée
+                line = line.replace(/^(\s*)\d+\.\s/, "$1");
+                const indent = (line.match(/^\s*/) || [""])[0];
+                const content = line.substring(indent.length);
+                return indent + "- " + content;})
+            .join("\n");}, true);}
+
+function toggleNumberedList() {
+    saveUndoState("Ajout/supression d'une liste indexée");
+    transformLines(block => {
+        const lines = block.split("\n");
+        const isNumbered = lines.filter(line => line.trim()).every(line => /^\s*\d+\.\s/.test(line));
+        return lines.map(line => {
+            if (!line.trim()) return line;
+            if (isNumbered) return line.replace( /^(\s*)\d+\.\s/, "$1");
+            line = line.replace( /^(\s*)-\s/, "$1");
+            const indent = (line.match(/^\s*/) || [""])[0];
+            const content = line.substring(indent.length);
+            return indent + "1. " + content;}).join("\n");}, true);}
 
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")
@@ -534,6 +820,7 @@ document.getElementById("stageAuthor").addEventListener("input", () => {
     Stage.Auteur = stageAuthor.value;
     storage.write("Stage", Stage);});
 construireNavigation();
+refreshUndoButtons();
 afficherExercice();
 document.querySelectorAll("#ibHeader input, #ExerciceHeader input").forEach(field => {
     field.addEventListener("input",() => validateField(field));
@@ -566,7 +853,12 @@ document.getElementById("btnPreview").addEventListener("click", openPreview);
 makeDraggable("ibWriterDialog",".ibModalHeader","Dialog");
 document.getElementById("ibWriterDialogClose").addEventListener("click",() => dialog.close());
 /* Initialisation de la barre de styles */
-document.getElementById("btnStyle").addEventListener("click",() => document.getElementById("ibWriterStyleBar").style.display="flex");
+document.getElementById("btnStyle").addEventListener("click", () => {
+    const start = textareaSync.selectionStart;
+    const end = textareaSync.selectionEnd;
+    document.getElementById("ibWriterStyleBar").style.display = "flex";
+    textareaSync.focus();
+    textareaSync.setSelectionRange(start, end);});
 document.getElementById("ibWriterStyleClose").addEventListener("click",() => document.getElementById("ibWriterStyleBar").style.display="none");
 if (!sessionStorage.getItem(IB_PREFIX + "WriterStyleLeft")) {
     const styleButton = document.getElementById("btnStyle");
@@ -577,6 +869,20 @@ if (!sessionStorage.getItem(IB_PREFIX + "WriterStyleLeft")) {
     sessionStorage.setItem(IB_PREFIX + "WriterStyleTop",(rectStyleButton.top - styleBar.offsetHeight + 12)+"px");
     styleBar.style.display = "none"; }
 makeDraggable("ibWriterStyleBar",".ibWriterStyleHandle","Style");
+updateStyleBar();
+/* Ajout de la gestion du Ctrl+Z pour l'annulation des actions de la barre d'insertion sur l'exercice en cours */
+textareaSync.addEventListener("keydown", event => {
+    const ctrl = event.ctrlKey || event.metaKey;
+    if (!ctrl) return;
+    const key = event.key.toLowerCase();
+    if (key === "z") {
+        event.preventDefault();
+        if (event.shiftKey) redoLastAction();     // Ctrl+Shift+Z
+        else undoLastAction();}      // Ctrl+Z
+    if (key === "y") {
+        event.preventDefault();
+        redoLastAction();}          // Ctrl+Y
+});
 /* Initialisation (nettoyage sur drop dans le vide) du DragNDrop */
 document.addEventListener("dragend", () => {
     document.querySelectorAll( ".writerNavDropBefore,.writerNavDropAfter" ).forEach(element => {

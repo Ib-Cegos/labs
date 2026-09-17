@@ -19,4 +19,17 @@ function getCurrentAtelier() {
 function getCurrentExercice() {
     const atelier = getCurrentAtelier();
     if (!atelier) return null;
-    return atelier.Exercices.find(e => e.Id == Current.Exercice);}        
+    return atelier.Exercices.find(e => e.Id == Current.Exercice);}
+
+const session = {
+    read(key, defaultValue = null) {
+        const value = sessionStorage.getItem(IB_PREFIX + "writer" + key);
+        if (value === null) {
+            sessionStorage.setItem(IB_PREFIX + "writer" + key, JSON.stringify(defaultValue));
+            return defaultValue; }
+        try { return JSON.parse(value); }
+        catch { return value; }},
+    write(key, value) {
+        sessionStorage.setItem(IB_PREFIX + "writer" + key, JSON.stringify(value));},
+    remove(key) {
+        sessionStorage.removeItem(IB_PREFIX + "writer" + key);}};

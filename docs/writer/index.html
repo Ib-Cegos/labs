@@ -51,18 +51,26 @@
 </aside>
 </div>
 <!-- Barre de Styles ibCAN -->
- <div id="ibWriterStyleBar">
-    <span class="ibWriterStyleHandle"> ✎ </span>
-    <button title="Titre">T1</button>
-    <button title="Sous-titre">T2</button>
-    <button title="Tâche numérotée">1.</button>
-    <button title="Puce">•</button>
-    <button title="Ligne/Bloc de code">Code</button>
+<div id="ibWriterStyleBar">
+    <span class="ibWriterStyleHandle">✎</span>
+    <button title="Titre de section" onclick="setHeading(2);">T1</button>
+    <button title="Titre de sous-section" onclick="setHeading(3);">T2</button>
+    <span class="ibWriterStyleSeparator"></span>
+    <button title="Gras" onclick="toggleBold()"><b>B</b></button>
+    <button title="Italique" onclick="toggleItalic()"><i>I</i></button>
+    <button title="Ligne/Bloc de code" onclick="toggleCode()">Code</button>
+    <span class="ibWriterStyleSeparator"></span>
+    <button title="Tâche numérotée" onclick="toggleNumberedList();">1.</button>
+    <button title="Puce" onclick="toggleBulletList();">•</button>
+    <button title="Note">></button>
+    <span class="ibWriterStyleSeparator"></span>
     <button title="Lien">🔗</button>
     <button title="Image/Illustration">🖼️</button>
-    <button title="Gras"><b>B</b></button>
-    <button title="Italique"><i>I</i></button>
-    <button title="Variables">[ ]</button>
+    <button title="Variables" id="styleBarVarButton">[ ]</button>
+    <button title="Tableau">[+]</button>
+    <span class="ibWriterStyleSeparator"></span>
+    <button id = "btnUndo" onclick = "undoLastAction();">↩</button>
+    <button id = "btnRedo" onclick = "redoLastAction();">↪</button>
     <button id="ibWriterStyleClose" class="ibModalClose" title="Fermer">✕</button>
 </div>
 <script src="../assets/common.js"></script>
