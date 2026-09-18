@@ -3,50 +3,59 @@ let previewWindow = null;
 let scrollTimer = null;
 let UndoStack = [];
 let RedoStack = [];
+let toolBarOpened = session.read('ToolOpen',false);
 const UndoLimit = 20;
+
+/*COnservation/reprise du curseur */
+const selection = {
+    start: 0,
+    end: 0,
+    save() {
+        this.start = textareaSync.selectionStart;
+        this.end = textareaSync.selectionEnd;},
+    restore(start = this.start, end = this.end) {
+        textareaSync.focus();
+        textareaSync.setSelectionRange(start, end);
+        this.start = start;
+        this.end = end;}};
+
+function restoreEditorState(state) {
+    Current.Atelier = state.atelier;
+    Current.Exercice = state.exercice;
+    chargerExercice();
+    afficherExercice();
+    textareaSync.value = state.text;
+    selection.restore(state.start, state.end);
+    Current.Contenu = state.text;
+    storage.write("Current",Current);
+    refreshUndoButtons();
+    refreshEditor();}
+
+function saveUndoStacks() {
+    session.write("Undo", UndoStack);
+    session.write("Redo", RedoStack);
+    refreshUndoButtons();}    
 
 function undoLastAction() {
     const state = UndoStack.pop();
     if (!state) return;
     RedoStack.push({ action: state.action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd});
     if (RedoStack.length > UndoLimit) RedoStack.shift();
-    session.write("Undo",UndoStack);
-    session.write("Redo",RedoStack);
-    Current.Atelier = state.atelier;
-    Current.Exercice = state.exercice;
-    chargerExercice();
-    afficherExercice();
-    textareaSync.value = state.text;
-    textareaSync.focus();
-    textareaSync.setSelectionRange(state.start, state.end);
-    Current.Contenu = state.text;
-    refreshUndoButtons();
-    refreshEditor();}
+    saveUndoStacks();
+    restoreEditorState(state);}
 
 function redoLastAction() {
     const state = RedoStack.pop();
     if (!state) return;
     UndoStack.push({ action: state.action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd});
-    session.write("Undo",UndoStack);
-    session.write("Redo",RedoStack);
-    Current.Atelier = state.atelier;
-    Current.Exercice = state.exercice;
-    chargerExercice();
-    afficherExercice();
-    textareaSync.value = state.text;
-    textareaSync.focus();
-    textareaSync.setSelectionRange(state.start, state.end);
-    Current.Contenu = state.text;
-    refreshUndoButtons();
-    refreshEditor();}    
+    saveUndoStacks();
+    restoreEditorState(state);}    
 
 function saveUndoState(action = "") {
     RedoStack = [];
     UndoStack.push({action: action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd});
     if (UndoStack.length > UndoLimit) UndoStack.shift();
-    session.write("Undo",UndoStack);
-    session.write("Redo",RedoStack);
-    refreshUndoButtons();}
+    saveUndoStacks();}
 
 function refreshUndoButtons() {
     const undo = document.getElementById("btnUndo");
@@ -103,6 +112,8 @@ function makeDraggable(elementId, handleSelector, storageKey) {
 /* Gestion des fenêtres modales */
 const dialog = {
     show(title, content, buttons = [], size = '') {
+        selection.save();
+        if (toolBarOpened) document.getElementById("ibWriterStyleBar").style.display = "none";
         document.getElementById("ibWriterDialogTitle").innerHTML = title;
         document.getElementById("ibWriterDialogContent").innerHTML = content;
         document.getElementById("ibWriterDialogOverlay").style.display = "flex";
@@ -126,7 +137,9 @@ const dialog = {
         if (buttons.length == 0) document.getElementById("ibWriterDialogButtons").style.display = "none";
         else document.getElementById("ibWriterDialogButtons").style.display = "flex";},
     close() {
-        document.getElementById("ibWriterDialogOverlay").style.display = "none";}};
+        if (toolBarOpened) document.getElementById("ibWriterStyleBar").style.display = "flex";
+        document.getElementById("ibWriterDialogOverlay").style.display = "none";
+        selection.restore();}};
 
 /* Synchonisation de la consultation de la preview */
 function syncPreviewScroll() {
@@ -569,6 +582,7 @@ function insertSommaire() {
     let contenu = textareaSync.value;
     const match = contenu.match(regexSommaire);
     let anciennePosition = -1;
+    let positionCorrigee = 0;
     if (match) {
         anciennePosition = match.index;
         contenu = contenu.replace(regexSommaire, ""); }
@@ -585,7 +599,7 @@ function insertSommaire() {
     storage.write("Current", Current);
     storage.write("Stage", Stage);
     refreshEditor();
-    textareaSync.focus();}
+    selection.restore(positionCorrigee + marqueur.length);}
 
 /* Gestion de la barre de style/insert */
 function refreshEditor() {
@@ -616,8 +630,7 @@ function toggleBold() {
     if (!selected) {
         saveUndoState("Ajout d'un marqueur Gras");
         textareaSync.setRangeText("****", start, end, "end");
-        textareaSync.selectionStart = start + 2;
-        textareaSync.selectionEnd = start + 2;
+        selection.restore(start + 2);
         refreshEditor();
         return;}
     const tripleBefore = text.substring(start - 3, start);
@@ -628,20 +641,17 @@ function toggleBold() {
         // ***texte*** -> *texte*
         saveUndoState("Suppression du marqueur Gras");
         textareaSync.setRangeText("*" + selected + "*" + spaces, start - 3, end + 3, "end");
-        textareaSync.selectionStart = start - 2;
-        textareaSync.selectionEnd = start - 2 + selected.length;}
+        selection.restore(start - 2, start - 2 + selected.length);}
     else if (doubleBefore === "**" && doubleAfter === "**") {
         // **texte** -> texte
         saveUndoState("Suppression du marqueur Gras");
         textareaSync.setRangeText(selected + spaces, start - 2, end + 2, "end");
-        textareaSync.selectionStart = start - 2;
-        textareaSync.selectionEnd = start - 2 + selected.length;}
+        selection.restore(start - 2, start - 2 + selected.length);}
     else {
         // texte -> **texte** ou *texte* -> ***texte***
         saveUndoState("Mise en Gras du texte");
         textareaSync.setRangeText("**" + selected + "**" + spaces, start, end, "end");
-        textareaSync.selectionStart = start + 2;
-        textareaSync.selectionEnd = start + 2 + selected.length;}
+        selection.restore(start + 2, start + 2 + selected.length);}
     refreshEditor();}
     
 function toggleItalic() {
@@ -649,8 +659,7 @@ function toggleItalic() {
     if (!selected) {
         saveUndoState("Ajout d'un marqueur Italique");
         textareaSync.setRangeText("**", start, end, "end");
-        textareaSync.selectionStart = start + 1;
-        textareaSync.selectionEnd = start + 1;
+        selection.restore(start + 1);
         refreshEditor();
         return;}
     const tripleBefore = text.substring(start - 3, start);
@@ -663,20 +672,17 @@ function toggleItalic() {
         // ***texte*** -> **texte**
         saveUndoState("Suppression du marqueur Italique");
         textareaSync.setRangeText("**" + selected + "**" + spaces, start - 3, end + 3, "end");
-        textareaSync.selectionStart = start - 1;
-        textareaSync.selectionEnd = start - 1 + selected.length;}
+        selection.restore(start -1, start -1 + selected.length);}
     else if (singleBefore === "*" && singleAfter === "*" && !(doubleBefore === "**" && doubleAfter === "**")) {
         // *texte* -> texte
         saveUndoState("Suppression du marqueur Italique");
         textareaSync.setRangeText(selected + spaces, start - 1, end + 1, "end");
-        textareaSync.selectionStart = start - 1;
-        textareaSync.selectionEnd = start - 1 + selected.length;}
+        selection.restore(start -1, start -1 + selected.length);}
     else {
         // texte -> *texte* ou **texte** -> ***texte***
         saveUndoState("Mise en Italique d'un texte");
         textareaSync.setRangeText("*" + selected + "*" + spaces, start, end, "end");
-        textareaSync.selectionStart = start + 1;
-        textareaSync.selectionEnd = start + 1 + selected.length;}
+        selection.restore(start + 1, start + 1 + selected.length);}
     refreshEditor();}
 
 function ensureBlankLines(start, end, content) {
@@ -705,8 +711,7 @@ function toggleCode() {
         const block = ensureBlankLines(start, end, "```\n\n```" );
         textareaSync.setRangeText(block, start, end, "end");
         const pos = start + block.indexOf("\n") + 1;
-        textareaSync.selectionStart = pos;
-        textareaSync.selectionEnd = pos;
+        selection.restore(pos);
         refreshEditor();
         return;}
     // Plusieurs lignes => bloc
@@ -714,8 +719,7 @@ function toggleCode() {
         saveUndoState("Transformation d'un texte en bloc de code");
         const block = ensureBlankLines(start, end, "```\n" + selected + "\n```");
         textareaSync.setRangeText(block, start, end, "end");
-        textareaSync.selectionStart = start;
-        textareaSync.selectionEnd = start + block.length;
+        selection.restore(start, start + block.length);
         refreshEditor();
         return;}
     // Une seule ligne => inline
@@ -724,13 +728,11 @@ function toggleCode() {
     if (before === "`" && after === "`") {
         saveUndoState("Transformation d'un texte en code");
         textareaSync.setRangeText(selected, start - 1, end + 1, "end" );
-        textareaSync.selectionStart = start - 1;
-        textareaSync.selectionEnd = start - 1 + selected.length;}
+        selection.restore(start - 1, start - 1 + selected.length);}
     else {
         saveUndoState("Transformation d'un texte en code");
         textareaSync.setRangeText("`" + selected + "`", start, end, "end");
-        textareaSync.selectionStart = start + 1;
-        textareaSync.selectionEnd = start + 1 + selected.length;}
+        selection.restore(start + 1, start + 1 + selected.length);}
     refreshEditor();}
 
 function setHeading(level) {
@@ -747,8 +749,7 @@ function setHeading(level) {
     const newLine = prefix + line;
     saveUndoState(`Transformation d'une ligne en ${level === 2 ? 'Titre de section' : 'Titre de sous-section'} `);
     textareaSync.setRangeText(newLine, lineStart, lineEnd, "end");
-    textareaSync.selectionStart = lineStart + prefix.length;
-    textareaSync.selectionEnd = lineStart + prefix.length;
+    selection.restore(lineStart + prefix.length);
     refreshEditor();}
 
 function transformLines(transformer, isolateBlock = false) {
@@ -766,12 +767,8 @@ function transformLines(transformer, isolateBlock = false) {
     const finalContent = isolateBlock ? ensureBlankLines(blockStart, blockEnd, result) : result;
     textareaSync.setRangeText(finalContent, blockStart, blockEnd, "end");
     const delta = finalContent.length - block.length;
-    if (start === end) {
-        textareaSync.selectionStart = start + delta;
-        textareaSync.selectionEnd = start + delta;}
-    else {
-        textareaSync.selectionStart = start;
-        textareaSync.selectionEnd = end + delta;}
+    if (start === end) selection.restore(start + delta);
+    else selection.restore(start, end + delta);
     refreshEditor();}
 
 function toggleBulletList() {
@@ -800,6 +797,111 @@ function toggleNumberedList() {
             const indent = (line.match(/^\s*/) || [""])[0];
             const content = line.substring(indent.length);
             return indent + "1. " + content;}).join("\n");}, true);}
+
+function toggleBlockquote() {
+    saveUndoState("Ajout/suppression d'une note");
+    transformLines(block => {
+        const lines = block.split("\n");
+        const isQuote = lines.filter(line => line.trim()).every(line => /^\s*>\s/.test(line));
+        return lines.map(line => {
+            if (!line.trim()) return line;
+            if (isQuote) return line.replace(/^(\s*)>\s/, "$1");
+            const indent = (line.match(/^\s*/) || [""])[0];
+            const content = line.substring(indent.length);
+            return indent + "> " + content;}).join("\n");}, true);}
+
+function buildInternalLinkOptions() {
+    let html = "";
+    let first = true;
+    Stage.Ateliers.forEach(atelier => {
+        atelier.Exercices.forEach(exercice => {
+            html += `<option value="a${atelier.Id}e${exercice.Id}"`
+            if (first) {
+                html += ' selected';
+                first = false;}
+            html += `>Atelier ${atelier.Id} - Exercice ${exercice.Id} ${exercice.Titre ? " : " + exercice.Titre : ""} </option>`;});});
+    return html;}
+
+function selectInternalOption() {
+    const selector = document.getElementById("linkInternalTarget")
+    const linkUrl = document.getElementById('linkUrl');
+    linkUrl.value = selector.value + '/';
+    const linkText = document.getElementById('linkText');
+    if (linkText.value === '') linkText.value=selector.options[selector.selectedIndex].text;}
+
+function toggleInternal() {
+     const button =  document.querySelector(".insertLinkSwitch");
+    if (!button) return;
+    if (button.innerText === 'Lien interne') {
+        button.innerText = 'Lien externe';
+        document.getElementById("ExternalLink").style.display="none";
+        document.getElementById("InternalLink").style.display="";
+        selectInternalOption();}
+    else {
+        button.innerText = 'Lien interne';
+        document.getElementById("ExternalLink").style.display="";
+        document.getElementById("InternalLink").style.display="none";}}
+
+function saveLink(start,end) {
+    const text = document.getElementById("linkText").value.trim();
+    const url =  document.getElementById("linkUrl").value.trim();
+    if (!url) return;
+    const markdown = text ? `[${text}](${url})` : url;
+    saveUndoState("Insertion d'un lien");
+    textareaSync.setRangeText(markdown, start, end, "end");
+    const pos = start + markdown.length;
+    selection.restore(pos);
+    dialog.close();
+    refreshEditor();}
+
+function insertLink() {
+    const start = textareaSync.selectionStart;
+    const end = textareaSync.selectionEnd;
+    const selected = textareaSync.value.substring(start, end).trim();
+    const isUrl = /^https?:\/\/\S+$/i.test(selected);
+    const textValue = isUrl ? "" : selected;
+    const urlValue = isUrl ? selected : "";
+    const html = `
+    <div class="linkEditor">
+        <div class="variableField">
+            <label>Texte</label><input id="linkText" value="${textValue.replace(/"/g,'&quot;')}">
+        </div>
+        <div class="variableField" id="ExternalLink">
+            <label>Adresse</label><input id="linkUrl" value="${urlValue.replace(/"/g,'&quot;')}">
+        </div>
+        <div class="variableField" id="InternalLink" style = "display:none;">
+            <label>Destination</label><select id="linkInternalTarget" onchange="selectInternalOption();">${buildInternalLinkOptions()}</select>
+        </div>
+    </div>`;
+    let buttons = [];
+    if (Stage.Ateliers.length > 1 || Stage.Ateliers[0].Exercices.length > 1) buttons =  [{label : "Lien interne", action: () => toggleInternal(),className : "insertLinkSwitch"}];
+    buttons.push ({label : "Annuler", action : () => dialog.close()},{label : "Insérer", action : () => saveLink(start,end)});
+    dialog.show("Insertion d'un lien", html, buttons, "small");
+    setTimeout(() => {
+        if (isUrl) document.getElementById("linkText")?.focus();
+        else document.getElementById("linkUrl")?.focus();},0);}
+
+function insertVariable(name) {
+    const variable = `[${name}]`;
+    saveUndoState(`Insertion de la variable ${name}`);
+    const start = textareaSync.selectionStart;
+    const end = textareaSync.selectionEnd;
+    textareaSync.setRangeText(variable, start, end, "end");
+    selection.restore(start + variable.length);
+    refreshEditor();}
+
+function openVariableInsert() {
+    const variables = Object.entries(Stage.Variables);
+    Object.entries(Stage.Variables).sort(([a],[b]) => a.localeCompare(b))
+    if (variables.length === 0) return;
+    if (variables.length === 1) {
+        insertVariable(variables[0][0]);
+        return;}
+    let html = '<div class="variableInsertList">';
+    variables.forEach(([name, variable]) => {html += `<button class="variableInsertButton" <button title="${variable.lib || ''}"> onclick="insertVariable('${name}'); dialog.close();">${name} ${variable.lib ? '👤' : '🔒'}</button>`;});
+    html += '</div>';
+    dialog.show("Insertion d'une variable", html,[{label : "Annuler", action : () => dialog.close()}], "small");}
+
 
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")
@@ -852,16 +954,16 @@ document.getElementById("btnPreview").addEventListener("click", openPreview);
 /* Initialisation de la gestion des fenêtres modales */
 makeDraggable("ibWriterDialog",".ibModalHeader","Dialog");
 document.getElementById("ibWriterDialogClose").addEventListener("click",() => dialog.close());
-/* Initialisation de la barre de styles */
-document.getElementById("btnStyle").addEventListener("click", () => {
-    const start = textareaSync.selectionStart;
-    const end = textareaSync.selectionEnd;
+/* Initialisation de la barre d'outils */
+document.getElementById("btnTools").addEventListener("click", () => {
+    selection.save();
+    toolBarOpened = true;
+    session.write('ToolOpen',true);
     document.getElementById("ibWriterStyleBar").style.display = "flex";
-    textareaSync.focus();
-    textareaSync.setSelectionRange(start, end);});
-document.getElementById("ibWriterStyleClose").addEventListener("click",() => document.getElementById("ibWriterStyleBar").style.display="none");
+    selection.restore();});
+document.getElementById("ibWriterStyleClose").addEventListener("click",() => {toolBarOpened = false; session.write('ToolOpen',false); document.getElementById("ibWriterStyleBar").style.display="none"; selection.restore();});
 if (!sessionStorage.getItem(IB_PREFIX + "WriterStyleLeft")) {
-    const styleButton = document.getElementById("btnStyle");
+    const styleButton = document.getElementById("btnTools");
     const styleBar  = document.getElementById("ibWriterStyleBar");
     styleBar.style.display = "flex";
     const rectStyleButton = styleButton.getBoundingClientRect();
@@ -891,6 +993,8 @@ document.addEventListener("dragend", () => {
 textareaSync.addEventListener("scroll", () => {
     clearTimeout(scrollTimer);
     scrollTimer = setTimeout(() => {syncPreviewScroll();}, 50);});
-textareaSync.addEventListener("keyup", syncCursor);
-textareaSync.addEventListener("click", syncCursor);
-textareaSync.addEventListener("mouseup", syncCursor);
+textareaSync.addEventListener("keyup", () => {selection.save(); syncCursor();});
+ textareaSync.addEventListener("click", () => {selection.save(); syncCursor();});
+textareaSync.addEventListener("mouseup", () => {selection.save(); syncCursor();});
+textareaSync.addEventListener("select", () => {selection.save();});
+textareaSync.addEventListener("input", () => {selection.save();});

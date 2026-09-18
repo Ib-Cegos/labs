@@ -1,7 +1,18 @@
 let Stage = storage.read("Stage");
 let Current = storage.read("Current");
 let PreviewShowVariableValues = sessionStorage.getItem("PreviewShowVariableValues") === 'true';
+let previewSyncEnabled = session.read("Synchro",true);
 const openerOrigin = opener.location;
+
+function togglePreviewSync() {
+    previewSyncEnabled = !previewSyncEnabled;
+    session.write("Synchro",previewSyncEnabled);
+    updateSyncButton();}
+function updateSyncButton() {
+    const button = document.getElementById("previewSyncButton");
+    button.title = previewSyncEnabled ? "Suivre la position de l'éditeur" : "Position dans la fenêtre independante de l'éditeur.";
+    button.classList.toggle("previewSyncDisabled",!previewSyncEnabled);
+    button.classList.toggle("previewSyncEnabled",previewSyncEnabled);}
 
 function replaceVariables(content) {
     Object.entries(Stage.Variables).forEach(([name, variable]) => {
@@ -60,15 +71,16 @@ function buildSommaire() {
     return html;}    
  
 renderPreview();
+updateSyncButton(); 
 
 window.addEventListener("storage", event => {
     if (event.key === IB_PREFIX + "writerCurrent" || event.key === IB_PREFIX + "writerStage") renderPreview();});
 /* Synchonisation de la lecture sur fenêtre parent */
 window.addEventListener("message", (event) => {
-    if (event.data.type === "scroll") {
+    if (event.data.type === "scroll" && previewSyncEnabled) {
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         window.scrollTo(0,maxScroll * event.data.percent);}
-    if (event.data.type === "cursor") {
+    if (event.data.type === "cursor" && previewSyncEnabled) {
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         window.scrollTo({top: maxScroll * event.data.percent, behavior: "smooth"});}
 });

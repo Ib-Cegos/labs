@@ -22,7 +22,11 @@
             <input id="writerExerciceLength" readonly>
     </div>
     <div id="ibContent"></div>
-    <footer id="ibFooter" class="preview"><div>Le contenu de cette fenêtre est mis à jour dynamiquement depuis vos éditions...</div><button id="btnPreviewVariables"  class="ibActionButton" onclick = "toggleShowVariables();">[ ] → abc</button></footer>
+    <footer id="ibFooter" class="preview">
+        <button id="previewSyncButton" onclick="togglePreviewSync();"></button>
+        <div>Le contenu de cette fenêtre est mis à jour dynamiquement depuis vos éditions...</div>
+        <button id="btnPreviewVariables"  class="ibActionButton" onclick = "toggleShowVariables();">[ ] → abc</button>
+    </footer>
     <script src="../assets/common.js"></script>
     <script src="marked.min.js"></script>
     <script src="preview.js"></script>
