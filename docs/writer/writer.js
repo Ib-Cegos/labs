@@ -25,11 +25,11 @@ function restoreEditorState(state) {
     chargerExercice();
     afficherExercice();
     textareaSync.value = state.text;
-    selection.restore(state.start, state.end);
     Current.Contenu = state.text;
     storage.write("Current",Current);
     refreshUndoButtons();
-    refreshEditor();}
+    refreshEditor();
+    selection.restore(state.start, state.end);}
 
 function saveUndoStacks() {
     session.write("Undo", UndoStack);
@@ -601,9 +601,16 @@ function insertSommaire() {
     refreshEditor();
     selection.restore(positionCorrigee + marqueur.length);}
 
-/* Gestion de la barre de style/insert */
+/* Gestion de la barre d'outils' */
 function refreshEditor() {
     textareaSync.dispatchEvent(new Event("input"));}
+
+function getCurrentWord(text, position) {
+    let start = position;
+    let end = position;
+    while (start > 0 && /[\p{L}\p{N}_'-]/u.test(text[start - 1])) start--;
+    while (end < text.length && /[\p{L}\p{N}_'-]/u.test(text[end])) end++;
+    return {start, end, word: text.substring(start, end)};}    
 
 function getSelectedTextInfo() {
     textareaSync.focus();
@@ -626,13 +633,19 @@ function getSelectedTextInfo() {
     return {start, end, text, selected, spaces};}
 
 function toggleBold() {
-    const { start, end, text, selected, spaces } = getSelectedTextInfo();
+    let { start, end, text, selected, spaces } = getSelectedTextInfo();
     if (!selected) {
+        const word = getCurrentWord(text, start);
+        if (word.word) {
+            start = word.start;
+            end = word.end;
+            selected = word.word;}
+    else {
         saveUndoState("Ajout d'un marqueur Gras");
         textareaSync.setRangeText("****", start, end, "end");
-        selection.restore(start + 2);
+        selection.restore(start + 2, start + 2);
         refreshEditor();
-        return;}
+        return;}}
     const tripleBefore = text.substring(start - 3, start);
     const tripleAfter  = text.substring(end, end + 3);
     const doubleBefore = text.substring(start - 2, start);
@@ -653,15 +666,21 @@ function toggleBold() {
         textareaSync.setRangeText("**" + selected + "**" + spaces, start, end, "end");
         selection.restore(start + 2, start + 2 + selected.length);}
     refreshEditor();}
-    
+
 function toggleItalic() {
-    const { start, end, text, selected, spaces } = getSelectedTextInfo();
+    let { start, end, text, selected, spaces } = getSelectedTextInfo();
     if (!selected) {
-        saveUndoState("Ajout d'un marqueur Italique");
-        textareaSync.setRangeText("**", start, end, "end");
-        selection.restore(start + 1);
-        refreshEditor();
-        return;}
+        const word = getCurrentWord(text, start);
+        if (word.word) {
+            start = word.start;
+            end = word.end;
+            selected = word.word;}
+        else {
+            saveUndoState("Ajout d'un marqueur Italique");
+            textareaSync.setRangeText("**", start, end, "end");
+            selection.restore( start + 1, start + 1);
+            refreshEditor();
+            return;}}
     const tripleBefore = text.substring(start - 3, start);
     const tripleAfter  = text.substring(end, end + 3);
     const doubleBefore = text.substring(start - 2, start);
@@ -672,19 +691,19 @@ function toggleItalic() {
         // ***texte*** -> **texte**
         saveUndoState("Suppression du marqueur Italique");
         textareaSync.setRangeText("**" + selected + "**" + spaces, start - 3, end + 3, "end");
-        selection.restore(start -1, start -1 + selected.length);}
+        selection.restore(start - 1, start - 1 + selected.length);}
     else if (singleBefore === "*" && singleAfter === "*" && !(doubleBefore === "**" && doubleAfter === "**")) {
         // *texte* -> texte
         saveUndoState("Suppression du marqueur Italique");
         textareaSync.setRangeText(selected + spaces, start - 1, end + 1, "end");
-        selection.restore(start -1, start -1 + selected.length);}
+        selection.restore(start - 1, start - 1 + selected.length);}
     else {
         // texte -> *texte* ou **texte** -> ***texte***
         saveUndoState("Mise en Italique d'un texte");
-        textareaSync.setRangeText("*" + selected + "*" + spaces, start, end, "end");
+        textareaSync.setRangeText( "*" + selected + "*" + spaces, start, end, "end");
         selection.restore(start + 1, start + 1 + selected.length);}
-    refreshEditor();}
-
+    refreshEditor();}    
+    
 function ensureBlankLines(start, end, content) {
     const text = textareaSync.value;
     const before = text.substring(0, start);
@@ -902,6 +921,81 @@ function openVariableInsert() {
     html += '</div>';
     dialog.show("Insertion d'une variable", html,[{label : "Annuler", action : () => dialog.close()}], "small");}
 
+function getCurrentTable() {
+    const position = textareaSync.selectionStart;
+    const text = textareaSync.value;
+    const lines = text.split("\n");
+    let currentLine = 0;
+    let currentOffset = 0;
+    while (currentLine < lines.length) {
+        const nextOffset = currentOffset + lines[currentLine].length + 1;
+        if (position <= nextOffset) break;
+        currentOffset = nextOffset;
+        currentLine++;}
+    const isTableLine = line => /^\s*\|.*\|\s*$/.test(line);
+    if (!isTableLine(lines[currentLine])) return {start: position, end: position, headers: ["", ""], rows: [["", ""]]};
+    let firstLine = currentLine;
+    let lastLine = currentLine;
+    while (firstLine > 0 && isTableLine(lines[firstLine - 1])) firstLine--;
+    while (lastLine < lines.length - 1 && isTableLine(lines[lastLine + 1])) lastLine++;
+    const headerLine = lines[firstLine];
+    const headers = headerLine.split("|").slice(1, -1).map(x => x.trim());
+    let rows = [];
+    for (let lineIndex = firstLine + 2; lineIndex <= lastLine; lineIndex++) {
+        let row = lines[lineIndex].split("|").slice(1, -1).map(x => x.trim());
+        while (row.length < headers.length) row.push("");
+        rows.push(row);}
+if (rows.length === 0)
+    rows.push(headers.map(() => ""));
+    let start = 0;
+    for (let i = 0; i < firstLine; i++) start += lines[i].length + 1;
+    let end = start;
+    for (let i = firstLine; i <= lastLine; i++) {
+        end += lines[i].length;
+        if (i < lastLine) end++;}
+    return {start, end, headers, rows};}
+function openTableEditor() {
+    const table = getCurrentTable();
+    let html = `<div id="ibContent" class="tableInsert"><table id="tableDesigner" class="tableDesigner"><tr>`;
+    table.headers.forEach(header => {html += `<th><input value="${header.replace(/"/g, '&quot;')}"></th>`;});
+    html += `</tr>
+    <tr>`;
+    table.rows[0].forEach(value => {html += `<td>${value}</td>`;});
+    html += `</tr></table></div>`;
+    dialog.show("Insertion / Modification d'un tableau", html, [{label : "+1 Colonne", action : () => addTableColumn()}, {label : "-1 Colonne", action : () => removeTableColumn()}, {label : "Annuler", action : () => dialog.close()}, {label : "Valider", action : () => saveTable()}]);
+    setTimeout(() => {document.querySelector("#tableDesigner th input")?.focus();}, 0);}
+function addTableColumn() {
+    const table = document.getElementById("tableDesigner");
+    table.rows[0].insertCell(-1).outerHTML = '<th><input value=""></th>';
+    table.rows[1].insertCell(-1);}    
+function removeTableColumn() {
+    const table = document.getElementById("tableDesigner");
+    if (table.rows[0].cells.length <= 1) return;
+    table.rows[0].deleteCell(-1);
+    table.rows[1].deleteCell(-1);}
+function saveTable() {
+    const table = getCurrentTable();
+    const headers = Array.from(document.querySelectorAll("#tableDesigner th input")).map(input => input.value.trim());
+    const adjustedRows = table.rows.map(row => {
+        const adjusted = [...row];
+        while (adjusted.length < headers.length) adjusted.push("");
+        return adjusted.slice(0, headers.length);});
+    let markdown = ["| " + headers.join(" | ") + " |", "| " + headers.map(() => "---").join(" | ") + " |", ...adjustedRows.map(row => "| " + row.join(" | ") + " |")].join("\n");
+    // Création d'un nouveau tableau uniquement
+    if (table.start === table.end) {
+        const text = textareaSync.value;
+        const beforeText = text.substring(0, table.start);
+        const afterText  = text.substring(table.end);
+        const needBlankLineBefore = beforeText.length > 0 && !beforeText.endsWith("\n\n");
+        const needBlankLineAfter = afterText.length > 0 && !afterText.startsWith("\n\n");
+        if (needBlankLineBefore) markdown = "\n\n" + markdown;
+        if (needBlankLineAfter) markdown += "\n\n";}
+    saveUndoState("Insertion / Modification d'un tableau");
+    textareaSync.setRangeText(markdown,table.start, table.end, "end");
+    const newPosition = table.start + markdown.lastIndexOf("\n") + 3;
+    dialog.close();
+    selection.restore(newPosition, newPosition);
+    refreshEditor();}
 
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")

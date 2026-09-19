@@ -89,3 +89,5 @@ button.variableStyle, button.variableEdit {border : none;background: transparent
 .variableInsertButton {display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: var(--ib-variable-intro-background); border: 1px solid var(--ib-variable-border); border-radius: 16px; color: var(--ib-color-text); font-family: Consolas, monospace; font-size: 0.9rem; cursor: pointer; transition: all .15s ease;}
 .variableInsertButton:hover {background: var(--ib-accent-color); border-color: var(--ib-accent-color); color: var(--ib-color-content);}
 .variableInsertButton:active {transform: scale(0.96);}
+.tableInsert {margin: 0px !important; padding: .5rem !important;}
+.tableDesigner {width: 100%; border-collapse: collapse;}
