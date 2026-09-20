@@ -29,7 +29,8 @@ function restoreEditorState(state) {
     storage.write("Current",Current);
     refreshUndoButtons();
     refreshEditor();
-    selection.restore(state.start, state.end);}
+    selection.restore(state.start, state.end);
+    textareaSync.scrollTop = state.scrollTop ?? 0;}
 
 function saveUndoStacks() {
     session.write("Undo", UndoStack);
@@ -39,7 +40,7 @@ function saveUndoStacks() {
 function undoLastAction() {
     const state = UndoStack.pop();
     if (!state) return;
-    RedoStack.push({ action: state.action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd});
+    RedoStack.push({ action: state.action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd, scrollTop: textareaSync.scrollTop});
     if (RedoStack.length > UndoLimit) RedoStack.shift();
     saveUndoStacks();
     restoreEditorState(state);}
@@ -47,13 +48,13 @@ function undoLastAction() {
 function redoLastAction() {
     const state = RedoStack.pop();
     if (!state) return;
-    UndoStack.push({ action: state.action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd});
+    UndoStack.push({ action: state.action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd, scrollTop: textareaSync.scrollTop});
     saveUndoStacks();
     restoreEditorState(state);}    
 
 function saveUndoState(action = "") {
     RedoStack = [];
-    UndoStack.push({action: action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd});
+    UndoStack.push({action: action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd, scrollTop: textareaSync.scrollTop});
     if (UndoStack.length > UndoLimit) UndoStack.shift();
     saveUndoStacks();}
 
@@ -988,11 +989,14 @@ function saveTable() {
         const afterText  = text.substring(table.end);
         const needBlankLineBefore = beforeText.length > 0 && !beforeText.endsWith("\n\n");
         const needBlankLineAfter = afterText.length > 0 && !afterText.startsWith("\n\n");
-        if (needBlankLineBefore) markdown = "\n\n" + markdown;
-        if (needBlankLineAfter) markdown += "\n\n";}
+        if (needBlankLineBefore) markdown = "\n" + markdown;
+        if (needBlankLineAfter) markdown += "\n";}
+    const lignes = markdown.split("\n");
+    let offset = 0;
+    for (let i = 0; i < 2; i++) offset += lignes[i].length + 1;
+    const newPosition = table.start + offset + 2;
     saveUndoState("Insertion / Modification d'un tableau");
     textareaSync.setRangeText(markdown,table.start, table.end, "end");
-    const newPosition = table.start + markdown.lastIndexOf("\n") + 3;
     dialog.close();
     selection.restore(newPosition, newPosition);
     refreshEditor();}
