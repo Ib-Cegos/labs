@@ -6,7 +6,7 @@ on:
       - main
       - travail
     paths:
-      - 'writer/**/*.json'
+      - 'writer/**/*.zip'
 
 jobs:
   import-stage:

@@ -55,6 +55,6 @@ def define_env(env):
             if match: titre = match.group(1).strip()
             auteur_html = (f'par {auteur} - ' if auteur else "")
             html.append( f'<li><a href="{dossier.name}/" class="stageLink">{dossier.name.upper()} - {titre}</a> - '
-                         f'({auteur_html}<a href="{dossier.name}/{dossier.name}.json" download class= "ibWriterExport">Exporter</a> / <a class="ibWriterModify" data-json="{dossier.name}/{dossier.name}.json">Modifier</a>)</li>' )
+                         f'({auteur_html}<a href="{dossier.name}/{dossier.name}.zip" download class= "ibWriterExport">Exporter</a> / <a class="ibWriterModify" data-zip="{dossier.name}/{dossier.name}.zip">Modifier</a>)</li>' )
         html.append('</ul>')
         return "\n".join(html)

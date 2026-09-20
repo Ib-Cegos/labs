@@ -31,7 +31,7 @@
     {% if page.file.src_uri|lower == 'index.md' %}
     <button class="ibActionButton writerButton" id="ibWriterNewButton">🞦 Nouveau stage</button>
     <button class="ibActionButton writerButton" id="ibWriterOpenButton">✎ Modifier un stage</button>
-    <input type="file" id="ibWriterFile" accept=".json" style="display:none">
+    <input type="file" id="ibWriterFile" accept=".zip" style="display:none">
     <span id="ibNotesButton"></span>
     {% else %}
     <button class="ibActionButton" id="ibNotesButton">📝 Notes</button>
@@ -102,6 +102,7 @@
     </div>
 </aside>
 {% endif %}
+<script src="{{ config.site_url}}assets/jszip.min.js"></script>
 <script src="{{ config.site_url}}assets/common.js"></script>
 <script src="{{ config.site_url }}assets/contenu.js"></script>
 <script src="{{ config.site_url}}assets/interface.js"></script>

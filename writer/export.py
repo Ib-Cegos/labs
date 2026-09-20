@@ -2,6 +2,7 @@ from pathlib import Path
 import yaml
 import re
 import json
+import zipfile
 
 def importer_exercice(fichier):
     resultat = {"Titre": "","Atelier": "","Duree": None,"Contenu": ""}
@@ -88,9 +89,10 @@ def lire_readme(stage_path: str) -> dict:
 def main():
     catalogue = importer_stages("docs")
     for stage in catalogue["Stages"]:
-        chemin_json = ( Path("docs") / stage["Reference"] / f"{stage['Reference']}.json" )
-        with open( chemin_json,"w",encoding="utf-8") as f:
-            json.dump(stage,f,ensure_ascii=False,indent=4)
+        chemin_zip = (Path("docs") / stage["Reference"] / f"{stage['Reference']}.zip")
+        json_content = json.dumps(stage, ensure_ascii=False, indent=4)
+        with zipfile.ZipFile(chemin_zip, "w", compression=zipfile.ZIP_DEFLATED) as zipf: 
+            zipf.writestr("content.json", json_content)
 
 if __name__ == "__main__":
     main()

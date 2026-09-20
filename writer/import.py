@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import zipfile
 
 WRITER_DIR = Path("writer")
 DOCS_DIR = Path("docs")
@@ -45,8 +46,10 @@ def generer_exercice(exercice, titre_atelier=None):
     if contenu_markdown: contenu.append(contenu_markdown)
     return "\n".join(contenu)
 
-def importer_stage(json_file):
-    with open(json_file,encoding="utf-8") as f: stage = json.load(f)
+def importer_stage(zip_file):
+    with zipfile.ZipFile(zip_file, "r") as zipf:
+        with zipf.open("content.json") as f:
+            stage = json.load(f)
     reference = stage["Reference"]
     dossier_stage = (DOCS_DIR / reference)
     dossier_stage.mkdir(parents=True,exist_ok=True)
@@ -66,12 +69,12 @@ def importer_stage(json_file):
             fichier.write_text(generer_exercice(exercice, titre_atelier),encoding="utf-8")
 
 def main():
-    for json_file in sorted(WRITER_DIR.glob("*.json")):
-        importer_stage(json_file)
+    for zip_file in sorted(WRITER_DIR.glob("*.ibcan")):
+        importer_stage(zip_file)
         try:
-            json_file.unlink()
-            print(f"JSON traité et supprimé : {json_file}")
-        except Exception as e: print(f"Impossible de supprimer {json_file} : {e}")
+            zip_file.unlink()
+            print(f"Stage traité et supprimé : {zip_file}")
+        except Exception as e: print(f"Impossible de supprimer {zip_file} : {e}")
 
 if __name__ == "__main__":
     main()

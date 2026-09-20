@@ -13,7 +13,7 @@ document.addEventListener(
         const newButton = document.getElementById("ibWriterNewButton");
         const openButton = document.getElementById("ibWriterOpenButton");
         document.querySelectorAll(".ibWriterModify").forEach(lien => {
-            lien.addEventListener("click", () => {modifierStage(lien.dataset.json)})})
+            lien.addEventListener("click", () => {modifierStage(lien.dataset.zip)})})
         const writerFile = document.getElementById("ibWriterFile");
         if (newButton) { newButton.addEventListener("click", () => { 
             localStorage.removeItem(IB_PREFIX + "writerStage");
@@ -23,30 +23,36 @@ document.addEventListener(
             window.location.href = "writer/";});}
         if (openButton && writerFile) {
             openButton.addEventListener("click", () => {writerFile.click();});
-            writerFile.addEventListener("change", (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = () => {
-                const stage = JSON.parse(reader.result)
-                const current = {Atelier : 0, Exercice : 0, Contenu : stage.Introduction}
-                localStorage.setItem(IB_PREFIX + "writerStage", reader.result);
-                localStorage.setItem(IB_PREFIX + "writerCurrent", JSON.stringify(current));
-                session.remove("Undo");
-                session.remove("Redo");
-                window.location.href = "writer/";};
-            reader.readAsText(file);});}
-    });
+            writerFile.addEventListener("change", async (event) => {
+                try {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    const zip = await JSZip.loadAsync(file);
+                    const json = await zip.file("content.json").async("string");
+                    const stage = JSON.parse(json);
+                    const current = {Atelier: 0, Exercice: 0, Contenu: stage.Introduction};
+                    localStorage.setItem(IB_PREFIX + "writerStage", json);
+                    localStorage.setItem(IB_PREFIX + "writerCurrent", JSON.stringify(current));
+                    session.remove("Undo");
+                    session.remove("Redo");
+                    window.location.href = "writer/";}
+                catch (error) {
+                    alert("Le fichier ZIP sélectionné n'est pas un export ibCAN valide.");
+                    console.error(error);}});}});
 
 async function modifierStage(url) {
     const response = await fetch(url);
-    const json = await response.text();
+    const blob = await response.blob();
+    const zip = await JSZip.loadAsync(blob);
+    const content = zip.file("content.json");
+    if (!content) {throw new Error("content.json introuvable");}
+    const json = await content.async("string");
     localStorage.setItem(IB_PREFIX + "writerStage", json);
     const stage = JSON.parse(json);
-    localStorage.setItem(IB_PREFIX + "writerCurrent",JSON.stringify({ Atelier : 0, Exercice : 0, Contenu : stage.Introduction }));
+    localStorage.setItem(IB_PREFIX + "writerCurrent", JSON.stringify({Atelier: 0, Exercice: 0, Contenu: stage.Introduction}));
     session.remove("Undo");
     session.remove("Redo");
-    window.location.href = "./writer/"; }
+    window.location.href = "./writer/";}
 
 function ibResizeIllustrationPanel() {
     const panel = document.getElementById("ibIllustrationPanel");

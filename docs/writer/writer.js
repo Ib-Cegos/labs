@@ -162,16 +162,17 @@ function getExerciceLabel(exercice) {
 function clearDropIndicators(element) {
     element.classList.remove("writerNavDropBefore", "writerNavDropAfter");}
 
-function exporterStage() {
+async function exporterStage() {
     majStage();
-    const json = JSON.stringify(Stage,null,2);
-    const blob = new Blob([json],{ type: "application/json" });
+    const zip = new JSZip();
+    zip.file("content.json", JSON.stringify(Stage, null, 2));
+    const blob = await zip.generateAsync({type: "blob"});
     const url = URL.createObjectURL(blob);
     const lien = document.createElement("a");
     lien.href = url;
-    lien.download = `${Stage.Reference || "stage"}-edit.json`;
+    lien.download = `${Stage.Reference || "stage"}-edit.zip`;
     lien.click();
-    URL.revokeObjectURL(url); }
+    URL.revokeObjectURL(url);}
 
 function majStage() {
     if (Current.Atelier == 0) Stage.Introduction = Current.Contenu;
