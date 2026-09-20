@@ -70,6 +70,8 @@ function buildSommaire() {
         html += "</ul></div>";});
     return html;}    
  
+theme = localStorage.getItem( IB_PREFIX + "theme") || 'original';
+ibApplyTheme(theme);
 renderPreview();
 updateSyncButton(); 
 

@@ -1003,6 +1003,8 @@ function saveTable() {
 
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")
+theme = localStorage.getItem( IB_PREFIX + "theme") || 'original';
+ibApplyTheme(theme);
 let Stage = storage.read('Stage',{ Titre: "", "Auteur": "", "Variables": {}, "Introduction": "", "Reference": "", "Ateliers": [{ "Id": 1, "Titre": "", "Exercices": [{ "Id": 1, "Titre": "", "Contenu": "", "Duree": "" }]}]});
 sortStage();
 renumberStage();

@@ -41,28 +41,6 @@ function ibInitFontSize() {
         localStorage.setItem( IB_PREFIX + "font-size", select.value );
         document.documentElement.style.setProperty( "--ib-content-font-size", select.value);});}
 
-/* Gestion des thèmes dynamiques */
-function ibInitTheme() {
-    if (!window.ibEnvironment.storage) { return; }
-    const select = document.getElementById("ibTheme");
-    if (!select) { return; }
-    let theme = localStorage.getItem( IB_PREFIX + "theme" );
-    if (!theme) {
-        if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) { theme = "sombre"; }
-        else { theme = "original"; }
-        localStorage.setItem( IB_PREFIX + "theme", theme );}
-    if (!select.querySelector(`option[value="${theme}"]`)) { theme = "original"; }
-    select.value = theme;
-    ibApplyTheme(theme);
-    select.addEventListener( "change", () => {
-        localStorage.setItem( IB_PREFIX + "theme", select.value );
-        ibApplyTheme( select.value );});}
-
-function ibApplyTheme(theme) {
-    const css = document.getElementById("ibThemeCss");
-    if (!css) { return; }
-    css.href = css.href.replace( /assets\/themes\/[^\/]+\.css$/, `assets/themes/${theme}.css` );}
-
 /* Gestion des variables */
 function ibInitVariables() {
     if (!window.ibVariables) { return; }
@@ -158,30 +136,7 @@ function ibPositionnerDerniereTache() {
     const tachesCochees = document.querySelectorAll( ".ibLabTask.done" );
     if (tachesCochees.length === 0) { return; }
     const derniereTache = tachesCochees[tachesCochees.length - 1];
-    setTimeout(() => { derniereTache.scrollIntoView({ block: "start" }); }, 100); }                    
-
-/* Vérification de l'environnement */
-function ibCheckEnvironment() {
-    function testStorage() {
-        try {
-            const test = "__ibCAN_test__";
-            localStorage.setItem(test, test);
-            localStorage.removeItem(test);
-            return true; }
-        catch { return false; }}
-    function testClipboard() {
-        return !!( navigator.clipboard && navigator.clipboard.writeText );}
-    window.ibEnvironment = {
-        storage: testStorage(),
-        clipboard: testClipboard() };
-    if (!window.ibEnvironment.clipboard) {
-        document.querySelectorAll( ".ibCopyButton, .ibInlineCopyButton" ).forEach( bouton => bouton.classList.add( "ibClipboardUnavailable" ));}
-    if (!window.ibEnvironment.storage) {
-        /* Désactivation des commandes nécessitant le localStorage */
-        document.querySelectorAll( ".ibVariableInput, .ibDisplayInput" ).forEach( elt => elt.disabled = true );
-        document.getElementById("ibExportButton").setAttribute( "disabled", true );
-        document.getElementById("ibImportButton").setAttribute( "disabled", true ); 
-        document.getElementById( "ibSettingsContent" ).insertAdjacentHTML( "afterbegin",'<div class="ibWarning">Le navigateur n\'autorise pas le stockage local.<br/>La progression et les paramètres ne pourront pas être conservés.</div>' );}}
+    setTimeout(() => { derniereTache.scrollIntoView({ block: "start" }); }, 100); }
     
 function ibInitNotes() {
     if (!window.ibEnvironment.storage) { return; }

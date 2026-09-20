@@ -20,7 +20,8 @@
 #writerAtelierTitle { width: 25%; }
 #writerExerciceTitle {flex: 1;}
 #writerExerciceLength {width: 80px;}
-#writerContenu {flex: 1; min-height: 0; width: 100%; box-sizing: border-box; resize: none; border: none; outline: none; padding: 1rem; overflow-y: auto; overflow-x: hidden; background: var(--ib-color-content); font-family: "Segoe UI", sans-serif; font-size: var(--ib-content-font-size); line-height: 1.6; }
+body {color: var(--ib-color-text)}
+#writerContenu {flex: 1; min-height: 0; width: 100%; box-sizing: border-box; resize: none; border: none; outline: none; padding: 1rem; overflow-y: auto; overflow-x: hidden; background: var(--ib-color-content); font-family: "Segoe UI", sans-serif; font-size: var(--ib-content-font-size); line-height: 1.6; color: inherit;}
 #ibWriterDialogOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9999; justify-content: center; align-items: center;}
 .ibModal { opacity: 1; }
 .ibModalHeader {background-color: var(--ib-color-writer); color: var(--ib-action-button); cursor: move; user-select: none;}
