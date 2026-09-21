@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 import zipfile
+import shutil
 
 WRITER_DIR = Path("writer")
 DOCS_DIR = Path("docs")
@@ -46,16 +47,20 @@ def generer_exercice(exercice, titre_atelier=None):
     return "\n".join(contenu)
 
 def importer_stage(zip_file):
-
     with zipfile.ZipFile(zip_file, "r") as zipf:
         with zipf.open("content.json") as f: stage = json.load(f)
         reference = stage["Reference"]
         dossier_stage = DOCS_DIR / reference
         dossier_stage.mkdir(parents=True, exist_ok=True)
         print(f"Import du stage {reference}")
+        # Nettoyage du dossier images du stage s'il existe
+        images_dir = dossier_stage / "images"
+        for item in images_dir.rglob("*"):
+            if item.is_file(): item.unlink()
         # Import des ressources
         for member in zipf.infolist():
             if member.filename == "content.json": continue
+            if member.is_dir():  continue
             destination = dossier_stage / member.filename
             destination.parent.mkdir(parents=True, exist_ok=True)
             with zipf.open(member) as source: destination.write_bytes(source.read())
