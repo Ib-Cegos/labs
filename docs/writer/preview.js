@@ -34,7 +34,16 @@ function toggleShowVariables() {
     sessionStorage.setItem("PreviewShowVariableValues",PreviewShowVariableValues);
     renderPreview();}
 
-function renderPreview() {
+async function resolveInternalImages(html) {
+    const parser = document.createElement("div");
+    parser.innerHTML = html;
+    for (const img of parser.querySelectorAll("img")) {
+        const src = img.getAttribute("src");
+        const url = await db.getUrl(src);
+        if (url) img.src = url;}
+    return parser.innerHTML;}
+
+async function renderPreview() {
     Current = storage.read("Current");
     Stage = storage.read("Stage");
     const atelier = getCurrentAtelier();
@@ -51,7 +60,16 @@ function renderPreview() {
     let contenu = Current.Contenu
     if (Current.Atelier === 0) contenu = contenu.replace(/\{\{\s*sommaire\s*\(\s*\)\s*\}\}/i, buildSommaire());
     variableButton();
+    const illuDiv = document.getElementById("ibIllustrationPanel")
+    if (Current.IllustrationName) {
+        const illustrationUrl = await db.getUrl(Current.IllustrationName);
+        illuDiv.style.display = "";
+        document.getElementById("ibIllustrationImage").src = illustrationUrl;}
+    else {
+        illuDiv.style.display = "none";
+    }
     contenu = marked.parse(contenu);
+    contenu = await resolveInternalImages(contenu);
     contenu = replaceVariables(contenu);
     document.getElementById("ibContent").innerHTML = contenu;}
 
@@ -76,7 +94,7 @@ renderPreview();
 updateSyncButton(); 
 
 window.addEventListener("storage", event => {
-    if (event.key === IB_PREFIX + "writerCurrent" || event.key === IB_PREFIX + "writerStage") renderPreview();});
+    if (event.key === WRITER_PREFIX + "Current" || event.key === WRITER_PREFIX + "Stage") renderPreview();});
 /* Synchonisation de la lecture sur fenêtre parent */
 window.addEventListener("message", (event) => {
     if (event.data.type === "scroll" && previewSyncEnabled) {
@@ -90,3 +108,34 @@ window.addEventListener("message", (event) => {
 setInterval(() => {
     try {if (!opener || opener.closed || opener.location !== openerOrigin) window.close();}
     catch {window.close();}}, 1000);
+
+/* Panneau d'illustration */
+function resizeIllustrationPanel() {
+    const panel = document.getElementById("ibIllustrationPanel");
+    const image = document.getElementById("ibIllustrationImage");
+    if (!panel || !image) { return; }
+    const largeurMax = window.innerWidth * 0.90;
+    const hauteurMax = (window.innerHeight - 120) * 0.95;
+    const ratio = image.naturalWidth / image.naturalHeight;
+    const largeurSelonHauteur = hauteurMax * ratio;
+    const largeur = Math.min( image.naturalWidth + 32, largeurSelonHauteur + 32, largeurMax );
+    panel.style.width = `${Math.round(largeur)}px`;
+    if (!panel.classList.contains("open")) { panel.style.right = `-${Math.round(largeur)}px`; }}
+
+const panel = document.getElementById("ibIllustrationPanel");
+const tab = document.getElementById("ibIllustrationTab");
+/* Retailler le panneau selon la taille de l'image si nécessaire */
+const image = document.getElementById( "ibIllustrationImage" );
+if (image) {
+    if (image.complete) { resizeIllustrationPanel(); }
+    image.addEventListener( "load", resizeIllustrationPanel );
+    window.addEventListener( "resize", resizeIllustrationPanel ); }
+panel.style.right = `-${panel.offsetWidth}px`;
+tab.addEventListener("click", () => {
+    panel.classList.toggle("open");
+    if (panel.classList.contains("open")) { 
+        sessionStorage.setItem( IB_PREFIX + "illustration-context", window.ibExerciseCode ); 
+        panel.style.right = "0"; }
+    else { 
+        sessionStorage.removeItem( IB_PREFIX + "illustration-context" ); 
+        panel.style.right = `-${panel.offsetWidth}px`; }});

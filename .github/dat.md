@@ -12,7 +12,9 @@ ibCANWriter est désormais capable :
 - d'ajouter et supprimer des ateliers  et des exercices ;
 - de réorganiser la structure du stage (par Drag & Drop) ;
 - de prévisualiser en temps réel le rendu Markdown ;
-- d'importer et exporter le modèle JSON intermédiaire utilisé par ibCAN.
+- d'importer et exporter un stage au format ZIP ;
+- de manipuler le modèle JSON intermédiaire utilisé par ibCAN ;
+- de gérer les ressources associées au stage (illustrations et images Markdown).
 
 Parmi les fonctionnalités actuellement prises en charge dans ibCAN:
 
@@ -184,7 +186,16 @@ Le système de thèmes est désormais considéré comme une fonctionnalité stab
 
 ## Architecture documentaire
 
-Le moteur ibCAN manipule désormais trois représentations d'un même contenu : JSON Writer <==> Markdown ibCAN ==> HTML publié
+Le moteur ibCAN manipule désormais trois représentations d'un même contenu : 
+ZIP Writer
+├── content.json
+└── ressources (images, illustrations)
+        ⇅
+Modèle JSON
+        ⇅
+Markdown ibCAN
+        ↓
+HTML publié
 Le modèle JSON est devenu le modèle documentaire pivot :
 
 - export Markdown vers JSON via export.py ;
@@ -465,7 +476,7 @@ Chaque exercice constitue l'unité pédagogique élémentaire du système.
 
 ## Illustrations d'exercice
 Chaque exercice peut être accompagné d'une illustration associée automatiquement par le moteur.
-Le moteur recherche les images portant le même nom que l'exercice : aXeY.png
+Le moteur recherche les images portant le même préfixe que l'exercice : aXeY.png (type supportés : .png, .jpg, .jpeg, .webp, .svg, .bmp, .gif)
 Lorsqu'une illustration est détectée, un panneau latéral Illustration est ajouté sur le bord droit de l'écran (le panneau s'adapte automatiquement aux dimensions de l'image)
 La détection des illustrations est entièrement automatique et ne nécessite aucune métadonnée supplémentaire dans les fichiers Markdown.
 
@@ -540,6 +551,7 @@ Stage
 
 Exemple : 
 
+```
      {
     "Reference": "msms030",
     "Titre": "...",
@@ -577,7 +589,12 @@ Ce modèle est considéré comme la base de travail du writer.
 
 Les propriétés Id des ateliers et exercices représentent leur ordre logique dans le stage.
 Les identifiants ne constituent pas des clés techniques permanentes.
-Après chaque ajout, suppression ou déplacement , les ateliers et exercices sont renumérotés ( Cette opération est assurée par la fonction renumberStage() utilisée par le Writer).
+Après chaque ajout, suppression ou déplacement, les ateliers et exercices sont renumérotés.
+Cette opération est assurée par la fonction renumberStage() du Writer qui :
+- renumérote les ateliers ;
+- renumérote les exercices ;
+- restaure l'exercice courant si nécessaire ;
+- synchronise les illustrations associées aux exercices déplacés.
 
 # Writer
 Le Writer est un projet compagnon d'ibCAN destiné à simplifier la création et la maintenance des stages.
@@ -606,15 +623,24 @@ L'objectif du Writer est de permettre à un formateur de produire ou maintenir u
 Le principe est : README.md + aXeY.md ==> export.py ==> STAGE.json ==> writer ==> STAGE.json ==> import.py ==> README.md + aXeY.md
 
 ## Architecture du Writer
-
 Le Writer repose sur deux fenêtres synchronisées : writer.html (édition) et preview.html (prévisualisation).
 Les deux fenêtres partagent le même modèle de données via le localStorage.
-Architecture : Stage ==> localStorage ==> Preview
+Architecture : Stage + ressources ==> localStorage + IndexedDB ==> Preview
 La prévisualisation est mise à jour automatiquement grâce à l'événement JavaScript "storage"
 Les contenus Markdown sont rendus localement dans la fenêtre de prévisualisation via la bibliothèque Marked.
+Les images internes référencées dans le Markdown sont automatiquement résolues depuis IndexedDB après le rendu Markdown.
+
+## Gestion des ressources
+Les ressources du stage (illustrations d'exercices et images référencées dans le Markdown) sont stockées dans une base IndexedDB locale pendant l'édition.
+Le format d'échange du Writer est désormais un fichier ZIP contenant : content.json,images/aXeY.png...
+Le Writer :
+
+- importe automatiquement les ressources dans IndexedDB ;
+- exporte automatiquement les ressources présentes dans IndexedDB ;
+- conserve les ressources lors de la réorganisation du stage ;
+-renomme automatiquement les illustrations d'exercices lors des déplacements d'ateliers ou d'exercices.
 
 ## Gestion des variables
-
 Le Writer permet l'ajout, la modification et la suppression des variables du stage.
 Les variables sont stockées dans "Stage.Variables"
 Structure :
@@ -663,6 +689,20 @@ Fonctionnalités :
 - Deux modes de rendu des variables : Mode auteur ([NomVariable]) et mode rendu (ValeurParDefaut)
 
 La prévisualisation constitue l'environnement principal de validation du rendu produit par le rédacteur. Sans être 100% fidèle à ibCAN, elle se veut représentative du résultat.
+
+## Format d'échange
+
+Le format d'échange du Writer est un fichier ZIP contenant :
+
+- content.json
+- a1e1.png
+- a1e2.webp
+- images/schema.png
+- images/azure/tenant.png
+...
+
+content.json contient le modèle documentaire du stage.
+Les autres fichiers sont considérés comme des ressources associées au stage.
 
 ---
 

@@ -3,6 +3,9 @@ import yaml
 import re
 import json
 import zipfile
+import sys
+sys.path.append( str(Path(__file__).parent.parent / "hooks"))
+import tools
 
 def importer_exercice(fichier):
     resultat = {"Titre": "","Atelier": "","Duree": None,"Contenu": ""}
@@ -89,10 +92,19 @@ def lire_readme(stage_path: str) -> dict:
 def main():
     catalogue = importer_stages("docs")
     for stage in catalogue["Stages"]:
+        stage_path = Path("docs") / stage["Reference"]
         chemin_zip = (Path("docs") / stage["Reference"] / f"{stage['Reference']}.zip")
         json_content = json.dumps(stage, ensure_ascii=False, indent=4)
         with zipfile.ZipFile(chemin_zip, "w", compression=zipfile.ZIP_DEFLATED) as zipf: 
             zipf.writestr("content.json", json_content)
+            for fichier in stage_path.iterdir():
+                if (fichier.is_file() and fichier.suffix.lower() in tools.IMAGE_EXTENSIONS):
+                    zipf.write(fichier, fichier.name)
+            images_dir = stage_path / "images"
+            if images_dir.exists():
+                for fichier in images_dir.rglob("*"):
+                    if (fichier.is_file()):
+                        zipf.write(fichier, fichier.relative_to(stage_path))
 
 if __name__ == "__main__":
     main()

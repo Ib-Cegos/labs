@@ -85,8 +85,8 @@ function makeDraggable(elementId, handleSelector, storageKey) {
     let dragging = false;
     let offsetX = 0;
     let offsetY = 0;
-    const savedLeft = sessionStorage.getItem(IB_PREFIX + "Writer" + storageKey + "Left");
-    const savedTop =  sessionStorage.getItem(IB_PREFIX + "Writer" + storageKey + "Top");
+    const savedLeft = sessionStorage.getItem(WRITER_PREFIX + storageKey + "Left");
+    const savedTop =  sessionStorage.getItem(WRITER_PREFIX + storageKey + "Top");
     if (savedLeft && savedTop) {
         element.style.left = savedLeft;
         element.style.top = savedTop;
@@ -107,8 +107,8 @@ function makeDraggable(elementId, handleSelector, storageKey) {
     document.addEventListener("mouseup", () => {
         if (!dragging) return;
         dragging = false;
-        sessionStorage.setItem(IB_PREFIX + "Writer" + storageKey + "Left", element.style.left);
-        sessionStorage.setItem(IB_PREFIX + "Writer" + storageKey + "Top",element.style.top);});}        
+        sessionStorage.setItem(WRITER_PREFIX + storageKey + "Left", element.style.left);
+        sessionStorage.setItem(WRITER_PREFIX + storageKey + "Top",element.style.top);});}        
 
 /* Gestion des fenêtres modales */
 const dialog = {
@@ -121,7 +121,7 @@ const dialog = {
         const modal =document.getElementById("ibWriterDialog");
         if (size == 'small') modal.classList.add ('ibModalSmall');
         else modal.classList.remove ('ibModalSmall');
-        if (!sessionStorage.getItem(IB_PREFIX + "WriterDialogLeft")) {
+        if (!sessionStorage.getItem(WRITER_PREFIX + "DialogLeft")) {
             const rect =modal.getBoundingClientRect();
             modal.style.left = `${rect.left}px`;
             modal.style.top =  `${rect.top}px`;
@@ -166,6 +166,10 @@ async function exporterStage() {
     majStage();
     const zip = new JSZip();
     zip.file("content.json", JSON.stringify(Stage, null, 2));
+    const fichiers = await db.list();
+    for (const path of fichiers) {
+        const blob = await db.read(path);
+        zip.file(path, blob);}
     const blob = await zip.generateAsync({type: "blob"});
     const url = URL.createObjectURL(blob);
     const lien = document.createElement("a");
@@ -182,19 +186,50 @@ function majStage() {
         exercice.Contenu = Current.Contenu; }
     storage.write('Stage', Stage); }
 
-function renumberStage() {
-    /* Renumérotation des exercices/ateliers du stage (après ajout/Suppression/déplacement) et mise à jour de l'Id Current */
+async function renumberStage() {
+    /* Renumérotation des exercices/ateliers du stage (après ajout/suppression/déplacement)  + renommage des illustrations */
+    console.log("renumberStage");
+    const mappings = [];
     Stage.Ateliers.forEach((atelier, atelierIndex) => {
-        atelier.Id = atelierIndex + 1;
-        atelier.Exercices.forEach((exercice, exerciceIndex) => {exercice.Id = exerciceIndex + 1;});});
+        const oldAtelierId = atelier.Id;
+        atelier.Exercices.forEach((exercice, exerciceIndex) => {
+            const oldExerciceId = exercice.Id;
+            mappings.push({oldPrefix: `a${oldAtelierId}e${oldExerciceId}`, newPrefix: `a${atelierIndex + 1}e${exerciceIndex + 1}`});
+            exercice.Id = exerciceIndex + 1;});
+        atelier.Id = atelierIndex + 1;});
+    console.log(mappings);
+    /* Restauration du Current */
     for (const atelier of Stage.Ateliers) {
         const exercice = atelier.Exercices.find(e => e._restoreCurrent);
         if (exercice) {
             Current.Atelier = atelier.Id;
             Current.Exercice = exercice.Id;
             delete exercice._restoreCurrent;
-            storage.write('Current',Current);
-        break;}}}
+            storage.write("Current", Current);
+            break;}}
+    /* Renommage des illustrations : Passe 1 => ancien nom -> temporaire */
+    const files = await db.list();
+    for (const atelier of Stage.Ateliers) {
+        for (const exercice of atelier.Exercices) {
+            if (!exercice._oldIllustrationName) continue;
+            const oldPrefix = exercice._oldIllustrationName;
+            const newPrefix = `a${atelier.Id}e${exercice.Id}`;
+            const file = files.find(path => path.startsWith(oldPrefix + "."));
+            if (!file) {
+                delete exercice._oldIllustrationName;
+                continue;}
+            const blob = await db.read(file);
+            const extension = file.substring(file.lastIndexOf("."));
+            await db.write("__tmp__" + newPrefix + extension, blob);
+        delete exercice._oldIllustrationName;}}
+    const tempFiles = await db.list();
+    for (const tempFile of tempFiles.filter(f => f.startsWith("__tmp__"))) {
+        const blob = await db.read(tempFile);
+        const finalName = tempFile.replace("__tmp__", "");
+        await db.write(finalName, blob);}
+    for (const tempFile of tempFiles.filter(f => f.startsWith("__tmp__"))) await db.delete(tempFile);
+    for (const file of files) {
+        if (/^a\d+e\d+\./i.test(file)) await db.delete(file);}}
 
 function sortStage() {
     Stage.Ateliers.sort((a, b) => a.Id - b.Id);
@@ -273,11 +308,14 @@ function resizeWriter() {
 window.addEventListener("resize", resizeWriter);
 resizeWriter();
 
-function chargerExercice() {
-    if (Current.Atelier == 0) { Current.Contenu = Stage.Introduction; }
+async function chargerExercice() {
+    if (Current.Atelier == 0) { Current.Contenu = Stage.Introduction; Current.IllustrationName = null;}
     else {
         const exercice = getCurrentExercice();
-        if (exercice) { Current.Contenu = exercice.Contenu; }}
+        if (exercice) {
+            Current.Contenu = exercice.Contenu;
+            const prefix = `a${Current.Atelier}e${Current.Exercice}.`;
+            Current.IllustrationName = await db.find(prefix);}}
     UndoStack = session.read("Undo", []);
     RedoStack = session.read("Redo", []);
     refreshUndoButtons();
@@ -469,22 +507,22 @@ function validateField(field) {
     field.classList.toggle("ibMissing",field.value.trim() === "");}
     
 /* Ajout / Suppression / déplacement des Ateliers */
-function addAtelier() {
+async function addAtelier() {
     Stage.Ateliers.push({Id: 0, Titre: "",Exercices: [{Id: 1, Titre: "", Duree: "",Contenu: ""}]});
-    renumberStage();
+    await renumberStage();;
     storage.write("Stage", Stage);
     construireNavigation();
     Current.Atelier = Stage.Ateliers.at(-1).Id;
     Current.Exercice = 1;
     chargerExercice();
     afficherExercice();}
-function deleteAtelier() {
+async function deleteAtelier() {
     if (Stage.Ateliers.length <= 1) {
         dialog.show( "Suppression impossible", "<p>Le stage doit contenir au moins un atelier.</p>", [], "small");
         return;}
     const index = Stage.Ateliers.findIndex(a => a.Id == Current.Atelier);
     Stage.Ateliers.splice(index, 1);
-    renumberStage();
+    await renumberStage();;
     storage.write("Stage", Stage);
     const nextIndex = Math.min(index,Stage.Ateliers.length - 1);
     Current.Atelier = Stage.Ateliers[nextIndex].Id;
@@ -496,9 +534,10 @@ function confirmDeleteAtelier() {
     const atelier =getCurrentAtelier();
     dialog.show("Supprimer l'atelier",
         `<p>Supprimer "${getAtelierLabel(atelier)}" ?</p><p>Tous les exercices de cet atelier seront supprimés.</p>`, [{label : "Annuler", action : () => dialog.close()},{label : "Supprimer", className : "ibDialogButtonDelete", action : () => {deleteAtelier(); dialog.close();}}],"small");}
-function moveAtelier(aSource,aTarget,before = false, confirmed = false) {
+async function moveAtelier(aSource,aTarget,before = false, confirmed = false) {
     if (aSource === aTarget) return;
     const atelier = Stage.Ateliers[aSource];
+    atelier.Exercices.forEach(exercice => {exercice._oldIllustrationName = `a${atelier.Id}e${exercice.Id}`;});
     const target = Stage.Ateliers[aTarget];
     const position = before ? "avant" : "après";
     if (!confirmed) {
@@ -511,24 +550,25 @@ function moveAtelier(aSource,aTarget,before = false, confirmed = false) {
     if (aSource < aTarget) insertIndex--;
     Stage.Ateliers.splice(aSource, 1);
     Stage.Ateliers.splice(insertIndex, 0, atelier);
-    renumberStage();
+    await renumberStage();;
     chargerExercice();
     storage.write("Stage", Stage);
     construireNavigation();
     afficherExercice();}
 
 /* Ajout / Suppression / déplacement des Exercices */
-function addExercice() {
+async function addExercice() {
     const atelier = getCurrentAtelier();
     if (!atelier) return;
     atelier.Exercices.push({ Id: 0, Titre: "", Duree: "", Contenu: ""});
-    renumberStage();
+    await renumberStage();;
     storage.write("Stage", Stage);
     construireNavigation();
     Current.Exercice = atelier.Exercices.at(-1).Id;
     chargerExercice();
     afficherExercice();}
-function deleteExercice() {
+async function deleteExercice() {
+    /* A faire (peut-être) suppression des illustrations inutiles le cas échéant */
     const atelier = getCurrentAtelier();
     if (!atelier) return;
     if (atelier.Exercices.length <= 1) {
@@ -536,7 +576,7 @@ function deleteExercice() {
         return;}
     const index = atelier.Exercices.findIndex(e => e.Id == Current.Exercice);
     atelier.Exercices.splice(index, 1);
-    renumberStage();
+    await renumberStage();;
     storage.write("Stage", Stage);
     const nextIndex = Math.min(index, atelier.Exercices.length - 1);
     Current.Exercice =  atelier.Exercices[nextIndex].Id;
@@ -546,11 +586,12 @@ function deleteExercice() {
 function confirmDeleteExercice() {
     const exercice = getCurrentExercice();
     dialog.show("Supprimer l'exercice",`<p>Supprimer "${getExerciceLabel(exercice)}" ?</p>`, [{label : "Annuler", action : () => dialog.close()}, {label : "Supprimer",className: "ibDialogButtonDelete", action : () => { deleteExercice(); dialog.close(); }}], 'small');}
-function moveExercice(aSource, aTarget, eSource, eTarget, before = false, confirmed = false) {
+async function moveExercice(aSource, aTarget, eSource, eTarget, before = false, confirmed = false) {
     if (aSource === aTarget && eSource === eTarget) return;
     const atelierSource = Stage.Ateliers[aSource];
     const atelierTarget = Stage.Ateliers[aTarget];
     const exercice = atelierSource.Exercices[eSource];
+    exercice._oldIllustrationName = `a${atelierSource.Id}e${exercice.Id}`;
     const target = atelierTarget.Exercices[eTarget];
     const position = before ? "avant" : "après";
     const deleteSourceAtelier = aSource !== aTarget && atelierSource.Exercices.length === 1;
@@ -569,7 +610,7 @@ function moveExercice(aSource, aTarget, eSource, eTarget, before = false, confir
     atelierSource.Exercices.splice(eSource, 1);
     atelierTarget.Exercices.splice(insertIndex, 0, exercice);
     if (aSource !== aTarget && atelierSource.Exercices.length === 0) Stage.Ateliers.splice(aSource, 1);
-    renumberStage();
+    await renumberStage();;
     chargerExercice();
     storage.write("Stage", Stage);
     construireNavigation();
@@ -1008,7 +1049,6 @@ theme = localStorage.getItem( IB_PREFIX + "theme") || 'original';
 ibApplyTheme(theme);
 let Stage = storage.read('Stage',{ Titre: "", "Auteur": "", "Variables": {}, "Introduction": "", "Reference": "", "Ateliers": [{ "Id": 1, "Titre": "", "Exercices": [{ "Id": 1, "Titre": "", "Contenu": "", "Duree": "" }]}]});
 sortStage();
-renumberStage();
 let Current = storage.read ('Current', {Atelier : 0, Exercice : 0, Contenu : Stage.Introduction});
 document.getElementById("stageReference").value = Stage.Reference || "";
 document.getElementById("stageReference").addEventListener("input", () => {
@@ -1063,13 +1103,13 @@ document.getElementById("btnTools").addEventListener("click", () => {
     document.getElementById("ibWriterStyleBar").style.display = "flex";
     selection.restore();});
 document.getElementById("ibWriterStyleClose").addEventListener("click",() => {toolBarOpened = false; session.write('ToolOpen',false); document.getElementById("ibWriterStyleBar").style.display="none"; selection.restore();});
-if (!sessionStorage.getItem(IB_PREFIX + "WriterStyleLeft")) {
+if (!sessionStorage.getItem(WRITER_PREFIX + "StyleLeft")) {
     const styleButton = document.getElementById("btnTools");
     const styleBar  = document.getElementById("ibWriterStyleBar");
     styleBar.style.display = "flex";
     const rectStyleButton = styleButton.getBoundingClientRect();
-    sessionStorage.setItem(IB_PREFIX + "WriterStyleLeft",(rectStyleButton.right - styleBar.offsetWidth)+"px");
-    sessionStorage.setItem(IB_PREFIX + "WriterStyleTop",(rectStyleButton.top - styleBar.offsetHeight + 12)+"px");
+    sessionStorage.setItem(WRITER_PREFIX + "StyleLeft",(rectStyleButton.right - styleBar.offsetWidth)+"px");
+    sessionStorage.setItem(WRITER_PREFIX + "StyleTop",(rectStyleButton.top - styleBar.offsetHeight + 12)+"px");
     styleBar.style.display = "none"; }
 makeDraggable("ibWriterStyleBar",".ibWriterStyleHandle","Style");
 updateStyleBar();

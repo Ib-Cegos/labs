@@ -27,7 +27,6 @@ def generer_readme(stage):
     contenu.append("")
     introduction = stage.get("Introduction","").strip()
     if introduction: contenu.append(introduction)
-    print(contenu)
     return "\n".join(contenu)
 
 def generer_exercice(exercice, titre_atelier=None):
@@ -47,13 +46,19 @@ def generer_exercice(exercice, titre_atelier=None):
     return "\n".join(contenu)
 
 def importer_stage(zip_file):
+
     with zipfile.ZipFile(zip_file, "r") as zipf:
-        with zipf.open("content.json") as f:
-            stage = json.load(f)
-    reference = stage["Reference"]
-    dossier_stage = (DOCS_DIR / reference)
-    dossier_stage.mkdir(parents=True,exist_ok=True)
-    print(f"Import du stage {reference}")
+        with zipf.open("content.json") as f: stage = json.load(f)
+        reference = stage["Reference"]
+        dossier_stage = DOCS_DIR / reference
+        dossier_stage.mkdir(parents=True, exist_ok=True)
+        print(f"Import du stage {reference}")
+        # Import des ressources
+        for member in zipf.infolist():
+            if member.filename == "content.json": continue
+            destination = dossier_stage / member.filename
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            with zipf.open(member) as source: destination.write_bytes(source.read())
     # README.md
     readme = dossier_stage / "README.md"
     readme.write_text(generer_readme(stage),encoding="utf-8")
@@ -69,7 +74,7 @@ def importer_stage(zip_file):
             fichier.write_text(generer_exercice(exercice, titre_atelier),encoding="utf-8")
 
 def main():
-    for zip_file in sorted(WRITER_DIR.glob("*.ibcan")):
+    for zip_file in sorted(WRITER_DIR.glob("*.zip")):
         importer_stage(zip_file)
         try:
             zip_file.unlink()

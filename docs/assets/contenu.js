@@ -82,33 +82,27 @@ function ibClearData() {
     Object.keys(localStorage).forEach(key => {
         if ( key.toLowerCase().startsWith( IB_PREFIX + window.ibLabCode + "-") ) { localStorage.removeItem(key); }});}    
 
-async function ibImport(event) {
+function ibImport(event) {
     const file = event.target.files[0];
     if (!file) { return; }
-    try {
-        ibClearData();
-        const zip = await JSZip.loadAsync(file);
-        const content = zip.file("content.json");
-        if (!content) throw new Error("content.json introuvable");
-        const json = await content.async("string");
-        const data = JSON.parse(json);
+    ibClearData();
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const data = JSON.parse(e.target.result);
         Object.entries(data).forEach(([key, value]) => {if (key.toLowerCase().startsWith(IB_PREFIX)) localStorage.setItem(key, value);});
-        location.reload();}
-    catch(error) {
-        alert("Le fichier ZIP n'est pas un export ibCAN valide.");
-        console.error(error);}}    
+        location.reload();};
+    reader.readAsText(file);}
     
-async function ibExport() {
+function ibExport() {
     const exportData = {};
     Object.keys(localStorage).filter(key => key.startsWith(IB_PREFIX)).forEach(key => {exportData[key] = localStorage.getItem(key);});
-    const zip = new JSZip();
-    zip.file("content.json", JSON.stringify(exportData, null, 2));
-    const blob = await zip.generateAsync({type: "blob"});
+    const json = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const date = new Date().toISOString().slice(0, 10);
+    const date = new Date().toISOString().slice(0,10);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `ibCAN-${date}.zip`;
+    a.download = `ibCAN-${date}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

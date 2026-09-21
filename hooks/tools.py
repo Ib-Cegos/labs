@@ -12,12 +12,13 @@ REGEX_SOMMAIRE = re.compile( r"\{\{\s*sommaire\s*\(\s*\)\s*\}\}", re.IGNORECASE 
 YAML_ERRORS = []
 IBCAN_PAGE_BREAK_PREFIX = "IBCAN_PAGE_BREAK"
 REGEX_VARIABLE = re.compile( r"\[([A-Za-z0-9_]+)\]")
+IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".webp", ".svg", ".bmp", ".gif")
 
 def trouver_illustration_exercice(fichier_exercice):
     # Une seule illustration est autorisée par exercice.
     # La première extension trouvée dans cette liste est utilisée.
     fichier_exercice = Path(fichier_exercice)
-    for extension in ( ".png", ".jpg", ".jpeg", ".webp", ".svg", ".bmp" ):
+    for extension in IMAGE_EXTENSIONS:
         illustration = ( fichier_exercice.parent / f"{fichier_exercice.stem}{extension}" )
         if illustration.exists(): return illustration
     return False
