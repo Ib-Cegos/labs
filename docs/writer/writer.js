@@ -5,6 +5,8 @@ let UndoStack = [];
 let RedoStack = [];
 let toolBarOpened = session.read('ToolOpen',false);
 const UndoLimit = 20;
+let imageSelection = null;
+let imageUrls = [];
 
 /*COnservation/reprise du curseur */
 const selection = {
@@ -1043,6 +1045,171 @@ function saveTable() {
     selection.restore(newPosition, newPosition);
     refreshEditor();}
 
+function normalizeImageName(name) {
+    return name.trim().replace(/\s+/g, "-").replace(/[\/\\:*?"<>|]/g, "");}
+function splitImagePath(path) {
+    const slash = path.lastIndexOf("/");
+    const dot = path.lastIndexOf(".");
+    return {folder: path.substring(0, slash + 1), name: path.substring(slash + 1, dot), extension: path.substring(dot)};}
+function updateImageReferences(oldPath, newPath = "") {
+    const escapedPath = oldPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const imageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${escapedPath}\\)`,"g");
+    const processContent = content => {
+        if (!content) return content;
+        // Renommage
+        if (newPath) return content.replaceAll(oldPath, newPath);
+        // Suppression
+        return content.replace(imageRegex, "").replace(/\n{3,}/g, "\n\n");};
+    Stage.Introduction = processContent(Stage.Introduction);
+    Stage.Ateliers.forEach(atelier => {
+        atelier.Exercices.forEach(exercice => {exercice.Contenu = processContent(exercice.Contenu);});});
+    if (Current.Exercice === 0) Current.Contenu = Stage.Introduction;
+    else Current.Contenu = getCurrentExercice().Contenu;
+    textareaSync.value = Current.Contenu;
+    storage.write("Stage", Stage);
+    storage.write("Current", Current);}
+function getCurrentImage() {
+    const position = textareaSync.selectionStart;
+    const text = textareaSync.value;
+    const regex = /!\[(.*?)\]\((.*?)\)/g;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+        const start = match.index;
+        const end = start + match[0].length;
+        if (position >= start && position <= end) return {start, end, alt: match[1], url: match[2], internal: !/^https?:\/\//i.test(match[2])};}
+    return {start: position, end: position, alt: "", url: "", internal: false };}
+function countImageReferences(path) {
+    let count = 0;
+    const escapedPath = path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(`!\\[[^\\]]*\\]\\(${escapedPath}\\)`,"g");
+    const countInContent = content => {
+        if (!content) return 0;
+        const matches = content.match(regex);
+        return matches ? matches.length : 0;};
+    count += countInContent(Stage.Introduction);
+    Stage.Ateliers.forEach(atelier => {atelier.Exercices.forEach(exercice => {count += countInContent(exercice.Contenu);});});
+    return count;}
+function isIllustration(path) {
+    return /^a\d+e\d+\.(png|jpg|jpeg|gif|webp)$/i.test(path);}    
+function selectImage(path) {
+    imageSelection = path;
+    document.querySelectorAll(".imageTileSelected").forEach(tile => tile.classList.remove("imageTileSelected"));
+    document.querySelector(`[data-path="${path}"]`)?.classList.add("imageTileSelected");}
+async function buildImageGallery(selectedPath = "") {
+    const files = await db.list();
+    const images = files.filter(file => /\.(png|jpg|jpeg|gif|webp)$/i.test(file));
+    let html = '<div class="imageGallery">';
+    for (const path of images) {
+        const url = await db.getUrl(path);
+        let imageTitle = splitImagePath(path).name;
+        imageUrls.push(url);
+        const isCurrentIllustration = path === Current.IllustrationName;
+        if (path.match(/^a\d+e\d+\.(png|jpg|jpeg|gif|webp|bmp)$/i) && path !== Current.IllustrationName) continue;
+        const selected = path === selectedPath ? " imageTileSelected" : "";
+        const icon = isCurrentIllustration ? "📷" : "🖼️";
+        imageTitle = imageTitle.length > 20 ? imageTitle.substring(0,17) + "..." : imageTitle;
+        html += `<div class="imageTile${selected}" data-path="${path}" onclick="selectImage('${path}')">
+        <div class = "imagePreview">
+            <img src="${url}">
+            ${!isCurrentIllustration ? `<button class="imageDeleteButton" onclick="event.stopPropagation(); confirmDeleteImage('${path}')">🗑️</button>` : ""}
+        </div>
+        <div class="imageTileName">
+            <span class="imageTitle" title="${path}">${icon} ${imageTitle}</span>
+            ${!isCurrentIllustration ? `<button class="imageRenameButton" onclick="event.stopPropagation(); startImageRename('${path}')">✏️</button>` : ""}
+        </div></div>`;}
+    html += "</div>";
+    return html;}
+function endImageRename(oldPath, newPath = oldPath) {
+    const tile = document.querySelector(`.imageTile[data-path="${oldPath}"]`);
+    if (!tile) return;
+    tile.dataset.path = newPath;
+    tile.onclick = () => selectImage(newPath);
+    const title =tile.querySelector(".imageTitle");
+    const parts = splitImagePath(newPath);
+    title.title = newPath;
+    title.textContent = `🖼️ ${parts.name}`;
+    const delButton = tile.querySelector(".imageDeleteButton");
+    delButton.onclick = (event) => {event.stopPropagation(); confirmDeleteImage(newPath);}
+    const renameButton = tile.querySelector(".imageRenameButton");
+    renameButton.onclick = (event) => {event.stopPropagation(); startImageRename(newPath);}}
+function startImageRename(path) {
+    const tile = document.querySelector(`.imageTile[data-path="${path}"]`);
+    if (!tile) return;
+    const title = tile.querySelector(".imageTitle");
+    const parts = splitImagePath(path);
+    title.innerHTML =`<input class="imageRenameInput" value="${parts.name}" onkeydown="handleImageRename(event, '${path}')">`;
+    const input = title.querySelector("input");
+    input.focus();
+    input.select();}
+function handleImageRename(event, oldPath) {
+    if (event.key === "Escape") {
+        endImageRename(oldPath);
+        return;}
+    if (event.key === "Enter") {
+        event.preventDefault();
+        saveImageRename(oldPath, event.target.value);}}
+async function saveImageRename(oldPath, newName) {
+    newName = normalizeImageName(newName);
+    if (!newName) {
+        endImageRename(oldPath);
+        return;}
+    const parts = splitImagePath(oldPath);
+    const newPath = parts.folder + newName + parts.extension;
+    if (newPath === oldPath) {
+        endImageRename(oldPath);
+        return;}
+    const files = await db.list();
+    if (files.includes(newPath)) {
+        alert("Ce nom est déjà utilisé.");
+        return;}
+    const blob = await db.read(oldPath);
+    if (!blob) {
+        alert("Impossible de lire l'image.");
+        endImageRename(oldPath);
+        return;}
+    updateImageReferences(oldPath, newPath);
+    await db.write(newPath, blob);
+    await db.delete(oldPath);
+    endImageRename(oldPath, newPath);}
+async function deleteImage(path) {
+    await db.delete(path);
+    updateImageReferences(path);
+    openImageEditor();}       
+function confirmDeleteImage(path) {
+    const count = countImageReferences(path);
+    let countStr = `<p>(${count} référence`;
+    if (count > 1) countStr += 's seront supprimées'; else countStr +=' sera supprimée';
+    if (count >0) countStr += ' dans le stage.)</p>'; else countStr = '';
+    dialog.show("Suppression d'une image",
+        `<p>Supprimer l'image <strong>${splitImagePath(path).name}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openImageEditor(imageSelection)},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteImage(path)}],'small');}
+async function addImage() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+        const path = `images/${normalizeImageName(file.name)}`;
+        await db.write(path, file);
+        openImageEditor(path);};
+    input.click();}
+async function openImageEditor(selectedPath = null) {
+    const image = getCurrentImage();
+    if (selectedPath !== null) imageSelection = selectedPath;
+    else imageSelection = image.internal ? image.url : null;
+    imageUrls.forEach(url => db.releaseUrl(url));
+    imageUrls = [];
+    const html = await buildImageGallery(imageSelection);
+    dialog.show("Insertion / Modification d'une image",html,
+        [
+            {label : "Ajouter", action : () => addImage()},
+            {label : "Image externe", action : () => openExternalImageEditor()},
+            {label : "Annuler", action : () => dialog.close()},
+            {label : "Valider", action : () => saveImage()}
+        ]
+    );
+}
+
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")
 theme = localStorage.getItem( IB_PREFIX + "theme") || 'original';
@@ -1139,3 +1306,5 @@ textareaSync.addEventListener("keyup", () => {selection.save(); syncCursor();});
 textareaSync.addEventListener("mouseup", () => {selection.save(); syncCursor();});
 textareaSync.addEventListener("select", () => {selection.save();});
 textareaSync.addEventListener("input", () => {selection.save();});
+
+
