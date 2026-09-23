@@ -21,10 +21,10 @@ const selection = {
         this.start = start;
         this.end = end;}};
 
-function restoreEditorState(state) {
+async function restoreEditorState(state) {
     Current.Atelier = state.atelier;
     Current.Exercice = state.exercice;
-    chargerExercice();
+    await chargerExercice();
     afficherExercice();
     textareaSync.value = state.text;
     Current.Contenu = state.text;
@@ -39,7 +39,7 @@ function saveUndoStacks() {
     session.write("Redo", RedoStack);
     refreshUndoButtons();}    
 
-function undoLastAction() {
+async function undoLastAction() {
     const state = UndoStack.pop();
     if (!state) return;
     RedoStack.push({ action: state.action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd, scrollTop: textareaSync.scrollTop});
@@ -47,7 +47,7 @@ function undoLastAction() {
     saveUndoStacks();
     restoreEditorState(state);}
 
-function redoLastAction() {
+async function redoLastAction() {
     const state = RedoStack.pop();
     if (!state) return;
     UndoStack.push({ action: state.action, timeStamp: Date.now(), atelier: Current.Atelier, exercice: Current.Exercice, text: textareaSync.value, start: textareaSync.selectionStart, end: textareaSync.selectionEnd, scrollTop: textareaSync.scrollTop});
@@ -157,10 +157,8 @@ function syncCursor() {
 
 function getAtelierLabel(atelier) {
     return atelier.Titre ? `Atelier ${atelier.Id} : ${atelier.Titre}` : `Atelier ${atelier.Id}`;}
-
 function getExerciceLabel(exercice) {
     return exercice.Titre ? `Exercice ${exercice.Id} : ${exercice.Titre}` : `Exercice ${exercice.Id}`;}
-    
 function clearDropIndicators(element) {
     element.classList.remove("writerNavDropBefore", "writerNavDropAfter");}
 
@@ -190,7 +188,6 @@ function majStage() {
 
 async function renumberStage() {
     /* Renumérotation des exercices/ateliers du stage (après ajout/suppression/déplacement)  + renommage des illustrations */
-    console.log("renumberStage");
     const mappings = [];
     Stage.Ateliers.forEach((atelier, atelierIndex) => {
         const oldAtelierId = atelier.Id;
@@ -199,7 +196,6 @@ async function renumberStage() {
             mappings.push({oldPrefix: `a${oldAtelierId}e${oldExerciceId}`, newPrefix: `a${atelierIndex + 1}e${exerciceIndex + 1}`});
             exercice.Id = exerciceIndex + 1;});
         atelier.Id = atelierIndex + 1;});
-    console.log(mappings);
     /* Restauration du Current */
     for (const atelier of Stage.Ateliers) {
         const exercice = atelier.Exercices.find(e => e._restoreCurrent);
@@ -311,13 +307,14 @@ window.addEventListener("resize", resizeWriter);
 resizeWriter();
 
 async function chargerExercice() {
-    if (Current.Atelier == 0) { Current.Contenu = Stage.Introduction; Current.IllustrationName = null;}
+    if (Current.Atelier == 0) { Current.Contenu = Stage.Introduction; Current.IllustrationName = "";}
     else {
         const exercice = getCurrentExercice();
         if (exercice) {
             Current.Contenu = exercice.Contenu;
             const prefix = `a${Current.Atelier}e${Current.Exercice}.`;
-            Current.IllustrationName = await db.find(prefix);}}
+            const illusName = await db.find(prefix);
+            Current.IllustrationName = illusName ? illusName : "";}}
     UndoStack = session.read("Undo", []);
     RedoStack = session.read("Redo", []);
     refreshUndoButtons();
@@ -328,6 +325,7 @@ function afficherExercice() {
     document.querySelectorAll(".writerNavExercice").forEach(lien => {
         if ( lien.dataset.atelier != Current.Atelier || lien.dataset.exercice != Current.Exercice) { lien.classList.remove("writerNavSelected");}
         else {lien.classList.add("writerNavSelected");}});
+    refreshIllusButton();
     if (Current.Atelier == 0) {
         if (Stage.Ateliers.length == 1 && Stage.Ateliers[0].Exercices.length == 1) document.getElementById("btnAddSommaire").style.display = "none";
         else document.getElementById("btnAddSommaire").style.display = "flex";
@@ -489,20 +487,20 @@ function updateStyleBar() {
     if (variables.length === 1) btn.title = `Insérer [${variables[0]}]`;
     else btn.title = "Insérer une variable";}    
 
-function selectExercice(atelier, exercice) {
+async function selectExercice(atelier, exercice) {
     if (atelier == Current.Atelier && exercice == Current.Exercice) return;
     majStage();
     Current.Atelier = atelier;
     Current.Exercice = exercice;
-    chargerExercice();
+    await chargerExercice();
     afficherExercice(); }
 
-function selectIntroduction() {
+async function selectIntroduction() {
     if (Current.Atelier == 0) return;
     majStage();
     Current.Atelier = 0;
     Current.Exercice = 0;
-    chargerExercice();
+    await chargerExercice();
     afficherExercice(); }
 
 function validateField(field) {
@@ -516,7 +514,7 @@ async function addAtelier() {
     construireNavigation();
     Current.Atelier = Stage.Ateliers.at(-1).Id;
     Current.Exercice = 1;
-    chargerExercice();
+    await chargerExercice();
     afficherExercice();}
 async function deleteAtelier() {
     if (Stage.Ateliers.length <= 1) {
@@ -529,7 +527,7 @@ async function deleteAtelier() {
     const nextIndex = Math.min(index,Stage.Ateliers.length - 1);
     Current.Atelier = Stage.Ateliers[nextIndex].Id;
     Current.Exercice = Stage.Ateliers[nextIndex].Exercices[0].Id;
-    chargerExercice();
+    await chargerExercice();
     construireNavigation();
     afficherExercice();}
 function confirmDeleteAtelier() {
@@ -553,7 +551,7 @@ async function moveAtelier(aSource,aTarget,before = false, confirmed = false) {
     Stage.Ateliers.splice(aSource, 1);
     Stage.Ateliers.splice(insertIndex, 0, atelier);
     await renumberStage();;
-    chargerExercice();
+    await chargerExercice();
     storage.write("Stage", Stage);
     construireNavigation();
     afficherExercice();}
@@ -567,7 +565,7 @@ async function addExercice() {
     storage.write("Stage", Stage);
     construireNavigation();
     Current.Exercice = atelier.Exercices.at(-1).Id;
-    chargerExercice();
+    await chargerExercice();
     afficherExercice();}
 async function deleteExercice() {
     /* A faire (peut-être) suppression des illustrations inutiles le cas échéant */
@@ -582,7 +580,7 @@ async function deleteExercice() {
     storage.write("Stage", Stage);
     const nextIndex = Math.min(index, atelier.Exercices.length - 1);
     Current.Exercice =  atelier.Exercices[nextIndex].Id;
-    chargerExercice();
+    await chargerExercice();
     construireNavigation();
     afficherExercice();}
 function confirmDeleteExercice() {
@@ -613,7 +611,7 @@ async function moveExercice(aSource, aTarget, eSource, eTarget, before = false, 
     atelierTarget.Exercices.splice(insertIndex, 0, exercice);
     if (aSource !== aTarget && atelierSource.Exercices.length === 0) Stage.Ateliers.splice(aSource, 1);
     await renumberStage();;
-    chargerExercice();
+    await chargerExercice();
     storage.write("Stage", Stage);
     construireNavigation();
     afficherExercice();}
@@ -962,7 +960,7 @@ function openVariableInsert() {
         insertVariable(variables[0][0]);
         return;}
     let html = '<div class="variableInsertList">';
-    variables.forEach(([name, variable]) => {html += `<button class="variableInsertButton" <button title="${variable.lib || ''}"> onclick="insertVariable('${name}'); dialog.close();">${name} ${variable.lib ? '👤' : '🔒'}</button>`;});
+    variables.forEach(([name, variable]) => {html += `<button class="variableInsertButton" title="${variable.lib || ''}" onclick="insertVariable('${name}'); dialog.close();">${name} ${variable.lib ? '👤' : '🔒'}</button>`;});
     html += '</div>';
     dialog.show("Insertion d'une variable", html,[{label : "Annuler", action : () => dialog.close()}], "small");}
 
@@ -1002,7 +1000,7 @@ if (rows.length === 0)
 function openTableEditor() {
     const table = getCurrentTable();
     let html = `<div id="ibContent" class="tableInsert"><table id="tableDesigner" class="tableDesigner"><tr>`;
-    table.headers.forEach(header => {html += `<th><input value="${header.replace(/"/g, '&quot;')}"></th>`;});
+    table.headers.forEach(header => {html += `<th><input value="${header.replace(/"/g, '&quot;')}" placeholder="Titre"></th>`;});
     html += `</tr>
     <tr>`;
     table.rows[0].forEach(value => {html += `<td>${value}</td>`;});
@@ -1042,8 +1040,7 @@ function saveTable() {
     saveUndoState("Insertion / Modification d'un tableau");
     textareaSync.setRangeText(markdown,table.start, table.end, "end");
     dialog.close();
-    selection.restore(newPosition, newPosition);
-    refreshEditor();}
+    selection.restore(newPosition, newPosition);}
 
 function normalizeImageName(name) {
     return name.trim().replace(/\s+/g, "-").replace(/[\/\\:*?"<>|]/g, "");}
@@ -1076,8 +1073,8 @@ function getCurrentImage() {
     while ((match = regex.exec(text)) !== null) {
         const start = match.index;
         const end = start + match[0].length;
-        if (position >= start && position <= end) return {start, end, alt: match[1], url: match[2], internal: !/^https?:\/\//i.test(match[2])};}
-    return {start: position, end: position, alt: "", url: "", internal: false };}
+        if (position >= start && position <= end) return {start, end, title: match[1], path: match[2], internal: !/^https?:\/\//i.test(match[2])};}
+    return {start: position, end: position, title: "", path: "", internal: false };}
 function countImageReferences(path) {
     let count = 0;
     const escapedPath = path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -1089,10 +1086,8 @@ function countImageReferences(path) {
     count += countInContent(Stage.Introduction);
     Stage.Ateliers.forEach(atelier => {atelier.Exercices.forEach(exercice => {count += countInContent(exercice.Contenu);});});
     return count;}
-function isIllustration(path) {
-    return /^a\d+e\d+\.(png|jpg|jpeg|gif|webp)$/i.test(path);}    
 function selectImage(path) {
-    imageSelection = path;
+    imageSelection = {path: path, title: splitImagePath(path).name};
     document.querySelectorAll(".imageTileSelected").forEach(tile => tile.classList.remove("imageTileSelected"));
     document.querySelector(`[data-path="${path}"]`)?.classList.add("imageTileSelected");}
 async function buildImageGallery(selectedPath = "") {
@@ -1180,8 +1175,7 @@ function confirmDeleteImage(path) {
     let countStr = `<p>(${count} référence`;
     if (count > 1) countStr += 's seront supprimées'; else countStr +=' sera supprimée';
     if (count >0) countStr += ' dans le stage.)</p>'; else countStr = '';
-    dialog.show("Suppression d'une image",
-        `<p>Supprimer l'image <strong>${splitImagePath(path).name}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openImageEditor(imageSelection)},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteImage(path)}],'small');}
+    dialog.show("Suppression d'une image", `<p>Supprimer l'image <strong>${splitImagePath(path).name}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openImageEditor(imageSelection.path)},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteImage(path)}],'small');}
 async function addImage() {
     const input = document.createElement("input");
     input.type = "file";
@@ -1193,22 +1187,96 @@ async function addImage() {
         await db.write(path, file);
         openImageEditor(path);};
     input.click();}
+function openExternalImageEditor() {
+    let image = getCurrentImage();
+    if (image.internal) image = {title: "", path: ""};
+    dialog.show(
+        "Insertion / Modification d'une image",
+        `<div class="variableEditor">
+             <div class="variableField"><label>Titre</label><input id="externalImageTitle" value="${image.title || ""}"></div>
+             <div class="variableField"><label>URL</label><input id="externalImageUrl" value="${image.path || ""}"></div>
+             <p><b><u>Nota</u></b> : Cette image ne sera pas stockée localement, son affichage dépendra de la disponibilité de la resource originale...</p>
+        </div>`,
+        [{label: "Image interne", action: () => openImageEditor(imageSelection.path)}, {label: "Annuler", action: () => dialog.close()}, {label: "Valider", action: () => saveImage()}]);}
+function saveImage() {
+    // Mode image externe
+    const titleInput = document.getElementById("externalImageTitle");
+    const urlInput = document.getElementById("externalImageUrl");
+    if (titleInput && urlInput) imageSelection = {title : titleInput.value.trim(), path  : urlInput.value.trim()};
+    if (!imageSelection.path) return;
+    const image = getCurrentImage();
+    const markdown = `![${imageSelection.title}](${imageSelection.path})`;
+    saveUndoState("insertion ou modification d'une image");
+    textareaSync.value = textareaSync.value.substring(0, image.start) + markdown + textareaSync.value.substring(image.end);
+    Current.Contenu = textareaSync.value;
+    majStage();
+    storage.write("Current", Current);
+    selection.restore(image.start + markdown.length,image.start + markdown.length);
+    refreshEditor();
+    dialog.close();}
 async function openImageEditor(selectedPath = null) {
     const image = getCurrentImage();
-    if (selectedPath !== null) imageSelection = selectedPath;
-    else imageSelection = image.internal ? image.url : null;
+    if (selectedPath !== null) imageSelection = {path: selectedPath, title: splitImagePath(selectedPath).name};
+    else imageSelection = {path : image.internal ? image.path : "",title : image.internal ? splitImagePath(image.path).name : ""};
     imageUrls.forEach(url => db.releaseUrl(url));
     imageUrls = [];
-    const html = await buildImageGallery(imageSelection);
-    dialog.show("Insertion / Modification d'une image",html,
-        [
-            {label : "Ajouter", action : () => addImage()},
-            {label : "Image externe", action : () => openExternalImageEditor()},
-            {label : "Annuler", action : () => dialog.close()},
-            {label : "Valider", action : () => saveImage()}
-        ]
-    );
-}
+    const html = await buildImageGallery(imageSelection.path);
+    dialog.show("Insertion / Modification d'une image",html, [{label : "Ajouter", action : () => addImage()}, {label : "Image externe", action : () => openExternalImageEditor()}, {label : "Annuler", action : () => dialog.close()}, {label : "Valider", action : () => saveImage()}]);}
+
+/* Edition des "illustrations" */
+function refreshIllusButton() {
+    const illusButton = document.getElementById("illustrationButton");
+    if (Current.Atelier == 0) return;
+    if (!Current.IllustrationName ) {
+        illusButton.title = "Ajouter une illustration à l'exercice.";
+        illusButton.classList.remove("hasIllustration");
+        illusButton.onclick = () => addIllustration();}
+    else {
+        illusButton.title = "Supprimer l'illustration de l'exercice.";
+        illusButton.classList.add("hasIllustration");
+         illusButton.onclick = () => confirmDeleteIllustration();}}
+function isIllustration(path) {
+    return /^a\d+e\d+\.(png|jpg|jpeg|gif|webp)$/i.test(path);}
+async function getCurrentIllustration() {
+    const files = await db.list();
+    const prefix = `a${Current.Atelier}e${Current.Exercice}.`;
+    return files.find(file => file.startsWith(prefix) && isIllustration(file)) || null;}
+function confirmDeleteIllustration() {
+    dialog.show("Supprimer l'illustration", `<p>Supprimer l'illustration "${Current.IllustrationName}" de cet exercice ?</p><p>(Elle sera conservée dans le dossier "images" pour être insérée dans les ateliers si nécessaire)</p>`, [{label : "Annuler", action : () => dialog.close()},{label : "Supprimer", className : "ibDialogButtonDelete", action : () => {deleteIllustration(); dialog.close();}}],"small");}
+async function deleteIllustration() {
+    const illustration = await getCurrentIllustration();
+    if (!illustration) return;
+    const count = countImageReferences(illustration);
+    const blob = await db.read(illustration);
+    const parts = splitImagePath(illustration);
+    let targetPath = `images/${parts.name}${parts.extension}`;
+    const files = await db.list();
+    let index = 1;
+    while (files.includes(targetPath)) {
+        targetPath = `images/${parts.name}-${index}${parts.extension}`;
+        index++;}
+    await db.write(targetPath, blob);
+    updateImageReferences(illustration, targetPath);
+    Current.IllustrationName = '';
+    storage.write("Current",Current);
+    await db.delete(illustration);
+    refreshIllusButton();
+    refreshEditor();}
+async function addIllustration() {
+    if (Current.IllustrationName != "") return;
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+        const extension = file.name.substring(file.name.lastIndexOf("."));
+        const illustrationPath = `a${Current.Atelier}e${Current.Exercice}${extension}`;
+        await db.write(illustrationPath, file);
+        Current.IllustrationName = illustrationPath;
+        storage.write("Current", Current);
+        refreshIllusButton();};
+    input.click();}    
 
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")

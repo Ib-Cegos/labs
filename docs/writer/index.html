@@ -26,6 +26,7 @@
             <button id="btnDeleteExercice" class="ibDeleteButton" title="Supprimer l'exercice">✖</button>
             <label for="writerExerciceLength">Durée :</label>
             <input id="writerExerciceLength">
+            <buton id="illustrationButton">📸</buton>
         </div>
         <textarea id="writerContenu"></textarea>
     </section>
@@ -52,7 +53,7 @@
 </div>
 <!-- Barre d'outils ibCAN -->
 <div id="ibWriterStyleBar">
-    <span class="ibWriterStyleHandle">✎</span>
+    <span class="ibWriterStyleHandle">🛠️</span>
     <button title="Titre de section" onclick="setHeading(2);">T1</button>
     <button title="Titre de sous-section" onclick="setHeading(3);">T2</button>
     <span class="ibWriterStyleSeparator"></span>
@@ -65,7 +66,7 @@
     <button title="Note" onclick="toggleBlockquote();">></button>
     <span class="ibWriterStyleSeparator"></span>
     <button title="Lien" onclick="insertLink();">🔗</button>
-    <button title="Image/Illustration" onclick="openImageEditor();">🖼️</button>
+    <button title="Image/Illustration" onclick="const image = getCurrentImage(); if (image.path && !image.internal) openExternalImageEditor(); else openImageEditor();">🖼️</button>
     <button title="Variables" id="styleBarVarButton" onclick="openVariableInsert();">[ ]</button>
     <button title="Tableau" onclick="openTableEditor();">⊞</button>
     <span class="ibWriterStyleSeparator"></span>
