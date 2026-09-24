@@ -8,7 +8,7 @@ $user1 = New-MGuser –UserPrincipalName "catherine@$wwlDomain" –DisplayName "
 $user2 = New-MGuser –UserPrincipalName "tameka@$wwlDomain" –DisplayName "Tameka Reed" -GivenName Tameka -SurName Reed -PasswordProfile @{password='Pa55w.rd';ForceChangePasswordNextSignIn=$false} -UsageLocation CH -AccountEnabled -MailNickname tameka
 $license = Get-MgSubscribedSku|where SkuPartNumber -like "*_365_E5*"
 $user1.Id,$user2.Id | foreach-object {Set-MgUserLicense -userId $_ -AddLicenses @{SkuId=$license.SkuId} -RemoveLicenses @()}
-Invoke-WebRequest "https://raw.githubusercontent.com/renaudwangler/ib-labs/master/resources/users.csv" | Select-Object -ExpandProperty Content | Out-File ".\users.csv"
+Invoke-WebRequest "https://msms030/ressources/users.csv" | Select-Object -ExpandProperty Content | Out-File ".\users.csv"
 (Get-Content .\users.csv).Replace('labxxxxx.godeploylabs.com', $labDomain) | Set-Content .\users.csv
 Import-Csv -Path .\users.csv | ForEach-Object {New-MGuser –UserPrincipalName $_.UPN –DisplayName $_.DisplayName -GivenName $_.LastName -SurName $_.FirstName -PasswordProfile @{password='Pa55w.rd';ForceChangePasswordNextSignIn=$false} -UsageLocation $_.UsageLocation -AccountEnabled -MailNickname $_.FirstName -jobTitle $_.Title -Department $_.department -StreetAddress $_.StreetAddress -City $_.city -PostalCode $_.PostalCode -Country $_.Country}
 $mktGroup = New-MgGroup -DisplayName Marketing -Description 'Marketing department users' -groupTypes unified -MailEnabled -securityEnabled -mailNickName marketing

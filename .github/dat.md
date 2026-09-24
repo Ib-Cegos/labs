@@ -632,7 +632,7 @@ Les images internes référencées dans le Markdown sont automatiquement résolu
 
 ## Gestion des ressources
 Les ressources du stage (illustrations d'exercices et images référencées dans le Markdown) sont stockées dans une base IndexedDB locale pendant l'édition.
-Le format d'échange du Writer est désormais un fichier ZIP contenant : content.json,images/aXeY.png...
+Le format d'échange du Writer est désormais un fichier ZIP contenant : content.json,ressources/aXeY.png...
 Le Writer :
 
 - importe automatiquement les ressources dans IndexedDB ;
@@ -697,8 +697,8 @@ Le format d'échange du Writer est un fichier ZIP contenant :
 - content.json
 - a1e1.png
 - a1e2.webp
-- images/schema.png
-- images/azure/tenant.png
+- ressources/schema.png
+- ressources/azure/tenant.png
 ...
 
 content.json contient le modèle documentaire du stage.

@@ -8,7 +8,7 @@ const UndoLimit = 20;
 let imageSelection = null;
 let imageUrls = [];
 
-/*COnservation/reprise du curseur */
+/*Conservation/reprise du curseur */
 const selection = {
     start: 0,
     end: 0,
@@ -16,10 +16,10 @@ const selection = {
         this.start = textareaSync.selectionStart;
         this.end = textareaSync.selectionEnd;},
     restore(start = this.start, end = this.end) {
-        textareaSync.focus();
         textareaSync.setSelectionRange(start, end);
         this.start = start;
-        this.end = end;}};
+        this.end = end;
+        textareaSync.focus();}};
 
 async function restoreEditorState(state) {
     Current.Atelier = state.atelier;
@@ -480,7 +480,8 @@ function openVariables() {
 
 function updateStyleBar() {
     const btn = document.getElementById("styleBarVarButton");
-    const variables = Object.keys(Stage.Variables || {});
+    const allVariables = {...SYSTEM_VARIABLES,...Stage.Variables};
+    const variables = Object.keys(allVariables || {});
     btn.dataset.variableCount = variables.length;
     if (variables.length === 0) btn.style.display = "none";
     else btn.style.display = "";
@@ -953,14 +954,22 @@ function insertVariable(name) {
     refreshEditor();}
 
 function openVariableInsert() {
-    const variables = Object.entries(Stage.Variables);
-    Object.entries(Stage.Variables).sort(([a],[b]) => a.localeCompare(b))
+    const allVariables = {...SYSTEM_VARIABLES,...Stage.Variables};
+    const variables = Object.entries(allVariables).sort((a, b) => {
+        const va = a[1];
+        const vb = b[1];
+        // Système → Éditable → Fixe
+        const pa = va.system ? 0 : va.lib ? 1 : 2;
+        const pb = vb.system ? 0 : vb.lib ? 1 : 2;
+        if (pa !== pb) return pa - pb;
+        return a[0].localeCompare(b[0]);});
+    //Object.entries(Stage.Variables).sort(([a],[b]) => a.localeCompare(b))
     if (variables.length === 0) return;
     if (variables.length === 1) {
         insertVariable(variables[0][0]);
         return;}
     let html = '<div class="variableInsertList">';
-    variables.forEach(([name, variable]) => {html += `<button class="variableInsertButton" title="${variable.lib || ''}" onclick="insertVariable('${name}'); dialog.close();">${name} ${variable.lib ? '👤' : '🔒'}</button>`;});
+    variables.forEach(([name, variable]) => {html += `<button class="variableInsertButton" title="${variable.lib || ''}" onclick="insertVariable('${name}'); dialog.close();">${variable.system ? '⚙️' : (variable.lib ? '👤' : '🔒')}${name}</button>`;});
     html += '</div>';
     dialog.show("Insertion d'une variable", html,[{label : "Annuler", action : () => dialog.close()}], "small");}
 
@@ -1041,7 +1050,6 @@ function saveTable() {
     textareaSync.setRangeText(markdown,table.start, table.end, "end");
     dialog.close();
     selection.restore(newPosition, newPosition);}
-
 function normalizeImageName(name) {
     return name.trim().replace(/\s+/g, "-").replace(/[\/\\:*?"<>|]/g, "");}
 function splitImagePath(path) {
@@ -1092,14 +1100,14 @@ function selectImage(path) {
     document.querySelector(`[data-path="${path}"]`)?.classList.add("imageTileSelected");}
 async function buildImageGallery(selectedPath = "") {
     const files = await db.list();
-    const images = files.filter(file => /\.(png|jpg|jpeg|gif|webp)$/i.test(file));
+    const images = files.filter(isImageFile);
     let html = '<div class="imageGallery">';
     for (const path of images) {
         const url = await db.getUrl(path);
         let imageTitle = splitImagePath(path).name;
         imageUrls.push(url);
         const isCurrentIllustration = path === Current.IllustrationName;
-        if (path.match(/^a\d+e\d+\.(png|jpg|jpeg|gif|webp|bmp)$/i) && path !== Current.IllustrationName) continue;
+        if (isIllustration(path) && path !== Current.IllustrationName) continue;
         const selected = path === selectedPath ? " imageTileSelected" : "";
         const icon = isCurrentIllustration ? "📷" : "🖼️";
         imageTitle = imageTitle.length > 20 ? imageTitle.substring(0,17) + "..." : imageTitle;
@@ -1183,7 +1191,7 @@ async function addImage() {
     input.onchange = async () => {
         const file = input.files[0];
         if (!file) return;
-        const path = `images/${normalizeImageName(file.name)}`;
+        const path = `ressources/${normalizeImageName(file.name)}`;
         await db.write(path, file);
         openImageEditor(path);};
     input.click();}
@@ -1195,7 +1203,7 @@ function openExternalImageEditor() {
         `<div class="variableEditor">
              <div class="variableField"><label>Titre</label><input id="externalImageTitle" value="${image.title || ""}"></div>
              <div class="variableField"><label>URL</label><input id="externalImageUrl" value="${image.path || ""}"></div>
-             <p><b><u>Nota</u></b> : Cette image ne sera pas stockée localement, son affichage dépendra de la disponibilité de la resource originale...</p>
+             <p><b><u>Nota</u></b> : Cette image ne sera pas stockée localement, son affichage dépendra de la disponibilité de la ressource originale...</p>
         </div>`,
         [{label: "Image interne", action: () => openImageEditor(imageSelection.path)}, {label: "Annuler", action: () => dialog.close()}, {label: "Valider", action: () => saveImage()}]);}
 function saveImage() {
@@ -1235,8 +1243,6 @@ function refreshIllusButton() {
         illusButton.title = "Supprimer l'illustration de l'exercice.";
         illusButton.classList.add("hasIllustration");
          illusButton.onclick = () => confirmDeleteIllustration();}}
-function isIllustration(path) {
-    return /^a\d+e\d+\.(png|jpg|jpeg|gif|webp)$/i.test(path);}
 async function getCurrentIllustration() {
     const files = await db.list();
     const prefix = `a${Current.Atelier}e${Current.Exercice}.`;
@@ -1249,11 +1255,11 @@ async function deleteIllustration() {
     const count = countImageReferences(illustration);
     const blob = await db.read(illustration);
     const parts = splitImagePath(illustration);
-    let targetPath = `images/${parts.name}${parts.extension}`;
+    let targetPath = `ressources/${parts.name}${parts.extension}`;
     const files = await db.list();
     let index = 1;
     while (files.includes(targetPath)) {
-        targetPath = `images/${parts.name}-${index}${parts.extension}`;
+        targetPath = `ressources/${parts.name}-${index}${parts.extension}`;
         index++;}
     await db.write(targetPath, blob);
     updateImageReferences(illustration, targetPath);
@@ -1284,6 +1290,7 @@ theme = localStorage.getItem( IB_PREFIX + "theme") || 'original';
 ibApplyTheme(theme);
 let Stage = storage.read('Stage',{ Titre: "", "Auteur": "", "Variables": {}, "Introduction": "", "Reference": "", "Ateliers": [{ "Id": 1, "Titre": "", "Exercices": [{ "Id": 1, "Titre": "", "Contenu": "", "Duree": "" }]}]});
 sortStage();
+systemVariableRefresh();
 let Current = storage.read ('Current', {Atelier : 0, Exercice : 0, Contenu : Stage.Introduction});
 document.getElementById("stageReference").value = Stage.Reference || "";
 document.getElementById("stageReference").addEventListener("input", () => {
@@ -1336,8 +1343,13 @@ document.getElementById("btnTools").addEventListener("click", () => {
     toolBarOpened = true;
     session.write('ToolOpen',true);
     document.getElementById("ibWriterStyleBar").style.display = "flex";
-    selection.restore();});
-document.getElementById("ibWriterStyleClose").addEventListener("click",() => {toolBarOpened = false; session.write('ToolOpen',false); document.getElementById("ibWriterStyleBar").style.display="none"; selection.restore();});
+    if (restoreEditorFocus) {
+        selection.restore();
+        restoreEditorFocus = false;}});
+let restoreEditorFocus = false;
+btnTools.addEventListener("mousedown", () => {restoreEditorFocus = document.activeElement === textareaSync;});
+document.getElementById("ibWriterStyleClose").addEventListener("mousedown", () => {restoreEditorFocus = document.activeElement === textareaSync;});
+document.getElementById("ibWriterStyleClose").addEventListener("click",() => {toolBarOpened = false; session.write('ToolOpen',false); document.getElementById("ibWriterStyleBar").style.display="none"; if (restoreEditorFocus) {selection.restore(); restoreEditorFocus = false;}});
 if (!sessionStorage.getItem(WRITER_PREFIX + "StyleLeft")) {
     const styleButton = document.getElementById("btnTools");
     const styleBar  = document.getElementById("ibWriterStyleBar");
@@ -1374,5 +1386,3 @@ textareaSync.addEventListener("keyup", () => {selection.save(); syncCursor();});
 textareaSync.addEventListener("mouseup", () => {selection.save(); syncCursor();});
 textareaSync.addEventListener("select", () => {selection.save();});
 textareaSync.addEventListener("input", () => {selection.save();});
-
-

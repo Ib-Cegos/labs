@@ -165,3 +165,10 @@ const db = {
     async find(prefix) {
         const files = await this.list();
         return files.find(path => path.startsWith(prefix)) ?? null;}};
+    
+    /* Gestion des varaibles système pour éditeur et preview */
+    function systemVariableRefresh() {
+            const siteUrl = window.location.origin +  window.location.pathname.replace(/\/writer\/?.*$/i, "");
+            Object.values(SYSTEM_VARIABLES).forEach(variable => {
+            variable.defaut = variable.defaut.replaceAll("[site_url]", siteUrl).replaceAll("[stage]", Stage.Reference);});}
+

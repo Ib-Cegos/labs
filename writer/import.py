@@ -53,9 +53,9 @@ def importer_stage(zip_file):
         dossier_stage = DOCS_DIR / reference
         dossier_stage.mkdir(parents=True, exist_ok=True)
         print(f"Import du stage {reference}")
-        # Nettoyage du dossier images du stage s'il existe
-        images_dir = dossier_stage / "images"
-        for item in images_dir.rglob("*"):
+        # Nettoyage du dossier ressources du stage s'il existe
+        ressources_dir = dossier_stage / "ressources"
+        for item in ressources_dir.rglob("*"):
             if item.is_file(): item.unlink()
         # Import des ressources
         for member in zipf.infolist():

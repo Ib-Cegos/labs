@@ -3,6 +3,7 @@ let Current = storage.read("Current");
 let PreviewShowVariableValues = sessionStorage.getItem("PreviewShowVariableValues") === 'true';
 let previewSyncEnabled = session.read("Synchro",true);
 const openerOrigin = opener.location;
+systemVariableRefresh();
 
 function togglePreviewSync() {
     previewSyncEnabled = !previewSyncEnabled;
@@ -18,6 +19,9 @@ function replaceVariables(content) {
     Object.entries(Stage.Variables).forEach(([name, variable]) => {
         const regex = new RegExp(`\\[${name}\\]`, "gi");
         content = content.replace(regex, `<span class="ibVariable" title="${variable.lib || ""}">${PreviewShowVariableValues ? variable.defaut || "" : '['+name+']'}</span>`);});
+    Object.entries(SYSTEM_VARIABLES).forEach(([name, variable]) => {
+        const regex = new RegExp(`\\[${name}\\]`, "gi");
+        content = content.replace(regex, variable.defaut);});
     return content;}
 
 function variableButton() {

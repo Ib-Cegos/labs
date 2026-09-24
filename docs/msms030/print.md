@@ -165,6 +165,8 @@ Dans cette tâche, vous allez vérifier l'état de santé du service Microsoft 3
 
 <div class="ibPrintNotes" data-exercise="a1e2" hidden></div>
 
+<div class="ibPrintIllustration"><img src="../a1e2.png" alt="Illustration de l'exercice"></div>
+
 Adatum a acheté un nouveau nom de domaine DNS pour son projet pilote (fourni par goDeploy) qui soit utilisable sur Internet.
 
 Adatum gère directement les enregistrements de ses domaines DNS. Pour que ce domaine soit utilisable sur le tenant, il va vous falloir passer par un assistant de configuration et créer les enregistrements DNS attendus. C'est ce que vous allez réaliser dans ce second exercice.
@@ -206,9 +208,7 @@ Dans cette tâche vous allez ajouter le domaine DNS d'entreprise à votre tenant
 
 1. Retournez dans l'onglet **DNS** de votre environnement d'atelier et créez-y tous les enregistrements DNS nécessaires pour le tenant du projet pilote.
 
-    > Voici un exemple d'onglet DNS contenant les enregistrements nécessaires créés pour vous aider : il vous faudra cependant remplacer la mention labXXXXXX par votre nom DNS d'entreprise ([[godeployDomain],[labXXXXX]]):  
-    >
-    >![msms030fr DNS Sample](../resources/DNS-Sample.png)
+    > Vous pouvez voir un exemple de résultat attendu à l'issue de cette opération dans l'illustration disponible sur le coté de cet exercice : il vous faudra cependant remplacer la mention labXXXXXX par votre nom DNS d'entreprise ([[godeployDomain],[labXXXXX]]).
 
 1. De retour dans la machine virtuelle **lon-DC1**, cliquez sur le bouton **Continue**. A ce moment, l'assistant de création du domaine va vérifier que tous les enregistrements DNS nécessaires ont correctement été créés.
 1. Si tous les enregistrements DNS attendus ont été correctement crées, la page **Domain setup is complete** devrait apparaître (Dans le cas contraire, merci de vérifier les enregistrement DNS manquant/erronés indiqués sur la page **Add DNS records** qui s'est réaffichée, avant de cliquer de nouveau sur **Continue**). Cliquez sur **Done**.
@@ -624,7 +624,7 @@ Dans cette tâche vous allez mettre en place l'environnement fondamental pour la
 
 > Si vous n'êtes pas intéressé par le détail des commandes PowerShell, vous pouvez utiliser le script suivant qui va réaliser l'équivalent des commandes des tâches suivantes. Si vous souhaitez utiliser le script, vous pouvez le faire à l'aide de la commande suivante (à l'issue de laquelle vous pouvez passer à l'exercice 5) :  
 ```powershell
-Invoke-Command -ScriptBlock ([Scriptblock]::Create((Invoke-WebRequest 'https://raw.githubusercontent.com/Ib-Cegos/labs/master/resources/msms030-a2e4.ps1' -useBasicParsing).Content))
+Invoke-Command -ScriptBlock ([Scriptblock]::Create((Invoke-WebRequest '[resourcesUrl]/msms030-a2e4.ps1' -useBasicParsing).Content))
 ```
 
 #### Tâche 2 - Créer de nouveaux utilisateurs et leur affecter des licences.
@@ -725,7 +725,7 @@ Dans cette tâche, vous allez utiliser Windows Powershell pour importer un fichi
 1. Vous devriez être resté connecté sur la machine **LON-CL1** avec le compte **```Administrator```** et le mot de passe **```Pa55w.rd```**; l'outil **Windows Powershell** devrait être resté ouvert en tant qu'administrateur. Si nécessaire, maximisez sa fenêtre.
 1. Tapez la commande suivante : 
 ```powershell
-Invoke-WebRequest "https://raw.githubusercontent.com/renaudwangler/ib-labs/master/resources/users.csv" | Select-Object -ExpandProperty Content | Out-File ".\users.csv"
+Invoke-WebRequest "[resourcesUrl]/users.csv" | Select-Object -ExpandProperty Content | Out-File ".\users.csv"
 ```
 
 1. En utilisant la commande suivante, vous allez pourvoir visualiser le contenu du fichier CSV dans **Notepad** :
@@ -988,7 +988,7 @@ Par exemple, plusieurs objets pourraient avoir un attribut **ProxyAddresses** ou
 Dans cette tâche, vous allez utiliser un script pour implémenter quelques erreurs sur les utilisateurs du projet pilote Adatum afin d'identifier ensuite la manière de trouver et corriger ce genre d'erreurs.
 
 1. Sur LON-DC1, dans la fenêtre **Administrator: WIndows Powershell**, utilisez la commande suivante pour récupérer le script que vous utiliserez ensuite :
-	```Invoke-WebRequest "https://raw.githubusercontent.com/ib-cegos/labs/master/resources/problemUsers.ps1" | Select-Object -ExpandProperty Content | Out-File ".\problemUsers.ps1"```
+	```Invoke-WebRequest "[resourcesUrl]/problemUsers.ps1" | Select-Object -ExpandProperty Content | Out-File ".\problemUsers.ps1"```
 1. Lancez ensuite ledit script dans la fenêtre **Administrator: Windows PowerShell** :
 	```.\problemUsers.ps1```
 
@@ -1001,7 +1001,7 @@ Dans cette tâche vous allez appréhender l'utilisation d'un script powerShell p
 
 1. Vous devriez être encore connecté sur **LON-DC1** à l'issue de la tâche précédente.
 1. Dans la fenêtre **Administrator: WIndows Powershell**, utilisez la commande suivante pour récupérer le script que vous utiliserez ensuite :
-	```Invoke-WebRequest "https://raw.githubusercontent.com/ib-cegos/labs/master/resources/ibIdFix.ps1" | Select-Object -ExpandProperty Content | Out-File ".\ibIdFix.ps1"```
+	```Invoke-WebRequest "[resourcesUrl]/ibIdFix.ps1" | Select-Object -ExpandProperty Content | Out-File ".\ibIdFix.ps1"```
 1. Lancez ensuite ledit script dans la fenêtre **Administrator: Windows PowerShell** :
 	```.\ibIdFix.ps1```  
 1. Une foix que le script a terminé, il génère un export des problèmes en .csv et ouvre une fenêtre **$Report|out-gridview** vous permettant de constater les comptes posant problèmes dans l'ADDS et qu'il serait impossible de synchroniser correctement.
@@ -1039,7 +1039,7 @@ Dans cette tâche, vous allez utiliser l'assistant d'installation de Entra Conne
 1. Vous devriez encore être connecté sur **LON-DC1** avec le compte **Administrator** à l'issue de la tâche précédente.
 1. Avant de pouvoir installer Entra Connect, il nous faut activer la version 1.2 du protocole TLS sur LON-DC1. Dans la barre des tâches, cliquez sur l'icône de l'outil **Administrator: Windows PowerSHell ISE** que vous aviez réduit précédemment.
 1. utilisez la commande suivante pour activer le TLS 1.2 et attendez que LON-DC1 redémarre :  
-```Invoke-Command -ScriptBlock ([Scriptblock]::Create((Invoke-WebRequest 'https://raw.githubusercontent.com/ib-cegos/labs/master/resources/enabletls12.ps1' -useBasicParsing).Content))```
+```Invoke-Command -ScriptBlock ([Scriptblock]::Create((Invoke-WebRequest '[resourcesUrl]/enabletls12.ps1' -useBasicParsing).Content))```
 1. Une fois que la machine LON-DC1 a redémarré, connectez-vous dessus avec le compte ```adatum\administrator``` et le mot de passe ```Pa55w.rd```.
 
 	> Il pourra être intéressant de (re)faire le ménage dans le démarrage du réseau du controleur de domaine avant de poursuivre les manipulations. Demandez conseil à votre formateur/formatrice le cas échéant...
@@ -1702,7 +1702,7 @@ Dominique configurera ensuite une stratégie de boite aux lettres pour les péri
 1. Fermez le panneau d'information d'**Alan Yoo** une fois le changement sauvegardé.
 1. Cliquez sur l'icone de recherche de la barre des tâches puis tapez ```Windows Powershell``` et lançez une invite Powershell.
 1. Dans la fenêtre Windows Powershell, tapez la commande suivante et validez par **[Entrée]** :
-	```Invoke-WebRequest "https://raw.githubusercontent.com/renaudwangler/ib-labs/master/resources/pieceJointe.txt" | Select-Object -ExpandProperty Content | Out-File "$env:USERPROFILE\documents\pieceJointe.txt"```
+	```Invoke-WebRequest "[resourcesUrl]/pieceJointe.txt" | Select-Object -ExpandProperty Content | Out-File "$env:USERPROFILE\documents\pieceJointe.txt"```
 1. Vous pouvez désormais fermer la fenêtre Powershell et revenir à votre navigateur Internet.
 1. Dans votre navigateur Internet, utilisez le menu des application 365 (la grille de 3x3 en haut à gauche des pages 365) pour lancer l'application web Outlook.
 1. Dans **Outlook**, cliquez sur le bouton **New mail**.

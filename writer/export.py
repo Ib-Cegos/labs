@@ -100,11 +100,12 @@ def main():
             for fichier in stage_path.iterdir():
                 if (fichier.is_file() and fichier.suffix.lower() in tools.IMAGE_EXTENSIONS):
                     zipf.write(fichier, fichier.name)
-            images_dir = stage_path / "images"
-            if images_dir.exists():
-                for fichier in images_dir.rglob("*"):
+            ressources_dir = stage_path / "ressources"
+            if ressources_dir.exists():
+                for fichier in ressources_dir.rglob("*"):
                     if (fichier.is_file()):
                         zipf.write(fichier, fichier.relative_to(stage_path))
+    tools.generate_python_tranfer_js("docs/assets/pythonTransfer.js")
 
 if __name__ == "__main__":
     main()

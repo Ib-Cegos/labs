@@ -4,6 +4,7 @@ import yaml
 import subprocess
 import os
 import requests
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -13,6 +14,37 @@ YAML_ERRORS = []
 IBCAN_PAGE_BREAK_PREFIX = "IBCAN_PAGE_BREAK"
 REGEX_VARIABLE = re.compile( r"\[([A-Za-z0-9_]+)\]")
 IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".webp", ".svg", ".bmp", ".gif")
+
+def get_system_variables(stage_reference, site_url):
+    site_url = site_url.rstrip("/")
+    return {
+        "ResourcesUrl": {
+            "defaut" : f"{site_url}/{stage_reference}/ressources",
+            "lib" : "URL du dossier des ressources du stage en cours",
+            "system" : True}
+    }
+
+def remplacer_variables_systeme(contenu, stage_reference, site_url):
+    variables = get_system_variables(stage_reference, site_url)
+    for nom, definition in variables.items():
+        contenu = re.sub(rf"\[{re.escape(nom)}\]", definition["defaut"], contenu, flags=re.IGNORECASE)
+    return contenu
+
+def generate_python_tranfer_js(output_path):
+    extensions_regex = "|".join(
+        ext.lstrip(".")
+        for ext in IMAGE_EXTENSIONS)
+    variables = get_system_variables("[stage]","[site_url]")
+    content = f"""// Généré automatiquement - Ne pas modifier
+    const IMAGE_EXTENSIONS = {json.dumps(list(IMAGE_EXTENSIONS))};
+    const IMAGE_REGEX = /\\.({extensions_regex})$/i;
+    const ILLUSTRATION_REGEX = /^a\\d+e\\d+\\.({extensions_regex})$/i;
+    const SYSTEM_VARIABLES = {json.dumps(variables, ensure_ascii=False, indent=4)};
+    function isImageFile(path) {{return IMAGE_REGEX.test(path);}}
+    function isIllustration(path) {{return ILLUSTRATION_REGEX.test(path);}}
+"""
+
+    Path(output_path).write_text(content, encoding="utf-8")    
 
 def trouver_illustration_exercice(fichier_exercice):
     # Une seule illustration est autorisée par exercice.
