@@ -1,7 +1,7 @@
 ---
 title: Démarrage propre d'un atelier mono-DC
-editionDate: 24/09/2026
-gitVersion: 7d88774
+editionDate: 25/09/2026
+gitVersion: a2f86bf
 auteur: Renaud WANGLER
 ---
 
@@ -85,6 +85,6 @@ Si vous voulez vous simplifier la vie, vous pouvez systématiser l'utilisation d
 
 1. Si vous le préférez, vous pouvez utiliser la commande suivante qui appelle un script contenant toutes les lignes présentées ci-dessus :  
 
-```
-Invoke-Command -ScriptBlock ([Scriptblock]::Create((Invoke-WebRequest '[resourcesUrl]/doItAll.ps1' -useBasicParsing).Content))
+```powershell
+iex ([Text.Encoding]::UTF8.GetString((Invoke-WebRequest '[resourcesUrl]/doItAll.ps1' -UseBasicParsing).Content))
 ```

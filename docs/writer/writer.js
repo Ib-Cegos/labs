@@ -7,6 +7,7 @@ let toolBarOpened = session.read('ToolOpen',false);
 const UndoLimit = 20;
 let imageSelection = null;
 let imageUrls = [];
+let fileUrls = [];
 
 /*Conservation/reprise du curseur */
 const selection = {
@@ -1050,9 +1051,10 @@ function saveTable() {
     textareaSync.setRangeText(markdown,table.start, table.end, "end");
     dialog.close();
     selection.restore(newPosition, newPosition);}
-function normalizeImageName(name) {
+
+function normalizeFileName(name) {
     return name.trim().replace(/\s+/g, "-").replace(/[\/\\:*?"<>|]/g, "");}
-function splitImagePath(path) {
+function splitFilePath(path) {
     const slash = path.lastIndexOf("/");
     const dot = path.lastIndexOf(".");
     return {folder: path.substring(0, slash + 1), name: path.substring(slash + 1, dot), extension: path.substring(dot)};}
@@ -1095,7 +1097,7 @@ function countImageReferences(path) {
     Stage.Ateliers.forEach(atelier => {atelier.Exercices.forEach(exercice => {count += countInContent(exercice.Contenu);});});
     return count;}
 function selectImage(path) {
-    imageSelection = {path: path, title: splitImagePath(path).name};
+    imageSelection = {path: path, title: splitFilePath(path).name};
     document.querySelectorAll(".imageTileSelected").forEach(tile => tile.classList.remove("imageTileSelected"));
     document.querySelector(`[data-path="${path}"]`)?.classList.add("imageTileSelected");}
 async function buildImageGallery(selectedPath = "") {
@@ -1104,7 +1106,7 @@ async function buildImageGallery(selectedPath = "") {
     let html = '<div class="imageGallery">';
     for (const path of images) {
         const url = await db.getUrl(path);
-        let imageTitle = splitImagePath(path).name;
+        let imageTitle = splitFilePath(path).name;
         imageUrls.push(url);
         const isCurrentIllustration = path === Current.IllustrationName;
         if (isIllustration(path) && path !== Current.IllustrationName) continue;
@@ -1128,7 +1130,7 @@ function endImageRename(oldPath, newPath = oldPath) {
     tile.dataset.path = newPath;
     tile.onclick = () => selectImage(newPath);
     const title =tile.querySelector(".imageTitle");
-    const parts = splitImagePath(newPath);
+    const parts = splitFilePath(newPath);
     title.title = newPath;
     title.textContent = `🖼️ ${parts.name}`;
     const delButton = tile.querySelector(".imageDeleteButton");
@@ -1139,7 +1141,7 @@ function startImageRename(path) {
     const tile = document.querySelector(`.imageTile[data-path="${path}"]`);
     if (!tile) return;
     const title = tile.querySelector(".imageTitle");
-    const parts = splitImagePath(path);
+    const parts = splitFilePath(path);
     title.innerHTML =`<input class="imageRenameInput" value="${parts.name}" onkeydown="handleImageRename(event, '${path}')">`;
     const input = title.querySelector("input");
     input.focus();
@@ -1152,11 +1154,11 @@ function handleImageRename(event, oldPath) {
         event.preventDefault();
         saveImageRename(oldPath, event.target.value);}}
 async function saveImageRename(oldPath, newName) {
-    newName = normalizeImageName(newName);
+    newName = normalizeFileName(newName);
     if (!newName) {
         endImageRename(oldPath);
         return;}
-    const parts = splitImagePath(oldPath);
+    const parts = splitFilePath(oldPath);
     const newPath = parts.folder + newName + parts.extension;
     if (newPath === oldPath) {
         endImageRename(oldPath);
@@ -1183,7 +1185,7 @@ function confirmDeleteImage(path) {
     let countStr = `<p>(${count} référence`;
     if (count > 1) countStr += 's seront supprimées'; else countStr +=' sera supprimée';
     if (count >0) countStr += ' dans le stage.)</p>'; else countStr = '';
-    dialog.show("Suppression d'une image", `<p>Supprimer l'image <strong>${splitImagePath(path).name}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openImageEditor(imageSelection.path)},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteImage(path)}],'small');}
+    dialog.show("Suppression d'une image", `<p>Supprimer l'image <strong>${splitFilePath(path).name}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openImageEditor(imageSelection.path)},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteImage(path)}],'small');}
 async function addImage() {
     const input = document.createElement("input");
     input.type = "file";
@@ -1191,7 +1193,7 @@ async function addImage() {
     input.onchange = async () => {
         const file = input.files[0];
         if (!file) return;
-        const path = `ressources/${normalizeImageName(file.name)}`;
+        const path = `ressources/${normalizeFileName(file.name)}`;
         await db.write(path, file);
         openImageEditor(path);};
     input.click();}
@@ -1224,8 +1226,8 @@ function saveImage() {
     dialog.close();}
 async function openImageEditor(selectedPath = null) {
     const image = getCurrentImage();
-    if (selectedPath !== null) imageSelection = {path: selectedPath, title: splitImagePath(selectedPath).name};
-    else imageSelection = {path : image.internal ? image.path : "",title : image.internal ? splitImagePath(image.path).name : ""};
+    if (selectedPath !== null) imageSelection = {path: selectedPath, title: splitFilePath(selectedPath).name};
+    else imageSelection = {path : image.internal ? image.path : "",title : image.internal ? splitFilePath(image.path).name : ""};
     imageUrls.forEach(url => db.releaseUrl(url));
     imageUrls = [];
     const html = await buildImageGallery(imageSelection.path);
@@ -1254,7 +1256,7 @@ async function deleteIllustration() {
     if (!illustration) return;
     const count = countImageReferences(illustration);
     const blob = await db.read(illustration);
-    const parts = splitImagePath(illustration);
+    const parts = splitFilePath(illustration);
     let targetPath = `ressources/${parts.name}${parts.extension}`;
     const files = await db.list();
     let index = 1;
@@ -1282,7 +1284,74 @@ async function addIllustration() {
         Current.IllustrationName = illustrationPath;
         storage.write("Current", Current);
         refreshIllusButton();};
-    input.click();}    
+    input.click();}
+
+/* Gestion des fichiers inclus */
+function getCurrentAttachment() {
+    const position = textareaSync.selectionStart;
+    const text = textareaSync.value;
+    const regex = /!\[(.*?)\]\((.*?)\)/g;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+        const start = match.index;
+        const end = start + match[0].length;
+        if (position >= start && position <= end) return {start, end, title: match[1], path: match[2], internal: !/^https?:\/\//i.test(match[2])};}
+    return {start: position, end: position, title: "", path: "", internal: false };}
+function countAttachmentReferences(path) {
+    let count = 0;
+    const escapedPath = path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(`!\\[[^\\]]*\\]\\(${escapedPath}\\)`,"g");
+    const countInContent = content => {
+        if (!content) return 0;
+        const matches = content.match(regex);
+        return matches ? matches.length : 0;};
+    count += countInContent(Stage.Introduction);
+    Stage.Ateliers.forEach(atelier => {atelier.Exercices.forEach(exercice => {count += countInContent(exercice.Contenu);});});
+    return count;}
+async function buildAttachmentGallery() {
+    const files = await db.list();
+    let html = '<div class="FileGallery">';
+    for (const path of files) {
+        const url = await db.getUrl(path);
+        let fileName = splitFilePath(path).name;
+        fileUrls.push(url);
+        fileName = fileName.length > 20 ? fileName.substring(0,17) + "..." : fileName;
+        html += `<div class="fileTile" data-path="${path}" onclick="selectFile('${path}')">
+            <span class="fileTitle" title="${path}">${fileName}</span>
+            <button class="fileDeleteButton" onclick="event.stopPropagation(); confirmDeleteAttachment('${path}')">🗑️</button>
+        </div>`;}
+    html += "</div>";
+    return html;}
+async function deleteAttachment(path) {
+    await db.delete(path);
+    updateImageReferences(path);
+    openAttachmentEditor();}
+function confirmDeleteAttachment(path) {
+    const count = countAttachmentReferences(path);
+    let countStr = `<p>(${count} référence`;
+    if (count > 1) countStr += 's seront supprimées'; else countStr +=' sera supprimée';
+    if (count >0) countStr += ' dans le stage.)</p>'; else countStr = '';
+    dialog.show("Suppression d'un fichier", `<p>Supprimer le fichier <strong>${splitFilePath(path).name}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openAttachmentEditor()},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteAttachment(path)}],'small');}
+async function addAttachment() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+        const path = `ressources/${normalizeFileName(file.name)}`;
+        await db.write(path, file);
+        openAttachmentEditor(path);};
+    input.click();}
+function saveAttachment(path) {
+    const markdown = `![${splitFilePath(path).name}](${path})`;
+    saveUndoState("insertion d'un fichier joint");
+    refreshEditor();
+    dialog.close();}
+async function openAttachmentEditor() {
+    fileUrls.forEach(url => db.releaseUrl(url));
+    fileUrls = [];
+    const html = await buildAttachmentGallery();
+    dialog.show("Insertion / Modification d'un fichier",html, [{label : "Ajouter", action : () => addAttachment()}, {label : "Annuler", action : () => dialog.close()}, {label : "Valider", action : () => saveAttachment()}]);}
 
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")
@@ -1360,19 +1429,6 @@ if (!sessionStorage.getItem(WRITER_PREFIX + "StyleLeft")) {
     styleBar.style.display = "none"; }
 makeDraggable("ibWriterStyleBar",".ibWriterStyleHandle","Style");
 updateStyleBar();
-/* Ajout de la gestion du Ctrl+Z pour l'annulation des actions de la barre d'insertion sur l'exercice en cours */
-textareaSync.addEventListener("keydown", event => {
-    const ctrl = event.ctrlKey || event.metaKey;
-    if (!ctrl) return;
-    const key = event.key.toLowerCase();
-    if (key === "z") {
-        event.preventDefault();
-        if (event.shiftKey) redoLastAction();     // Ctrl+Shift+Z
-        else undoLastAction();}      // Ctrl+Z
-    if (key === "y") {
-        event.preventDefault();
-        redoLastAction();}          // Ctrl+Y
-});
 /* Initialisation (nettoyage sur drop dans le vide) du DragNDrop */
 document.addEventListener("dragend", () => {
     document.querySelectorAll( ".writerNavDropBefore,.writerNavDropAfter" ).forEach(element => {

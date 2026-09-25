@@ -1,7 +1,7 @@
 ---
 title: Administration de Microsoft 365
-editionDate: 24/09/2026
-gitVersion: 7d88774
+editionDate: 25/09/2026
+gitVersion: d6ee8dd
 auteur: Renaud Wangler
 ---
 
@@ -624,7 +624,7 @@ Dans cette tâche vous allez mettre en place l'environnement fondamental pour la
 
 > Si vous n'êtes pas intéressé par le détail des commandes PowerShell, vous pouvez utiliser le script suivant qui va réaliser l'équivalent des commandes des tâches suivantes. Si vous souhaitez utiliser le script, vous pouvez le faire à l'aide de la commande suivante (à l'issue de laquelle vous pouvez passer à l'exercice 5) :  
 ```powershell
-Invoke-Command -ScriptBlock ([Scriptblock]::Create((Invoke-WebRequest '[resourcesUrl]/msms030-a2e4.ps1' -useBasicParsing).Content))
+iex ([Text.Encoding]::UTF8.GetString((Invoke-WebRequest '[resourcesUrl]/a2e4.ps1' -UseBasicParsing).Content))
 ```
 
 #### Tâche 2 - Créer de nouveaux utilisateurs et leur affecter des licences.
@@ -725,7 +725,7 @@ Dans cette tâche, vous allez utiliser Windows Powershell pour importer un fichi
 1. Vous devriez être resté connecté sur la machine **LON-CL1** avec le compte **```Administrator```** et le mot de passe **```Pa55w.rd```**; l'outil **Windows Powershell** devrait être resté ouvert en tant qu'administrateur. Si nécessaire, maximisez sa fenêtre.
 1. Tapez la commande suivante : 
 ```powershell
-Invoke-WebRequest "[resourcesUrl]/users.csv" | Select-Object -ExpandProperty Content | Out-File ".\users.csv"
+Invoke-WebRequest "[resourcesUrl]/users.csv" | Select-Object -ExpandProperty Content | Out-File ".\users.csv" 
 ```
 
 1. En utilisant la commande suivante, vous allez pourvoir visualiser le contenu du fichier CSV dans **Notepad** :
@@ -866,7 +866,7 @@ Dans cette tâche, Dominique va vérifier la délégation administrative mise en
 1. Dans la liste **Active users**, cliquez sur **Leanna Goodwin**.
 1. Dans le panneau d'informations sur **Leanna Goodwin**, l'onglet **Account** est affiché par défaut. Sous la section **Roles**, vous devriez voir que Leanna administratrice des utilisateurs : **User Administrator**. Cliquez sur le **X** en haut à droite pour fermer le panneau d'informations de Leanna.
 1. Utilisez le menu en haut à droite de votre navigateur **Edge** pour ouvrir une nouvelle fenêtre de navigation privée (**New InPrivate window**).
-1. Dans cette nouvelle fenêtre privée, saisissez l'adresse ```https://www.microsoft365.com``` pour vous rendre sur le portail Microsoft 365.
+1. Dans cette nouvelle fenêtre privée, saisissez l'adresse `https://www.microsoft365.com` pour vous rendre sur le portail Microsoft 365.
 1. Vous allez commencer par vous connecter avec le compte de **Alan Yoo**. Cliquez sur **Sign In**
 1. Dans la fenêtre **Sign-in**, entrez ```Alan@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com```.  
 1. Dans la fenêtre **Enter password**, tapez ```Pa55w.rd```.
@@ -924,7 +924,7 @@ Le *Remote Connectivity Analyzer* est un outil web pensé pour aider les adminis
 Dans cette tâche, vous allez ouvrir l'outil *Microsoft Test connectivity* et vous y connecter.
 
 1. Vous devriez encore être connecté sur **LON-CL1** à l'issue de l'atelier précédent. Le **Microsoft 365 admin center** devrait encore être resté ouvert dans votre navigateur et vous devriez y être connecté avec le compte *Dominique Skyetson*.
-1. Ouvrez un nouvel onglet dans le navigateur et rendez-vous à l'adresse du *Remote Connectivity Analyzer* : ```https://testconnectivity.microsoft.com```  
+1. Ouvrez un nouvel onglet dans le navigateur et rendez-vous à l'adresse du *Remote Connectivity Analyzer* : `https://testconnectivity.microsoft.com`  
 1. Sur la page **Microsoft Remote Connectivity Analyzer**, dans le menu de navigation vertical à gauche, l'onglet **Exchange Online** est affiché par défaut (sélectionnez le si ce n'est pas le cas). Sur cet onglet, sélectionnez la tuile intitulée **Exchange Online Custom Domain DNS Connectivity Test**.
 1. Sur la page **Exchange Online Custom Domain DNS Connectivity Test**, saisissez les informations suivantes :
 
@@ -988,9 +988,8 @@ Par exemple, plusieurs objets pourraient avoir un attribut **ProxyAddresses** ou
 Dans cette tâche, vous allez utiliser un script pour implémenter quelques erreurs sur les utilisateurs du projet pilote Adatum afin d'identifier ensuite la manière de trouver et corriger ce genre d'erreurs.
 
 1. Sur LON-DC1, dans la fenêtre **Administrator: WIndows Powershell**, utilisez la commande suivante pour récupérer le script que vous utiliserez ensuite :
-	```Invoke-WebRequest "[resourcesUrl]/problemUsers.ps1" | Select-Object -ExpandProperty Content | Out-File ".\problemUsers.ps1"```
-1. Lancez ensuite ledit script dans la fenêtre **Administrator: Windows PowerShell** :
-	```.\problemUsers.ps1```
+	```Invoke-WebRequest "[resourcesUrl]/problemUsers.ps1" -OutFile ".\problemUsers.ps1" -UseBasicParsing```
+1. Lancez ensuite ledit script dans la fenêtre **Administrator: Windows PowerShell** : `.\problemUsers.ps1`
 
 	> Vous devriez pouvoir exécuter ce script sans problème car vous avez déjà changé la stratégie d'exécution des scripts sur LON-DC1 dans l'atelier 2.
 
@@ -1001,9 +1000,8 @@ Dans cette tâche vous allez appréhender l'utilisation d'un script powerShell p
 
 1. Vous devriez être encore connecté sur **LON-DC1** à l'issue de la tâche précédente.
 1. Dans la fenêtre **Administrator: WIndows Powershell**, utilisez la commande suivante pour récupérer le script que vous utiliserez ensuite :
-	```Invoke-WebRequest "[resourcesUrl]/ibIdFix.ps1" | Select-Object -ExpandProperty Content | Out-File ".\ibIdFix.ps1"```
-1. Lancez ensuite ledit script dans la fenêtre **Administrator: Windows PowerShell** :
-	```.\ibIdFix.ps1```  
+	```Invoke-WebRequest "[resourcesUrl]/ibIdFix.ps1" -OutFile ".\ibIdFix.ps1" -UseBasicParsing```
+1. Lancez ensuite ledit script dans la fenêtre **Administrator: Windows PowerShell** : `.\ibIdFix.ps1`
 1. Une foix que le script a terminé, il génère un export des problèmes en .csv et ouvre une fenêtre **$Report|out-gridview** vous permettant de constater les comptes posant problèmes dans l'ADDS et qu'il serait impossible de synchroniser correctement.
 
 	- La première ligne indique un problème dans la syntaxte UPN de l'utilisateur *Klemen*,
@@ -1039,15 +1037,17 @@ Dans cette tâche, vous allez utiliser l'assistant d'installation de Entra Conne
 1. Vous devriez encore être connecté sur **LON-DC1** avec le compte **Administrator** à l'issue de la tâche précédente.
 1. Avant de pouvoir installer Entra Connect, il nous faut activer la version 1.2 du protocole TLS sur LON-DC1. Dans la barre des tâches, cliquez sur l'icône de l'outil **Administrator: Windows PowerSHell ISE** que vous aviez réduit précédemment.
 1. utilisez la commande suivante pour activer le TLS 1.2 et attendez que LON-DC1 redémarre :  
-```Invoke-Command -ScriptBlock ([Scriptblock]::Create((Invoke-WebRequest '[resourcesUrl]/enabletls12.ps1' -useBasicParsing).Content))```
+```powershell
+iex ([Text.Encoding]::UTF8.GetString((Invoke-WebRequest '[resourcesUrl]/enabletls12.ps1' -UseBasicParsing).Content))
+```
 1. Une fois que la machine LON-DC1 a redémarré, connectez-vous dessus avec le compte ```adatum\administrator``` et le mot de passe ```Pa55w.rd```.
 
 	> Il pourra être intéressant de (re)faire le ménage dans le démarrage du réseau du controleur de domaine avant de poursuivre les manipulations. Demandez conseil à votre formateur/formatrice le cas échéant...
 
-1. Lancez votre navigateur Internet afin de vous rendre à l'adresse ```https://admin.microsoft.com```.
-1. Si besoin, dans la boite **Sign in**, utilisez l'adresse de connexion de Dominique Skyetson (```dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com```) et cliquez sur **Next**.
+1. Lancez votre navigateur Internet afin de vous rendre à l'adresse `https://admin.microsoft.com`.
+1. Si besoin, dans la boite **Sign in**, utilisez l'adresse de connexion de Dominique Skyetson (`dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com`) et cliquez sur **Next**.
 
-	1. Dans la boite **Enter password**, saisissez ```ibForm@tion``` et cliquez sur **Sign in**.
+	1. Dans la boite **Enter password**, saisissez `ibForm@tion` et cliquez sur **Sign in**.
 	1. Dans la boite **Stay signed in?**, cochez la case **Don’t show this again** et cliquez sur **Yes.**
 
 1. Dans le menu de navigation à gauche, cliquez sur **Identity** sous la section **Admin centers** (il pourra être nécessaire de cliquer sur **Show All**) afin d'ouvrir le portail d'administration Entra dans un nouvel onglet.
@@ -1135,7 +1135,7 @@ Dans cette tâche, vous allez forcer volontairement la synchronisation entre l'A
 #### Tâche 5 - Résultat de la Synchronisation   
 
 1. Basculez sur la machine virtuelle **LON-CL1**.
-1. Examinons maintenant les résultats de la synchronisation. Lancez votre navigateur Edge et ouvrez le centre d'administration Microsoft 365 en utilisant l'adresse suivante : ```https://admin.microsoft.com```.
+1. Examinons maintenant les résultats de la synchronisation. Lancez votre navigateur Edge et ouvrez le centre d'administration Microsoft 365 en utilisant l'adresse suivante : `https://admin.microsoft.com`.
 1. Connectez vous avec le compte de Dominique (```dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com``` avec son mot de passe ```ibForm@tion```.
 1. Dans le portail **Microsoft 365 admin center**, dans le menu de navigation à gauche, ouvrez le groupe d'options **Teams & groups** pour sélectionner **Active teams & groups**.
 1. Dans la liste **Active teams & groups**, vérifiez qu'un groupe **Manufacturing** apparaît sous l'onglet **Security groups**.
@@ -1282,9 +1282,9 @@ Vous utiliserez ensuite la VM **LON-CL2** pour installer Microsoft 365 Apps.
 
 1. Basculez vers **LON-CL2** et connectez-vous en **.\Admin** avec le mot de passe **Pa55w.rd**.
 1. Vous allez commencer par tester si un utilisateur sans licence Microsoft 365 Apps peut ou non installer Microsoft 365 Apps. Pour ce test, vous allez utiliser le compte de **Laura Atkins**. Vous avez créé un compte pour Laura dans [l'atelier 2,exercice1](a2e1.md), mais ne lui avez pas affecté de licence. Dans LON-CL2, cliquez sur l'icône **Microsoft Edge** sur la barre des tâches.
-1. Maximisez votre navigateur Internet puis rendez-vous sur la page d'accueil **Microsoft 365** en utilisant l'adresse suivante : ```https://m365.cloud.microsoft```
+1. Maximisez votre navigateur Internet puis rendez-vous sur la page d'accueil **Microsoft 365** en utilisant l'adresse suivante : `https://m365.cloud.microsoft`
 
-	> Si n'importe quel compte est automatiquement connecté, déconnectez-le en cliquant sur l'icône d'utilisateur (rond en haut à droite) et en sélectionnant **Sign out**, retapez ensuite ```https://m365.cloud.microsoft``` dans la barre d'adresse.
+	> Si n'importe quel compte est automatiquement connecté, déconnectez-le en cliquant sur l'icône d'utilisateur (rond en haut à droite) et en sélectionnant **Sign out**, retapez ensuite `https://m365.cloud.microsoft` dans la barre d'adresse.
 
 1. Cliquez sur **Sign in**.
 1. Dans la fenêtre **Sign in**, tapez ```Laura@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com``` avant de cliquer sur **Next**.
@@ -1456,9 +1456,9 @@ Vous allez ensuite créer une série de règles de transport pour modifier le fl
 #### Tâche 1 - Changement du domaine de messagerie
 Microsoft ayant eu de nombreux problèmes d'utilisation des domaines *onmicrosoft.com* pour des attaques cyber, ces domaines sont désormais marqués comme étant illégitimes (spam) par défaut. Dans cette première tâche, vous allez ajouter une adresse email basée sur le domaine [[godeployDomain],[labXXXXX]].godeploylabs.com à toutes les boites qui seront utilisées pour test.
 
-1. Ouvrez une session sur LON-CL1 en utilisant le compte ```adatum\administrator``` et le mot de passe ```Pa55w.rd```.
+1. Ouvrez une session sur LON-CL1 en utilisant le compte `adatum\administrator` et le mot de passe `Pa55w.rd`.
 1. Cliquez sur l'icône de **Microsoft Edge** dans la barre des tâches pour lancer votre navigateur Internet. Maximisez sa fenêtre.
-1. Dans votre navigateur internet, utilisez l'adresse ```https://admin.microsoft.com``` pour ouvrir le portail **Microsoft 365 admin center**.
+1. Dans votre navigateur internet, utilisez l'adresse `https://admin.microsoft.com` pour ouvrir le portail **Microsoft 365 admin center**.
 1. Connectez-vous au centre d'administration avec le compte de Dominique (```dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com``` et mot de passe ```ibForm@tion```)
 1. Dans le menu de navigation du portail **Microsoft 365 Admin center**, sous la section **Admin Centers** cliquez sur **Exchange**. Cela va ouvrir le portail administratif de Exchange Online dans un nouvel onglet.
 1. Si nécessaire, dans le portail **Exchange admin center**, dans le menu de navigation à gauche, ouvrez le groupe d'options **Recipients** pour sélectionner **Mailboxes**.
@@ -1479,7 +1479,7 @@ Dans cette tâche, vous allez créer deux connecteurs pour forcer l'utilisation 
 
 1. Ouvrez une session sur LON-CL1 en utilisant le compte ```adatum\administrator``` et le mot de passe ```Pa55w.rd```.
 1. Cliquez sur l'icône de **Microsoft Edge** dans la barre des tâches pour lancer votre navigateur Internet. Maximisez sa fenêtre.
-1. Dans votre navigateur internet, utilisez l'adresse ```https://admin.microsoft.com``` pour ouvrir le portail **Microsoft 365 admin center**.
+1. Dans votre navigateur internet, utilisez l'adresse `https://admin.microsoft.com` pour ouvrir le portail **Microsoft 365 admin center**.
 1. Connectez-vous au centre d'administration avec le compte de Dominique (```dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com``` et mot de passe ```ibForm@tion```)
 1. Dans le menu de navigation du portail **Microsoft 365 Admin center**, sous la section **Admin Centers** cliquez sur **Exchange**. Cela va ouvrir le portail administratif de Exchange Online dans un nouvel onglet.
 1. Dans le portail **Exchange admin center**, dans le menu de navigation à gauche, ouvrez le groupe d'options **Mail flow** pour sélectionner **Connectors**.
@@ -1558,7 +1558,7 @@ Dans cette tâche, vous allez tester les nouvelles règles de transport que vous
 
 1. Basculez sur l'onglet **Microsoft 365 admin center** et référez-vous aux procédures que vous avez utilisé à [l'atelier 2, exercice 5](a2e5.md) pour réinitialiser le mot de passe de **Megan Bowen** vers **Pa55w.rd**.
 1. Ouvrez le menu de votre navigateur Internet (en haut à droite) et lancez-en une nouvelle instance en choisissant **New Inprivate Window**.
-1. Dans votre nouvelle fenêtre de navigation privée, utilisez l'adresse suivante pour ouvrir la boite aux lettres de Megan Bowen : ```https://outlook.office.com```.
+1. Dans votre nouvelle fenêtre de navigation privée, utilisez l'adresse suivante pour ouvrir la boite aux lettres de Megan Bowen : `https://outlook.office.com`.
 1. Sur la page **Sign in**, connectez-vous avec le compte ```meganB@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com```.
 1. Sur la page **Enter password**, utilisez le mot de passe ```Pa55w.rd``` et cliquez sur **Sign in**.
 1. Sur la page **Update your password**, saisissez ```Pa55w.rd``` dans le champ **Current password** et ```ibForm@tion``` dans les champs **New password** et **Confirm password** avant de cliquer sur **Sign in**.
@@ -1702,18 +1702,18 @@ Dominique configurera ensuite une stratégie de boite aux lettres pour les péri
 1. Fermez le panneau d'information d'**Alan Yoo** une fois le changement sauvegardé.
 1. Cliquez sur l'icone de recherche de la barre des tâches puis tapez ```Windows Powershell``` et lançez une invite Powershell.
 1. Dans la fenêtre Windows Powershell, tapez la commande suivante et validez par **[Entrée]** :
-	```Invoke-WebRequest "[resourcesUrl]/pieceJointe.txt" | Select-Object -ExpandProperty Content | Out-File "$env:USERPROFILE\documents\pieceJointe.txt"```
+	```Invoke-WebRequest "[resourcesUrl]/pieceJointe.txt" -OutFile $env:USERPROFILE\documents\pieceJointe.txt -UseBasicParsing```
 1. Vous pouvez désormais fermer la fenêtre Powershell et revenir à votre navigateur Internet.
 1. Dans votre navigateur Internet, utilisez le menu des application 365 (la grille de 3x3 en haut à gauche des pages 365) pour lancer l'application web Outlook.
 1. Dans **Outlook**, cliquez sur le bouton **New mail**.
-1. Dans la fenêtre de composition de nouveau message, tapez ```alan@[[godeployDomain],[labXXXXX]].godeploylabs.com``` dans le champ **To**.
-1. Dans le champ **Add a subject**, entrez ```Attachment Test```.
+1. Dans la fenêtre de composition de nouveau message, tapez `alan@[[godeployDomain],[labXXXXX]].godeploylabs.com` dans le champ **To**.
+1. Dans le champ **Add a subject**, entrez `Attachment Test`.
 1. Dans le bandeau, cliquez sur l'icône de pièce jointe et choisissez **Browse This computer**.
 1. Dans la fenêtre **Open**, naviguez vers le dossier **Documents**, sélectionnez **pieceJointe.txt** puis cliquez sur **Open**.
 1. Cliquez sur **Send**.
 1. Basculez ensuite sur LON-CL2.
 1. Si un navigateur Internet est ouvert sur LON-CL2, fermez-le. Lancez ensuite une nouvelle session de navigation en cliquant sur l'icône de **Edge** dans la barre des tâches.
-1. Ouvrez *Outlook on the Web* pour **Alan Yoo** en vous rendant à l'adresse suivante : ```https://outlook.office365.com```. Si la boite aux lettres de Alan ne s'ouvre pas, connectez-vous avec son compte (```alan@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com``` et le mot de passe ```ibForm@tion```).
+1. Ouvrez *Outlook on the Web* pour **Alan Yoo** en vous rendant à l'adresse suivante : `https://outlook.office365.com`. Si la boite aux lettres de Alan ne s'ouvre pas, connectez-vous avec son compte (```alan@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com``` et le mot de passe ```ibForm@tion```).
 1. Dans la boite de réception de Alan (*Inbox*), sélectionnez le message reçu de la tâche précédente dont le sujet est **Attachment Test**.
 1. Sélectionnez la flèche descendante à droite du fichier joint **pieceJointe.txt**.
 1. Dans la boite de Alan, vous ne devriez pas avoir l'option **Download** si la stratégie s'est correctement appliquée.
@@ -1778,10 +1778,10 @@ Toujours en tant que Dominique Skyetson, Administrateur de l'entreprise Adatum, 
 1. sur le portail **Microsoft Teams admin center**, cliquez sur **Meeting settings** dans le groupe d'options **Meetings**.
 1. Sur la page **Meetings settings**, dans la section **Email invitation**, Saisissez les informations suivantes :
 
-	- **Logo URL** : ```https://renaudwangler.github.io/ib-pages/logo_ibcegos.png```
-	- **Privacy and security URL** : ```https://adatum.com/legal.html```
-	- **Help URL** : ```https://adatum.com/joiningmeetinghelp.html```
-	- **Footer :** ```Please accept at your earliest convenience. Thank you!```
+	- **Logo URL** : `[resourcesUrl]/logo_ibcegos.png`
+	- **Privacy and security URL** : `https://adatum.com/legal.html`
+	- **Help URL** : `https://adatum.com/joiningmeetinghelp.html`
+	- **Footer :** `Please accept at your earliest convenience. Thank you!`
 
 1. Cliquez sur le bouton **Preview invite**.
 1. Sur la boite de dialogue **Email invite preview**, consultez l'aperçu de l'invitation avant de cliquer sur le bouton **Close** pour la fermer.
@@ -2067,13 +2067,15 @@ Après avoir créé un site avec le portail d'administration de Sharepoint Onlin
 1. Dans la partie basse (bleue) de la fenêtre **Administrator: Windows Powershell ISE**, utilisez la commande suivante pour installer le module Powershell de gestion de Sharepoint Online :  
 	```Install-Module Microsoft.Online.SharePoint.PowerShell -Force```
 1. Dans l'invite de commande de l'ISE, utilisez la commande suivante pour vous connecter à votre environnement Sharepoint Online :  
-	```Connect-SPOService –Url https://[[onMicrosoftDomain],[wwlxxxxx]]-admin.sharepoint.com```
+	`Connect-SPOService –Url https://[[onMicrosoftDomain],[wwlxxxxx]]-admin.sharepoint.com`
 	> Dans cette commande, le nom de domaine original est suffixé de *-admin*.
 
 1. Dans la boite de dialogue **Sign in**, saisissez le nom de connexion de Dominique Skyetson (```dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com```) et cliquez sur **Next**.
 1. Dans la boite de dialogue **Enter password**, saisissez ```ibForm@tion``` et cliquez sur **Sign in**.
 1. Dans l'invite Powershell, utilisez la commande suivante pour créer un nouveau site nommé **Accounting** :  
-	```New-SPOSite -Url https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Accounting -Owner dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com -StorageQuota 500 -NoWait -Template PROJECTSITE#0 –Title Accounting```  
+	```powershell
+	New-SPOSite -Url https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Accounting -Owner dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com -StorageQuota 500 -NoWait -Template PROJECTSITE#0 –Title Accounting
+	```  
 
 1. Minimisez la fenêtre **Administrator: Windows Powershell ISE**.
 1. Dans votre navigateur Internet, la page **Active sites** devrait toujours être affichée à l'issue de la tâche précédente. Si le site **Accounting** ne s'affiche pas, rafraichissez la page du navigateur. (Il vous faudra peut-être attendre quelques instants et répéter l'opération). Ne passez pas à la tâche suivante tant que vous n'avez pas constaté l'affichage du site **Accounting** dans la liste des sites actifs.
@@ -2094,7 +2096,7 @@ Après avoir ajouté les sites de la formation et de la comptabilité d'Adatum, 
 1. Fermez le panneau **Add site admins to Training**.
 1. Basculez sur la machine virtuelle **LON-CL2** ou vous devriez encore être connecté avec le compte **.\admin**.
 1. Dans le navigateur Edge, le Webmail **Outlook** devrait être resté ouvert (et vous devriez y être connecté avec le compte de *Alan Yoo*).
-1. Dans la barre d'adresse du navigateur, utilisez l'adresse suivante : ```https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training``` pour ouvrir le site Sharepoint du service formation de Adatum.
+1. Dans la barre d'adresse du navigateur, utilisez l'adresse suivante : `https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training` pour ouvrir le site Sharepoint du service formation de Adatum.
 1. Une fois que le site **Training** s'ouvre, attendez que l'icône d'engrenage s'affiche en haut à droite (à gauche des initiales de Alan Yoo). Cliquez sur cette icône d'engrenage.
 1. Sur le panneau **Settings**, cliquez sur **Site permissions**.
 1. Sur le panneau **Permissions**, cliquez sur **Advanced permissions settings**.
@@ -2105,7 +2107,7 @@ Après avoir ajouté les sites de la formation et de la comptabilité d'Adatum, 
 Dans cette tâche, Alan Yoo, en tant qu'administrateur du site Sharepoint de la formation va donner l'accès au site du service Formation à deux utilisateurs qui en ont besoin : Libby Hayward et Elvis Cress. Tandis que Libby va demander l'accès au site, Alan sait déjà que Elvis a besoin d'accès et va lui assigner directement.
 
 1. Sur **LON-CL2**, faites un clic-droit sur l'icône de **Edge** sur la barre des tâches, et dans le menu qui apparaît, choisissez **New InPrivate window**.
-1. Dans la nouvelle session **InPrivate Browsing** de votre navigateur Internet, entrez l'adresse suivante pour ouvrir le site Sharepoint du service formation : ```https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training```.
+1. Dans la nouvelle session **InPrivate Browsing** de votre navigateur Internet, entrez l'adresse suivante pour ouvrir le site Sharepoint du service formation : `https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training`.
 1. Dans la boite de dialogue **Sign in**, entrez ```libby@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com``` et cliquez sur **Next**.
 1. Sur la page **Enter password**, saisissez ```ibForm@tion``` et cliquez sur **Sign in**.
 1. Sur la page **Stay signed in?**, cliquez sur **Yes**.
@@ -2127,11 +2129,11 @@ Dans cette tâche, Alan Yoo, en tant qu'administrateur du site Sharepoint de la 
 1. Sur la boite de dialogue **Share 'Training'**, l'onglet **Invite People** est affiché par défaut. Dans le champ **Enter names or email addresses**, entrez ```Elvis```. Cliquez sur le compte de **Elvis Cress** lorsqu'il apparaît avant de cliquer sur **Share**.  
 	Le nom de Elvis Cress apparaît désormais dans la page **People and Groups - Training Visitors** au côté de Libby Hayward.
 1. Vous allez maintenant vérifier que Libby peut accéder au site Sharepoint du service Formation. Basculez sur la session de navigation privée que vous aviez minimisée.
-1. Rafraichissez la page de demande d'accès au site **Training** (Si nécessaire, retentez l'accès sur l'adresse ```https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training```)
+1. Rafraichissez la page de demande d'accès au site **Training** (Si nécessaire, retentez l'accès sur l'adresse `https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training`)
 1. Le site **Training** s'ouvre : vous venez de confirmer que Libby peut accéder au site formation d'Adatum suite à l'acceptation de sa demande.
 1. Fermez la fenêtre de navigation privée de Libby.
 1. Faites de nouveau un clic-droit sur l'icône de **Edge** sur la barre des tâches, et dans le menu qui apparaît, choisissez **New InPrivate window**.
-1. Dans la nouvelle sesssion **InPrivate Browsing** de votre navigateur Internet, entrez l'adresse suivante pour ouvrir le site Sharepoint du service formation : ```https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training```.
+1. Dans la nouvelle sesssion **InPrivate Browsing** de votre navigateur Internet, entrez l'adresse suivante pour ouvrir le site Sharepoint du service formation : `https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training`.
 1. Dans la boite de dialogue **Sign in**, entrez ```elvis@[[godeployDomain],[labXXXXX]].godeploylabs.com``` et cliquez sur **Next**.
 1. Sur la page **Enter password**, saisissez ```Pa55w.rd``` et cliquez sur **Sign in**.
 1. Sur la page **Stay signed in?**, cliquez sur **Yes**.
@@ -2374,7 +2376,7 @@ Dans votre rôle d'administrateur, en tant que Dominique Skyetson, vous allez cr
 1. Basculez vers la machine virtuelle **LON-CL1**, sur laquelle vous devrez être resté connecté avec le compte **adatum\Administrator** avec le mot de passe **Pa55w.rd**.
 1. A l'issue de l'atelier précédent, votre navigateur Internet devrait être resté ouvert, avec un onglet contenant le portail **Microsoft 365 admin center**, connecté avec le compte de Dominique Skyetson.  
 
-	> Si besoin, utilisez l'adresse ```https://admin.microsoft.com``` pour ouvrir le portail d'administration si vous l'aviez fermé.
+	> Si besoin, utilisez l'adresse `https://admin.microsoft.com` pour ouvrir le portail d'administration si vous l'aviez fermé.
 
 1. Dans le menu de navigation du portail **Microsoft 365 admin center**, cliquez sur **Active teams & groups** dans le groupe d'options **Teams & groups**.
 1. Sur la page **Active teams & groups**, cliquez sur le bouton **+ Add a team** sur la barre d'outils de l'onglet **Teams & Microsoft 365 groups**.
@@ -2554,7 +2556,7 @@ Dominique a prévu de tester cet outil en envoyant un email à un domaine qui n'
 1. Attendez de recevoir le message d'échec de livraison.
 1. Une fois le message d'échec de livraison reçu, ouvrez-le. Notez la raison de l'échec de livraison : **The Domain Name System (DNS) reported that the recipient's domain does not exist.**
 1. Descendez dans le corps du message jusqu'à la section **Diagnostic information for administrators**. Sélectionnez tout le texte de cette section (qui commence après la ligne **Original message headers:** jusqu'à la fin du message) et copiez-le dans votre presse-papier.
-1. Ouvrez un nouvel onglet dans votre navigateur Internet et utilisez l'URL suivante ```https://testconnectivity.microsoft.com```.
+1. Ouvrez un nouvel onglet dans votre navigateur Internet et utilisez l'URL suivante `https://testconnectivity.microsoft.com`.
 1. La page **Microsoft Remote Connectivity Analyzer** s'ouvre. Dans le menu de navigation à gauche, cliquez sur l'onglet **Message Analyzer**.
 1. Dans la page **Message Header Analyzer** qui s'est ouverte dans un nouvel onglet, Cliquez dans la zone de texte sous le titre **Insert the message header you would like to analyze** et copiez-y les informations de diagnostique précédemment copiées.
 1. Cliquez ensuite sur le bouton **Analyze headers**.
