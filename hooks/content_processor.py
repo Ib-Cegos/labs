@@ -32,7 +32,7 @@ def on_page_content(html, page, config, files):
     return html
 
 def on_page_markdown(markdown, page, config, files):
-    markdown = tools.remplacer_variables_systeme(markdown, Path(page.file.src_uri).parent.name.upper(), config["site_url"]) 
+    markdown = tools.remplacer_variables_systeme(markdown, Path(page.file.src_uri).parent.name, config["site_url"]) 
     if tools.est_page_print(page): return markdown
     fichier = Path(page.file.src_uri).name
     # Titre des pages d'exercices
