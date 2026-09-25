@@ -1,0 +1,8 @@
+﻿Ceci est un message d'exemple.
+Dans le contexte de votre atelier, il a été envoyé à Alan, qui ne devrait pas pouvoir l'ouvrir une fois la stratégie Outlook Web App active....
+
+Nota : l'activation de la stratégie peut prendre un certain temps et un temps certain. Si vous avez pu ouvrir ce fichier (voir le bouton 'download'), faites un "force refresh" de votre navigateur ou essayez de consulter le webmlail depuis un autre navigateur...
+
+Cordialement,
+
+Dominique Skyetson
