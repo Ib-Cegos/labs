@@ -2,7 +2,7 @@ if ([System.Security.Principal.WindowsIdentity]::GetCurrent().groups -match 'S-1
     #Script à lancer en administrateur
     #Récupération automatique dernière version de 2fast
     Start-BitsTransfer -source ((Invoke-WebRequest 'https://api.github.com/repos/2fast-team/2fast/releases/latest') | ConvertFrom-Json).assets.browser_download_url -Destination './2fast.zip'
-    Invoke-WebRequest "[resourcesUrl]/ibMFA.2fa" | Select-Object -ExpandProperty Content | Out-File "$([System.Environment]::GetFolderPath("MyDocuments"))\ibMFA.2fa"
+    Invoke-WebRequest "https://ib-cegos.github.io/labs/mfaSetup/ressources/ibMFA.2fa" | Select-Object -ExpandProperty Content | Out-File "$([System.Environment]::GetFolderPath("MyDocuments"))\ibMFA.2fa"
     Expand-Archive '.\2fast.zip' -DestinationPath .\2fast -Force
 
     #Activation du "sideloading" d'applications sur le poste
