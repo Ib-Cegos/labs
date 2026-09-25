@@ -115,5 +115,5 @@ foreach ($group in $dupEmail) {
 
 # Export du rapport
 $Report | Export-Csv -Path $ExportPath -NoTypeInformation -Encoding UTF8
-Write-Host "Rapport généré : $ExportPath"
+Write-Host "Rapport : $ExportPath"
 $Report | out-gridview

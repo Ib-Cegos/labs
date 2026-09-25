@@ -16,4 +16,4 @@ $user1.Id,$user2.id | foreach-object { New-MgGroupMember -groupId $mktGroup.Id -
 Get-MgDomain | ForEach-Object { update-MgDomain -DomainId $_.Id -PasswordNotificationWindowInDays 10 -PasswordValidityPeriodInDays 90 }
 Reset-MgUserAuthenticationMethodPassword -UserId $user2.id -NewPassword 'P@$$w0rd' -AuthenticationMethodId (Get-MgUserAuthenticationPasswordMethod -userId $user2.Id).id
 Get-MGuser -All | ForEach-Object { Update-MgUser -UserId $_.Id -PasswordPolicies None}
-write-host -ForegroundColor Yellow 'L''équivalent de l''exercice 4 a été réalisé : vous pouvez passer à l''exercice 5.'
+write-host -ForegroundColor Yellow 'Si aucune erreur n''est affichée, l''équivalent de l''exercice 4 a été réalisé : vous pouvez passer à l''exercice 5.'
