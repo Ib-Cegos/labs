@@ -115,3 +115,4 @@ button.variableStyle, button.variableEdit {border : none;background: transparent
 .fileTile:hover { border-color: var(--ib-input-border);}
 .fileDeleteButton {position: absolute; right: 4px; bottom: 0px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--ib-input-border); border-radius: 50%; cursor: pointer; background: var(--ib-color-content); color: var(--ib-color-text); opacity: 0; transition: opacity .15s ease, transform .15s ease;}    
 .fileTile:hover .fileDeleteButton { opacity: 1;}
+.ibLabTask::marker { cursor: default;}

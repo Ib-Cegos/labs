@@ -5,6 +5,23 @@ let previewSyncEnabled = session.read("Synchro",true);
 const openerOrigin = opener.location;
 systemVariableRefresh();
 
+function markLabTasks(preview) {
+    let niveau = 0;
+    function parcourir(node) {
+        for (const child of node.children) {
+            if (child.tagName === "OL") {
+                niveau++;
+                parcourir(child);
+                niveau--;}
+            else if (child.tagName === "UL" && niveau > 0) {
+                niveau++;
+                parcourir(child);
+                niveau--;}
+            else {
+                if (child.tagName === "LI" && niveau === 1) child.classList.add("ibLabTask");
+                parcourir(child);}}}
+    parcourir(preview);}
+
 function togglePreviewSync() {
     previewSyncEnabled = !previewSyncEnabled;
     session.write("Synchro",previewSyncEnabled);
@@ -75,7 +92,8 @@ async function renderPreview() {
     contenu = marked.parse(contenu);
     contenu = await resolveInternalImages(contenu);
     contenu = replaceVariables(contenu);
-    document.getElementById("ibContent").innerHTML = contenu;}
+    document.getElementById("ibContent").innerHTML = contenu;
+    contenu = markLabTasks(document.getElementById("ibContent"));}
 
 function buildSommaire() {
     let html = "";
