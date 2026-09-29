@@ -1,7 +1,7 @@
 ---
 title: Administration de Microsoft 365
 editionDate: 29/09/2026
-gitVersion: adf9d51
+gitVersion: 164f9b8
 auteur: Renaud Wangler
 ---
 
