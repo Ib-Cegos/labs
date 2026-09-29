@@ -1,7 +1,7 @@
 ---
 title: MS365
 editionDate: 25/09/2026
-gitVersion: d6ee8dd
+gitVersion: f61d606
 auteur: Renaud Wangler
 ---
 

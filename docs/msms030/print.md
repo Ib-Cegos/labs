@@ -1,11 +1,12 @@
 ---
 title: Administration de Microsoft 365
-editionDate: 25/09/2026
-gitVersion: d6ee8dd
+editionDate: 29/09/2026
+gitVersion: adf9d51
 auteur: Renaud Wangler
 ---
 
 # Administration de Microsoft 365
+
 L'entreprise Adatum héberge actuellement un environnement informatique *classique* (dans ses datacenters) qui comporte diverses applications historiques (comme Microsoft Exchange par exemple). L'entreprise a cependant récemment acquis un abonnement Microsoft 365, y voyant l'opportunité d'un déploiement hybride et d'un rapprochement des applications du Cloud.  
 
 Au fil des ateliers de ce stage, vous allez prendre l'identité de Dominique Skyetson, membre de l'équipe d'administration IT de Adatum.
@@ -82,7 +83,7 @@ goDeploy, qui héberge l'environnement d'atelier, a déjà créé un tenant Micr
 #### Tâche 1 - Renseignement des variables
 Une fois votre atelier démarré, vous pourrez accéder au compte de test Microsoft 365 fourni par goDeploy. Le compte *MOD Administrator* a été créé et s'est vu affecté le rôle *Global Administrator* sur le tenant de test.
 
-Cliquez sur le bouton **Paramètres** au bas de cette page pour renseigner les *variables* qui simpliieront grandement la réalisation de l'ensemble de vos ateliers : Vous allez ainsi pouvoir, par exemple, personnaliser les noms de domaine contenus dans les présentes instruction : 
+Cliquez sur le bouton **Paramètres** au bas de cette page pour renseigner les *variables* qui simplifieront grandement la réalisation de l'ensemble de vos ateliers : Vous allez ainsi pouvoir, par exemple, personnaliser les noms de domaine contenus dans les présentes instruction : 
 
 1. **Préfixe du tenant**. Ce préfixe sera utilisé pour identifier et se connecter avec les comptes Entra Id dans votre tenant. Le format de ce préfixe est de la forme **xxxxxxxx.onmicrosoft.com**. Notez donc la valeur **xxxxxxxx** pour utilisation ultérieure dans tous les ateliers (sa valeur actuelle est "[[onMicrosoftDomain],[wwlxxxxx]]").
 1. **Domaine DNS de l'entreprise**. goDeploy a également créé un nom de domaine DNS pour l'entreprise Adatum. Il peut être trouvé sous le nom **Lab Domain** dans l'onglet **DNS** du volet de gauche de votre environnement goDeploy (c'est un nom qui ressemble à *labXXXXX.godeploylabs.com*) (sa valeur actuelle est "[[godeployDomain],[labXXXXX]]").  
@@ -173,7 +174,7 @@ Adatum gère directement les enregistrements de ses domaines DNS. Pour que ce do
 
 #### Avant de commencer
 
-dans votre environnement d'atelier, goDeploy vous fournit un nom de domaine DNS d'entreprise pour le projet pilote. Vous pouvavez déjà identifié ce nom de domaine en tête de l'onglet **DNS** dans l'environnement d'atelier.
+dans votre environnement d'atelier, goDeploy vous fournit un nom de domaine DNS d'entreprise pour le projet pilote. Vous avez déjà identifié ce nom de domaine en tête de l'onglet **DNS** dans l'environnement d'atelier.
 
 #### Tâche 1 - Ajout du DNS d'entreprise
 Dans cette tâche vous allez ajouter le domaine DNS d'entreprise à votre tenant Microsoft 365, en créant les enregistrements nécessaires pour les services Exchange Online et Intune.
@@ -193,9 +194,9 @@ Dans cette tâche vous allez ajouter le domaine DNS d'entreprise à votre tenant
 1. La page **Add DNS records** identifie les services qu'une entreprise peut implémenter dans le contexte de son déploiement Microsoft 365 et qui ont besoin d'enregistrements DNS. L'option **Exchange and Exchange Online Protection** devrait être sélectionnée par défaut (sinon, sélectionnez là).
 1. Trois enregistrements DNS sont nécessaires pour les services Exchange - un enregistrement **MX** , un alias **CNAME**, et un enregistrement **TXT**. Sélectionnez chaque enregistrement pour l'ouvrir et prendre note de son contenu à créer.  
 
-    - MX pointe vers `[[godeployDomain],[labXXXXX]]-godeploylabs-com.mail.protection.outlook.com` avec préférence de **0**  
+    - Pour le MX, saisir `@` dans le champ **Name**, `[[godeployDomain],[labXXXXX]]-godeploylabs-com.mail.protection.outlook.com` dans le champ **Host** et `0` en **préférence**.  
     - CNAME associe `autodiscover` à `autodiscover.outlook.com`  
-    - TXT contient `v=spf1 include:spf.protection.outlook.com -all`
+    - Pour le TXT, saisir `@` dans le champ **Name** et `v=spf1 include:spf.protection.outlook.com -all` dans le champ **Value**
 
 1. Plus bas dans la page **Add DNS records** cliquez sur **Advanced Options**.
 1. Deux services additionnels sont affichés ici : **Intune and Mobile Device Management for Microsoft 365** et **DomainKeys Identified Mail (DKIM)**.  
@@ -203,8 +204,8 @@ Dans cette tâche vous allez ajouter le domaine DNS d'entreprise à votre tenant
 
 1. Notez que deux alias CNAME sont nécessaires au fonctionnement correct de **Intune and Mobile Device Management for Microsoft 365**. Sélectionnez **CNAME Record (2)** pour les afficher et prenez bonne note de leur contenu.  
 
-    - CNAME associe `enterpriseregistration` à `enterpriseregistration.windows.net`  
-    - CNAME associe `enterpriseenrollment` à `enterpriseenrollment-s.manage.microsoft.com` (selon les tenants, peut aussi être associé à `enterpriseenrollment.manage.microsoft.com`).  
+    - Un CNAME associe `enterpriseregistration` à `enterpriseregistration.windows.net`  
+    - Un autre CNAME associe `enterpriseenrollment` à `enterpriseenrollment-s.manage.microsoft.com` (selon les tenants, peut aussi être associé à `enterpriseenrollment.manage.microsoft.com`).  
 
 1. Retournez dans l'onglet **DNS** de votre environnement d'atelier et créez-y tous les enregistrements DNS nécessaires pour le tenant du projet pilote.
 
@@ -247,7 +248,7 @@ Bien que vous ayez déjà accédé au portail général d'administration *Micros
 
 #### Tâche 2 - Visite du Exchange admin center
 
-Sans prendre trop de temps (vous y reviendrez plus tard dans ce stage), vous allez vous connecter sur le portail d'administration de Exchange Onine, pour consulter les rubriques qu'il présente.
+Sans prendre trop de temps (vous y reviendrez plus tard dans ce stage), vous allez vous connecter sur le portail d'administration de Exchange Online, pour consulter les rubriques qu'il présente.
 
 1. Suite à la tâche précédente, vous devriez toujours être connecté à **LON-CL1** et votre navigateur Internet devrait être ouvert sur le **Microsoft 365 Admin Center**, connecté en **MOD Administrator**. Dans le menu de navigation, dans la section **Admin centers**, cliquez sur **Exchange**. Un nouvel onglet va s'ouvrir, affichant le portail **Exchange admin center**.
 1. Parcourez le **Exchange admin center**, en sélectionnant chaque entrée de son menu de navigation. Consultez les informations disponibles pour chaque entrée et parcourez les onglets (le cas échéant).
@@ -263,7 +264,7 @@ Sans prendre trop de temps (vous y reviendrez plus tard dans ce stage), vous all
 
 #### Tâche 4 - Visite du SharePoint admin center
 
-Sans prendre trop de temps (vous y reviendrez plus tard dans ce stage), vous allez vous connecter sur le portail d'administration de Sharepoint Onine, pour consulter les rubriques qu'il présente.
+Sans prendre trop de temps (vous y reviendrez plus tard dans ce stage), vous allez vous connecter sur le portail d'administration de Sharepoint Online, pour consulter les rubriques qu'il présente.
 
 1. Suite à la tâche précédente, vous devriez toujours être connecté à **LON-CL1** et votre navigateur Internet devrait être ouvert sur le **Microsoft 365 Admin Center**, connecté en **MOD Administrator**. Dans le menu de navigation, dans la section **Admin centers**, cliquez sur **Sharepoint**. Un nouvel onglet va s'ouvrir, affichant le portail **Sharepoint admin center**.
 1. Parcourez le **Sharepoint admin center**, en sélectionnant chaque entrée de son menu de navigation. Consultez les informations disponibles pour chaque entrée et parcourez les onglets (le cas échéant).
@@ -271,7 +272,7 @@ Sans prendre trop de temps (vous y reviendrez plus tard dans ce stage), vous all
 
 #### Tâche 5 - Visite de Microsoft 365 Defender
 
-Sans prendre trop de temps (vous y reviendrez plus tard dans ce stage), vous allez vous connecter sur le portail d'administration de la sécuité, Microsoft Defender, pour consulter les rubriques qu'il présente.
+Sans prendre trop de temps (vous y reviendrez plus tard dans ce stage), vous allez vous connecter sur le portail d'administration de la sécurité, Microsoft Defender, pour consulter les rubriques qu'il présente.
 
 1. Suite à la tâche précédente, vous devriez toujours être connecté à **LON-CL1** et votre navigateur Internet devrait être ouvert sur le **Microsoft 365 Admin Center**, connecté en **MOD Administrator**. Dans le menu de navigation, dans la section **Admin centers**, cliquez sur **Security**. Un nouvel onglet va s'ouvrir, affichant le portail **Microsoft 365 Defender**.
 1. Parcourez le **Microsoft 365 Defender**, en sélectionnant chaque entrée de son menu de navigation. Consultez les informations disponibles pour chaque entrée et parcourez les onglets (le cas échéant).
@@ -322,11 +323,11 @@ goDeploy a potentiellement déjà affecté des licences à beaucoup (trop) d'uti
 
 	> Si tous les utilisateurs de la liste ne sont pas présent dans votre tenant de test, contentez-vous de désaffecter les licences de celles et ceux qui s'y trouvent, ce n'est pas pénalisant pour la suite....
 
-	> Si, sur votre tenant, les licenses présentes sont **Office 365 E5 (no teams)** et non **Microsoft 365 E5 (no Teams)**, merci d'adapter des énnonçés des ateliers en conséquence...
+	> Si, sur votre tenant, les licences présentes sont **Office 365 E5 (no teams)** et non **Microsoft 365 E5 (no Teams)**, merci d'adapter des énoncés des ateliers en conséquence...
 
 1. Dans la fenêtre de confirmation **Unassign 11 licenses?**, cliquez sur le bouton **Unassign**.
 1. Dans le menu de navigation à gauche du portail administratif, ouvrez le groupe **Billing** pour resélectionner l'entrée **Licenses**.  
-1. Répétez la procédure précédente pour désaffecter la license **Microsoft Teams Enterprise** des mêmes utilisateurs.
+1. Répétez la procédure précédente pour désaffecter la License **Microsoft Teams Enterprise** des mêmes utilisateurs.
 
 #### Tâche 1 - Création d'utilisateurs
 
@@ -351,7 +352,7 @@ goDeploy a potentiellement déjà affecté des licences à beaucoup (trop) d'uti
 		> Après avoir configuré ce champ, le nom utilisateur de Dominique devrait apparaitre sous la forme: **dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com**
 
 	- Décochez l'option **Automatically create a password**
-	- Password : ```Pa55w.rd``` (Astuce : cliquez sur l'icône d'oeil à droite pour vérifier le mot de passe saisi)
+	- Password : `Pa55w.rd` (Astuce : cliquez sur l'icône d'oeil à droite pour vérifier le mot de passe saisi)
 	- Cochez la case **Require this user to change their password when they first sign in**
 
 1. Cliquez **Next**.
@@ -420,7 +421,7 @@ Vous affecterez ensuite une licence produit au compte de Ada Russell. Pour finir
 
 	Puisque l'option **Auto-generate password** est sélectionnée par défaut et que la case **Make this user change their password when they first sign in** est cochée, cliquez simplement sur le bouton **Restore** en bas de la page.
 
-1. Le panneau **Libby Hayward has been restored** s'affiche pour confirmer que le compte de Libby a été restauré et son mot de passe remplacé. Prenez soin de copier le nouveau mot de passe (en utilisant par exemple le bouton *Npotes* ci-dessous, vous en aurez besoin à la tâche suivante) avant de cliquer sur le bouton **Close**.  
+1. Le panneau **Libby Hayward has been restored** s'affiche pour confirmer que le compte de Libby a été restauré et son mot de passe remplacé. Prenez soin de copier le nouveau mot de passe (en utilisant par exemple le bouton *Notes* ci-dessous, vous en aurez besoin à la tâche suivante) avant de cliquer sur le bouton **Close**.  
 
 	> Si vous avez procédé *trop* rapidement à la suppression et restauration de l'utilisateur, il se peut que le nom de connexion de celui-ci ne soit pas correct (restauration effectuée avant que le suppression ne soit complètement assumée). Dans ce cas, vous pourrez ensuite aisément modifier le nom de connexion de Libby pour lui remettre ```libby@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com```...
 
@@ -438,20 +439,20 @@ Dans cette tâche, vous allez vérifier l'impact des changements que vous avez f
 1. Dans la fenêtre **Pick an account**, sélectionnez **+ Use another account**.
 1. Dans la fenêtre **Sign in**, entrez `Libby@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com` et cliquez sur **Next**.
 1. Dans la fenêtre **Enter password**, saisissez le mot de passe temporaire de Libby dont vous avez pris note dans la tâche précédente et cliquez sur le bouton **Sign in**.
-1. Dans la fenêtre **Update your password**, entrez de nouveau le mot de passe temporaire de Libby dans le champ **Current password**, et utilisez le mot de passe ```userPass``` dans les champs **New password** et **Confirm password**. Cliquez sur **Sign in**.
+1. Dans la fenêtre **Update your password**, entrez de nouveau le mot de passe temporaire de Libby dans le champ **Current password**, et utilisez le mot de passe ```ibForm@tion``` dans les champs **New password** et **Confirm password**. Cliquez sur **Sign in**.
 1. Si une fenêtre **Welcome to Microsoft 365** apparait, cliquez deux fois sur la flèche de droite pour accéder à la validation vous permettant de la fermer.
 1. Vérifiez que vous pouvez accéder à la page d'accueil de M365 Copilot. Notez qu'aucune application n'est présente sur le portail de Libby (en cliquant sur le **App Launcher** de 3*3 carrés en haut à gauche) puisque vous n'avez affecté aucune licence au compte de Libby.
 1. Vous devez désormais vous déconnecter du compte de Libby pour tenter de vous connecter avec le compte de Alan Yoo. Pour vous déconnecter, cliquez sur le nom de connexion de Libby Hayward (en bas à gauche) et cliquez sur **Sign out**.
 1. Une fois déconnecté, ressaisissez l'adresse suivante dans la barre d'adresse de votre navigateur si nécessaire : `https:/m365.cloud.microsoft`
 1. Dans la page **login**, cliquez sur le choix **Switch to a different account** en dessous du bouton **Sign in**
 1. Saisissez `Alan@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com` dans le champ **Email address** avant de cliquer sur **Next**
-1. Dans la fenêtre **Enter password**, saisissez ```defaultPass``` et cliquez sur **Sign in**.
+1. Dans la fenêtre **Enter password**, saisissez ```Pa55w.rd``` et cliquez sur **Sign in**.
 1. Sur la fenêtre **Pick an account**, constatez qu'un message d'erreur apparait, indiquant que le compte de Alan a été bloqué. Vous venez de vérifier que Alan ne peut plus se connecter à Microsoft 365.
 1. Vous allez finalement vous connecter avec votre compte admin de Dominique Skyetson, en utilisant le compte nominatif que vous avez créé dans la première tâche de cet exercice. Dans la fenêtre **Pick an account**, sélectionnez donc **+ Use another account**.
 1. Dans la fenêtre **Sign in**, saisissez `dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com` et cliquez sur **Next**.
-1. Dans la fenêtre suivante, utilisez le mot de passe ```defaultPass``` et cliquez sur **Sign in**.
-1. Dans la fenêtre **Update your password**, saisissez ```defaultPass``` dans le champ **Current password** et saisissez ```userPass``` dans les champs **New password** et **Confirm password**. Cliquez sur **Sign in**.
-1. Si une fenêtre **Welcome to Microsoft 365** apparait, cliquez deux fois sur la flèche de droite pour accèder à la validation vous permettant de la fermer. 
+1. Dans la fenêtre suivante, utilisez le mot de passe ```Pa55w.rd``` et cliquez sur **Sign in**.
+1. Dans la fenêtre **Update your password**, saisissez ```Pa55w.rd``` dans le champ **Current password** et saisissez ```ibForm@tion``` dans les champs **New password** et **Confirm password**. Cliquez sur **Sign in**.
+1. Si une fenêtre **Welcome to Microsoft 365** apparait, cliquez deux fois sur la flèche de droite pour accéder à la validation vous permettant de la fermer. 
 1. Dans la page d'accueil de M365 Copilot, cliquez sur le **App Launcher** puis sur **More Apps**".
 1. Dans la page "**Apps**", cliquez sur **All apps** pour lancer l'application **Admin**.
 1. Dans le portail **Microsoft 365 admin center**, dans le menu de navigation à gauche, ouvrez le groupe **Users** pour y sélectionner **Active users**.
@@ -497,7 +498,7 @@ Pour tester l'authentification multifactorielle (MFA), Dominique Skyetson veut l
 1. Vous devriez encore être connecté sur **LON-CL1** à l'issue du premier atelier. Le **Microsoft 365 admin center** devrait encore être resté ouvert dans votre navigateur et vous devriez y être connecté avec le compte *Dominique Skyetson*.
 1. Pour activer la MFA pour le compte utilisateur de Dominique Skyetson, vous devez d'abord accéder à la liste des **Active users** dans le portail **Microsoft 365 admin center**. Utilisez donc le menu de navigation pour ouvrir le groupe d'options **Users** afin d'y choisir **Active users**.
 1. Dans la page **Active users**, dans la barre de menu au-dessus de la liste d'utilisateurs, cliquez sur **Multi-factor authentication**. Cette action va ouvrir le portail d'administration Entra dans un nouvel onglet, sur la page **Per-user ultifactor authentication** (avec la vue **Users** affichée par défaut).  
-1. Si vous êtes amenés à mettre en place la MFA de Dominique pour accèder à cette page, vous pouvez vous référer à la procédure détaillée dans la tâche 3 suivante, sinon, poursuivez avec la procédure de la présente tâche
+1. Si vous êtes amenés à mettre en place la MFA de Dominique pour accéder à cette page, vous pouvez vous référer à la procédure détaillée dans la tâche 3 suivante, sinon, poursuivez avec la procédure de la présente tâche
 
 	> Le statut MFA de tous les utilisateurs existant est **Disabled**.
 
@@ -513,7 +514,7 @@ Vous allez désormais vous connecter avec le compte de Dominique pour sécuriser
 
 1. Cliquez sur l'icône de **Microsoft Edge** sur la barre des tâches pour ouvrir une nouvelle session de navigation et réouvrez le portail **Microsoft 365 Admin center** en utilisant l'url `https://admin.microsoft.com`
 1. Dans la fenêtre **Pick an Account**, choisissez **dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com**.
-1. Dans la fenêtre **Enter password**, entrez ```userPass``` et cliquez sur **Sign in**.
+1. Dans la fenêtre **Enter password**, entrez ```ibForm@tion``` et cliquez sur **Sign in**.
 1. La MFA étant maintenant active pour Dom, une fenêtre **More information required** apparait. Cliquez sur **Next**.
 1. Si nécessaire, reportez-vous à la procédure **Mise en place de la M.F.A pour les ateliers Microsoft** pour activer la génération de codes pour Dominique dans une application de MFA tierce.
 1. Après votre connexion avec la MFA, si une fenêtre **Stay signed in?** apparait, sélectionnez **Don't show this again** et cliquez sur **Yes**.
@@ -530,7 +531,7 @@ Vous allez désormais vous connecter avec le compte de Dominique pour sécuriser
 Précédemment vous avez ajouté plusieurs compte Microsoft 365. Pour poursuivre dans votre rôle d'administration de Dominique Skyetson, vous souhaitez désormais mettre en place la gestion des groupes dans Microsoft 365. Dans cet exercice, vous allez créer de nouveaux groupes et gérer leur contenu en leur affectant des utilisateurs. Vous testerez aussi l'effet d'une suppression de groupe sur les utilisateurs contenus dans celui-ci.
 
 #### Tâche 1 - Création de groupes
-En tant que Dominique Skyetson, vous souhaitez désormais mettre en oeuvre les groupes Microsoft 365 dans le projet pilote. Dans cette tâche, vous allez ajouter deux groupes de Vente et un groupe du service paye. Vous allez ensuite supprimer un des groupes Vente pour constater que cela ne supprime pas les utilisateurs contenus dans ce groupe.
+En tant que Dominique Skyetson, vous souhaitez désormais mettre en œuvre les groupes Microsoft 365 dans le projet pilote. Dans cette tâche, vous allez ajouter deux groupes de Vente et un groupe du service paye. Vous allez ensuite supprimer un des groupes Vente pour constater que cela ne supprime pas les utilisateurs contenus dans ce groupe.
 
 1. Vous devriez encore être connecté sur **LON-CL1** à l'issue du premier atelier. Le **Microsoft 365 admin center** devrait encore être resté ouvert dans votre navigateur et vous devriez y être connecté avec le compte *Dominique Skyetson*.
 1. Dans le portail **Microsoft 365 admin center**, dans le menu de navigation de gauche, ouvrez **Teams & groups** pour sélectionner **Active teams & groups**.
@@ -595,7 +596,7 @@ En tant que Dominique Skyetson, vous souhaitez désormais mettre en oeuvre les g
 
 <div class="ibPrintNotes" data-exercise="a2e4" hidden></div>
 
-Windows Powershell permet aux administrateurs d'automatiser, d'accélérer et de fluidifier les tâches qui seraient faites dans le portail Microssoft 365 admin center, les plus compliquées comme les plus simples.
+Windows Powershell permet aux administrateurs d'automatiser, d'accélérer et de fluidifier les tâches qui seraient faites dans le portail Microsoft 365 admin center, les plus compliquées comme les plus simples.
 
 Dans cet exercice, vous allez continuer, en tant que Dominique, à faire des opérations administratives de maintenance dans Microsoft 365 en utilisant Windows Powershell. Cela vous permettra de comparer l'expérience de création et de maintenance des utilisateurs et des groupes entre le centre d'administration et le scripting Powershell.
 
@@ -603,7 +604,7 @@ Vous souhaitez donc utiliser Windows Powershell pour créer des comptes utilisat
 
 #### Tâche 1 - Installation du module Windows Powershell pour Entra ID
 
-Dans cette tâche vous allez mettre en place l'environnement fondamental pour la gestion de Microsoft 365 à l'aide de Windows Powershell en insatllant le module Microsoft.graph dans votre machine d'administration **LON-CL1**.
+Dans cette tâche vous allez mettre en place l'environnement fondamental pour la gestion de Microsoft 365 à l'aide de Windows Powershell en installant le module Microsoft.graph dans votre machine d'administration **LON-CL1**.
 
 1. Suite à l'exercice précédent, vous devriez être resté connecté sur la machine **LON-CL1** avec le compte **```Administrator```** et le mot de passe **```Pa55w.rd```**.
 1. Dans la zone de recherche en bas à gauche de la barre des tâches, tapez ```powershell```
@@ -679,7 +680,7 @@ Connect-MgGraph -scopes User.ReadWrite.All,Group.ReadWrite.All,Domain.ReadWrite.
 	Set-MgUserLicense -userId $user2.id -AddLicenses @{SkuId=$license.SkuId} -RemoveLicenses @()
 	```
 
-1. Utilisez la commande suivante pour bloquer le compte de Catherine et l'empècher de se connecter à l'environnement Mixcrosoft 365 :
+1. Utilisez la commande suivante pour bloquer le compte de Catherine et l'empêcher de se connecter à l'environnement Microsoft 365 :
 	```powershell
 	Update-MgUser -UserId $user1.Id -AccountEnabled:$false
 	```
@@ -745,7 +746,7 @@ Notepad .\users.csv
 1. Constatez le résultat de cette commande : chaque utilisateur est ajouté à l'environnement Microsoft 365 (sans licence affectée cependant).
 1. Vous pouvez ensuite utiliser la commande `Get-MgUser` pour obtenir la liste des comptes utilisateurs et constater qu'elle contient désormais les nouveaux utilisateurs importés à l'instant.
 1. Minimiser l'outil **Administrator : Windows Powershell** et retournez dans votre navigateur Internet. 
-1. Dans le portail **Microsoft 365 admin center** navigez jusqu'à la liste **Active users**. Jetez un oeil au contenu de cette liste pour vérifier que les utilisateurs importés sont bien présents, ainsi que Catherine Richard et Tameka Reed, que vous avez ajouté précédemment par commandes PowerShell.
+1. Dans le portail **Microsoft 365 admin center** navigez jusqu'à la liste **Active users**. Jetez un œil au contenu de cette liste pour vérifier que les utilisateurs importés sont bien présents, ainsi que Catherine Richard et Tameka Reed, que vous avez ajouté précédemment par commandes PowerShell.
 1. Dans le **Microsoft 365 admin center**, cliquez sur **Show all** (si nécessaire) pour afficher toutes les entrées de menu. Dans le groupe d'options **Admin centers**, cliquez sur **Exchange**.
 1. Dans le portail **Exchange admin center**, ouvrez le groupe d'options **Recipients** pour sélectionner **Mailboxes** si vous n'y êtes pas arrivé par défaut. Parcourrez les boites aux lettres et notez qu'aucune boite aux lettres n'a été créée pour les utilisateurs sans licence.
 1. Fermez l'onglet **Exchange Admin Center** dans le navigateur, pour retourner sur l'onglet **Microsoft 365 admin center**. 
@@ -809,7 +810,7 @@ Dans cet exercice, en tant que Dominique Skyetson et pour le projet pilote Micro
 
 #### Tâche 1 - Délégation administrative dans le portail administratif
 
-Connecté avec un compte *Global Admin*, vous allez commencer cet exercice par tester l'affectation de droits administratifs via le portail **Microsoft 365 Admin Center**. Vous allez ainsi affecter le rôle *Billing Administrtor* à *Elvis Cress* et le rôle *User Administrator* à *Leanna Goodwin*.
+Connecté avec un compte *Global Admin*, vous allez commencer cet exercice par tester l'affectation de droits administratifs via le portail **Microsoft 365 Admin Center**. Vous allez ainsi affecter le rôle *Billing Administator* à *Elvis Cress* et le rôle *User Administrator* à *Leanna Goodwin*.
 
 1. Vous devriez encore être connecté sur **LON-CL1** à l'issue du précédent atelier. Le **Microsoft 365 admin center** devrait encore être resté ouvert dans votre navigateur et vous devriez y être connecté avec le compte *Dominique Skyetson*.
 1. Dans le portail **Microsoft 365 admin center**, dans le menu de navigation de gauche, ouvrez **Users** pour sélectionner **Active users**.
@@ -918,7 +919,7 @@ Répétez les étapes vues précédemment pour débloquer le compte de Leila. (N
 
 <div class="ibPrintNotes" data-exercise="a3e1" hidden></div>
 
-Le *Remote Connectivity Analyzer* est un outil web pensé pour aider les administrateurs IT à dépanner les soucis de connectivité avec leurs déploiement Exchange, Microsoft 365 et Teams. Dominique Skyetson, en tant qu'administrateur de Adatum, doit savoir utiliser cet outil si une configuration erronnée vient interrompre les communications dans le projet pilote par exemple.
+Le *Remote Connectivity Analyzer* est un outil web pensé pour aider les administrateurs IT à dépanner les soucis de connectivité avec leurs déploiement Exchange, Microsoft 365 et Teams. Dominique Skyetson, en tant qu'administrateur de Adatum, doit savoir utiliser cet outil si une configuration erronée vient interrompre les communications dans le projet pilote par exemple.
 
 #### Tâche 1 - Test de connectivité
 Dans cette tâche, vous allez ouvrir l'outil *Microsoft Test connectivity* et vous y connecter.
@@ -937,11 +938,11 @@ Dans cette tâche, vous allez ouvrir l'outil *Microsoft Test connectivity* et vo
 
 	> Si vous recevez un message concernant le fait d'avoir réalisé trop de tests les 60 dernières secondes, attendez quelques instant avant de réessayer.
 
-1. Lorsque vous voyez appraître le message **Successfully verified specified external domain name settings for your domain in Microsoft 365**, cliquez sur la flèche basse **V** à gauche de **Test Steps** (cliquez sur le texte **Test Steps** lui-même ne fonctionne pas) afin de parcourir les étapes vérifiées lors de ce test de votre domainde de tenant.
+1. Lorsque vous voyez apparaître le message **Successfully verified specified external domain name settings for your domain in Microsoft 365**, cliquez sur la flèche basse **V** à gauche de **Test Steps** (cliquez sur le texte **Test Steps** lui-même ne fonctionne pas) afin de parcourir les étapes vérifiées lors de ce test de votre domaine de tenant.
 
 #### Tâche 2 - Test de connectivité Exchange
 
-vous allez maintenant uiliser l'outil *Microsoft Test Connectivity* pour vérifier la connectivité réseau d'une boite aux lettre Outlook.
+vous allez maintenant utiliser l'outil *Microsoft Test Connectivity* pour vérifier la connectivité réseau d'une boite aux lettre Outlook.
 
 1. Sur la page **Microsoft Remote Connectivity Analyzer**, dans le menu de navigation vertical à gauche, cliquez sur l'onglet **Exchange Online**.
 1. Sélectionnez la tuile intitulée **Outlook Connectivity**.
@@ -966,7 +967,7 @@ Chaque étape a une mention **Test Steps** que vous pouvez utiliser pour consult
 <div class="ibPrintNotes" data-exercise="a4e1" hidden></div>
 
 Comme dans les précédents exercices, vous allez vous glisser dans la peau de Dominique Skyetson, administrateur de Adatum. Dans cet atelier, vous réaliserez les tâches nécessaires pour gérer l'hybridation de la gestion d'identités du projet pilote entre l'Active Directory existant et l'Entra ID utilisé par l'environnement Microsoft 365.  
-Pendant cet atelier, vous allez préparer, installer et mettre en oeuvre Entra Connect qui sera un jalon important pour Adatum dans sa décision de déplacer ses données et applications vers le cloud 365.
+Pendant cet atelier, vous allez préparer, installer et mettre en œuvre Entra Connect qui sera un jalon important pour Adatum dans sa décision de déplacer ses données et applications vers le cloud 365.
 
 #### Tâche 1 - Modification des UPN
 Dans *Active Directory Domain Service* (ADDS), le suffixe UPN par défaut est le nom DNS du domaine dans lequel le compte utilisateur a été créé. L'assistant d'installation Entra Connect utilise l'attribut *UserPrincipalName* (bien qu'il soit possible d'en sélectionner un autre) comme nom de connexion utilisateur pour Entra Id.  
@@ -983,7 +984,7 @@ Dans cette tâche, vous allez vous faciliter la vie en utilisant Windows Powersh
 	```Get-ADUser -Filter * -Properties SamAccountName | ForEach-Object { Set-ADUser $_  -UserPrincipalName ($_.SamAccountName.replace(' ','') + '@' + $upnSuff )}```
 
 #### Tâche 2 - Préparation de comptes à problèmes
-L'intégration de votre ADDS on-premises avec Entra Id rendra vos utilisateurs plus productifs tout en facilitant l'administration de leurs comptes. Cependant, des erreurs peuvent survenir car, tout au long de la vie de votre ADDS, des informations érronées ont pu être utilisées qui n'ont pas posé de problème on-premises mais ne pourraient être supportées dans le cloud.  
+L'intégration de votre ADDS on-premises avec Entra Id rendra vos utilisateurs plus productifs tout en facilitant l'administration de leurs comptes. Cependant, des erreurs peuvent survenir car, tout au long de la vie de votre ADDS, des informations erronées ont pu être utilisées qui n'ont pas posé de problème on-premises mais ne pourraient être supportées dans le cloud.  
 Par exemple, plusieurs objets pourraient avoir un attribut **ProxyAddresses** ou **UserPrincipalName** identiques dans l'ADDS. De nombreuses erreurs similaires pourraient poser problème dans la mise en place de la synchronisation de votre annuaire.  
 Dans cette tâche, vous allez utiliser un script pour implémenter quelques erreurs sur les utilisateurs du projet pilote Adatum afin d'identifier ensuite la manière de trouver et corriger ce genre d'erreurs.
 
@@ -995,8 +996,8 @@ Dans cette tâche, vous allez utiliser un script pour implémenter quelques erre
 
 1. Attendez que le script ait terminé son exécution avant de poursuivre sur la tâche suivante.
 
-#### Tâche 3 - Identification et correction des problèmes avec powerShell
-Dans cette tâche vous allez appréhender l'utilisation d'un script powerShell pour identifier et corriger les problèmes sur vos objets ADDS avant de mettre en place la synchronisation de ce dernier vers Entra Id.
+#### Tâche 3 - Identification et correction des problèmes avec PowerShell
+Dans cette tâche vous allez appréhender l'utilisation d'un script PowerShell pour identifier et corriger les problèmes sur vos objets ADDS avant de mettre en place la synchronisation de ce dernier vers Entra Id.
 
 1. Vous devriez être encore connecté sur **LON-DC1** à l'issue de la tâche précédente.
 1. Dans la fenêtre **Administrator: WIndows Powershell**, utilisez la commande suivante pour récupérer le script que vous utiliserez ensuite :
@@ -1004,18 +1005,18 @@ Dans cette tâche vous allez appréhender l'utilisation d'un script powerShell p
 1. Lancez ensuite ledit script dans la fenêtre **Administrator: Windows PowerShell** : `.\ibIdFix.ps1`
 1. Une foix que le script a terminé, il génère un export des problèmes en .csv et ouvre une fenêtre **$Report|out-gridview** vous permettant de constater les comptes posant problèmes dans l'ADDS et qu'il serait impossible de synchroniser correctement.
 
-	- La première ligne indique un problème dans la syntaxte UPN de l'utilisateur *Klemen*,
+	- La première ligne indique un problème dans la syntaxe UPN de l'utilisateur *Klemen*,
 	- Les secondes et troisièmes lignes indiquent que deux comptes ont l'attribut emailAddress dédoublé.
 	- Notez également que le domaine des deux derniers comptes en erreur n'est pas légitime dans l'environnement de l'atelier.
 	
 1. Ouvrez donc l'outil **Server Manager** (depuis le menu démarrer si vous l'aviez fermé) pour cliquer sur le menu **Tools/Active Directory Administrative Center**.
-1. Dans l'outil **Active Directory Administrative center**, saisissez ```klemen``` dans le champ **Search** (à droite, dans l'ancadré **Global Search**).
+1. Dans l'outil **Active Directory Administrative center**, saisissez ```klemen``` dans le champ **Search** (à droite, dans l'encadré **Global Search**).
 1. Dans la fenêtre de résultat, double-cliquez sur l'utilisateur **Klemen Sic** pour supprimer le caractère **@** après son prénom dans le champ **User UPN logon**.
 1. Cliquez sur **OK** pour valider le changement.
-1. Dans la fenêtre **Global Search**, effaçez le nom **Klemen** et saisissez le nom ```Logan``` avant d'appuyer sur **Entrée**.
+1. Dans la fenêtre **Global Search**, effacez le nom **Klemen** et saisissez le nom ```Logan``` avant d'appuyer sur **Entrée**.
 1. Dans la fenêtre de résultat, double-cliquez sur l'utilisateur **Logan Boyle** pour corriger le contenu de son champ **E-mail** avec la valeur ```logan@[[godeployDomain],[labXXXXX]].godeploylabs.com```.
 1. Cliquez sur **OK** pour valider le changement.
-1. Dans la fenêtre **Global Search**, effaçez le nom **Logan** et saisissez le nom ```Lara``` avant d'appuyer sur **Entrée**.
+1. Dans la fenêtre **Global Search**, effacez le nom **Logan** et saisissez le nom ```Lara``` avant d'appuyer sur **Entrée**.
 1. Dans la fenêtre de résultat, double-cliquez sur l'utilisateur **Lara Raisic** pour corriger le contenu de son champ **E-mail** avec la valeur ```lara@[[godeployDomain],[labXXXXX]].godeploylabs.com```.
 1. Cliquez sur **OK** pour valider le changement.
 1. Fermez l'outil **Active Directory Administrative Center**, vous êtes prêt à mettre en place la synchronisation.
@@ -1035,14 +1036,14 @@ Vous allez ensuite utiliser des objets groupes pour faire quelques modifications
 Dans cette tâche, vous allez utiliser l'assistant d'installation de Entra Connect pour activer la synchronisation entre l'ADDS de Adatum et Entra Id. Une fois la configuration terminée, le processus de synchronisation démarre automatiquement.
 
 1. Vous devriez encore être connecté sur **LON-DC1** avec le compte **Administrator** à l'issue de la tâche précédente.
-1. Avant de pouvoir installer Entra Connect, il nous faut activer la version 1.2 du protocole TLS sur LON-DC1. Dans la barre des tâches, cliquez sur l'icône de l'outil **Administrator: Windows PowerSHell ISE** que vous aviez réduit précédemment.
+1. Avant de pouvoir installer Entra Connect, il nous faut activer la version 1.2 du protocole TLS sur LON-DC1. Dans la barre des tâches, cliquez sur l'icône de l'outil **Administrator: Windows PowerShell ISE** que vous aviez réduit précédemment.
 1. utilisez la commande suivante pour activer le TLS 1.2 et attendez que LON-DC1 redémarre :  
 ```powershell
 iex ([Text.Encoding]::UTF8.GetString((Invoke-WebRequest '[resourcesUrl]/enabletls12.ps1' -UseBasicParsing).Content))
 ```
 1. Une fois que la machine LON-DC1 a redémarré, connectez-vous dessus avec le compte ```adatum\administrator``` et le mot de passe ```Pa55w.rd```.
 
-	> Il pourra être intéressant de (re)faire le ménage dans le démarrage du réseau du controleur de domaine avant de poursuivre les manipulations. Demandez conseil à votre formateur/formatrice le cas échéant...
+	> Il pourra être intéressant de (re)faire le ménage dans le démarrage du réseau du contrôleur de domaine avant de poursuivre les manipulations. Demandez conseil à votre formateur/formatrice le cas échéant...
 
 1. Lancez votre navigateur Internet afin de vous rendre à l'adresse `https://admin.microsoft.com`.
 1. Si besoin, dans la boite **Sign in**, utilisez l'adresse de connexion de Dominique Skyetson (`dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com`) et cliquez sur **Next**.
@@ -1056,7 +1057,7 @@ iex ([Text.Encoding]::UTF8.GetString((Invoke-WebRequest '[resourcesUrl]/enabletl
 1. Dans la seconde partie, intitulée **Manage from on-premises : Connect Sync**, cliquez sur le bouton **Donwload Connect Sync Agent**.
 1. Dans le panneau **Microsoft Entra Connect Agent** qui s'est ouvert, cliquez sur le bouton **Accept terms & download**.
 
-	> Le téléchargement peut prendre quelques minutes à démarrer dans votre navigateur, sans aucune information... Ici encore, la patience est de rigeur...
+	> Le téléchargement peut prendre quelques minutes à démarrer dans votre navigateur, sans aucune information... Ici encore, la patience est de rigueur...
 
 1. Dans la notification en haut à droite (si le fichier est "téléchargé et que la notification n'apparaît pas, allez chercher le fichier **AzureADConnect.msi** dans le dossier **Downloads** de LON-DC1), cliquez sur **Open File** sous le nom du fichier téléchargé : **AzureADConnect.msi**.
 1. Si une boite de dialogue **Do you want to run this file?** s'affiche, cliquez sur **Run**.
@@ -1219,7 +1220,9 @@ Dans cette tâche, vous allez utiliser l'assistant de configuration de Entra Con
 1. Cliquez sur le nom de **Isaiah Langer**.
 1. Dans le panneau qui apparait concernant les informations de **Isahia Langer**, cliquez sur l'onglet **Licenses and apps**.
 1. Sur l'onglet **Licenses and apps** de Isaiah Langer, décochez toutes les cases et cliquez sur **Save changes**
+
 	> Les étapes précédentes ne sont nécessaires que si votre tenant ne contient pas assez de licences pour pouvoir en affecter à Beth dans les étapes suivantes. Ne tenez pas compte des étapes précédentes si vous avez assez de licences à affecter à Beth....
+
 1. Dans la liste des **Active users**, dans le champ **Search active users list** entrez ```beth``` et appuyez sur **[Entrée]**.
 1. Cliquez sur le nom de **Beth Burke**.
 1. Dans le panneau qui apparait concernant les informations de **Beth Burke**, cliquez sur l'onglet **Licenses and apps**.
@@ -1243,11 +1246,11 @@ Dans cette tâche, vous allez utiliser l'assistant de configuration de Entra Con
 
 1. Basculez de nouveau sur la machine **LON-CL1**.
 1. Vous devriez toujours être connecté avec le compte de Beth. Pour vous assurer que la jonction hybride soit effective le plus rapidement possible, il vous faut vous déconnecter : faites un clic-droit sur le bouton **Démarrer** et choisissez **Shut down or sign out >** puis **sign out**.
-1. Si une liste d'applications ouvertes empêchant la fermeture de session s'affiche, cliquez sur **SIgn out anyway**.
+1. Si une liste d'applications ouvertes empêchant la fermeture de session s'affiche, cliquez sur **Sign out anyway**.
 1. Sur la mire d'ouverture de session, connectez vous avec le compte de  ```Beth@[[godeployDomain],[labXXXXX]].godeploylabs.com``` et le mot de passe ```Pa55w.rd```.
 1. Sur la barre des tâches, dans le champ de recherche à droite du bouton Démarrer, tapez ```Windows PowerShell ISE``` sur **Windows Powershell (ISE)**.
 1. Utilisez la commande suivante pour afficher l'état de la jonction de la machine : ```dsregcmd /status```.
-1. Au début du résultat, vous devriez voir **YES** en regard de **AzureADJoined**. Si ce n'est pas le cas, attendez quelques instants avant de réessayer (vous pouvez utiliser la commande ```dsregcmd /join``` pour tenter d'accélerer les choses....).
+1. Au début du résultat, vous devriez voir **YES** en regard de **AzureADJoined**. Si ce n'est pas le cas, attendez quelques instants avant de réessayer (vous pouvez utiliser la commande ```dsregcmd /join``` pour tenter d'accélérer les choses....).
 1. Fermez la fenêtre **Windows Powershell**.
 1. Ouvrez le menu **Démarrer** et cliquez sur l'engrenage **Settings** dans son menu de navigation à gauche.
 1. Dans la fenêtre **Windows Settings**, cliquez sur **Accounts**.
@@ -1323,7 +1326,7 @@ Dominique va désormais tester si les utilisateurs avec licence peuvent être em
 1. Dans la boite de dialogue **Update your password**, tapez ```Pa55w.rd``` dans le champ **Current password**, tapez ensuite ```ibForm@tion``` dans les champs **New password** et **Confirm password** avant de cliquer sur **Sign in**.
 1. Dans la page **Hi,What can I help you with?**", ouvrez le *App Launcher* (les 9 carrés en haut à gauche) pour cliquer sur **More apps**.
 1. Sur la page **Apps**, cliquez sur le bouton **Install apps** en haut à droite et sélectionnez **Microsoft 365 apps**.
-1. La fenêtre **My account** de Alan s'affiche. Sous la section **Office apps &amp; devices**, vous ne devriez pas pouvoir installer Office...  
+1. La fenêtre **My account** de Alan s'affiche. Sous la section **Office apps & devices**, vous ne devriez pas pouvoir installer Office...  
 
 	> Vous venez de vérifier qu'un utilisateur licencié ne peut télécharger Microsoft 365 Apps for enterprise si le paramètre global l'en empêche.
 
@@ -1348,7 +1351,7 @@ Dans la tâche précédente, vous vous êtes connecté avec le compte de Alan Yo
 1. Vous devriez encore être connecté à LON-CL2, avec votre navigateur Internet ouvert sur la page **My Account** de Alan Yoo. 
 1. Dans la section **Office apps &amp; devices**, vous avez constaté qu'un bouton **Install Office** est apparu.  
 
-	> En cliquant sur ce bouton  **Install Office** c'est la version anglaise 64 bit de Microsoft 365 Apps qui sera installée. Cependant, si vous souhaitez installer une autre version et/ou une autre langue, il vous faut cliquer sur l'onglet **Apps &amp; devices**.  
+	> En cliquant sur ce bouton  **Install Office** c'est la version anglaise 64 bit de Microsoft 365 Apps qui sera installée. Cependant, si vous souhaitez installer une autre version et/ou une autre langue, il vous faut cliquer sur l'onglet **Apps & devices**.  
 
 1. Puisque Alan veut installer une version 32-bits anglaise de Microsoft 365 Apps for enterprise, cliquez sur l'onglet  **Apps &amp; devices** et modifiez le champ **Version** à **32-bit** avant de cliquer sur le bouton orange **Install Office**.
 1. Dans la barre de notification qui apparait en haut à droite de votre navigateur, cliquez sur le lien **Open file** sous le fichier **OfficeSetup.exe** une fois ce dernier téléchargé. Vous allez ainsi lancer l'assistant d'installation d'Office.
@@ -1381,7 +1384,7 @@ Dans la tâche finale, vous allez vérifier l'installation automatisée et centr
 
 #### Tâche 1 - Ajout de 365 apps dans Intune
 
-Dominique souhaite désormais ajouter Microsoft 365 apps automatiquement aux périphériques qu'il gère. Pour gérer les périphériques en utilisant Microsoft 365, Adatum a acquis des abonnements Enterprise Mobility + Security E5 (EMS E5). Dans cette tâche, Dominique va affecter une de ces licences à un utilisateur. Ensuite, il ajoutera Mircosoft 365 apps aux périphériques gérés et en vérifie l'installation.
+Dominique souhaite désormais ajouter Microsoft 365 apps automatiquement aux périphériques qu'il gère. Pour gérer les périphériques en utilisant Microsoft 365, Adatum a acquis des abonnements Enterprise Mobility + Security E5 (EMS E5). Dans cette tâche, Dominique va affecter une de ces licences à un utilisateur. Ensuite, il ajoutera Microsoft 365 apps aux périphériques gérés et en vérifie l'installation.
 
 1. Basculez vers la VM cliente **LON-CL1** sur laquelle vous devriez être connecté avec le compte ```Adatum\Administrator``` et le mot de passe ```Pa55w.rd```. Vous devriez encore être connecté sur votre navigateur Internet avec le compte de Dominique sur le portail **Microsoft 365 admin center**.
 1. Dans le menu de navigation du portail **Microsoft 365 admin center**, cliquez sur **Show all...** si nécessaire pour pouvoir cliquer sur **Microsoft Intune**.
@@ -1400,7 +1403,7 @@ Dominique souhaite désormais ajouter Microsoft 365 apps automatiquement aux pé
 1. Sur l'onglet **Review + create**, cliquez sur le bouton **Create**.
 
 #### Tâche 2 - Prérequis d'auto-enrollment
-Pour que l'*auto-enrollment* fonctionne comme prévu, vous devez vérifier que que le paramétrage en a été fait correctement. Les étapes suivantes montrent les principaux prérequis dans l'utilisation d'Intune :  
+Pour que l'*auto-enrollment* fonctionne comme prévu, vous devez vérifier que le paramétrage en a été fait correctement. Les étapes suivantes montrent les principaux prérequis dans l'utilisation d'Intune :  
 
 1. Suite à la tâche précédente, vous devriez encore être connecté sur le portail **Microsoft Intune admin center** avec le compte de Dominique.
 1. Dans le menu de navigation à gauche du portail **Microsoft Intune admin center**, cliquez sur **Devices**.
@@ -1468,7 +1471,7 @@ Microsoft ayant eu de nombreux problèmes d'utilisation des domaines *onmicrosof
 1. cliquez sur la case **Set as primary email address** afin de la sélectionner et valider en utilisant le bouton **OK** en bas de page.
 1. De retour sur le panneau **Manage email adress types**, cliquez sur **Save** puis fermez le panneau d'informations de Dominique avec la croix de fermeture en haut à droite. 
 
-> Répétez ensuite les étapes précedentes pour les comptes utilisateurs qui vont nous servir pour les test dans nos ateliers :  
+> Répétez ensuite les étapes précédentes pour les comptes utilisateurs qui vont nous servir pour les test dans nos ateliers :  
 > | Nom | email |
 > | --- | --- |
 > | Alan Yoo | ```alan```@[[godeployDomain],[labXXXXX]].godeploylabs.com |
@@ -1598,7 +1601,7 @@ Dans cette tâche, vous allez créer un filtre antiviral pour les pièces jointe
 
 1. Vous devriez encore être connecté sur **LON-CL1** à l'issue de l'atelier précédent. Les portails **Microsoft 365 admin center** et **Exchange admin center** devraient encore être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
 1. Dans le portail **Microsoft 365 Admin center**, sous la section **Admin Centers** du menu de navigation à gauche, cliquez sur **Security**.
-1. Dans le portail **Microsoft Defender**, cliquez (à gauche) sur la flêche **Show navigation**.
+1. Dans le portail **Microsoft Defender**, cliquez (à gauche) sur la flèche **Show navigation**.
 1. Dans le groupe d'options **Email &amp; collaboration** du menu de navigation, cliquez sur **Policies &amp; rules**.
 1. Sur la page **Policies &amp; rules**, cliquez sur **Threat policies**.
 1. Sur la page **Threat policies**, cliquez sur **Anti-malware** dans la section **Policies**.
@@ -1644,7 +1647,7 @@ En tant qu'administrateur de Adatum, Dominique souhaite activer et maintenir les
 1. Une fois les modifications sauvegardées, cliquez sur **Close**.
 
 #### Tâche 4 - Stratégie *Safe attachment*
-Dans cette dernière tâche, vous allez activer **Defender for Office** pour Sharepoint, OneDrive et Teams et vous allez créer une stratégie *Safe Attachments* qui va permettre de tester les pièces jointes des messages non détectées comme problématiques par l'antivirus. Vous allez configurer la stratégie de sorte que si une pièce jointe est problématique, elle soit retirée du message avant sa livraison au destinataire et qu'une copie du message original soit envoyée dans la boite de Dominique Skyetson pour investigation plus poussée.
+Dans cette dernière tâche, vous allez activer **Defender for Office** pour SharePoint, OneDrive et Teams et vous allez créer une stratégie *Safe Attachments* qui va permettre de tester les pièces jointes des messages non détectées comme problématiques par l'antivirus. Vous allez configurer la stratégie de sorte que si une pièce jointe est problématique, elle soit retirée du message avant sa livraison au destinataire et qu'une copie du message original soit envoyée dans la boite de Dominique Skyetson pour investigation plus poussée.
 
 1. Vous devriez encore être connecté sur **LON-CL1** à l'issue de l'atelier précédent. Les portails **Microsoft 365 admin center**, **Exchange admin center** et **Microsoft 365 Defender** devraient encore être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
 1. Dans le portail **Microsoft 365 Defender**, en haut de la page **Anti-spam policies**, dans le menu séquentiel, cliquez sur **Threat policies** pour remonter d'un niveau.
@@ -1669,7 +1672,7 @@ Dans cette dernière tâche, vous allez activer **Defender for Office** pour Sha
 
 <div class="ibPrintNotes" data-exercise="a6e3" hidden></div>
 
-Outlook on the web permet aux utilisateurs d'Adatum d'accèder à leur boite aux lettres depuis un navigateur Internet. Après qu'Adatum ait créé son tenant Microsoft 365 avec Exchange Online, ce dernier inclut une unique stratégie nommée **OWAMailboxPolicy-Default**. Cette stratégie définit les paramètres Outlook on the web pour tous les utilisateurs. Cependant, Dominique Skyetson, par son rôle d'administrateur de Adatum, souhaite créer une stratégie Outlook on the web policy qui s'appliqera à un utilisateur particulier (dans notre cas Alan Yoo). En vérifiant si une telle affectation de stratégie par utilisateur fonctionne, Dominique sera dès lors capable de gérer les paramètres de boite aux lettres pour les différentes populations d'utilisateurs de l'entreprise.  
+Outlook on the web permet aux utilisateurs d'Adatum d'accéder à leur boite aux lettres depuis un navigateur Internet. Après qu'Adatum ait créé son tenant Microsoft 365 avec Exchange Online, ce dernier inclut une unique stratégie nommée **OWAMailboxPolicy-Default**. Cette stratégie définit les paramètres Outlook on the web pour tous les utilisateurs. Cependant, Dominique Skyetson, par son rôle d'administrateur de Adatum, souhaite créer une stratégie Outlook on the web policy qui s'appliquera à un utilisateur particulier (dans notre cas Alan Yoo). En vérifiant si une telle affectation de stratégie par utilisateur fonctionne, Dominique sera dès lors capable de gérer les paramètres de boite aux lettres pour les différentes populations d'utilisateurs de l'entreprise.  
 Dominique configurera ensuite une stratégie de boite aux lettres pour les périphériques mobiles qui exige un mot de passe de périphérique, ainsi qu'une stratégie de périphérique mobile permettant de placer en quarantaine tout nouveau périphérique; nécessitant approbation de celui-ci pour qu'il puisse synchroniser les messages.
 
 #### Tâche 1 - Configuration de stratégie Outlook Web App
@@ -1700,7 +1703,7 @@ Dominique configurera ensuite une stratégie de boite aux lettres pour les péri
 1. Sur la page **Manage settings for email apps**, remplacez (vous pouvez cliquer sur le **x** à droite de la stratégie actuelle) le contenu du champ **Outlook web app mailbox policy** en tapant ```Limited features```.
 1. Sélectionnez votre stratégie **Limited features** avant de cliquer sur **Save**.
 1. Fermez le panneau d'information d'**Alan Yoo** une fois le changement sauvegardé.
-1. Cliquez sur l'icone de recherche de la barre des tâches puis tapez ```Windows Powershell``` et lançez une invite Powershell.
+1. Cliquez sur l'icone de recherche de la barre des tâches puis tapez ```Windows Powershell``` et lancez une invite Powershell.
 1. Dans la fenêtre Windows Powershell, tapez la commande suivante et validez par **[Entrée]** :
 	```Invoke-WebRequest "[resourcesUrl]/pieceJointe.txt" -OutFile $env:USERPROFILE\documents\pieceJointe.txt -UseBasicParsing```
 1. Vous pouvez désormais fermer la fenêtre Powershell et revenir à votre navigateur Internet.
@@ -1756,7 +1759,7 @@ Finalement, Dominique souhaite gérer l'accès à *Teams*, spécifiquement l'acc
 
 #### Tâche 1 - Gestion de la stratégie globale de réunion
 Les stratégies de réunion contrôlent les fonctionnalités disponibles pour les participants dans les réunions *Teams* qui ont été planifiées par les utilisateurs de l'entreprise. Une stratégie par défaut pour l'entreprise nommée *Global* a été créée par défaut et elle a été appliquée à tous les utilisateurs de l'entreprise. Vous pouvez soit faire des changements à cette stratégie par défaut, soit créer votre propre stratégie spécifique. En créant une stratégie spécifique, il est possible d'autoriser ou d'interdire la disponibilité de certaines fonctionnalités à vos utilisateurs.
-Dans le rôle de Dominique Skyetson, vous souhaitez maintenant customiser la stratégie globale de réunions pour l'entreprise, comme souhaité dans le cadre du projet pilote de mise en oeuvre de *Teams* chez Adatum.
+Dans le rôle de Dominique Skyetson, vous souhaitez maintenant customiser la stratégie globale de réunions pour l'entreprise, comme souhaité dans le cadre du projet pilote de mise en œuvre de *Teams* chez Adatum.
 
 1. Votre session devrait déjà ouverte sur **LON-CL1**, avec le compte **ADATUM\Administrator** et le mot de passe **Pa55w.rd**.
 1. Les portails **Microsoft 365 admin center** et **Exchange admin center** (que vous pouvez désormais fermer) devraient encore être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
@@ -1764,7 +1767,7 @@ Dans le rôle de Dominique Skyetson, vous souhaitez maintenant customiser la str
 1. Dans le portail **Microsoft Teams admin center**,  dans le menu de navigation, cliquez sur **Show All**.
 1. Ouvrez le groupe d'options **Meetings** pour cliquer sur le choix **Meeting policies**.
 1. Descendez dans la fenêtre **Meeting policies** pour cliquer sur la stratégie **Global (Org-wide default)**.  
-1. Dans la fenêtre **Global (Org-wide default)** qui s'affiche, sous la section **Meeting join &amp; lobby**, observez chaque paramètre. Comme Adatum a rencontré des problèmes par le passé avec des invités en accès téléphonique entrant de manière inopinée dans des réunion, il vous a été demandé de vérifier que l'option **People dialing-in can bypass the lobby** soit sur **Off**.
+1. Dans la fenêtre **Global (Org-wide default)** qui s'affiche, sous la section **Meeting join & lobby**, observez chaque paramètre. Comme Adatum a rencontré des problèmes par le passé avec des invités en accès téléphonique entrant de manière inopinée dans des réunion, il vous a été demandé de vérifier que l'option **People dialing-in can bypass the lobby** soit sur **Off**.
 1. Sous la section **Content Sharing**, observez chaque paramètre. Sur le choix **Screen sharing mode**, cliquez sur **Entire screen** pour le changer en **Single application**.
 1. Toujours sous la section **Content Sharing**, basculez le choix **External participants can give or request control** à **On**.
 1. Sous la section **Recording and transcription**, observez chaque paramètre et assurez vous que la fonctionnalité de  **Transcription** soit sur **On**.
@@ -1855,7 +1858,7 @@ Créer une file d'attente téléphonique est un processus en deux étapes, dans 
 1. **Calling Queue 1** apparaît désormais dans la liste des comptes de ressource.
 
 #### Tâche 5 - Créer une file d'attente
-Maintenant que vous avez créé un compte de ressource pour votre file d'atente, vous allez créer ladite file d'attente (dans le cadre de cet atelier nous ne pourrons lui affecter le précédent compte de ressource, par manque de licence et de numéro de téléphone).
+Maintenant que vous avez créé un compte de ressource pour votre file d'attente, vous allez créer ladite file d'attente (dans le cadre de cet atelier nous ne pourrons lui affecter le précédent compte de ressource, par manque de licence et de numéro de téléphone).
 
 1. Sur le portail **Microsoft Teams admin center**, cliquez sur **Call queues** dans le groupe d'options **Voice**.
 1. Sur la page **Call queues**, cliquez sur **+ Add** dans la barre de menu en haut de la page puis sur **Advanced setup**.
@@ -1944,7 +1947,7 @@ Dans le contexte du projet pilote Adatum, Dominique Skyetson va maintenant modif
 
 #### Tâche 9 – Gestion des paramètres d'équipes
 Le portail d'administration de *Teams* inclut un ensemble de paramètre qui contrôlent la performance du client *Teams*.  
-Dominique Skyetson va, pour finir cet atelier, configurer un certain nombre de ces paramêtres choisis par l'équipe projet pilote d'Adatum.
+Dominique Skyetson va, pour finir cet atelier, configurer un certain nombre de ces paramètres choisis par l'équipe projet pilote d'Adatum.
 
 1. Sur le portail **Microsoft Teams admin center**, cliquez sur **Teams settings** dans le groupe d'options **Teams**.
 1. Sur la page **Teams settings**, sélectionnez les valeurs suivantes :
@@ -1988,21 +1991,21 @@ Dominique Skyetson va, pour finir cet atelier, configurer un certain nombre de c
 
 <div class="ibPrintNotes" data-exercise="a8e1" hidden></div>
 
-Maintenant que Dominique a configuré *Exchange Online* et *Teams*, il s'apprette à implémenter *Sharepoint Online* dans le projet pilote d'Adatum.  
-Dans cet exercice, Dominique va commencer par modifier les paramètres génériques de Sharepoint Online pour les mettre en conformité avec les besoins business d'Adatum.
+Maintenant que Dominique a configuré *Exchange Online* et *Teams*, il s'apprête à implémenter *SharePoint Online* dans le projet pilote d'Adatum.  
+Dans cet exercice, Dominique va commencer par modifier les paramètres génériques de SharePoint Online pour les mettre en conformité avec les besoins business d'Adatum.
 
 #### Tâche 1 - Configuration de paramètres
 
 1. Basculez sur la machine virtuelle **LON-CL1**, sur laquelle vous devriez encore être connecté avec le compte **adatum\Administrator** et le mot de passe **Pa55w.rd**.
 1. Les portails **Microsoft 365 admin center** et **Microsoft Teams admin center** (que vous pouvez désormais fermer) devraient encore être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
-1. Dans le portail **Microsoft 365 admin center**, dans le menu de navigation, cliquez sur **Show all** (si nécessaire) puis cliquez sur **Sharepoint** sous la section **Admin centers**. Ceci va ouvrir le portail **SharePoint admin center** dans un nouvel onglet.
+1. Dans le portail **Microsoft 365 admin center**, dans le menu de navigation, cliquez sur **Show all** (si nécessaire) puis cliquez sur **SharePoint** sous la section **Admin centers**. Ceci va ouvrir le portail **SharePoint admin center** dans un nouvel onglet.
 1. Si une boite de dialogue **Take the tour** apparaît, cliquez en dehors pour la fermer.
-1. Dans le menu de navigation du portail **Sharepoint admin center**, ouvrez le groupe d'options **Policies** pour cliquer sur **Sharing**.
+1. Dans le menu de navigation du portail **SharePoint admin center**, ouvrez le groupe d'options **Policies** pour cliquer sur **Sharing**.
 1. Sur la page **Sharing**, cliquez pour ouvrir la section **More external sharing settings**. Parmi les options affichées, cochez la case **Allow guests to share items they don't own** (si elle n'est pas déjà cochée par défaut)). Cliquez sur le bouton **Save** en bas de page.
 
 #### Tâche 2 - Configuration des profils utilisateurs
 
-1. Les portails **Microsoft 365 admin center** et **Sharepoint admin center** devraient être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
+1. Les portails **Microsoft 365 admin center** et **SharePoint admin center** devraient être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
 1. Dans le menu de navigation du portail **SharePoint admin center** cliquez sur **More features**.
 1. Sur la page **More features**, cliquez sur le bouton **Open** sur la tuile **User profiles**.
 1. Sur la page **User Profiles**, sous l'en-tête **People** cliquez sur **Manage User Profiles**.
@@ -2019,12 +2022,12 @@ Dans cet exercice, Dominique va commencer par modifier les paramètres génériq
 
 #### Tâche 3 - Configuration des applications
 
-1. Les portails **Microsoft 365 admin center** et **Sharepoint admin center** devraient être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
+1. Les portails **Microsoft 365 admin center** et **SharePoint admin center** devraient être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
 1. Dans le menu de navigation du portail **SharePoint admin center** cliquez sur **More features**.
 1. Sur la page **More features**, cliquez sur le bouton **Open** sur la tuile **Apps**.
 1. Attendez que le catalogue d'applications soit prêt (votre navigateur Internet peut recharger la page plusieurs fois) et cliquez sur **More Features** dans le menu de navigation.
 1. Sur la page **More features**, cliquez sur le bouton **Open** sur la tuile **Configure store settings**.
-1. Sur la page **Apps**, en regard de **Apps for Office from the Store** cliquez sur **No** pour désactiver le lancement des applications Office lors de l'ouverture des documents des sites Sharepoint dans le navigateur.
+1. Sur la page **Apps**, en regard de **Apps for Office from the Store** cliquez sur **No** pour désactiver le lancement des applications Office lors de l'ouverture des documents des sites SharePoint dans le navigateur.
 1. Cliquez sur **OK**.
 1. Fermez les deux derniers onglets ouverts dans votre navigateur Internet, laissant les portails **Microsoft 365 admin center** et **Sharepoint admin center** ouverts pour l'exercice suivant.
 
@@ -2037,10 +2040,10 @@ Dans cet exercice, Dominique va commencer par modifier les paramètres génériq
 Dans cet exercice, Dominique Skyetson veut commencer à explorer les sites *SharePoint Online*. Pour en comparer le fonctionnement, Dominique va créer un site en utilisant le portail *SharePoint Online admin center*, avant d'en créer un second en utilisant Windows PowerShell. Elle va ensuite mettre en place les permissions d'accès sur les sites et vérifier leur mode de fonctionnement.
 
 #### Tâche 1 - Créer un site dans le SharePoint admin center
-Dans cette tâche, vous allez utiliser le portail Sharepoint admin center pour créer un site pour le service formation de Adatum.
+Dans cette tâche, vous allez utiliser le portail SharePoint admin center pour créer un site pour le service formation de Adatum.
 
-1. Sur la machine LON-CL1, les portails **Microsoft 365 admin center** et **Sharepoint admin center** devraient être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
-1. Dans le menu de navigation du **Sharepoint admin center**, cliquez sur le choix **Active sites** dans le groupe d'options **Sites**.
+1. Sur la machine LON-CL1, les portails **Microsoft 365 admin center** et **SharePoint admin center** devraient être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
+1. Dans le menu de navigation du **SharePoint admin center**, cliquez sur le choix **Active sites** dans le groupe d'options **Sites**.
 1. Sur la barre de menu au-dessus de la liste de sites, cliquez sur le bouton **+ Create**.
 1. Sur la page **Create a site: Select the site type**, cliquez sur la tuile **Communication Site**.
 1. Sur la page **Select a template**, choisissez le modèle de site **Standard communication**, qui semble convenir pour la communication sur les formations proposées par Adatum en cliquant sur la première tuile. Validez votre choix en cliquant sur **use template**.
@@ -2059,15 +2062,15 @@ Dans cette tâche, vous allez utiliser le portail Sharepoint admin center pour c
 	> Les paramètres de site changent pour permettre le partage d'éléments de ce site de la manière la plus ouverte possible.
 
 #### Tâche 2 - Créer un site avec Windows Powershell
-Après avoir créé un site avec le portail d'administration de Sharepoint Online, vous allez désormais utiliser Windows Powershell pour créer un site pour le service comptabilité de Adatum.
+Après avoir créé un site avec le portail d'administration de SharePoint Online, vous allez désormais utiliser Windows Powershell pour créer un site pour le service comptabilité de Adatum.
 
 1. Sur **LON-CL1**, tapez ```Powershell ISE``` dans la recherche à droite du bouton **Démarrer** sur la barre des tâches.
 1. Sur le menu **Démarrer**, dans le panneau de détail sur l'application **Windows PowerShell ISE**, cliquez sur **Run as administrator**.
 1. Si une fenêtre **User Account Control** apparaît, connectez-vous avec le compte **adatum\administrator** et le mot de passe **Pa55w.rd**.
-1. Dans la partie basse (bleue) de la fenêtre **Administrator: Windows Powershell ISE**, utilisez la commande suivante pour installer le module Powershell de gestion de Sharepoint Online :  
+1. Dans la partie basse (bleue) de la fenêtre **Administrator: Windows Powershell ISE**, utilisez la commande suivante pour installer le module Powershell de gestion de SharePoint Online :  
 	```Install-Module Microsoft.Online.SharePoint.PowerShell -Force```
-1. Dans l'invite de commande de l'ISE, utilisez la commande suivante pour vous connecter à votre environnement Sharepoint Online :  
-	`Connect-SPOService –Url https://[[onMicrosoftDomain],[wwlxxxxx]]-admin.sharepoint.com`
+1. Dans l'invite de commande de l'ISE, utilisez la commande suivante pour vous connecter à votre environnement Sharepoint Online :  	`Connect-SPOService –Url https://[[onMicrosoftDomain],[wwlxxxxx]]-admin.sharepoint.com`
+
 	> Dans cette commande, le nom de domaine original est suffixé de *-admin*.
 
 1. Dans la boite de dialogue **Sign in**, saisissez le nom de connexion de Dominique Skyetson (```dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com```) et cliquez sur **Next**.
@@ -2083,7 +2086,7 @@ Après avoir créé un site avec le portail d'administration de Sharepoint Onlin
 #### Tâche 3 - Configurer des permissions sur les sites
 Après avoir ajouté les sites de la formation et de la comptabilité d'Adatum, vous allez configurer des permissions pour le site de la formation. Vous allez affecter le rôle d'administrateur sur le site Formation à Alan Yoo.
 
-1. Sur la machine LON-CL1, les portails **Microsoft 365 admin center** et **Sharepoint admin center** devraient être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
+1. Sur la machine LON-CL1, les portails **Microsoft 365 admin center** et **SharePoint admin center** devraient être resté ouverts dans votre navigateur (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
 1. Dans le menu de navigation du portail **SharePoint admin center**, cliquez sur **Active sites** dans le groupe d'options **Sites**.
 1. Sur la page **Active sites**, constatez que les sites **Accounting** et **Training** apparaissent dans la liste des sites actifs. Cliquez sur le nom du site **Training**.
 
@@ -2096,7 +2099,7 @@ Après avoir ajouté les sites de la formation et de la comptabilité d'Adatum, 
 1. Fermez le panneau **Add site admins to Training**.
 1. Basculez sur la machine virtuelle **LON-CL2** ou vous devriez encore être connecté avec le compte **.\admin**.
 1. Dans le navigateur Edge, le Webmail **Outlook** devrait être resté ouvert (et vous devriez y être connecté avec le compte de *Alan Yoo*).
-1. Dans la barre d'adresse du navigateur, utilisez l'adresse suivante : `https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training` pour ouvrir le site Sharepoint du service formation de Adatum.
+1. Dans la barre d'adresse du navigateur, utilisez l'adresse suivante : `https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training` pour ouvrir le site SharePoint du service formation de Adatum.
 1. Une fois que le site **Training** s'ouvre, attendez que l'icône d'engrenage s'affiche en haut à droite (à gauche des initiales de Alan Yoo). Cliquez sur cette icône d'engrenage.
 1. Sur le panneau **Settings**, cliquez sur **Site permissions**.
 1. Sur le panneau **Permissions**, cliquez sur **Advanced permissions settings**.
@@ -2104,36 +2107,40 @@ Après avoir ajouté les sites de la formation et de la comptabilité d'Adatum, 
 1. Vérifier que **Alan Yoo** apparaît dans le champ. Vous venez de vérifier que Alan est administrateur du site du service Formation, car il peut accéder aux paramètres administratifs de celui-ci.
 
 #### Tâche 4 - Vérification de l'accès aux sites
-Dans cette tâche, Alan Yoo, en tant qu'administrateur du site Sharepoint de la formation va donner l'accès au site du service Formation à deux utilisateurs qui en ont besoin : Libby Hayward et Elvis Cress. Tandis que Libby va demander l'accès au site, Alan sait déjà que Elvis a besoin d'accès et va lui assigner directement.
+Dans cette tâche, Alan Yoo, en tant qu'administrateur du site SharePoint de la formation va donner l'accès au site du service Formation à deux utilisateurs qui en ont besoin : Libby Hayward et Elvis Cress. Tandis que Libby va demander l'accès au site, Alan sait déjà que Elvis a besoin d'accès et va lui assigner directement.
 
 1. Sur **LON-CL2**, faites un clic-droit sur l'icône de **Edge** sur la barre des tâches, et dans le menu qui apparaît, choisissez **New InPrivate window**.
-1. Dans la nouvelle session **InPrivate Browsing** de votre navigateur Internet, entrez l'adresse suivante pour ouvrir le site Sharepoint du service formation : `https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training`.
+1. Dans la nouvelle session **InPrivate Browsing** de votre navigateur Internet, entrez l'adresse suivante pour ouvrir le site SharePoint du service formation : `https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training`.
 1. Dans la boite de dialogue **Sign in**, entrez ```libby@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com``` et cliquez sur **Next**.
 1. Sur la page **Enter password**, saisissez ```ibForm@tion``` et cliquez sur **Sign in**.
 1. Sur la page **Stay signed in?**, cliquez sur **Yes**.
 1. Une page s'affiche **Access required** qui indique **You need permission to access this site.** Un champ de message est prérempli avec la valeur : **I'd like access, please**.  
-	Puisque ce message peut être personnalisé, Libby souhaite saisir un message justifiant pourquoi elle a besoin d'accéder à ce site. Remplacez le message existant par le suivant : ```Bonjour. Je m'appelle Libby Hayward. Je m'occupe du suivi post-formation de nos stagiaires internes et externes en France. J'aurai donc besoin d'accéder à ce site pour pouvoir participer à la vie du service Formation d'Adatum.```
-	> Si une page d'erreur vous indique que Libby n'est pas présente dans l'environnement Sharepoint, votre test est peut-être trop rapide après la création du site : revenez plus tard pour retester la fin de la présente tâche...
+	Puisque ce message peut être personnalisé, Libby souhaite saisir un message justifiant pourquoi elle a besoin d'accéder à ce site. Remplacez le message existant par le suivant :
+```
+Bonjour. Je m'appelle Libby Hayward. Je m'occupe du suivi post-formation de nos stagiaires internes et externes en France. J'aurai donc besoin d'accéder à ce site pour pouvoir participer à la vie du service Formation d'Adatum.
+```
+	> Si une page d'erreur vous indique que Libby n'est pas présente dans l'environnement SharePoint, votre test est peut-être trop rapide après la création du site : revenez plus tard pour retester la fin de la présente tâche...
+
 1. Cliquez sur le bouton **Request Access**.
 1. Minimisez la fenêtre de navigation privée dans la barre des tâches et retournez sur le navigateur Edge ou Alan Yoo est resté connecté.
-1. Sur la page du site Sharepoint **Training**, Cliquez sur l'icône d'engrenage.
+1. Sur la page du site SharePoint **Training**, Cliquez sur l'icône d'engrenage.
 1. Sur le panneau **Settings**, cliquez sur **Site contents**.
 1. en haut à droite de la page, cliquez sur le bouton **Access requests**.
 1. Sur la page **Access Requests**, vérifiez que la demande de Libby Hayward apparaît sous la section **Pending Requests** et cliquez sur les points de suspension à droite de son nom.
 1. Cliquez sur le menu **Permission** pour sélectionner **Training Visitors** avant de cliquer sur le bouton **Approve** en regard de la demande de Libby Hayward.
-1. Sur la page du site Sharepoint **Training**, Cliquez sur l'icône d'engrenage pour sélectionner le lien **Site settings**
+1. Sur la page du site SharePoint **Training**, Cliquez sur l'icône d'engrenage pour sélectionner le lien **Site settings**
 1. Sur la page **Site Settings**, dans la section **Users and Permissions**, cliquez sur **Site permissions**.
 1. Sur l'onglet **Permissions: Training**, dans la liste des utilisateurs ayant accès au site, sélectionnez **Training Visitors**.
 1. Dans la page **People and Groups - Training Visitors**, vérifiez que Libby Hayward soit dans la liste.
 1. Vous souhaitez désormais inviter Elvis Cress à devenir membre du site Formation. Dans la barre de menu au-dessus de la liste des utilisateurs, cliquez sur le bouton **New** et choisissez **Add Users**.
 1. Sur la boite de dialogue **Share 'Training'**, l'onglet **Invite People** est affiché par défaut. Dans le champ **Enter names or email addresses**, entrez ```Elvis```. Cliquez sur le compte de **Elvis Cress** lorsqu'il apparaît avant de cliquer sur **Share**.  
 	Le nom de Elvis Cress apparaît désormais dans la page **People and Groups - Training Visitors** au côté de Libby Hayward.
-1. Vous allez maintenant vérifier que Libby peut accéder au site Sharepoint du service Formation. Basculez sur la session de navigation privée que vous aviez minimisée.
+1. Vous allez maintenant vérifier que Libby peut accéder au site SharePoint du service Formation. Basculez sur la session de navigation privée que vous aviez minimisée.
 1. Rafraichissez la page de demande d'accès au site **Training** (Si nécessaire, retentez l'accès sur l'adresse `https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training`)
 1. Le site **Training** s'ouvre : vous venez de confirmer que Libby peut accéder au site formation d'Adatum suite à l'acceptation de sa demande.
 1. Fermez la fenêtre de navigation privée de Libby.
 1. Faites de nouveau un clic-droit sur l'icône de **Edge** sur la barre des tâches, et dans le menu qui apparaît, choisissez **New InPrivate window**.
-1. Dans la nouvelle sesssion **InPrivate Browsing** de votre navigateur Internet, entrez l'adresse suivante pour ouvrir le site Sharepoint du service formation : `https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training`.
+1. Dans la nouvelle session **InPrivate Browsing** de votre navigateur Internet, entrez l'adresse suivante pour ouvrir le site SharePoint du service formation : `https://[[onMicrosoftDomain],[wwlxxxxx]].sharepoint.com/sites/Training`.
 1. Dans la boite de dialogue **Sign in**, entrez ```elvis@[[godeployDomain],[labXXXXX]].godeploylabs.com``` et cliquez sur **Next**.
 1. Sur la page **Enter password**, saisissez ```Pa55w.rd``` et cliquez sur **Sign in**.
 1. Sur la page **Stay signed in?**, cliquez sur **Yes**.
@@ -2146,10 +2153,10 @@ Dans cette tâche, Alan Yoo, en tant qu'administrateur du site Sharepoint de la 
 
 <div class="ibPrintNotes" data-exercise="a8e3" hidden></div>
 
-Dans les deux précédents exercices, Dominique Skyetson a configuré les services et les sites *SharePoint Online*. Il est donc désormais prêt à gérer le partage externe dans Sharepoint Online, dans le contexte d'ouverture d'Adatum vers Microsoft 365.  
-Les fonctionnalités de partage externe de Sharepoint Online permet aux utilisateurs d'une entreprise de partager du contenu avec des utilisateurs externes à l'entreprise (comme des partenaires, vendeurs ou des clients). Le partage externe peut également être utilisé pour faciliter le travail de collaborateurs dont les comptes sont situés dans des *tenant Entra Id* distinct, si votre organisation en regroupe plusieurs.  
-Sharepoint propose un paramétrage du partage externe au niveau de la globalité de l'entreprise et au niveau de chaque site. Pour permettre le partage sur un site de Adatum, Dominique doit d'abord l'autoriser au niveau de l'entreprise. Il pourra ensuite restreindre le partage externe site par site. Si les paramètres de partage externe d'un site et ceux de l'entreprise ne sont pas identique, ce sera le niveau le plus restrictif qui sera appliqué.  
-Même si le niveau global de l'entreprise autorise le partage externe, touts les nouveaux sites ne l'autoriseront pas par défaut. Le niveau de partage par défaut pour les sites correspondant aux équipes *Teams* et autres groupes Microsoft 365 est "*New and existing guests*". Le niveau de partage par défaut pour les sites Sharepoint de communication classiques est "*Only people in your organization*".  
+Dans les deux précédents exercices, Dominique Skyetson a configuré les services et les sites *SharePoint Online*. Il est donc désormais prêt à gérer le partage externe dans SharePoint Online, dans le contexte d'ouverture d'Adatum vers Microsoft 365.  
+Les fonctionnalités de partage externe de SharePoint Online permet aux utilisateurs d'une entreprise de partager du contenu avec des utilisateurs externes à l'entreprise (comme des partenaires, vendeurs ou des clients). Le partage externe peut également être utilisé pour faciliter le travail de collaborateurs dont les comptes sont situés dans des *tenant Entra Id* distinct, si votre organisation en regroupe plusieurs.  
+SharePoint propose un paramétrage du partage externe au niveau de la globalité de l'entreprise et au niveau de chaque site. Pour permettre le partage sur un site de Adatum, Dominique doit d'abord l'autoriser au niveau de l'entreprise. Il pourra ensuite restreindre le partage externe site par site. Si les paramètres de partage externe d'un site et ceux de l'entreprise ne sont pas identique, ce sera le niveau le plus restrictif qui sera appliqué.  
+Même si le niveau global de l'entreprise autorise le partage externe, touts les nouveaux sites ne l'autoriseront pas par défaut. Le niveau de partage par défaut pour les sites correspondant aux équipes *Teams* et autres groupes Microsoft 365 est "*New and existing guests*". Le niveau de partage par défaut pour les sites SharePoint de communication classiques est "*Only people in your organization*".  
 Dans cet exercice, Dominique va autoriser le partage externe au niveau de l'organisation et pour un site spécifique. Il vérifiera ensuite qu'il peut partager un document comme un site avec des utilisateurs externes.
 
 #### Tâche 1 - Configurer le paramètre de partage global de Sharepoint
@@ -2164,12 +2171,12 @@ Dans cette tâche, Dominique va autoriser le partage externe sur la globalité d
 Dans l'exercice précédent, vous avez créé un site pour le service formation d'Adatum. Dans cette tâche, vous allez configurer la possibilité de configurer le partage externe sur ce site.
 
 1. Dans le menu de navigation du portail **SharePoint admin center**, cliquez sur **Active sites** dans le groupe d'options **Sites**.
-1. Sur la liste des sites Sharepoint, cliquez sur le nom du site **Training** (pas sur son adresse *../sites/TRaining*).
+1. Sur la liste des sites SharePoint, cliquez sur le nom du site **Training** (pas sur son adresse *../sites/Training*).
 1. Sur le panneau **Training** qui apparaît à droite de l'écran, cliquez sur l'onglet **Settings**.
 1. Sur l'onglet **Settings**, l'option **Anyone** devrait être sélectionnée par défaut pour le champ **External file sharing**. Si ce n'est pas le cas, changez-la avant de sauvegarder (avec le bouton *Save*) ce changement.
 1. Fermez ensuite le panneau **Training**.
-1. Dans la liste des sites Sharepoint, cliquez désormais sur l'adresse **../sites/training** du site du service formation.
-1. Un nouvel onglet s'ouvre, affichant le contenu du site **Training**. En haut de ce nouvel onglet (sous le bandeau *Sharepoint*), cliquez sur **Site access**.
+1. Dans la liste des sites SharePoint, cliquez désormais sur l'adresse **../sites/training** du site du service formation.
+1. Un nouvel onglet s'ouvre, affichant le contenu du site **Training**. En haut de ce nouvel onglet (sous le bandeau *SharePoint*), cliquez sur **Site access**.
 1. dans le panneau **Site access** qui s'affiche, vous pouvez afficher les propriétaires, membres et visiteurs du site. En ouvrant la section **Site visitors - no control**, vous devriez pouvoir vérifier la présence de **Elvis Cress** et **Libby Hayward**.
 1. Dans le champ situé au-dessus de ces groupes (sous la mention **Add users, Microsoft 365 groups or \[...]**), entrez une adresse email personnelle (qui n'a pas besoin d'être un compte Microsoft 365). Votre adresse email apparaît ensuite sous le champ en question, vous pouvez cliquer dessus.  
 	Votre adresse personnelle apparaît désormais sous le champ, accompagnée d'un message indiquant que cette adresse est en dehors de l'entreprise Adatum.
@@ -2193,7 +2200,7 @@ Dans l'exercice précédent, vous avez créé un site pour le service formation 
 1. Votre boite de réception devrait contenir deux messages d'invitation. Si vous ne les y trouvez pas, vérifiez votre dossier de courrier indésirable.
 1. Ouvrez le message qui a pour sujet : **Dominique Skyetson wants to share Training**.
 1. Cliquez sur le lien **Training** dans le message.
-1. Connectez-vous avec les indications qui vous sont fournies (qui vont différer selon que vous ayiez un compte *Entra Id*, un compte personnel Microsoft ou ni l'un ni l'autre) et vérifiez que vous pouvez accéder au site **Training**
+1. Connectez-vous avec les indications qui vous sont fournies (qui vont différer selon que vous ayez un compte *Entra Id*, un compte personnel Microsoft ou ni l'un ni l'autre) et vérifiez que vous pouvez accéder au site **Training**
 1. Fermez le site **Training** et retournez dans votre boite aux lettres personnelle pour ouvrir le second message qui devrait avoir pour sujet **Dominique Skyetson shared "Document" with you**.
 1. Une fois le second message ouvert, vous pouvez cliquer sur le bouton **Open**
 
@@ -2217,7 +2224,7 @@ Dans cet exercice, Dominique va configurer les paramètres principaux de *Viva E
 1. Cliquez sur le choix **All admin centers** pour sélectionner **Viva Engage** dans la page **All Admin centers**.
 1. Fermez les éventuels popup de bienvenue et d'information en cliquant sur le **X** en haut à droite de chacun.
 1. Dans le page d'accueil de **Engage**, cliquez sur l'engrenage en haut à droite pour cliquer sur **Admin center**, cliquez sur la tuile **Tenant settings**.
-1. Dans la page **Tenant settings** cliquez sur le bouyton **Add** dans la section **Usage Policy**
+1. Dans la page **Tenant settings** cliquez sur le bouton **Add** dans la section **Usage Policy**
 1. Utilisez les paramètres suivants : 
 
 	- Dans le champ **Policy Name**, entrez ```Adatum Acceptable Use Policy```.
@@ -2265,7 +2272,7 @@ Dans cette tâche, vous allez vous connecter à *Viva Engage* avec le compte de 
 
 Après avoir implémenté *Viva Engage* dans le projet pilote Adatum, Dominique Skyetson est prêt à faire de même avec *OneDrive for Business*. Dominique sait que, avec OneDrive, les utilisateurs d'Adatum pourront accéder aisément et de manière sécurisée à leurs fichiers de travail depuis tous leur périphériques. Cela leur permettra aussi d'être plus efficace dans le travail avec d'autres collaborateurs, qu'ils soient internes ou externes à l'entreprise.  
 Dominique a également conscience que *OneDrive for Business* aidera à mieux protéger les documents métier de Adatum car il seront chiffrés, aussi bien lors de leur déplacement que lors de leur stockage.  
-Dans cet exercice, Dominique va mettre en oeuvre la synchronisation *OneDrive for Business*, créer quelques fichiers test à synchroniser et vérifier le résultat de ces opérations.  
+Dans cet exercice, Dominique va mettre en œuvre la synchronisation *OneDrive for Business*, créer quelques fichiers test à synchroniser et vérifier le résultat de ces opérations.  
 
 #### Tâche 1 - Activation de la synchronisation OneDrive
 
@@ -2329,7 +2336,7 @@ Maintenant que la synchronisation de fichiers est activée avec *OneDrive for Bu
 1. Dans votre navigateur Internet, basculez sur l'onglet **OneDrive**.
 1. Puisque vous venez de modifier votre fichier **Holidays.docx**, vous verrez mention de ce changement dans la colonne **Modified**, qui vous indique que le document a été modifié il y a quelques secondes.
 1. Basculez de nouveau vers l'explorateur de fichier que vous aviez minimisé. 
-1. Dans l'arborescence, cliquez sur **OndeDrive - Adatum** pour retourner à la racine de votre emplacement OneDrive. Vous devriez voir que les changements que vous venez de faire ont été correctement synchronisés sur la copie locale.
+1. Dans l'arborescence, cliquez sur **OneDrive - Adatum** pour retourner à la racine de votre emplacement OneDrive. Vous devriez voir que les changements que vous venez de faire ont été correctement synchronisés sur la copie locale.
 
 #### Tâche 3 - Partage de fichiers avec d'autres utilisateurs
 
@@ -2367,8 +2374,8 @@ Maintenant que la synchronisation de fichiers est activée avec *OneDrive for Bu
 Adatum a désormais une bonne vision de Microsoft 365 grâce à son projet pilote. L'entreprise a gagné plusieurs contrats gouvernementaux, l'amenant à travailler sur de nombreux produits sensibles et classifiés.  
 Dans son rôle d'administrateur de l'entreprise Adatum, Dominique Skyetson s'est vu demandé par le CTO d'étudier une solution pour protéger et chiffrer les messages concernant ces contrats sensibles.  
 Il lui a également été demandé que toute référence au "**Project New Day**" soit automatiquement chiffrée. Il s'agit du nom de code d'un projet top-secret, et il est impératif qu'aucune mention de ce projet ne fuite en dehors du contexte d'Adatum.  
-Dans cet atelier, vous allez voir comment mettre en oeuvre la réponse à la demande du CTO en utilisant les labels d'informations sensibles dans le centre d'administration *Purview* et avec des commandes *Windows Powershell*.
->**Important :** Les labels d'informations sensibles et leurs stratégies peuvent prendre jusqu'à 24h pour se propager dans l'intégralité de l'environnement 365. Malheureusement, comme votre stage touche à sa fin, il y a de fortes chances que vous ne soyez pas à même d'en vérifier l'application dans votre tenant de test. Ceci étant acté, cet exercice va tout de même vous permettre de découvrir les interfaces de mise en oeuvre desdits labels et des stratégies correspondantes.
+Dans cet atelier, vous allez voir comment mettre en œuvre la réponse à la demande du CTO en utilisant les labels d'informations sensibles dans le centre d'administration *Purview* et avec des commandes *Windows Powershell*.
+>**Important :** Les labels d'informations sensibles et leurs stratégies peuvent prendre jusqu'à 24h pour se propager dans l'intégralité de l'environnement 365. Malheureusement, comme votre stage touche à sa fin, il y a de fortes chances que vous ne soyez pas à même d'en vérifier l'application dans votre tenant de test. Ceci étant acté, cet exercice va tout de même vous permettre de découvrir les interfaces de mise en œuvre desdits labels et des stratégies correspondantes.
 
 #### Tâche 1 - Créer une équipe *Teams* de test
 Dans votre rôle d'administrateur, en tant que Dominique Skyetson, vous allez créer une nouvelle équipe *Teams*, nommée **PND Group** (pour groupe *Project New Day*) qui sera utilisée pour l'applications des labels de données sensibles par la suite.
@@ -2509,13 +2516,13 @@ Dans cet exercice, Dominique va visualiser les informations d'état de santé du
 #### Tâche 1 - Visualiser l'état de santé des services
 
 1. Sur la machine virtuelle **LON-CL1**, votre session devrait déjà ouverte, avec le compte **ADATUM\Administrator** et le mot de passe **Pa55w.rd**.
-1. Les portails **Microsoft 365 admin center** et **Micrsooft Purview** (que vous pouvez désormais fermer) devraient être resté ouverts dans votre navigateur Internet (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
+1. Les portails **Microsoft 365 admin center** et **Microsoft Purview** (que vous pouvez désormais fermer) devraient être resté ouverts dans votre navigateur Internet (et vous devriez y être connecté avec le compte de *Dominique Skyetson*).
 1. Dans le menu de navigation du portail **Microsoft 365 admin center**, sélectionnez **Service health** dans le groupe d'options **Health** (il pourra être utile de cliquer sur **Show all**).
 1. Sur la page **Service health** page, si un problème est présent dans la section **Active issues Microsoft is working on**, cliquez sur son titre pour ouvrir un panneau d'information contenant les détails du problème. Consultez les informations détaillées sur le problème, puis fermer le panneau.
 1. Sur la page **Service health**, sous la section **Service status**, consultez la liste des services pour voir si certains affichent un problème connu en cours. Essayez, le cas échéant, de faire le lien avec les informations consultées dans le point précédent.
 1. Remontez sur la page **Service health**, cliquez sur l'onglet **Issue history**. Un historique des incidents récemment résolus et autres avertissements va s'afficher.
 1. Dans le menu de navigation du portail **Microsoft 365 admin center**, sélectionnez **Message center** dans le groupe d'options **Health**.
-1. La page **Message Center** affiche une liste de tous les messages en cours (*inbox*) liés à des modifications planifiées et/ou en cours de mise en oeuvre. Sélectionnez un message pour consulter quelques informations sur le changement prévu. N'hésitez pas à consulter n'importe quel message dont le thème vous intéresse.
+1. La page **Message Center** affiche une liste de tous les messages en cours (*inbox*) liés à des modifications planifiées et/ou en cours de mise en œuvre. Sélectionnez un message pour consulter quelques informations sur le changement prévu. N'hésitez pas à consulter n'importe quel message dont le thème vous intéresse.
 1. L'onglet **Archive** affiche la liste de changement récent, mais passés. Sélectionnez une entrée de la liste pour avoir plus de détails dessus.
 
 #### Tâche 2 - Visualiser des rapports
@@ -2527,7 +2534,7 @@ Dans cet exercice, Dominique va visualiser les informations d'état de santé du
 	- Rapports de sécurité sont disponibles dans le portail *Defender*.
 
 		1. Dans le menu de navigation du portail **Microsoft 365 admin center**, cliquez sur le portail **Security** dans la section **Admin centers**.
-		1. Dans le portail **Microsoft Defender**, si nécessaire, cliquez (à gauche) sur la flêche **Show navigation**.
+		1. Dans le portail **Microsoft Defender**, si nécessaire, cliquez (à gauche) sur la flèche **Show navigation**.
 		1. En bas du menu de navigation du portail **Defender**, cliquez sur le choix **Reports**.
 
 	- Rapports de flux de messages dans le centre d'administration Exchange.
@@ -2580,7 +2587,7 @@ Dominique a prévu de tester cet outil en envoyant un email à un domaine qui n'
 #### Tâche 3 - Analyse du flux de messages
 Dans cette tâche, vous allez surveiller le flux de message en analysant leur traçabilité. Notez que bien que la fonctionnalité de traçabilité des messages soit fournie par *Exchange*, elle s'accède depuis le portail *Defender*.
 1. Dans le menu de navigation du portail **Microsoft 365 admin center**, sous la section **Admin centers**, cliquez sur **Security** (il pourra être utile de cliquer sur **Show all**).
-1. Dans le portail **Microsoft Defender**, si nécessaire, cliquez (à gauche) sur la flêche **Show navigation**.
+1. Dans le portail **Microsoft Defender**, si nécessaire, cliquez (à gauche) sur la flèche **Show navigation**.
 1. Dans le menu de navigation du portail **Microsoft Defender**, cliquez sur **Exchange message trace** dans la section **Email & collaboration** section.
 1. Dans la page **Message trace** vous trouvez quelques requêtes par défaut que vous pouvez directement utiliser. Cependant, dans le cas de Dominique, il souhaite créer une trace customisée. Cliquez sur **+Start a trace**.
 1. Dans le panneau **New message trace** qui s'affiche, cliquez dans le champ **Senders** et tapez ```Dominique```. Sélectionnez le compte de **Dominique Skyetson**.

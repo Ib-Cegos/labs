@@ -1250,7 +1250,7 @@ async function getCurrentIllustration() {
     const prefix = `a${Current.Atelier}e${Current.Exercice}.`;
     return files.find(file => file.startsWith(prefix) && isIllustration(file)) || null;}
 function confirmDeleteIllustration() {
-    dialog.show("Supprimer l'illustration", `<p>Supprimer l'illustration "${Current.IllustrationName}" de cet exercice ?</p><p>(Elle sera conservée dans le dossier "images" pour être insérée dans les ateliers si nécessaire)</p>`, [{label : "Annuler", action : () => dialog.close()},{label : "Supprimer", className : "ibDialogButtonDelete", action : () => {deleteIllustration(); dialog.close();}}],"small");}
+    dialog.show("Supprimer l'illustration", `<p>Supprimer l'illustration "${Current.IllustrationName}" de cet exercice ?</p><p>(Elle sera conservée dans le dossier "Ressources" pour être insérée en image dans les ateliers si nécessaire)</p>`, [{label : "Annuler", action : () => dialog.close()},{label : "Supprimer", className : "ibDialogButtonDelete", action : () => {deleteIllustration(); dialog.close();}}],"small");}
 async function deleteIllustration() {
     const illustration = await getCurrentIllustration();
     if (!illustration) return;
@@ -1287,16 +1287,6 @@ async function addIllustration() {
     input.click();}
 
 /* Gestion des fichiers inclus */
-function getCurrentAttachment() {
-    const position = textareaSync.selectionStart;
-    const text = textareaSync.value;
-    const regex = /!\[(.*?)\]\((.*?)\)/g;
-    let match;
-    while ((match = regex.exec(text)) !== null) {
-        const start = match.index;
-        const end = start + match[0].length;
-        if (position >= start && position <= end) return {start, end, title: match[1], path: match[2], internal: !/^https?:\/\//i.test(match[2])};}
-    return {start: position, end: position, title: "", path: "", internal: false };}
 function countAttachmentReferences(path) {
     let count = 0;
     const escapedPath = path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -1310,15 +1300,17 @@ function countAttachmentReferences(path) {
     return count;}
 async function buildAttachmentGallery() {
     const files = await db.list();
-    let html = '<div class="FileGallery">';
+    let html = '<div class="fileGallery">';
     for (const path of files) {
         const url = await db.getUrl(path);
-        let fileName = splitFilePath(path).name;
+        if (splitFilePath(path).folder !== "ressources/") continue;
+        let fileName = splitFilePath(path).name + splitFilePath(path).extension;
         fileUrls.push(url);
-        fileName = fileName.length > 20 ? fileName.substring(0,17) + "..." : fileName;
+        fileName = fileName.length > 20 ? "..." + fileName.substring(fileName.length - 17) : fileName;
         html += `<div class="fileTile" data-path="${path}" onclick="selectFile('${path}')">
-            <span class="fileTitle" title="${path}">${fileName}</span>
+            <div class="fileTitle" title="${path}">${fileName}
             <button class="fileDeleteButton" onclick="event.stopPropagation(); confirmDeleteAttachment('${path}')">🗑️</button>
+            </div>
         </div>`;}
     html += "</div>";
     return html;}
@@ -1331,7 +1323,7 @@ function confirmDeleteAttachment(path) {
     let countStr = `<p>(${count} référence`;
     if (count > 1) countStr += 's seront supprimées'; else countStr +=' sera supprimée';
     if (count >0) countStr += ' dans le stage.)</p>'; else countStr = '';
-    dialog.show("Suppression d'un fichier", `<p>Supprimer le fichier <strong>${splitFilePath(path).name}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openAttachmentEditor()},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteAttachment(path)}],'small');}
+    dialog.show("Suppression d'un fichier", `<p>Supprimer le fichier <strong>${splitFilePath(path).name}.${splitFilePath(path).extension}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openAttachmentEditor()},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteAttachment(path)}],'small');}
 async function addAttachment() {
     const input = document.createElement("input");
     input.type = "file";
