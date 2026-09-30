@@ -83,18 +83,23 @@ function ibApplyTheme(theme) {
     if (!css) { return; }
     css.href = css.href.replace( /assets\/themes\/[^\/]+\.css$/, `assets/themes/${theme}.css` );}
 
+async function clearWorkspace() {
+    localStorage.removeItem(WRITER_PREFIX + "Stage");
+    localStorage.removeItem(WRITER_PREFIX + "Current");
+    session.remove("Undo");
+    session.remove("Redo");
+    await db.clear();}
+
 /* Chargement d'un zip pour mettre son contenu dans le localStorage et le indexedDB */
 async function ouvrirStageDepuisZip(source) {
     const zip = await JSZip.loadAsync(source);
     const content = zip.file("content.json");
     if (!content) throw new Error("content.json introuvable");
     const json = await content.async("string");
+    await clearWorkspace();
     localStorage.setItem(WRITER_PREFIX + "Stage", json);
     const stage = JSON.parse(json);
     localStorage.setItem(WRITER_PREFIX + "Current", JSON.stringify({Atelier: 0, Exercice: 0, Contenu: stage.Introduction}));
-    session.remove("Undo");
-    session.remove("Redo");
-    await db.clear();
     for (const [path,file] of Object.entries(zip.files)) {
         if (path === "content.json") continue;
         if (file.dir) continue;

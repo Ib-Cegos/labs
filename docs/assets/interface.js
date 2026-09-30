@@ -15,11 +15,8 @@ document.addEventListener(
         document.querySelectorAll(".ibWriterModify").forEach(lien => {
             lien.addEventListener("click", () => {modifierStage(lien.dataset.zip)})})
         const writerFile = document.getElementById("ibWriterFile");
-        if (newButton) { newButton.addEventListener("click", () => { 
-            localStorage.removeItem(WRITER_PREFIX + "Stage");
-            localStorage.removeItem(WRITER_PREFIX + "Current");
-            session.remove("Undo");
-            session.remove("Redo");
+        if (newButton) { newButton.addEventListener("click", async () => {
+            await clearWorkspace();
             window.location.href = "writer/";});}
         if (openButton && writerFile) {
             openButton.addEventListener("click", () => {writerFile.click();});
