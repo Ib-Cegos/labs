@@ -26,8 +26,13 @@ ms102/
 ├── README.md
 ├── a1e1.md
 ├── a1e2.md
+├── a1e2.png
 ├── a2e1.md
-└── ...
+├── ...
+└── ressources
+    ├── image.png
+    ├── script.py
+    └── document.pdf
 ```
 
 Le dossier contient :
