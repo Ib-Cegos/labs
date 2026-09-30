@@ -1058,15 +1058,15 @@ function splitFilePath(path) {
     const slash = path.lastIndexOf("/");
     const dot = path.lastIndexOf(".");
     return {folder: path.substring(0, slash + 1), name: path.substring(slash + 1, dot), extension: path.substring(dot)};}
-function updateImageReferences(oldPath, newPath = "") {
+ function updateFileReferences(oldPath, newPath = "") {
     const escapedPath = oldPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const imageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${escapedPath}\\)`,"g");
+     const referenceRegex = new RegExp(`!?\\[[^\\]]*\\]\\(\\s*${escapedPath}(?:\\s+[^)]*)?\\s*\\)`,"g");
     const processContent = content => {
         if (!content) return content;
         // Renommage
         if (newPath) return content.replaceAll(oldPath, newPath);
         // Suppression
-        return content.replace(imageRegex, "").replace(/\n{3,}/g, "\n\n");};
+        return content.replace(referenceRegex, "").replace(/\n{3,}/g, "\n\n");};
     Stage.Introduction = processContent(Stage.Introduction);
     Stage.Ateliers.forEach(atelier => {
         atelier.Exercices.forEach(exercice => {exercice.Contenu = processContent(exercice.Contenu);});});
@@ -1085,16 +1085,21 @@ function getCurrentImage() {
         const end = start + match[0].length;
         if (position >= start && position <= end) return {start, end, title: match[1], path: match[2], internal: !/^https?:\/\//i.test(match[2])};}
     return {start: position, end: position, title: "", path: "", internal: false };}
-function countImageReferences(path) {
+function countFileReferences(path) {
     let count = 0;
-    const escapedPath = path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regex = new RegExp(`!\\[[^\\]]*\\]\\(${escapedPath}\\)`,"g");
+    const basename = path.substring(path.lastIndexOf("/") + 1);
+    const escapedReferences = [...new Set([path, basename])]
+        .sort((left, right) => right.length - left.length).map(reference => reference.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const regex = new RegExp(`(^|[^\\w.-])(?:${escapedReferences.join("|")})(?=$|[^\\w.-])`, "g");
     const countInContent = content => {
         if (!content) return 0;
         const matches = content.match(regex);
         return matches ? matches.length : 0;};
-    count += countInContent(Stage.Introduction);
-    Stage.Ateliers.forEach(atelier => {atelier.Exercices.forEach(exercice => {count += countInContent(exercice.Contenu);});});
+    count += countInContent(Current.Atelier === 0 ? Current.Contenu : Stage.Introduction);
+    Stage.Ateliers.forEach(atelier => {
+        atelier.Exercices.forEach(exercice => {
+            const isCurrent = atelier.Id == Current.Atelier && exercice.Id == Current.Exercice;
+            count += countInContent(isCurrent ? Current.Contenu : exercice.Contenu);});});
     return count;}
 function selectImage(path) {
     imageSelection = {path: path, title: splitFilePath(path).name};
@@ -1172,18 +1177,18 @@ async function saveImageRename(oldPath, newName) {
         alert("Impossible de lire l'image.");
         endImageRename(oldPath);
         return;}
-    updateImageReferences(oldPath, newPath);
+    updateFileReferences(oldPath, newPath);
     await db.write(newPath, blob);
     await db.delete(oldPath);
     endImageRename(oldPath, newPath);}
 async function deleteImage(path) {
     await db.delete(path);
-    updateImageReferences(path);
+    updateFileReferences(path);
     openImageEditor();}       
 function confirmDeleteImage(path) {
-    const count = countImageReferences(path);
-    let countStr = `<p>(${count} référence`;
-    if (count > 1) countStr += 's seront supprimées'; else countStr +=' sera supprimée';
+    const count = countFileReferences(path);
+    let countStr = `<p>(${count} mention`;
+    if (count > 1) countStr += 's détectées'; else countStr +=' détectée';
     if (count >0) countStr += ' dans le stage.)</p>'; else countStr = '';
     dialog.show("Suppression d'une image", `<p>Supprimer l'image <strong>${splitFilePath(path).name}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openImageEditor(imageSelection.path)},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteImage(path)}],'small');}
 async function addImage() {
@@ -1254,7 +1259,6 @@ function confirmDeleteIllustration() {
 async function deleteIllustration() {
     const illustration = await getCurrentIllustration();
     if (!illustration) return;
-    const count = countImageReferences(illustration);
     const blob = await db.read(illustration);
     const parts = splitFilePath(illustration);
     let targetPath = `ressources/${parts.name}${parts.extension}`;
@@ -1264,7 +1268,7 @@ async function deleteIllustration() {
         targetPath = `ressources/${parts.name}-${index}${parts.extension}`;
         index++;}
     await db.write(targetPath, blob);
-    updateImageReferences(illustration, targetPath);
+    updateFileReferences(illustration, targetPath);
     Current.IllustrationName = '';
     storage.write("Current",Current);
     await db.delete(illustration);
@@ -1287,17 +1291,6 @@ async function addIllustration() {
     input.click();}
 
 /* Gestion des fichiers inclus */
-function countAttachmentReferences(path) {
-    let count = 0;
-    const escapedPath = path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regex = new RegExp(`!\\[[^\\]]*\\]\\(${escapedPath}\\)`,"g");
-    const countInContent = content => {
-        if (!content) return 0;
-        const matches = content.match(regex);
-        return matches ? matches.length : 0;};
-    count += countInContent(Stage.Introduction);
-    Stage.Ateliers.forEach(atelier => {atelier.Exercices.forEach(exercice => {count += countInContent(exercice.Contenu);});});
-    return count;}
 async function buildAttachmentGallery() {
     const files = await db.list();
     let html = '<div class="fileGallery">';
@@ -1310,20 +1303,21 @@ async function buildAttachmentGallery() {
         html += `<div class="fileTile" data-path="${path}" onclick="selectFile('${path}')">
             <div class="fileTitle" title="${path}">${fileName}
             <button class="fileDeleteButton" onclick="event.stopPropagation(); confirmDeleteAttachment('${path}')">🗑️</button>
-            </div>
-        </div>`;}
-    html += "</div>";
+            </div></div>`;}
+    html += `
+    <p>Ces fichiers sont disponibles à l'adresse <span role="button" tabindex="0" title="Copier [ResourcesUrl]" style="cursor: pointer" onclick="navigator.clipboard.writeText('[ResourcesUrl]')">[ResourcesUrl]</span></p>
+    <p>(<span role="button" tabindex="0" title="Copier l'URL" style="cursor: pointer" onclick="navigator.clipboard.writeText(this.textContent)">${SYSTEM_VARIABLES['ResourcesUrl'].defaut}</span>)</p></div>`;
     return html;}
 async function deleteAttachment(path) {
     await db.delete(path);
-    updateImageReferences(path);
+    updateFileReferences(path);
     openAttachmentEditor();}
 function confirmDeleteAttachment(path) {
-    const count = countAttachmentReferences(path);
-    let countStr = `<p>(${count} référence`;
-    if (count > 1) countStr += 's seront supprimées'; else countStr +=' sera supprimée';
+    const count = countFileReferences(path);
+    let countStr = `<p>(${count} mention`;
+    if (count > 1) countStr += 's détectées'; else countStr +=' détectée';
     if (count >0) countStr += ' dans le stage.)</p>'; else countStr = '';
-    dialog.show("Suppression d'un fichier", `<p>Supprimer le fichier <strong>${splitFilePath(path).name}.${splitFilePath(path).extension}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openAttachmentEditor()},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteAttachment(path)}],'small');}
+    dialog.show("Suppression d'un fichier", `<p>Supprimer le fichier <strong>${splitFilePath(path).name}${splitFilePath(path).extension}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openAttachmentEditor()},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteAttachment(path)}],'small');}
 async function addAttachment() {
     const input = document.createElement("input");
     input.type = "file";
