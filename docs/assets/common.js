@@ -99,7 +99,8 @@ async function ouvrirStageDepuisZip(source) {
     await clearWorkspace();
     localStorage.setItem(WRITER_PREFIX + "Stage", json);
     const stage = JSON.parse(json);
-    localStorage.setItem(WRITER_PREFIX + "Current", JSON.stringify({Atelier: 0, Exercice: 0, Contenu: stage.Introduction}));
+    if (stage.Ateliers.length === 1 && stage.Ateliers[0].Exercices.length === 1) localStorage.setItem(WRITER_PREFIX + "Current", JSON.stringify({Atelier: stage.Ateliers[0].Id, Exercice: stage.Ateliers[0].Exercices[0].Id, Contenu: stage.Ateliers[0].Exercices[0].Contenu}));
+    else localStorage.setItem(WRITER_PREFIX + "Current", JSON.stringify({Atelier: 0, Exercice: 0, Contenu: stage.Introduction}));
     for (const [path,file] of Object.entries(zip.files)) {
         if (path === "content.json") continue;
         if (file.dir) continue;
@@ -171,7 +172,7 @@ const db = {
         const files = await this.list();
         return files.find(path => path.startsWith(prefix)) ?? null;}};
     
-    /* Gestion des varaibles système pour éditeur et preview */
+    /* Gestion des variables système pour éditeur et preview */
     function systemVariableRefresh() {
             const siteUrl = window.location.origin +  window.location.pathname.replace(/\/writer\/?.*$/i, "");
             Object.values(SYSTEM_VARIABLES).forEach(variable => {

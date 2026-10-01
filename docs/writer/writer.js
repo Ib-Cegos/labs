@@ -1347,6 +1347,7 @@ let Stage = storage.read('Stage',{ Titre: "", "Auteur": "", "Variables": {}, "In
 sortStage();
 systemVariableRefresh();
 let Current = storage.read ('Current', {Atelier : 0, Exercice : 0, Contenu : Stage.Introduction});
+if (Stage.Ateliers.length === 1 && Stage.Ateliers[0].Exercices.length === 1) Current = {Atelier : Stage.Ateliers[0].Id, Exercice : Stage.Ateliers[0].Exercices[0].Id, Contenu : Stage.Ateliers[0].Exercices[0].Contenu};
 document.getElementById("stageReference").value = Stage.Reference || "";
 document.getElementById("stageReference").addEventListener("input", () => {
     Stage.Reference = stageReference.value;
