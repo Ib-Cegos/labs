@@ -613,6 +613,7 @@ Fonctionnalités actuellement disponibles :
 - déplacement des exercices par Drag & Drop ;
 - validation visuelle des champs obligatoires ;
 - import/export JSON ;
+- export ZIP bloqué si le stage n'a pas de titre ou de référence ;
 - prévisualisation Markdown temps réel;
 - gestion complète des variables du stage ;
 - prévisualisation du sommaire dynamique ;
@@ -1200,8 +1201,8 @@ Conséquences :
 - le README reste obligatoire ;
 - le README redirige automatiquement vers `a1e1` ;
 - la navigation spécifique est masquée ;
-- le titre n'est pas préfixé ;
-- l'impression correspond essentiellement au contenu de `a1e1.md`.
+- le titre de `a1e1.md` est remplacé par le premier titre du README ;
+- l'impression utilise également le titre du README.
 
 ---
 
@@ -1260,7 +1261,8 @@ La structure du document est reconstruite automatiquement à partir du modèle d
 
 ### Atelier autonome
 Cas particulier : 1 atelier + 1 exercice
-Le README n'est alors pas imprimé.
+Le README n'est alors pas imprimé comme contenu séparé.
+Le titre du document et celui de l'exercice unique proviennent toutefois du premier titre du README.
 Le document contient essentiellement : Exercice unique + Variables + Notes éventuelles
 Cette approche évite la duplication inutile d'informations.
 

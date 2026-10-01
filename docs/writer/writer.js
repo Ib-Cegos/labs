@@ -165,6 +165,16 @@ function clearDropIndicators(element) {
 
 async function exporterStage() {
     majStage();
+    const referenceInput = document.getElementById("stageReference");
+    const titleInput = document.getElementById("stageTitle");
+    validateField(referenceInput);
+    validateField(titleInput);
+    const champsManquants = [];
+    if (!Stage.Reference?.trim()) champsManquants.push("une référence");
+    if (!Stage.Titre?.trim()) champsManquants.push("un titre");
+    if (champsManquants.length) {
+        dialog.show("Export impossible", `<p>Le stage doit posséder ${champsManquants.join(" et ")} avant de pouvoir être exporté.</p>`, [], "small");
+        return;}
     const zip = new JSZip();
     zip.file("content.json", JSON.stringify(Stage, null, 2));
     const fichiers = await db.list();
@@ -1429,3 +1439,4 @@ textareaSync.addEventListener("keyup", () => {selection.save(); syncCursor();});
 textareaSync.addEventListener("mouseup", () => {selection.save(); syncCursor();});
 textareaSync.addEventListener("select", () => {selection.save();});
 textareaSync.addEventListener("input", () => {selection.save();});
+textareaSync.focus();

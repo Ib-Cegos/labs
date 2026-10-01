@@ -48,7 +48,10 @@ def on_page_markdown(markdown, page, config, files):
                 break
         bloc_duree = ""
         if duree: bloc_duree = ( f'\n\n<div class="ibDuration">⏱ Durée estimée : {duree} minutes</div>\n' )
-        if tools.est_atelier_autonome(page): return re.sub( r"^#\s+(.+)$", r"# \1" + bloc_duree, markdown, count=1, flags=re.MULTILINE, )
+        if tools.est_atelier_autonome(page):
+            readme = dossier_stage / "README.md"
+            titre_atelier = re.search( r"^#\s+(.+)$", readme.read_text(encoding="utf-8"), re.MULTILINE ).group(1).strip()
+            return re.sub( r"^#\s+(.+)$", lambda _: f"# {titre_atelier}{bloc_duree}", markdown, count=1, flags=re.MULTILINE, )
         return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1" + bloc_duree, markdown, count=1, flags=re.MULTILINE, )
     # Titre des pages README
     if fichier.upper() == "README.MD":

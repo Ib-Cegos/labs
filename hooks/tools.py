@@ -47,8 +47,7 @@ def generate_python_tranfer_js(output_path):
     Path(output_path).write_text(content, encoding="utf-8")    
 
 def trouver_illustration_exercice(fichier_exercice):
-    # Une seule illustration est autorisée par exercice.
-    # La première extension trouvée dans cette liste est utilisée.
+    # Une seule illustration est autorisée par exercice, la première extension trouvée dans la liste est utilisée.
     fichier_exercice = Path(fichier_exercice)
     for extension in IMAGE_EXTENSIONS:
         illustration = ( fichier_exercice.parent / f"{fichier_exercice.stem}{extension}" )
@@ -218,9 +217,9 @@ def charger_markdown_stage(dossier_stage):
 def charger_markdown_atelier_autonome(dossier_stage):
     fichier = next(dossier_stage.glob("a1e1.md"))
     contenu = extraire_markdown_sans_yaml(fichier)
-    titre = "Cahier d'atelier"
-    titre_match = re.search( r"^#\s+(.+)$", contenu, re.MULTILINE )
-    if titre_match: titre = titre_match.group(1).strip()
+    readme = dossier_stage / "README.md"
+    titre = re.search( r"^#\s+(.+)$", extraire_markdown_sans_yaml(readme), re.MULTILINE ).group(1).strip()
+    contenu = re.sub( r"^#\s+.+$", lambda _: f"# {titre}", contenu, count=1, flags=re.MULTILINE )
     contenu = preparer_variables_print( dossier_stage, contenu )
     return ( construire_yaml_print(titre,dossier_stage) + '<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n' + contenu )
 

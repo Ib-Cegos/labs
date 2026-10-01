@@ -1,7 +1,7 @@
 ---
 title: Administration de Microsoft 365
-editionDate: 30/09/2026
-gitVersion: fe4e6f1
+editionDate: 01/10/2026
+gitVersion: eab47a1
 auteur: Renaud Wangler
 ---
 
@@ -1722,7 +1722,7 @@ Dominique configurera ensuite une stratégie de boite aux lettres pour les péri
 1. Sélectionnez la flèche descendante à droite du fichier joint **pieceJointe.txt**.
 1. Dans la boite de Alan, vous ne devriez pas avoir l'option **Download** si la stratégie s'est correctement appliquée.
 
-	> La prise en compte de votre stratégie peut prendre quelques minutes. Vous pouvez aussi essayer de faire un *force-refresh* de votre navigateur pour vous assurer que le moteur de Webmail que Alan utilise n'est pas celui qui a été précédemment mis en cache par exemple.
+	> La prise en compte de votre stratégie peut prendre quelques *longues* minutes. Vous pouvez aussi essayer de faire un *force-refresh* de votre navigateur pour vous assurer que le moteur de Webmail que Alan utilise n'est pas celui qui a été précédemment mis en cache par exemple.
 
 #### Tâche 2 - Configurer l'accès mobile
 Dans cette tâche, vous allez créer une stratégie d'accès mobile qui place tous les nouveaux périphériques mobiles en quarantaine, après quoi la synchronisation de ces nouveaux périphériques devra être validée par un administrateur.  
@@ -2070,7 +2070,7 @@ Après avoir créé un site avec le portail d'administration de SharePoint Onlin
 1. Si une fenêtre **User Account Control** apparaît, connectez-vous avec le compte **adatum\administrator** et le mot de passe **Pa55w.rd**.
 1. Dans la partie basse (bleue) de la fenêtre **Administrator: Windows Powershell ISE**, utilisez la commande suivante pour installer le module Powershell de gestion de SharePoint Online :  
 	```Install-Module Microsoft.Online.SharePoint.PowerShell -Force```
-1. Dans l'invite de commande de l'ISE, utilisez la commande suivante pour vous connecter à votre environnement Sharepoint Online :  	`Connect-SPOService –Url https://[[onMicrosoftDomain],[wwlxxxxx]]-admin.sharepoint.com`
+1. Dans l'invite de commande de l'ISE, utilisez la commande suivante pour vous connecter à votre environnement Sharepoint Online :  	`Connect-SPOService –Url https://[[onMicrosoftDomain],[wwlxxxxx]]-admin.sharepoint.com -UseSystemBrowser $true`
 
 	> Dans cette commande, le nom de domaine original est suffixé de *-admin*.
 
