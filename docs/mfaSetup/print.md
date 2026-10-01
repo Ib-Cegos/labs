@@ -8,6 +8,7 @@ auteur: Renaud WANGLER
 <div class="ibPrintNotes" data-exercise="a1e1" hidden></div>
 
 # Mise en place de la M.F.A pour les ateliers Microsoft
+
 Depuis Mars 2024, Microsoft, victime de trop d'attaques cyber, impose l'utilisation de la MFA pour tous les contextes professionnels, y-compris pour les tenant de test Microsoft 365 que l'éditeur fournit pour les formations officielles.  
 Il faut donc désormais mettre en place la MFA pour tous les utilisateurs à tester dans ce contexte.
 

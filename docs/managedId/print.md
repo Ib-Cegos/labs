@@ -8,6 +8,7 @@ auteur: Renaud WANGLER
 <div class="ibPrintNotes" data-exercise="a1e1" hidden></div>
 
 # Key Vault et Identité gérée
+
 Dans cet atelier, nous allons illustrer l'utilisation d'un *Key Vault* pour stocker un élément de sécurité (réprésenté ici par le mot de passe d'un *Azure File Share*).  
 De plus l'accès au *Key Vault* se fera depuis une machine virtuelle en utilisant sa *System Assigned Managed Identity*.  
 

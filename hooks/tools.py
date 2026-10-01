@@ -166,6 +166,29 @@ def decaler_titres_markdown(contenu, niveaux=2):
     def remplacer(match): return "#" * (len(match.group(1)) + niveaux) + " "
     return re.sub( r"^(#{1,6})\s+", remplacer, contenu, flags=re.MULTILINE )
 
+def remplacer_ou_ajouter_titre_markdown(contenu, titre, suffixe=""):
+    front_matter = re.match(
+        r"\A---[ \t]*\r?\n.*?^---[ \t]*(?:\r?\n|$)",
+        contenu,
+        flags=re.DOTALL | re.MULTILINE)
+    prefixe = front_matter.group(0) if front_matter else ""
+    if front_matter: contenu = contenu[front_matter.end():]
+
+    lignes = contenu.splitlines(keepends=True)
+    for index, ligne in enumerate(lignes):
+        ligne_sans_fin = ligne.rstrip("\r\n")
+        if not ligne_sans_fin.strip(): continue
+        if re.match(r"^[ \t]*#\s+.+$", ligne_sans_fin):
+            fin_ligne = ligne[len(ligne_sans_fin):]
+            lignes[index] = f"# {titre}{suffixe}{fin_ligne}"
+            return prefixe + "".join(lignes)
+        break
+
+    separateur = "\n" if prefixe else ""
+    contenu = contenu.lstrip("\r\n")
+    if suffixe: return f"{prefixe}{separateur}# {titre}{suffixe}\n{contenu}"
+    return f"{prefixe}{separateur}# {titre}\n\n{contenu}"
+
 def extraire_markdown_sans_yaml(fichier):
     contenu = fichier.read_text(encoding="utf-8")
     if contenu.startswith("---"):
@@ -219,7 +242,7 @@ def charger_markdown_atelier_autonome(dossier_stage):
     contenu = extraire_markdown_sans_yaml(fichier)
     readme = dossier_stage / "README.md"
     titre = re.search( r"^#\s+(.+)$", extraire_markdown_sans_yaml(readme), re.MULTILINE ).group(1).strip()
-    contenu = re.sub( r"^#\s+.+$", lambda _: f"# {titre}", contenu, count=1, flags=re.MULTILINE )
+    contenu = remplacer_ou_ajouter_titre_markdown(contenu, titre)
     contenu = preparer_variables_print( dossier_stage, contenu )
     return ( construire_yaml_print(titre,dossier_stage) + '<div class="ibPrintNotes" data-exercise="a1e1" hidden></div>\n\n' + contenu )
 

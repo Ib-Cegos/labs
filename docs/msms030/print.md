@@ -1,7 +1,7 @@
 ---
 title: Administration de Microsoft 365
 editionDate: 01/10/2026
-gitVersion: eab47a1
+gitVersion: 7368d1c
 auteur: Renaud Wangler
 ---
 
@@ -2129,7 +2129,7 @@ Bonjour. Je m'appelle Libby Hayward. Je m'occupe du suivi post-formation de nos 
 1. en haut à droite de la page, cliquez sur le bouton **Access requests**.
 1. Sur la page **Access Requests**, vérifiez que la demande de Libby Hayward apparaît sous la section **Pending Requests** et cliquez sur les points de suspension à droite de son nom.
 1. Cliquez sur le menu **Permission** pour sélectionner **Training Visitors** avant de cliquer sur le bouton **Approve** en regard de la demande de Libby Hayward.
-1. Sur la page du site SharePoint **Training**, Cliquez sur l'icône d'engrenage pour sélectionner le lien **Site settings**
+1. Restez sur la page du site SharePoint **Training** et cliquez sur l'icône d'engrenage pour sélectionner le lien **Site settings**
 1. Sur la page **Site Settings**, dans la section **Users and Permissions**, cliquez sur **Site permissions**.
 1. Sur l'onglet **Permissions: Training**, dans la liste des utilisateurs ayant accès au site, sélectionnez **Training Visitors**.
 1. Dans la page **People and Groups - Training Visitors**, vérifiez que Libby Hayward soit dans la liste.

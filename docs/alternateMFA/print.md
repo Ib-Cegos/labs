@@ -1,13 +1,14 @@
 ---
 title: Mise en place de la M.F.A avec une application Windows
-editionDate: 25/09/2026
-gitVersion: 642611b
+editionDate: 01/10/2026
+gitVersion: 7368d1c
 auteur: Renaud WANGLER
 ---
 
 <div class="ibPrintNotes" data-exercise="a1e1" hidden></div>
 
 # Mise en place de la M.F.A avec une application Windows
+
 Dans cet atelier, vous allez utiliser une application sur un poste Windows 10/11 pour implémenter l'authentification multifactorielle. Cette mise en oeuvre pourrait, par exemple, être utilisée pour authentifier un utilisateur dans un environnement Entra Id ou Microsoft 365.
 
 ## Etape 1 : Installer une application du Store Microsoft sur Windows 11

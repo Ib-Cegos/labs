@@ -2,13 +2,12 @@
 title: Installation d'une application Windows Win32 via Intune
 editionDate: 17/08/2026
 gitVersion: d06ca7d
+auteur: Renaud WANGLER
 ---
 
 <div class="ibPrintNotes" data-exercise="a1e1" hidden></div>
 
 # Installation d'une application Windows Win32 via Intune
-
-# Scenario
 Dans cet atelier, il vous est proposé de tester l'installation via Intune d'une application Win32 sur un poste Windows. Vous allez pouvoir préparer l'application pour installation puis paramètrer son installation par Intune.
 [godeploydomain]
 

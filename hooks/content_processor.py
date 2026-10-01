@@ -51,7 +51,7 @@ def on_page_markdown(markdown, page, config, files):
         if tools.est_atelier_autonome(page):
             readme = dossier_stage / "README.md"
             titre_atelier = re.search( r"^#\s+(.+)$", readme.read_text(encoding="utf-8"), re.MULTILINE ).group(1).strip()
-            return re.sub( r"^#\s+(.+)$", lambda _: f"# {titre_atelier}{bloc_duree}", markdown, count=1, flags=re.MULTILINE, )
+            return tools.remplacer_ou_ajouter_titre_markdown(markdown, titre_atelier, bloc_duree)
         return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1" + bloc_duree, markdown, count=1, flags=re.MULTILINE, )
     # Titre des pages README
     if fichier.upper() == "README.MD":

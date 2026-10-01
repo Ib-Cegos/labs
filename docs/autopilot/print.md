@@ -8,6 +8,7 @@ auteur: Renaud WANGLER
 <div class="ibPrintNotes" data-exercise="a1e1" hidden></div>
 
 # Mise en place d'un test Windows AutoPilot
+
 Dans cet atelier, il vous est proposé de tester de manière la plus simple et rapide possible la fonctionnalité **Windows Autopilot** Afin de constater la jonction et la customisation automatique d'un poste Windows 10 dans un tenant Microsoft 365.
 
 # Prérequis

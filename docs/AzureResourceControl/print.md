@@ -8,6 +8,7 @@ auteur: Renaud WANGLER
 <div class="ibPrintNotes" data-exercise="a1e1" hidden></div>
 
 # Utilisation de l'Azure Resource Control pour gérer une machine Windows depuis l'environnement Azure
+
 Dans cet atelier, nous allons illustrer l'utilisation de l'*Azure Resource Control* pour gérer une machine Windows depuis l'environnement Azure.  
 De plus l'accès aux resources Azure depuis la machine Windows se fera nativement gràce à une *Managed Identity*.  
 ## Etape 1 : Créer une machine Windows

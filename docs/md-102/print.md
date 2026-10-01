@@ -8,6 +8,7 @@ auteur: Renaud WANGLER
 <div class="ibPrintNotes" data-exercise="a1e1" hidden></div>
 
 # Gestion des mises à jour avec Intune
+
 Il vous a été demandé de créer un environnement de mises à jour qui n'affecte que les machines membres du groupe "*Contoso Developer Devices*". Ce groupe doit répondre aux prérequis suivants :
 
 - Quality update deferral period (days): **15**

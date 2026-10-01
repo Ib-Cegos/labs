@@ -8,6 +8,7 @@ auteur: Renaud WANGLER
 <div class="ibPrintNotes" data-exercise="a1e1" hidden></div>
 
 # Mise en oeuvre Azure File Sync
+
 Dans cet atelier, nous allons tester la synchronisation de fichiers entre un serveur SMB Windows Server "classique" et un partage de fichiers "*Azure File Share*".  
 
 ## Etape 1 : Créer une machine virtuelle
