@@ -86,6 +86,7 @@ def construire_pagination(page):
     fichier_courant = Path(page.file.src_uri).name
     infos = tools.analyser_exercice(fichier_courant)
     if not infos: return ""
+    if tools.est_atelier_autonome(page): return ""
     numero_atelier, numero_exercice = infos
     dossier_stage = Path(page.file.abs_src_path).parent
     exercices = []
@@ -94,7 +95,6 @@ def construire_pagination(page):
         if infos: _, numero_exercice_fichier = infos
         exercices.append((numero_exercice_fichier, fichier.stem))
     exercices.sort( key=lambda x: x[0] )
-    if len(exercices) <= 1: return ""
     position = next(
         (i for i, (n, _) in enumerate(exercices)
          if n == numero_exercice),

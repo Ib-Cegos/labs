@@ -1,7 +1,7 @@
 ---
 title: Administration de Microsoft 365
 editionDate: 02/10/2026
-gitVersion: 6becbe1
+gitVersion: 90aa705
 auteur: Renaud Wangler
 ---
 
@@ -2341,7 +2341,10 @@ Maintenant que la synchronisation de fichiers est activée avec *OneDrive for Bu
 
 #### Tâche 3 - Partage de fichiers avec d'autres utilisateurs
 
-1. Dans l'explorateur de fichier, faites un clic-droit sur le dossier *Project A** et sélectionnez **View online**.
+1. Dans l'explorateur de fichier, faites un clic-droit sur le dossier **Project A** et sélectionnez **View online**.
+
+	> Vous pouvez accélérer la prise en compte des fichiers par le client oneDrive en réinitialisant ce dernier si le menu OneDrive n'apparait pas. Pour ce faire, utilisez la commande suivante `C:\Program Files (x86)\Microsoft OneDrive\onedrive.exe /reset`
+
 1. Votre navigateur Internet devrait s'ouvrir sur le **OneDrive** de Alan, avec l'arborescence ouverte sur **My files > Project A**.  
 	Passez votre souris à gauche du nom de fichier **Projetc Targets.docx** et sélectionnez le cercle qui apparaît de sorte que ce dernier affiche une coche.
 1. Une fois le fichier sélectionné, cliquez sur le bouton **Share** dans le menu en haut de page.
