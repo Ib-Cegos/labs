@@ -1,7 +1,7 @@
 ---
 title: Gestion des mises à jour avec Intune
-editionDate: 25/09/2026
-gitVersion: 642611b
+editionDate: 01/10/2026
+gitVersion: c864694
 auteur: Renaud WANGLER
 ---
 

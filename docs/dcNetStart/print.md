@@ -1,7 +1,7 @@
 ---
 title: Démarrage propre d'un atelier mono-DC
-editionDate: 25/09/2026
-gitVersion: a2f86bf
+editionDate: 01/10/2026
+gitVersion: c864694
 auteur: Renaud WANGLER
 ---
 

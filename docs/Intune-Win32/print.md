@@ -1,7 +1,7 @@
 ---
 title: Installation d'une application Windows Win32 via Intune
-editionDate: 17/08/2026
-gitVersion: d06ca7d
+editionDate: 01/10/2026
+gitVersion: c864694
 auteur: Renaud WANGLER
 ---
 

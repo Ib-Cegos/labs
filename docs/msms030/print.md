@@ -1,7 +1,7 @@
 ---
 title: Administration de Microsoft 365
-editionDate: 01/10/2026
-gitVersion: 7368d1c
+editionDate: 02/10/2026
+gitVersion: 6becbe1
 auteur: Renaud Wangler
 ---
 
@@ -50,7 +50,7 @@ L'équipe projet de Adatum a décidé de mettre en œuvre Microsoft 365  dans un
     - <a class='ibPrintTocLink' href='#a10e1'>Exercice 1 - Création de labels de sensibilité</a>
 - Atelier 11 - Surveillance et dépannage de Microsoft 365
     - <a class='ibPrintTocLink' href='#a11e1'>Exercice 1 - Etat de santé du service Microsoft 365</a>
-    - <a class='ibPrintTocLink' href='#a11e2'>Exercice 2 - SDépannage de flux de messages</a>
+    - <a class='ibPrintTocLink' href='#a11e2'>Exercice 2 - Dépannage de flux de messages</a>
 
 ## Conseils génériques
 
@@ -2465,7 +2465,9 @@ Après avoir testé la création de labels de données sensibles en utilisant le
 	````Connect-IPPSSession -UserPrincipalName dom@[[onMicrosoftDomain],[wwlxxxxx]].onmicrosoft.com````
 1. Sur la page **Enter password**, saisissez ```ibForm@tion``` dans le champ **Password** avant de cliquer sur **Sign in**.
 1. Dans l'invite Powershell, utilisez la commande suivante pour créer un nouveau label de données sensibles nommé *Adatum-Secret* :  
-	```New-Label -Name Adatum-Secret -DisplayName Adatum-Secret -Tooltip 'For use with Government contracts ONLY' -AdvancedSettings @{Color="Red"} -Comment 'For use with Government contracts ONLY' -ApplyContentMarkingFooterEnabled $true -ApplyContentMarkingFooterText 'ADATUM - SECRET' -ApplyContentMarkingFooterFontSize 12 -ApplyContentMarkingFooterFontColor '#008000' -ApplyContentMarkingFooterAlignment left -ApplyContentMarkingHeaderEnabled $true -ApplyContentMarkingHeaderText 'TOP SECRET' -ApplyContentMarkingHeaderAlignment left -ApplyContentMarkingHeaderFontColor '#0000FF' -ApplyContentMarkingHeaderFontSize 12 -ApplyWaterMarkingEnabled $true -ApplyWaterMarkingText 'ADATUM - SECRET' -ApplyWaterMarkingFontColor '#FF0000' -ApplyWaterMarkingFontSize 48 -ApplyWaterMarkingLayout Diagonal```  
+	```
+	New-Label -Name Adatum-Secret -DisplayName Adatum-Secret -Tooltip 'For use with Government contracts ONLY' -AdvancedSettings @{Color="Red"} -Comment 'For use with Government contracts ONLY' -ApplyContentMarkingFooterEnabled $true -ApplyContentMarkingFooterText 'ADATUM - SECRET' -ApplyContentMarkingFooterFontSize 12 -ApplyContentMarkingFooterFontColor '#008000' -ApplyContentMarkingFooterAlignment left -ApplyContentMarkingHeaderEnabled $true -ApplyContentMarkingHeaderText 'TOP SECRET' -ApplyContentMarkingHeaderAlignment left -ApplyContentMarkingHeaderFontColor '#0000FF' -ApplyContentMarkingHeaderFontSize 12 -ApplyWaterMarkingEnabled $true -ApplyWaterMarkingText 'ADATUM - SECRET' -ApplyWaterMarkingFontColor '#FF0000' -ApplyWaterMarkingFontSize 48 -ApplyWaterMarkingLayout Diagonal
+	```  
 1. Basculez vers votre navigateur Internet et affichez l'onglet du portail **Microsoft Purview**. Vous devriez être resté sur la page **Labels**.
 1. Dans la liste des labels, le label **Adatum-Classified** que vous avez créé dans le portail est affiché. Cliquez sur le bouton **Refresh** dans la barre de menu au-dessus de la liste.
 1. Vous devriez désormais trouver dans la liste des labels le label **Adatum-Secret** que vous venez de créer en PowerShell en plus du label **Adatum-Classified**.  
@@ -2547,7 +2549,7 @@ Dans cet exercice, Dominique va visualiser les informations d'état de santé du
 
 <!-- IBCAN_PAGE_BREAK|a11e2 --># Atelier 11 - Surveillance et dépannage de Microsoft 365
 
-## Exercice 2 - SDépannage de flux de messages
+## Exercice 2 - Dépannage de flux de messages
 
 <div class="ibPrintNotes" data-exercise="a11e2" hidden></div>
 
@@ -2587,6 +2589,7 @@ Dominique a prévu de tester cet outil en envoyant un email à un domaine qui n'
 
 #### Tâche 3 - Analyse du flux de messages
 Dans cette tâche, vous allez surveiller le flux de message en analysant leur traçabilité. Notez que bien que la fonctionnalité de traçabilité des messages soit fournie par *Exchange*, elle s'accède depuis le portail *Defender*.
+
 1. Dans le menu de navigation du portail **Microsoft 365 admin center**, sous la section **Admin centers**, cliquez sur **Security** (il pourra être utile de cliquer sur **Show all**).
 1. Dans le portail **Microsoft Defender**, si nécessaire, cliquez (à gauche) sur la flèche **Show navigation**.
 1. Dans le menu de navigation du portail **Microsoft Defender**, cliquez sur **Exchange message trace** dans la section **Email & collaboration** section.
