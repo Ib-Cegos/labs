@@ -7,6 +7,7 @@ let toolBarOpened = session.read('ToolOpen',false);
 const UndoLimit = 20;
 let imageSelection = null;
 let imageUrls = [];
+let attachmentSelection = null;
 let fileUrls = [];
 
 /*Conservation/reprise du curseur */
@@ -1301,33 +1302,53 @@ async function addIllustration() {
     input.click();}
 
 /* Gestion des fichiers inclus */
-async function buildAttachmentGallery() {
+function selectAttachment(path) {
+    attachmentSelection = { path, name: `${splitFilePath(path).name}${splitFilePath(path).extension}` };
+    document.querySelectorAll(".fileTileSelected").forEach(tile => tile.classList.remove("fileTileSelected"));
+    document.querySelector(`[data-path="${path}"]`)?.classList.add("fileTileSelected");
+}
+
+function selectFile(path) {
+    selectAttachment(path);
+}
+
+async function buildAttachmentGallery(selectedPath = "") {
     const files = await db.list();
+    const attachments = files.filter(path => path.startsWith("ressources/") && !isImageFile(path) && !isIllustration(path));
     let html = '<div class="fileGallery">';
-    for (const path of files) {
-        const url = await db.getUrl(path);
-        if (splitFilePath(path).folder !== "ressources/") continue;
-        let fileName = splitFilePath(path).name + splitFilePath(path).extension;
-        fileUrls.push(url);
-        fileName = fileName.length > 20 ? "..." + fileName.substring(fileName.length - 17) : fileName;
-        html += `<div class="fileTile" data-path="${path}" onclick="selectFile('${path}')">
-            <div class="fileTitle" title="${path}">${fileName}
+    for (const path of attachments) {
+        const selected = path === selectedPath ? " fileTileSelected" : "";
+        const fileName = splitFilePath(path).name + splitFilePath(path).extension;
+        const displayName = fileName.length > 20 ? "..." + fileName.substring(fileName.length - 17) : fileName;
+        html += `<div class="fileTile${selected}" data-path="${path}" onclick="selectAttachment('${path}')">
+            <div class="fileTitle" title="${path}">${displayName}
             <button class="fileDeleteButton" onclick="event.stopPropagation(); confirmDeleteAttachment('${path}')">🗑️</button>
-            </div></div>`;}
+            </div></div>`;
+    }
+    if (attachments.length === 0) {
+        html += '<p class="emptyGalleryMessage">Aucun fichier inclus.</p>';
+    }
     html += `
     <p>Ces fichiers sont disponibles à l'adresse <span role="button" tabindex="0" title="Copier [ResourcesUrl]" style="cursor: pointer" onclick="navigator.clipboard.writeText('[ResourcesUrl]')">[ResourcesUrl]</span></p>
     <p>(<span role="button" tabindex="0" title="Copier l'URL" style="cursor: pointer" onclick="navigator.clipboard.writeText(this.textContent)">${SYSTEM_VARIABLES['ResourcesUrl'].defaut}</span>)</p></div>`;
-    return html;}
+    return html;
+}
+
 async function deleteAttachment(path) {
     await db.delete(path);
     updateFileReferences(path);
-    openAttachmentEditor();}
+    attachmentSelection = null;
+    openAttachmentEditor();
+}
+
 function confirmDeleteAttachment(path) {
     const count = countFileReferences(path);
     let countStr = `<p>(${count} mention`;
-    if (count > 1) countStr += 's détectées'; else countStr +=' détectée';
-    if (count >0) countStr += ' dans le stage.)</p>'; else countStr = '';
-    dialog.show("Suppression d'un fichier", `<p>Supprimer le fichier <strong>${splitFilePath(path).name}${splitFilePath(path).extension}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openAttachmentEditor()},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteAttachment(path)}],'small');}
+    if (count > 1) countStr += 's détectées'; else countStr += ' détectée';
+    if (count > 0) countStr += ' dans le stage.)</p>'; else countStr = '';
+    dialog.show("Suppression d'un fichier", `<p>Supprimer le fichier <strong>${splitFilePath(path).name}${splitFilePath(path).extension}</strong> ?</p>${countStr}`, [{label: "Annuler", action: () => openAttachmentEditor(attachmentSelection?.path || null)},{label: "Supprimer", className: "ibDialogButtonDelete", action: () => deleteAttachment(path)}],'small');
+}
+
 async function addAttachment() {
     const input = document.createElement("input");
     input.type = "file";
@@ -1336,18 +1357,37 @@ async function addAttachment() {
         if (!file) return;
         const path = `ressources/${normalizeFileName(file.name)}`;
         await db.write(path, file);
-        openAttachmentEditor(path);};
-    input.click();}
-function saveAttachment(path) {
-    const markdown = `![${splitFilePath(path).name}](${path})`;
-    saveUndoState("insertion d'un fichier joint");
+        openAttachmentEditor(path);
+    };
+    input.click();
+}
+
+function saveAttachment(selectedPath = attachmentSelection?.path) {
+    const path = selectedPath || attachmentSelection?.path;
+    if (!path) return;
+    const fileName = attachmentSelection?.name || `${splitFilePath(path).name}${splitFilePath(path).extension}`;
+    const resourceUrl = path.replace(/^ressources\//, "[ResourcesUrl]/");
+    const markdown = `[${fileName}](${resourceUrl})`;
+    const start = textareaSync.selectionStart;
+    const end = textareaSync.selectionEnd;
+    saveUndoState("insertion d'un fichier inclus");
+    textareaSync.setRangeText(markdown, start, end, "end");
+    selection.restore(start + markdown.length, start + markdown.length);
     refreshEditor();
-    dialog.close();}
-async function openAttachmentEditor() {
-    fileUrls.forEach(url => db.releaseUrl(url));
+    dialog.close();
+}
+
+async function openAttachmentEditor(selectedPath = null) {
+    if (selectedPath !== null) {
+        attachmentSelection = { path: selectedPath, name: `${splitFilePath(selectedPath).name}${splitFilePath(selectedPath).extension}` };
+    } else if (!attachmentSelection || !attachmentSelection.path) {
+        attachmentSelection = null;
+    }
+    fileUrls.forEach(url => db.releaseUrl?.(url));
     fileUrls = [];
-    const html = await buildAttachmentGallery();
-    dialog.show("Insertion / Modification d'un fichier",html, [{label : "Ajouter", action : () => addAttachment()}, {label : "Annuler", action : () => dialog.close()}, {label : "Valider", action : () => saveAttachment()}]);}
+    const html = await buildAttachmentGallery(attachmentSelection?.path || "");
+    dialog.show("Insertion / Modification d'un fichier", html, [{label : "Ajouter", action : () => addAttachment()}, {label : "Annuler", action : () => dialog.close()}, {label : "Valider", action : () => saveAttachment()}]);
+}
 
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")

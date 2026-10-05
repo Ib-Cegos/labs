@@ -111,8 +111,9 @@ button.variableStyle, button.variableEdit {border : none;background: transparent
 #illustrationButton {width: 28px; height: 28px; margin-left: 6px; border: 1px solid var(--ib-input-border); border-radius: 4px; background: var(--ib-input-background); color: var(--ib-color-action); cursor: pointer; font-size: 18px; transition: all .15s ease;}
 #illustrationButton:hover {border-color: var(--ib-accent-color); background: color-mix(in srgb, var(--ib-accent-color) 10%, var(--ib-input-background));}
 #illustrationButton.hasIllustration {color: var(--ib-success-color); background: color-mix(in srgb, var(--ib-success-color) 15%, var(--ib-input-background)); border-color: var(--ib-success-color);}
-.fileTile {width: 180; cursor: pointer; border: 3px solid transparent; border-radius: 6px; padding: 4px; box-sizing: border-box; position: relative; background: var(--ib-color-content);}
+.fileTile {width: 180px; cursor: pointer; border: 3px solid transparent; border-radius: 6px; padding: 4px; box-sizing: border-box; position: relative; background: var(--ib-color-content);}
 .fileTile:hover { border-color: var(--ib-input-border);}
+.fileTileSelected { border-color: var(--ib-success-color); box-shadow: 0 0 6px var(--ib-success-color);}
 .fileDeleteButton {position: absolute; right: 4px; bottom: 0px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--ib-input-border); border-radius: 50%; cursor: pointer; background: var(--ib-color-content); color: var(--ib-color-text); opacity: 0; transition: opacity .15s ease, transform .15s ease;}    
 .fileTile:hover .fileDeleteButton { opacity: 1;}
 .fileGallery > p { flex: 0 0 100%;margin:0px;}
