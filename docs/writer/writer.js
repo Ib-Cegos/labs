@@ -900,7 +900,8 @@ function buildInternalLinkOptions() {
 function selectInternalOption() {
     const selector = document.getElementById("linkInternalTarget")
     const linkUrl = document.getElementById('linkUrl');
-    linkUrl.value = selector.value + '/';
+    const prefix = Current.Atelier === 0 ? "" : "../";
+    linkUrl.value = prefix + selector.value + '/';
     const linkText = document.getElementById('linkText');
     if (linkText.value === '') linkText.value=selector.options[selector.selectedIndex].text;}
 

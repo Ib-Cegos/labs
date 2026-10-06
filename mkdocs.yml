@@ -1,24 +1,15 @@
 site_name: Cahiers d'Ateliers Numériques ib Cegos
 site_url: https://ib-cegos.github.io/labs
-copyright: ib Cegos
 
 theme:
   name: mkdocs
-  language: fr
   custom_dir: themes
 
 hooks:
   - hooks/content_processor.py
 
 plugins:
-  - search
   - macros
 
 markdown_extensions:
-  - admonition
-  - tables
-  - toc
-  - pymdownx.details
   - pymdownx.superfences
-  - pymdownx.tabbed:
-      alternate_style: true
