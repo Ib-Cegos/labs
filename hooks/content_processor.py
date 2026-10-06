@@ -8,6 +8,7 @@ from mkdocs.structure.files import File
 import tools
 
 IB_PREFIX = "ibCAN-"
+PAGES_SANS_ENRICHISSEMENTS_INTERACTIFS = {"guide-redacteur.md"}
 
 COPY_BUTTON_SVG = """
 <svg viewBox="-1 0 20 20">
@@ -23,9 +24,10 @@ def on_page_content(html, page, config, files):
     if tools.est_page_print(page): return html
     meta = tools.charger_meta_atelier(page)
     html = injecter_variables(html, page, meta)
-    html = ajouter_boutons_copie(html)
-    html = ajouter_boutons_copie_inline(html)
-    html = ajouter_checkboxes(html, page)
+    if page.file.src_uri not in PAGES_SANS_ENRICHISSEMENTS_INTERACTIFS:
+        html = ajouter_boutons_copie(html)
+        html = ajouter_boutons_copie_inline(html)
+        html = ajouter_checkboxes(html, page)
     html = remplacer_variables(html, meta)
     html = construire_alerte_yaml(page) + html
     html += construire_panneau_parametres(meta)

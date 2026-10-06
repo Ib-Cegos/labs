@@ -1,5 +1,19 @@
 # Guide du rédacteur ibCAN
 
+## ibCAN du point de vue du rédacteur
+
+ibCAN (Cahier d'Ateliers Numériques) est une plateforme permettant de publier des ateliers de formation stockés en Markdown.
+L'objectif est de permettre à un rédacteur de se concentrer sur la qualité pédagogique du contenu sans avoir à se préoccuper :
+
+- du HTML
+- du CSS
+- du JavaScript
+- de la navigation entre les éléments
+- du suivi de progression du lecteur
+- de l'impression de l'ensemble des exercices.
+
+Le moteur ibCAN enrichit automatiquement les contenus pour produire une expérience de lecture interactive, cohérente et agréable.
+
 ## À qui s’adresse ce guide ?
 
 Ce guide accompagne les formateurs et rédacteurs qui utilisent ibCANWriter pour créer ou modifier un stage. Il explique les principales zones de l’éditeur, le format attendu pour organiser les ateliers et exercices, et la manière dont le moteur ibCAN interprète le Markdown.
@@ -282,14 +296,18 @@ Les sources de publication sont les fichiers Markdown et les ressources du stage
 
 > L’export des données du lecteur depuis le panneau Paramètres du site est un export totalement différent : il sauvegarde les notes, variables personnalisées, progression et préférences du lecteur au format JSON. Il ne remplace pas l’export ZIP du Writer.
 
-## 10. Conseils éditoriaux
+## 10. Checklist pédagogique avant export
 
-- Définissez un objectif observable pour chaque exercice.
-- Présentez les prérequis avant les étapes.
-- Écrivez une consigne actionnable par étape numérotée.
-- Essayez d'indiquer le résultat attendu et la manière de le vérifier.
-- Expliquez les acronymes et les termes propres à l’environnement.
-- Utilisez les variables pour les valeurs qui peuvent changer selon le contexte ou le lecteur.
-- Ajoutez une illustration seulement si elle aide réellement à accomplir ou comprendre l’action.
-- Relisez en mode aperçu et vérifiez le rendu publié et imprimé.
-- N'hésitez pas à vous inspirer des contenus déjà publiés sur la plateforme.
+Pour chaque exercice, vérifiez les points suivants :
+
+- l’objectif est clair et le lecteur peut constater qu’il l’a atteint ;
+- les prérequis, accès et informations nécessaires sont présentés avant les étapes ;
+- chaque étape numérotée décrit une action réalisable, formulée de façon cohérente avec les autres étapes ;
+- le résultat attendu ou la manière de vérifier l’action est indiqué lorsque cela aide le lecteur ;
+- les acronymes et les termes propres à l’environnement sont expliqués ;
+- les énumérations informatives sont présentées sous forme de puces plutôt que comme des tâches à cocher ;
+- les valeurs susceptibles de varier sont remplacées par des variables adaptées, sans y placer d’information confidentielle ;
+- les liens, fichiers et illustrations sont utiles, accessibles et correctement décrits ;
+- l’aperçu est relu, puis le rendu publié et imprimé est vérifié.
+
+N'hésitez pas à vous inspirer des contenus déjà publiés sur la plateforme.

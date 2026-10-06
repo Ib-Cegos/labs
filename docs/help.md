@@ -18,7 +18,7 @@
 - <div>Sous le titre de l'exercice en cours, une ligne verte vous indique votre progression dans cet exercice.<div class="ibHelpCurrentProgress"></div></div>
 - Certaines informations peuvent être adaptées à votre environnement de travail (nom d'utilisateur, mot de passe, nom de domaine, etc.).  
     <span class="ibVariable" data-variable="Elles apparaissent sous cette forme">Elles sont affichées sous cette forme</span> et leur contenu est modifiable dans les *paramètres*.  
-- Certains champs comportent un bouton de copie {{ IB_COPY_BUTTON }} qui permet de copier le texte contenu dans votre presse-papier pour faciliter la saisie dans vos exercices.  
+- Les blocs de code et les valeurs présentées sous forme de code dans le texte comportent un bouton de copie {{ IB_COPY_BUTTON }}. Cliquez dessus pour copier l'extrait et le coller dans l'application concernée. Si le navigateur ne permet pas l'accès au presse-papiers, le bouton apparaît grisé et un message vous en informe.
 
 # Notes
 

@@ -26,7 +26,10 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 
 /* Mise en forme des codes */
 #ibContent code { background: var(--ib-code-background); padding: .10rem .30rem; color: var(--ib-code-text); font-size: .95em; }
-#ibContent pre { color: var(--ib-code-text); background: var(--ib-code-background); border: 1px solid var(--ib-pre-border); border-radius: 8px; padding: .75rem 1rem; margin: .75rem 0; overflow-x: auto; white-space: pre; box-shadow: inset 0 1px 0 var(--ib-pre-shadow); }
+#ibContent pre {
+    color: var(--ib-code-text); background: var(--ib-code-background); border: 1px solid var(--ib-pre-border); border-radius: 8px; padding: .75rem 1rem; margin: .75rem 0;
+    overflow-wrap: anywhere; white-space: pre-wrap; box-shadow: inset 0 1px 0 var(--ib-pre-shadow);
+}
 #ibContent pre code { background: transparent; border: none; padding: 0; font-size: .92em; line-height: 1.5; }
 
 /* Gestion des boutons de copie de code */
