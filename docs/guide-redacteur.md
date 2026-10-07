@@ -223,7 +223,7 @@ Conseils :
 - utilisez le sélecteur de variables plutôt que de retaper le nom afin d’éviter les fautes ;
 - avant de supprimer une variable, vérifiez les occurrences signalées : la suppression de la définition ne réécrit pas automatiquement le texte qui l’emploie.
 
-Le moteur possède aussi la variable système `[ResourcesUrl]`, utile pour construire un lien vers une ressource du stage. L’outil **Fichier inclus** l’utilise automatiquement.
+Le moteur possède aussi la variable système <code>&#91;ResourcesUrl&#93;</code>, utile pour construire un lien vers une ressource du stage. L’outil **Fichier inclus** l’utilise automatiquement.
 
 ## 6. Images, illustrations et fichiers
 
@@ -249,9 +249,21 @@ Le chemin ci-dessus illustre le Markdown produit par l’outil pour une image in
 
 ### Fichier à télécharger
 
-Le bouton **Fichier inclus** ajoute un fichier au dossier de ressources et insère un lien vers celui-ci. Le Writer affiche l’adresse `[ResourcesUrl]`, qui sera remplacée par l’adresse du stage dans le site publié.
+Le bouton **Fichier inclus** ajoute un fichier au dossier de ressources et insère un lien vers celui-ci. Le Writer affiche l’adresse <code>&#91;ResourcesUrl&#93;</code>, qui sera remplacée par l’adresse du stage dans le site publié.
 
 Vérifiez les liens et les ressources après leur insertion. Supprimer une ressource peut également retirer les références détectées dans les contenus.
+
+### Lancer un script PowerShell fourni avec le stage
+
+Un script (PowerShell par exemple) peut être distribué parmi les fichiers de ressources. Dans le contenu, <code>&#91;ResourcesUrl&#93;</code> est remplacé par l’adresse des ressources du stage publié.
+
+Pour permettre l'execution directe d'un script powershell dans ne session Windows, vous pouvez, par exemple, utiliser la commande suivante :
+
+```powershell
+iex ([Text.Encoding]::UTF8.GetString((Invoke-WebRequest '[resourcesUrl]/MonScript.ps1' -UseBasicParsing).Content))
+```
+
+(il pourra être pertinent de rappeler d'éviter de lancer un script téléchargé sans l’avoir vérifié et de se conformer aux règles de production de chaque organisation...)
 
 ## 7. Ce que le moteur ibCAN ajoute automatiquement
 
@@ -311,3 +323,5 @@ Pour chaque exercice, vérifiez les points suivants :
 - l’aperçu est relu, puis le rendu publié et imprimé est vérifié.
 
 N'hésitez pas à vous inspirer des contenus déjà publiés sur la plateforme.
+
+> Si vous pensez qu'un élément manque à cette aide ou à un autre endroit de ibCAN, n'hésitez pas à nous le faire savoir. C'est avec votre aide que nous pourrons toujours améliorer cet outil.

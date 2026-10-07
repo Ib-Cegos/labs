@@ -16,8 +16,13 @@ document.addEventListener(
             lien.addEventListener("click", () => {modifierStage(lien.dataset.zip)})})
         const writerFile = document.getElementById("ibWriterFile");
         if (newButton) { newButton.addEventListener("click", async () => {
-            await clearWorkspace();
-            window.location.href = "writer/";});}
+            try {
+                await checkStoredStage();
+                await clearWorkspace();
+                window.location.href = "writer/";}
+            catch (error) {
+                alert("Impossible de sauvegarder le stage en cours ; le nouvel espace n'a pas été créé.");
+                console.error(error);}});}
         if (openButton && writerFile) {
             openButton.addEventListener("click", () => {writerFile.click();});
             writerFile.addEventListener("change", async (event) => {
@@ -26,14 +31,18 @@ document.addEventListener(
                     if (!file) return;
                     await ouvrirStageDepuisZip(file);}
                 catch(error) {
-                    alert("Le fichier ZIP sélectionné n'est pas un export ibCAN valide.");
+                    alert("Le stage n'a pas pu être ouvert. Vérifiez le fichier et le stockage du navigateur.");
                     console.error(error);}});}});
 
 async function modifierStage(url) {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Erreur ${response.status}`);
-    const blob = await response.blob();
-    await ouvrirStageDepuisZip(blob);}
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Erreur ${response.status}`);
+        const blob = await response.blob();
+        await ouvrirStageDepuisZip(blob);}
+    catch (error) {
+        alert("Le stage n'a pas pu être chargé ; l'édition en cours a été conservée.");
+        console.error(error);}}
 
 function ibResizeIllustrationPanel() {
     const panel = document.getElementById("ibIllustrationPanel");
@@ -150,4 +159,3 @@ function ibPrint() {
     url = url.replace( /\/a\d+e\d+\/?$/i, "" );
     url = url.replace( /\/$/, "" );
     window.open( url + "/print/", "_blank" );}
-

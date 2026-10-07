@@ -80,71 +80,207 @@ function openPreview() {
     // Attendre un peu que la preview soit chargée
     setTimeout(() => { syncPreviewScroll();}, 500);}
 
-/* Déplacement des éléments dans la page */
-function makeDraggable(elementId, handleSelector, storageKey) {
-    const element = document.getElementById(elementId);
-    if (!element) return;
-    const handle = element.querySelector(handleSelector);
-    if (!handle) return;
-    let dragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
-    const savedLeft = sessionStorage.getItem(WRITER_PREFIX + storageKey + "Left");
-    const savedTop =  sessionStorage.getItem(WRITER_PREFIX + storageKey + "Top");
-    if (savedLeft && savedTop) {
-        element.style.left = savedLeft;
-        element.style.top = savedTop;
-        element.style.transform = "scale(1)";}
-    handle.addEventListener("mousedown", event => {
-        dragging = true;
-        const rect = element.getBoundingClientRect();
-        offsetX = event.clientX - rect.left;
-        offsetY = event.clientY - rect.top;
-        element.style.left = `${rect.left}px`;
-        element.style.top = `${rect.top}px`;
-        element.style.transform = "scale(1)";
-        event.preventDefault(); });
-    document.addEventListener("mousemove", event => {
-        if (!dragging) return;
-        element.style.left = `${event.clientX - offsetX}px`;
-        element.style.top = `${event.clientY - offsetY}px`; });
-    document.addEventListener("mouseup", () => {
-        if (!dragging) return;
-        dragging = false;
-        sessionStorage.setItem(WRITER_PREFIX + storageKey + "Left", element.style.left);
-        sessionStorage.setItem(WRITER_PREFIX + storageKey + "Top",element.style.top);});}        
+function keepWriterElementInViewport(element, storageKey, margin = 8) {
+    if (!element || element.getClientRects().length === 0) return;
+    const rect = element.getBoundingClientRect();
+    const maxLeft = Math.max(margin, window.innerWidth - rect.width - margin);
+    const maxTop = Math.max(margin, window.innerHeight - rect.height - margin);
+    const left = Math.min(Math.max(rect.left, margin), maxLeft);
+    const top = Math.min(Math.max(rect.top, margin), maxTop);
+    if (left === rect.left && top === rect.top) return;
+    const previousTransition = element.style.transition;
+    element.style.transition = "none";
+    element.style.left = `${left}px`;
+    element.style.top = `${top}px`;
+    element.style.transform = "none";
+    sessionStorage.setItem(WRITER_PREFIX + storageKey + "Left", element.style.left);
+    sessionStorage.setItem(WRITER_PREFIX + storageKey + "Top", element.style.top);
+    requestAnimationFrame(() => {element.style.transition = previousTransition;});}
+
+async function openWriterHelp() {
+    dialog.show("❓ Aide", "<p>Chargement de l’aide…</p>", [], "help");
+    const modal = document.getElementById("ibWriterDialog");
+    const content = document.getElementById("ibWriterDialogContent");
+    try {
+        const helpUrl = new URL("help/", window.location.href);
+        const response = await fetch(helpUrl);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const html = await response.text();
+        const helpDocument = new DOMParser().parseFromString(html, "text/html");
+        const helpContent = helpDocument.querySelector("#ibContent");
+        if (!helpContent) throw new Error("Contenu de l’aide introuvable");
+        helpContent.querySelectorAll("script, aside").forEach(element => element.remove());
+        const contentElement = document.createElement("div");
+        contentElement.id = "ibContent";
+        contentElement.className = "ibWriterHelpContent";
+        contentElement.innerHTML = helpContent.innerHTML;
+        const headings = [...contentElement.querySelectorAll("h1, h2")];
+        const toc = document.createElement("details");
+        toc.className = "ibWriterHelpToc";
+        const tocTitle = document.createElement("summary");
+        tocTitle.textContent = "Dans cette aide";
+        const tocLinks = document.createElement("nav");
+        tocLinks.setAttribute("aria-label", "Rubriques de l’aide");
+        headings.forEach(heading => {
+            if (!heading.id) return;
+            const link = document.createElement("a");
+            link.href = `#${heading.id}`;
+            link.textContent = heading.textContent;
+            link.addEventListener("click", event => {
+                event.preventDefault();
+                toc.open = false;
+                const targetTop = heading.getBoundingClientRect().top
+                    - content.getBoundingClientRect().top
+                    + content.scrollTop
+                    - toc.offsetHeight
+                    - 8;
+                content.scrollTo({top: targetTop, behavior: "auto"});});
+            tocLinks.appendChild(link);});
+        toc.append(tocTitle, tocLinks);
+        content.replaceChildren(toc, contentElement);
+        content.scrollTop = 0;
+        contentElement.querySelectorAll("a").forEach(link => {
+            link.target = "_blank";
+            link.rel = "noopener";});
+        keepWriterElementInViewport(modal, dialogPositionKey);
+    } catch (error) {
+        console.error("Impossible de charger l’aide du Writer.", error);
+        content.textContent = "L’aide n’a pas pu être chargée. Vérifiez votre connexion puis réessayez.";
+        keepWriterElementInViewport(modal, dialogPositionKey);
+    }}
 
 /* Gestion des fenêtres modales */
+const writerModal = document.getElementById("ibWriterDialog");
+const writerDialogOverlay = document.getElementById("ibWriterDialogOverlay");
+let dialogPositionKey = "DialogNormal";
 const dialog = {
     show(title, content, buttons = [], size = '') {
         selection.save();
         if (toolBarOpened) document.getElementById("ibWriterStyleBar").style.display = "none";
+        writerModal.classList.remove("ibModalSmall", "ibWriterHelpModal");
+        const variant = size === "small" || size === "help" ? size : "normal";
+        if (variant === "small") writerModal.classList.add("ibModalSmall");
+        if (variant === "help") writerModal.classList.add("ibWriterHelpModal");
+        dialogPositionKey = `Dialog${variant[0].toUpperCase()}${variant.slice(1)}`;
+        const storedLeft = sessionStorage.getItem(WRITER_PREFIX + dialogPositionKey + "Left");
+        const storedTop = sessionStorage.getItem(WRITER_PREFIX + dialogPositionKey + "Top");
+        const legacyLeft = variant === "normal" ? sessionStorage.getItem(WRITER_PREFIX + "DialogLeft") : null;
+        const legacyTop = variant === "normal" ? sessionStorage.getItem(WRITER_PREFIX + "DialogTop") : null;
+        const hasStoredPosition = storedLeft && storedTop;
+        const hasLegacyPosition = legacyLeft && legacyTop;
+        const left = hasStoredPosition ? storedLeft : hasLegacyPosition ? legacyLeft : null;
+        const top = hasStoredPosition ? storedTop : hasLegacyPosition ? legacyTop : null;
+        writerModal.style.left = left || "";
+        writerModal.style.top = top || "";
+        writerModal.style.transform = left && top ? "none" : "";
+        if (!hasStoredPosition && hasLegacyPosition) {
+            sessionStorage.setItem(WRITER_PREFIX + dialogPositionKey + "Left", legacyLeft);
+            sessionStorage.setItem(WRITER_PREFIX + dialogPositionKey + "Top", legacyTop);}
         document.getElementById("ibWriterDialogTitle").innerHTML = title;
         document.getElementById("ibWriterDialogContent").innerHTML = content;
-        document.getElementById("ibWriterDialogOverlay").style.display = "flex";
-        const modal =document.getElementById("ibWriterDialog");
-        if (size == 'small') modal.classList.add ('ibModalSmall');
-        else modal.classList.remove ('ibModalSmall');
-        if (!sessionStorage.getItem(WRITER_PREFIX + "DialogLeft")) {
-            const rect =modal.getBoundingClientRect();
-            modal.style.left = `${rect.left}px`;
-            modal.style.top =  `${rect.top}px`;
-            modal.style.transform = "scale(1)";}
-        document.getElementById("ibWriterDialog").classList.add("ibModalOpen");
+        writerDialogOverlay.style.display = "flex";
+        writerModal.classList.add("ibModalOpen");
+        keepWriterElementInViewport(writerModal, dialogPositionKey);
         const footer = document.getElementById("ibWriterDialogButtons");
         footer.innerHTML = "";
         buttons.forEach(button => {
             const element = document.createElement("button");
             element.textContent = button.label;
-            element.addEventListener("click",button.action);
+            element.addEventListener("click", button.action);
             element.className = button.className || "ibDialogButton";
             footer.appendChild(element);});
-        if (buttons.length == 0) document.getElementById("ibWriterDialogButtons").style.display = "none";
-        else document.getElementById("ibWriterDialogButtons").style.display = "flex";},
+        footer.style.display = buttons.length ? "flex" : "none";},
     close() {
-        if (toolBarOpened) document.getElementById("ibWriterStyleBar").style.display = "flex";
-        document.getElementById("ibWriterDialogOverlay").style.display = "none";
+        writerDialogOverlay.style.display = "none";
+        if (toolBarOpened) {
+            const styleBar = document.getElementById("ibWriterStyleBar");
+            styleBar.style.display = "flex";
+            keepWriterElementInViewport(styleBar, "Style");}
         selection.restore();}};
+
+ibMakeDraggable(writerModal, ".ibModalHeader", () => dialogPositionKey);
+
+function getStoredRecoveryStage() {
+    const raw = localStorage.getItem(WRITER_PREFIX + "oldStage");
+    if (raw === null) return null;
+    try {
+        const stage = JSON.parse(raw);
+        if (!stage || typeof stage !== "object" || Array.isArray(stage)
+            || !Array.isArray(stage.Ateliers)
+            || stage.Ateliers.some(atelier => !atelier || !Array.isArray(atelier.Exercices))) return null;
+        return {raw, stage};
+    } catch {
+        return null;}}
+
+function getRecoveryCurrent(stage) {
+    const raw = localStorage.getItem(WRITER_PREFIX + "oldCurrent");
+    if (raw !== null) {
+        try {
+            const current = JSON.parse(raw);
+            if (current && typeof current === "object" && !Array.isArray(current)) return current;
+        } catch {}}
+    if (stage.Ateliers.length === 1 && stage.Ateliers[0].Exercices.length === 1) {
+        const atelier = stage.Ateliers[0];
+        const exercice = atelier.Exercices[0];
+        return {Atelier: atelier.Id, Exercice: exercice.Id, Contenu: exercice.Contenu};}
+    return {Atelier: 0, Exercice: 0, Contenu: stage.Introduction};}
+
+async function discardStoredRecoveryStage() {
+    await db.clearSnapshotFiles();
+    localStorage.removeItem(WRITER_PREFIX + "oldStage");
+    localStorage.removeItem(WRITER_PREFIX + "oldCurrent");}
+
+async function resumeStoredRecoveryStage(recovery) {
+    const previousStage = localStorage.getItem(WRITER_PREFIX + "Stage");
+    const previousCurrent = localStorage.getItem(WRITER_PREFIX + "Current");
+    try {
+        localStorage.setItem(WRITER_PREFIX + "Stage", recovery.raw);
+        localStorage.setItem(WRITER_PREFIX + "Current", JSON.stringify(getRecoveryCurrent(recovery.stage)));
+        await db.restoreSnapshotFiles();
+    } catch (error) {
+        if (previousStage === null) localStorage.removeItem(WRITER_PREFIX + "Stage");
+        else localStorage.setItem(WRITER_PREFIX + "Stage", previousStage);
+        if (previousCurrent === null) localStorage.removeItem(WRITER_PREFIX + "Current");
+        else localStorage.setItem(WRITER_PREFIX + "Current", previousCurrent);
+        throw error;}
+    localStorage.removeItem(WRITER_PREFIX + "oldStage");
+    localStorage.removeItem(WRITER_PREFIX + "oldCurrent");
+    try {
+        await db.clearSnapshotFiles();}
+    catch (error) {
+        alert("Le stage a été restauré, mais la copie de récupération des fichiers n’a pas pu être supprimée.");
+        console.error(error);}
+    window.location.reload();}
+
+async function promptStoredRecoveryStage() {
+    const recovery = getStoredRecoveryStage();
+    if (!recovery) return;
+    const closeButton = document.getElementById("ibWriterDialogClose");
+    const closeRecoveryPrompt = async () => {
+        try {
+            await discardStoredRecoveryStage();}
+        catch (error) {
+            alert("La sauvegarde de récupération n’a pas pu être supprimée.");
+            console.error(error);}};
+    dialog.show("Précédente édition détectée", "<p>Un stage en cours d’édition ou de création a été trouvé dans ce navigateur. Voulez-vous plutôt reprendre son édition&nbsp;?</p><p><strong>Référence :</strong> <span id=\"ibRecoveryReference\"></span><br><strong>Stage :</strong> <span id=\"ibRecoveryTitle\"></span></p>",
+        [{label: "Continuer sans reprendre", action: async () => {
+                closeButton.removeEventListener("click", closeRecoveryPrompt);
+                try {
+                    await discardStoredRecoveryStage();
+                    dialog.close();}
+                catch (error) {
+                    alert("La sauvegarde de récupération n’a pas pu être supprimée.");
+                    console.error(error);}}},
+            {label: "Reprendre l’édition", action: async () => {
+                closeButton.removeEventListener("click", closeRecoveryPrompt);
+                try {
+                    await resumeStoredRecoveryStage(recovery);}
+                catch (error) {
+                    alert("Le stage n’a pas pu être restauré. La sauvegarde de récupération a été conservée.");
+                    console.error(error);}}}], "small");
+    document.getElementById("ibRecoveryTitle").textContent = recovery.stage.Titre || "(sans titre)";
+    document.getElementById("ibRecoveryReference").textContent = recovery.stage.Reference || "(sans référence)";
+    closeButton.addEventListener("click", closeRecoveryPrompt, {once: true});}
 
 /* Synchonisation de la consultation de la preview */
 function syncPreviewScroll() {
@@ -188,7 +324,30 @@ async function exporterStage() {
     lien.href = url;
     lien.download = `${Stage.Reference || "stage"}-edit.zip`;
     lien.click();
-    URL.revokeObjectURL(url);}
+    URL.revokeObjectURL(url);
+    dialog.show(
+        "Export terminé",
+        "<p>Après avoir vérifié que l’export est correct, vous pouvez <strong>supprimer</strong> les données du navigateur local ou les <strong>conserver</strong> pour poursuivre l'édition.</p>",
+        [
+            {label: "Supprimer", action: async () => {
+                try {
+                    await clearWriterLocalData();
+                    window.location.href = "../";}
+                catch (error) {
+                    alert("Les données locales n’ont pas pu être supprimées.");
+                    console.error(error);}}},
+            {label: "Conserver", action: () => dialog.close()}
+        ],
+        "small");}
+
+async function clearWriterLocalData() {
+    await db.clearWorkspaceFiles();
+    localStorage.removeItem(WRITER_PREFIX + "Stage");
+    localStorage.removeItem(WRITER_PREFIX + "Current");
+    localStorage.removeItem(WRITER_PREFIX + "oldStage");
+    localStorage.removeItem(WRITER_PREFIX + "oldCurrent");
+    session.remove("Undo");
+    session.remove("Redo");}
 
 function majStage() {
     if (Current.Atelier == 0) Stage.Introduction = Current.Contenu;
@@ -1398,7 +1557,13 @@ let Stage = storage.read('Stage',{ Titre: "", "Auteur": "", "Variables": {}, "In
 sortStage();
 systemVariableRefresh();
 let Current = storage.read ('Current', {Atelier : 0, Exercice : 0, Contenu : Stage.Introduction});
-if (Stage.Ateliers.length === 1 && Stage.Ateliers[0].Exercices.length === 1) Current = {Atelier : Stage.Ateliers[0].Id, Exercice : Stage.Ateliers[0].Exercices[0].Id, Contenu : Stage.Ateliers[0].Exercices[0].Contenu};
+if (Stage.Ateliers.length === 1 && Stage.Ateliers[0].Exercices.length === 1) {
+    const atelier = Stage.Ateliers[0];
+    const exercice = atelier.Exercices[0];
+    const currentMatches = Current && typeof Current === "object"
+        && Current.Atelier == atelier.Id && Current.Exercice == exercice.Id;
+    Current = {Atelier: atelier.Id, Exercice: exercice.Id, Contenu: currentMatches && typeof Current.Contenu === "string" ? Current.Contenu : exercice.Contenu ?? ""};
+    storage.write("Current", Current);}
 document.getElementById("stageReference").value = Stage.Reference || "";
 document.getElementById("stageReference").addEventListener("input", () => {
     Stage.Reference = stageReference.value;
@@ -1437,19 +1602,21 @@ document.getElementById("btnAddAtelier").addEventListener("click", addAtelier);
 document.getElementById("btnAddExercice").addEventListener("click", addExercice);
 document.getElementById("btnVariables").addEventListener("click", openVariables);
 document.getElementById("btnExport").addEventListener("click", exporterStage);
+document.getElementById("btnHelp").addEventListener("click", openWriterHelp);
 document.getElementById("btnDeleteExercice").addEventListener("click", confirmDeleteExercice);
 document.getElementById("btnDeleteAtelier").addEventListener("click", confirmDeleteAtelier);
 document.getElementById("btnPreview").addEventListener("click", openPreview);
     
 /* Initialisation de la gestion des fenêtres modales */
-makeDraggable("ibWriterDialog",".ibModalHeader","Dialog");
 document.getElementById("ibWriterDialogClose").addEventListener("click",() => dialog.close());
 /* Initialisation de la barre d'outils */
 document.getElementById("btnTools").addEventListener("click", () => {
     selection.save();
     toolBarOpened = true;
     session.write('ToolOpen',true);
-    document.getElementById("ibWriterStyleBar").style.display = "flex";
+    const styleBar = document.getElementById("ibWriterStyleBar");
+    styleBar.style.display = "flex";
+    keepWriterElementInViewport(styleBar, "Style");
     if (restoreEditorFocus) {
         selection.restore();
         restoreEditorFocus = false;}});
@@ -1465,7 +1632,7 @@ if (!sessionStorage.getItem(WRITER_PREFIX + "StyleLeft")) {
     sessionStorage.setItem(WRITER_PREFIX + "StyleLeft",(rectStyleButton.right - styleBar.offsetWidth)+"px");
     sessionStorage.setItem(WRITER_PREFIX + "StyleTop",(rectStyleButton.top - styleBar.offsetHeight + 12)+"px");
     styleBar.style.display = "none"; }
-makeDraggable("ibWriterStyleBar",".ibWriterStyleHandle","Style");
+ibMakeDraggable(document.getElementById("ibWriterStyleBar"),".ibWriterStyleHandle","Style");
 updateStyleBar();
 /* Initialisation (nettoyage sur drop dans le vide) du DragNDrop */
 document.addEventListener("dragend", () => {
@@ -1481,3 +1648,4 @@ textareaSync.addEventListener("mouseup", () => {selection.save(); syncCursor();}
 textareaSync.addEventListener("select", () => {selection.save();});
 textareaSync.addEventListener("input", () => {selection.save();});
 textareaSync.focus();
+promptStoredRecoveryStage();

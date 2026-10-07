@@ -73,6 +73,11 @@ blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: 
 
 /* Mise en forme générale */
 body {color: var(--ib-color-text)}
+@media print {
+    body.ibGuidePage { display: block; margin: 0; padding: 0; background: #fff; color: #000; }
+    body.ibGuidePage #ibHeader, body.ibGuidePage #ibFooter, body.ibGuidePage #ibPageInfo, body.ibGuidePage #ibHelpPanel, body.ibGuidePage #ibNotesPanel, body.ibGuidePage #ibIllustrationPanel, body.ibGuidePage #ibNavigationPanel { display: none !important; }
+    body.ibGuidePage #ibContent { max-width: none; margin: 0; padding: 10%; background: #fff; color: #000; }
+}
 #ibContent { font-size: var(--ib-content-font-size); line-height: 1.6;}
 #ibContent ol { margin: .5rem 0 1rem 0; padding-left: 2rem; }
 #ibContent li { margin: .25rem 0; }

@@ -11,13 +11,14 @@ commentaires.forEach(commentaire => {
     commentaire.parentNode.replaceChild( saut, commentaire );});
 
 function launchPrint() {
-    document.getElementById("ibPrintSetupDialog").style.display = "none";
-    document.getElementById("ibPrintSetupOverlay").style.display = "none";
+    closePrintSetup();
     window.print(); }            
 
-document.getElementById("ibPrintSetupClose").addEventListener("click", () => {
+function closePrintSetup() {
     document.getElementById("ibPrintSetupDialog").style.display = "none";
-    document.getElementById("ibPrintSetupOverlay").style.display = "none"; });
+    document.getElementById("ibPrintSetupOverlay").style.display = "none"; }
+
+document.getElementById("ibPrintSetupClose").addEventListener("click", closePrintSetup);
 document.getElementById("ibPrintButton").addEventListener("click", () => { launchPrint(); });
 
 function ibTogglePrintIllustrations() {
@@ -91,27 +92,20 @@ else {
     document.getElementById("useCustomVariables").addEventListener("change", ibToglePrintVariables);
     ibToglePrintVariables(); }
 
-/* Panneau préaparation déplaçable */
-const dialog = document.getElementById("ibPrintSetupDialog");
-const header = dialog.querySelector(".ibPrintSetupHeader");
-const closeButton = document.getElementById("ibPrintSetupClose");
-let dragging = false;
-let offsetX = 0;
-let offsetY = 0;
-header.addEventListener("mousedown", (e) => {
-    closeButton.addEventListener("pointerdown", (e) => { e.stopPropagation();})
-    if (e.target.closest(".ibPrintSetupClose")) { return; }
-   const rect = dialog.getBoundingClientRect();
-    dialog.style.left = `${rect.left}px`;
-    dialog.style.top = `${rect.top}px`;
-    dialog.style.transform = "none";
-    dragging = true;
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;});
-document.addEventListener("mousemove", (e) => {
-    if (!dragging) return;
-    dialog.style.left = `${e.clientX - offsetX}px`;
-    dialog.style.top = `${e.clientY - offsetY}px`;
-    dialog.style.transform = "none";});
-document.addEventListener("mouseup", () => { dragging = false; });
-          
+/* Modale de préparation d'impression */
+const printSetupDialog = document.getElementById("ibPrintSetupDialog");
+const printSetupPositionKey = "PrintSetup";
+ibMakeDraggable(printSetupDialog, ".ibPrintSetupHeader", printSetupPositionKey, "#ibPrintSetupClose");
+function keepPrintSetupInViewport(margin = 8) {
+    const rect = printSetupDialog.getBoundingClientRect();
+    const maxLeft = Math.max(margin, window.innerWidth - rect.width - margin);
+    const maxTop = Math.max(margin, window.innerHeight - rect.height - margin);
+    const left = Math.min(Math.max(rect.left, margin), maxLeft);
+    const top = Math.min(Math.max(rect.top, margin), maxTop);
+    if (left === rect.left && top === rect.top) return;
+    printSetupDialog.style.left = `${left}px`;
+    printSetupDialog.style.top = `${top}px`;
+    printSetupDialog.style.transform = "none";
+    sessionStorage.setItem(WRITER_PREFIX + printSetupPositionKey + "Left", printSetupDialog.style.left);
+    sessionStorage.setItem(WRITER_PREFIX + printSetupPositionKey + "Top", printSetupDialog.style.top);}
+keepPrintSetupInViewport();

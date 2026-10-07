@@ -8,7 +8,7 @@ from mkdocs.structure.files import File
 import tools
 
 IB_PREFIX = "ibCAN-"
-PAGES_SANS_ENRICHISSEMENTS_INTERACTIFS = {"guide-redacteur.md"}
+PAGES_SANS_ENRICHISSEMENTS_INTERACTIFS = {"guide-redacteur.md","writer/help.md"}
 
 COPY_BUTTON_SVG = """
 <svg viewBox="-1 0 20 20">

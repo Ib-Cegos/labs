@@ -7,7 +7,7 @@
     <link id="ibThemeCss" rel="stylesheet" href="{{ 'assets/themes/original.css' | url }}" >
     <link rel="icon" href="{{ config.site_url }}assets/images/favicon.png">
 </head>
-<body>
+<body{% if page.file.src_uri|lower == 'guide-redacteur.md' %} class="ibGuidePage"{% endif %}>
 <header id="ibHeader">
     <div id="ibHeaderTitle" 
     {% if ibStageAuthor %} title="Auteur : {{ ibStageAuthor }}" {% endif %}
