@@ -21,7 +21,7 @@ def importer_exercice(fichier):
             resultat["Duree"] = (metadata.get("Duree") or metadata.get("Durée") or metadata.get("duree"))
         except Exception as e:
             print(f"Erreur YAML : {e}")
-    titre_match = re.search(r"^#\s+(.*)$",markdown,re.MULTILINE)
+    titre_match = re.match(r"^\s*#\s+([^\r\n]+)(?:\r?\n|$)",markdown)
     if titre_match:
         resultat["Titre"] = (titre_match.group(1).strip())
         resultat["Contenu"] = (markdown[titre_match.end():].strip())

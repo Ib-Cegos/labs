@@ -75,6 +75,12 @@ async function renderPreview() {
     if (Current.Atelier === 0) document.getElementById("ExerciceHeader").style.display = "none";
     else {
         document.getElementById("ExerciceHeader").style.display = "flex";
+        const pseudoStage = Stage.Ateliers.length === 1 && Stage.Ateliers[0].Exercices.length === 1;
+        document.getElementById("writerAtelierTitleLabel").style.display = pseudoStage ? "none" : "";
+        document.getElementById("writerAtelierTitle").style.display = pseudoStage ? "none" : "";
+        const exerciceTitleVisible = atelier?.Exercices.length > 1;
+        document.getElementById("writerExerciceTitleLabel").style.display = exerciceTitleVisible ? "" : "none";
+        document.getElementById("writerExerciceTitle").style.display = exerciceTitleVisible ? "" : "none";
         document.getElementById("writerAtelierTitle").value = atelier?.Titre || "";
         document.getElementById("writerExerciceTitle").value = exercice?.Titre || "";
         document.getElementById("writerExerciceLength").value = exercice?.Duree || "";}
@@ -98,9 +104,17 @@ async function renderPreview() {
 function buildSommaire() {
     let html = "";
     Stage.Ateliers.forEach(atelier => {
-        html += `<div class="somLabTit"> Atelier ${atelier.Id}`;
+        html += '<div class="somLab">';
+        if (atelier.Exercices.length === 1) {
+            const exercice = atelier.Exercices[0];
+            const titre = atelier.Titre || exercice.Titre;
+            html += `<span class="somLabTit somLabLink somExLink" data-stage="${(Stage.Reference || "").toLowerCase()}" data-exercice="a${atelier.Id}e${exercice.Id}">Atelier ${atelier.Id} : ${titre}`;
+            if (exercice.Duree) html += ` <span class="somDuree">(${exercice.Duree} min)</span>`;
+            html += '</span></div>';
+            return;}
+        html += `<div class="somLabTit">Atelier ${atelier.Id}`;
         if (atelier.Titre != "") html += ` : ${atelier.Titre}`;
-        html += ' </div><ul>';
+        html += '</div><ul>';
         atelier.Exercices.forEach(exercice => {
             html+=`<li class="somEx"><span class="somExLink">Exercice ${exercice.Id}`;
             if (exercice.Titre != "") html += ` - ${exercice.Titre}`;

@@ -149,6 +149,9 @@ def extraire_titre_atelier(exercices):
         if exercice["atelier_titre"]: return exercice["atelier_titre"]
     return None
 
+def titre_atelier_ou_exercice(exercices):
+    return extraire_titre_atelier(exercices) or exercices[0]["titre"]
+
 # Gestion de l'export/impression du stage
 def construire_sommaire_export(dossier_stage):
     ateliers = charger_structure_stage(dossier_stage)
@@ -156,6 +159,11 @@ def construire_sommaire_export(dossier_stage):
     for numero_atelier in sorted(ateliers.keys()):
         exercices = sorted( ateliers[numero_atelier], key=lambda e: e["numero"])
         titre_atelier = extraire_titre_atelier(exercices)
+        if len(exercices) == 1:
+            morceaux.append(
+                f"- <a class='ibPrintTocLink' href='#a{numero_atelier}e{exercices[0]['numero']}'>"
+                f"Atelier {numero_atelier} : {titre_atelier_ou_exercice(exercices)}</a>" )
+            continue
         if titre_atelier: morceaux.append( f"- Atelier {numero_atelier} - {titre_atelier}" )
         else: morceaux.append( f"- Atelier {numero_atelier}" )
         for exercice in exercices:
@@ -196,16 +204,21 @@ def extraire_markdown_sans_yaml(fichier):
         if len(morceaux) >= 3: return morceaux[2].strip()
     return contenu.strip()
 
-def formater_exercice_pour_export( contenu, fichier_exercice, numero_atelier, titre_atelier, numero_exercice, titre_exercice ):
+def formater_exercice_pour_export( contenu, fichier_exercice, numero_atelier, titre_atelier, numero_exercice, titre_exercice, atelier_a_un_exercice=False ):
     contenu = re.sub( r"^#\s+.+?\n+", "", contenu, count=1, flags=re.MULTILINE ).lstrip()
     contenu = decaler_titres_markdown( contenu, niveaux=2 )
     illustration = trouver_illustration_exercice( fichier_exercice )
     bloc_illustration = ""
     if illustration: bloc_illustration = ( f'<div class="ibPrintIllustration"><img src="../{illustration.name}" alt="Illustration de l\'exercice"></div>\n\n' )
+    if atelier_a_un_exercice:
+        titres = f"# Atelier {numero_atelier} : {titre_atelier}\n\n"
+    else:
+        titres = (
+            f"# Atelier {numero_atelier} - {titre_atelier}\n\n"
+            f"## Exercice {numero_exercice} - {titre_exercice}\n\n" )
     return (
     f"<!-- {IBCAN_PAGE_BREAK_PREFIX}|a{numero_atelier}e{numero_exercice} -->"
-    f"# Atelier {numero_atelier} - {titre_atelier}\n\n"
-    f"## Exercice {numero_exercice} - {titre_exercice}\n\n"
+    f"{titres}"
     f'<div class="ibPrintNotes" '
     f'data-exercise="a{numero_atelier}e{numero_exercice}" hidden></div>\n\n'
     f'{bloc_illustration}'
@@ -228,7 +241,9 @@ def charger_markdown_stage(dossier_stage):
         for exercice in exercices:
             fichier = ( dossier_stage / f"a{numero_atelier}e{exercice['numero']}.md" )
             contenu = extraire_markdown_sans_yaml(fichier)
-            morceaux.append( formater_exercice_pour_export( contenu, fichier, numero_atelier, titre_atelier or "", exercice["numero"], exercice["titre"]))
+            atelier_a_un_exercice = len(exercices) == 1
+            titre_export = titre_atelier_ou_exercice(exercices) if atelier_a_un_exercice else titre_atelier or ""
+            morceaux.append( formater_exercice_pour_export( contenu, fichier, numero_atelier, titre_export, exercice["numero"], exercice["titre"], atelier_a_un_exercice))
     contenu = "\n\n".join(morceaux)
     titre = dossier_stage.name.upper()
     readme = dossier_stage / "README.md"

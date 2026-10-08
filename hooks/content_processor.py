@@ -1,10 +1,7 @@
 import re
 import json
-import yaml
 import markdown
 from pathlib import Path
-from datetime import datetime
-from mkdocs.structure.files import File
 import tools
 
 IB_PREFIX = "ibCAN-"
@@ -54,6 +51,10 @@ def on_page_markdown(markdown, page, config, files):
             readme = dossier_stage / "README.md"
             titre_atelier = re.search( r"^#\s+(.+)$", readme.read_text(encoding="utf-8"), re.MULTILINE ).group(1).strip()
             return tools.remplacer_ou_ajouter_titre_markdown(markdown, titre_atelier, bloc_duree)
+        exercices_atelier = sorted(ateliers.get(numero_atelier, []), key=lambda e: e["numero"])
+        if len(exercices_atelier) == 1:
+            titre_atelier = tools.titre_atelier_ou_exercice(exercices_atelier)
+            return re.sub( r"^#\s+(.+)$", lambda _: f"# Atelier {numero_atelier} : {titre_atelier}{bloc_duree}", markdown, count=1, flags=re.MULTILINE, )
         return re.sub( r"^#\s+(.+)$", rf"# Atelier {numero_atelier} - Exercice {numero_exercice} : \1" + bloc_duree, markdown, count=1, flags=re.MULTILINE, )
     # Titre des pages README
     if fichier.upper() == "README.MD":
@@ -300,6 +301,13 @@ def construire_navigation_stage(page):
             stem = exercice["fichier"].rstrip("/")
             if stem == Path(page.file.src_uri).stem: atelier_courant = True
         code_stage = dossier_stage.name.lower()
+        if len(exercices) == 1:
+            exercice = exercices[0]
+            stem = exercice["fichier"].rstrip("/")
+            courant = " ibNavCurrent" if stem == Path(page.file.src_uri).stem else ""
+            titre = tools.titre_atelier_ou_exercice(exercices)
+            html.append( f'<a class="ibNavExercice ibNavAtelierLink{courant}" data-stage="{code_stage}" data-exercice="{stem}" href="../{stem}/"><div class="ibNavExRef">Atelier {numero_atelier}</div><div class="ibNavExTitre">{titre}</div></a>' )
+            continue
         html.append( f'<details class="ibNavAtelier{" ibNavAtelierCurrent" if atelier_courant else ""}" data-stage="{code_stage}" data-atelier="{numero_atelier}" {"open" if atelier_courant else ""}>' )
         html.append( f'<summary class="ibNavAtelierHeader"><div class="ibNavAtelierText"><div class="ibNavAtelierRef">Atelier {numero_atelier}</div><div class="ibNavAtelierTitre">{titre_atelier or ""}</div></div></summary>' )
  

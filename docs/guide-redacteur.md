@@ -44,7 +44,7 @@ La référence et le titre sont obligatoires pour exporter. Choisissez une réf�
 
 ### Navigation et édition
 
-La colonne de navigation contient l’introduction, les ateliers et leurs exercices. Cliquez sur une entrée pour modifier son contenu dans la zone centrale.
+La colonne de navigation contient l’introduction, les ateliers et leurs exercices. Cliquez sur une entrée pour modifier son contenu dans la zone centrale. Pour un stage composé d’un seul atelier et d’un seul exercice, cette colonne est masquée, l’exercice s’ouvre directement et les champs de titre de l’atelier et de l’exercice sont masqués. Lorsqu’un atelier d’un stage plus complet ne contient qu’un seul exercice, seul le champ de titre de l’exercice est masqué : le titre de l’atelier sert alors de titre visible.
 
 Pour organiser le stage :
 
@@ -78,6 +78,8 @@ Le premier titre de niveau 1 (`#`) est le titre du stage. Dans le Writer, ce tit
 
 Le bouton **+ Sommaire** insère le marqueur `{{ sommaire() }}` à la position du curseur. Dans le site publié, ibCAN le remplace par la liste des ateliers et exercices. Placez-le là où le sommaire doit apparaître (par exemple entre la présentation du stage et des considérations plus annexes).
 
+> L'entrée **Introduction** n'est pas affichée pour un *stage autonome* qui ne contient qu'un atelier et qu'un seul exercice.
+
 ### Ateliers et exercices
 
 Un stage est organisé ainsi :
@@ -97,6 +99,7 @@ Chaque exercice doit proposer un objectif clair et une suite d’actions réalis
 - le titre d’atelier est partagé par les exercices d'un même atelier ;
 - le titre d’exercice apparaît dans la navigation, les sommaires et en-tête de page d'exercice avec le titre de l'atelier;
 - la durée estimée (optionnelle) est exprimée en minutes et sera affichée par ibCAN.
+- Si les manipulations que vous proposez ne contiennent qu'un seul niveau de découpage, préférez faire un découpage de plusieurs ateliers contenant chacun un seul exercice (plutôt qu'un atelier regroupant tous les exercices) pour un meilleur rendu dans ibCAN.
 
 L’ordre des entrées dans la navigation est l’ordre pédagogique.
 
@@ -104,7 +107,7 @@ L’ordre des entrées dans la navigation est l’ordre pédagogique.
 
 ### Stage autonome
 
-On appellera Atelier ou stage autonome un stage comportant un seul atelier et un seul exercice. Le site redirige alors directement la page d'introduction vers l’exercice et utilise le titre du stage comme titre visible de l’exercice. Cette forme convient à une activité isolée, elle n’est pas adaptée à un parcours nécessitant plusieurs exercices.
+On appellera Atelier ou stage autonome un stage comportant un seul atelier et un seul exercice. Le site redirige alors directement la page d'introduction vers l’exercice et utilise le titre du stage comme titre visible de l’exercice. Cette forme convient à une activité isolée, elle n’est pas adaptée à un parcours nécessitant plusieurs ateleirs et/ou exercices.
 
 ## 4. Écrire en Markdown
 
@@ -305,6 +308,8 @@ Les sources de publication sont les fichiers Markdown et les ressources du stage
 3. Pour reprendre plus tard, utilisez **Modifier un stage** depuis le catalogue puis sélectionnez ce ZIP.
 4. Pour transmettre une modification, fournissez le ZIP de travail demandé.
 5. Après publication, ouvrez le stage dans ibCAN et faites une dernière vérification visuelle.
+
+Avant l’export, le Writer signale certains oublis possibles : contenu vide, titre manquant, variable non définie ou inutilisée, ressource locale absente ou inutilisée, sommaire manquant dans un stage complet, ou liste/tableau dont l’interprétation Markdown peut être perturbée par l’absence d’une ligne vide avant. Les avertissements associés à une ligne de contenu sont cliquables : ils ouvrent l’introduction ou l’exercice concerné et sélectionnent la ligne. Ces contrôles ne bloquent pas l’export et ne remplacent pas la relecture du stage.
 
 > L’export des données du lecteur depuis le panneau Paramètres du site est un export totalement différent : il sauvegarde les notes, variables personnalisées, progression et préférences du lecteur au format JSON. Il ne remplace pas l’export ZIP du Writer.
 
