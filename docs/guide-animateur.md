@@ -1,6 +1,6 @@
 # Guide express de l’animateur
 
-## À montrer aux apprenants :
+## À (dé)montrer aux apprenants :
 
 - **Se repérer** : le panneau **Navigation**, à gauche, donne accès au sommaire et aux ateliers ou exercices. Les flèches permettent de passer d’un exercice à l’autre. L’onglet **Illustration**, s’il existe, affiche l’image utile à l’exercice.
 - **Suivre les étapes** : cliquer sur la case d’une tâche la marque comme faite ; les tâches précédentes le sont aussi. La barre verte indique l’avancement (dans le sommaire également).

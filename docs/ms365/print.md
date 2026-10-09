@@ -1,7 +1,7 @@
 ---
 title: L'essentiel pour l'administrateur MS365
-editionDate: 25/09/2026
-gitVersion: f61d606
+editionDate: 08/10/2026
+gitVersion: e1254c3
 auteur: Renaud Wangler
 ---
 
