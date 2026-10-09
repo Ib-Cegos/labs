@@ -8,6 +8,12 @@ on:
     paths-ignore:
       - 'writer/**'
 
+  workflow_run:
+    workflows:
+      - Import des JSON
+    types:
+      - completed
+
 permissions:
   contents: read
   pages: write
@@ -16,10 +22,11 @@ permissions:
 concurrency:
   group: pages
   cancel-in-progress: true
-
 jobs:
-
   build:
+    if: >
+      github.event_name == 'push' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
 
     env:
