@@ -30,7 +30,7 @@ jobs:
         run: |
           git config user.name "ibCAN Import Bot"
           git config user.email "actions@github.com"
-          git add docs/
+          git add docs/ writer/
           if git diff --cached --quiet; then
             echo "No changes detected"
           else
