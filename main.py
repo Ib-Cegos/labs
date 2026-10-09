@@ -18,12 +18,24 @@ def define_env(env):
             exercices = sorted(ateliers[numero_atelier], key=lambda e: e['numero'])
             titre_atelier = tools.extraire_titre_atelier(exercices)
             html.append('<div class="somLab">')
-            if titre_atelier: html.append(f'<div class="somLabTit">Atelier {numero_atelier} : {titre_atelier}</div>')
-            else: html.append(f'<div class="somLabTit">Atelier {numero_atelier}</div>')
+            if len(exercices) > 1:
+                if titre_atelier: html.append(f'<div class="somLabTit">Atelier {numero_atelier} : {titre_atelier}</div>')
+                else: html.append(f'<div class="somLabTit">Atelier {numero_atelier}</div>')
+            else:
+                titre = tools.titre_atelier_ou_exercice(exercices)
+                exercice = exercices[0]
+                duree = f'<span class="somDuree">({exercice["duree"]} min)</span>' if exercice["duree"] else ""
+                html.append(
+                    f'<a class="somLabTit somLabLink somExLink" data-stage="{dossier_stage.name.lower()}" '
+                    f'data-exercice="{exercice["fichier"].rstrip("/")}" href="{exercice["fichier"]}">'
+                    f'Atelier {numero_atelier} : {titre}{duree}</a>')
+                html.append('</div>')
+                continue
             html.append('<ul>')
             for exercice in exercices:
                 html.append('<li class="somEx">')
-                html.append( f'<a class="somExLink" data-stage="{dossier_stage.name.lower()}" data-exercice="{exercice["fichier"].rstrip("/")}" href="{exercice["fichier"]}">Exercice {exercice["numero"]} - {exercice["titre"]}</a>' )
+                texte = f'Exercice {exercice["numero"]} - {exercice["titre"]}'
+                html.append( f'<a class="somExLink" data-stage="{dossier_stage.name.lower()}" data-exercice="{exercice["fichier"].rstrip("/")}" href="{exercice["fichier"]}">{texte}</a>' )
                 if exercice['duree']: html.append(f'<span class="somDuree">({exercice["duree"]} min)</span>')
                 html.append('</li>')
             html.append('</ul>')

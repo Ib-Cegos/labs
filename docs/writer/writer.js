@@ -300,7 +300,134 @@ function getExerciceLabel(exercice) {
 function clearDropIndicators(element) {
     element.classList.remove("writerNavDropBefore", "writerNavDropAfter");}
 
-async function exporterStage() {
+function echapperHtmlWriter(texte) {
+    return String(texte).replace(/[&<>"']/g, caractere => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[caractere]);}
+
+function trouverBlocsMarkdownSansLigneVide(contenu) {
+    const lignes = contenu.replace(/\r\n?/g, "\n").split("\n");
+    const problemes = [];
+    let fence = null;
+    const marqueurListe = /^ {0,3}(?:[-+*]|\d+[.)])\s+/;
+    const separateurTableau = /^ {0,3}\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?\s*$/;
+    for (let index = 0; index < lignes.length; index++) {
+        const ligne = lignes[index];
+        const fenceCourant = ligne.match(/^ {0,3}(`{3,}|~{3,})/);
+        if (fenceCourant) {
+            if (!fence) fence = {caractere: fenceCourant[1][0], longueur: fenceCourant[1].length};
+            else if (fenceCourant[1][0] === fence.caractere && fenceCourant[1].length >= fence.longueur) fence = null;
+            continue;}
+        if (fence || !ligne.trim() || index === 0 || !lignes[index - 1].trim()) continue;
+        const estListe = marqueurListe.test(ligne);
+        const estTableau = index + 1 < lignes.length
+            && ligne.includes("|")
+            && separateurTableau.test(lignes[index + 1]);
+        if (!estListe && !estTableau) continue;
+        const lignePrecedente = lignes[index - 1];
+        if (/^ {0,3}#{1,6}\s+/.test(lignePrecedente)
+            || /^ {0,3}(?:(?:[*_-]\s*){3,}|={3,})$/.test(lignePrecedente)
+            || /^\s*<\/?(?:address|article|aside|blockquote|details|div|dl|fieldset|footer|form|h[1-6]|header|hr|main|nav|ol|p|pre|section|summary|table|ul)\b/i.test(lignePrecedente)) continue;
+        if (estListe && marqueurListe.test(lignePrecedente)) continue;
+        if (estListe && /^\s+/.test(lignePrecedente)) {
+            let indexPrecedent = index - 1;
+            while (indexPrecedent >= 0 && lignes[indexPrecedent].trim()) {
+                if (marqueurListe.test(lignes[indexPrecedent])) break;
+                if (!/^\s+/.test(lignes[indexPrecedent])) {
+                    indexPrecedent = -1;
+                    break;}
+                indexPrecedent--;}
+            if (indexPrecedent >= 0 && marqueurListe.test(lignes[indexPrecedent])) continue;}
+        problemes.push({
+            type: estListe ? "liste" : "tableau",
+            ligne: index + 1
+        });}
+    return problemes;}
+
+function diagnostiquerStage(fichiers) {
+    const avertissements = [];
+    const ajouterAvertissement = (texte, section = null, ligne = null) => {
+        avertissements.push({texte, section, ligne});};
+    const ligneDuContenu = (contenu, position) => contenu.slice(0, position).split("\n").length;
+    const contenus = [{
+        label: "Introduction",
+        contenu: Stage.Introduction || "",
+        emplacement: {atelier: 0, exercice: 0}
+    }];
+    const exercices = Stage.Ateliers.flatMap(atelier => atelier.Exercices.map(exercice => ({
+        atelier,
+        exercice,
+        label: `Atelier ${atelier.Id} - Exercice ${exercice.Id}`,
+        contenu: exercice.Contenu || "",
+        emplacement: {atelier: atelier.Id, exercice: exercice.Id}
+    })));
+    const estStageComplet = exercices.length > 1;
+    if (estStageComplet && !/\{\{\s*sommaire\s*\(\s*\)\s*\}\}/i.test(Stage.Introduction || "")) {
+        ajouterAvertissement("L’introduction ne contient pas le marqueur de sommaire {{ sommaire() }}.");}
+
+    Stage.Ateliers.forEach(atelier => {
+        const exerciceUnique = atelier.Exercices.length === 1;
+        if (exerciceUnique) {
+            const exercice = atelier.Exercices[0];
+            if (estStageComplet && !atelier.Titre?.trim() && !exercice.Titre?.trim()) {
+                ajouterAvertissement(`L’atelier ${atelier.Id} et son exercice unique n’ont pas de titre.`);}
+        } else {
+            if (!atelier.Titre?.trim()) ajouterAvertissement(`L’atelier ${atelier.Id} n’a pas de titre.`);
+            atelier.Exercices.forEach(exercice => {
+                if (!exercice.Titre?.trim()) ajouterAvertissement(`L’exercice ${exercice.Id} de l’atelier ${atelier.Id} n’a pas de titre.`);});}
+        atelier.Exercices.forEach(exercice => {
+            const label = `Atelier ${atelier.Id} - Exercice ${exercice.Id}`;
+            const contenu = exercice.Contenu || "";
+            const section = {atelier: atelier.Id, exercice: exercice.Id};
+            if (!contenu.trim()) ajouterAvertissement(`${label} ne contient aucun contenu.`, section, 1);
+            contenus.push({label, contenu, emplacement: section});});});
+    contenus.forEach(section => {
+        trouverBlocsMarkdownSansLigneVide(section.contenu).forEach(probleme => {
+            const typeBloc = probleme.type === "liste" ? "La liste" : "Le tableau";
+            ajouterAvertissement(`${typeBloc} à la ligne ${probleme.ligne} de « ${section.label} » : l’absence d’une ligne vide avant peut perturber son interprétation Markdown.`, section.emplacement, probleme.ligne);});});
+
+    const variablesConnues = new Set([
+        ...Object.keys(Stage.Variables || {}),
+        ...Object.keys(SYSTEM_VARIABLES || {})
+    ].map(nom => nom.toLowerCase()));
+    const nomsTouchesClavier = new Set(["ctrl"]);
+    const variablesSignalees = new Set();
+    contenus.forEach(section => {
+        for (const correspondance of section.contenu.matchAll(/\[([A-Za-z][A-Za-z0-9-]*)\](?!\s*\()/g)) {
+            const nom = correspondance[1];
+            if (variablesConnues.has(nom.toLowerCase()) || nomsTouchesClavier.has(nom.toLowerCase())) continue;
+            const cle = nom.toLowerCase();
+            if (variablesSignalees.has(cle)) continue;
+            variablesSignalees.add(cle);
+            const ligne = ligneDuContenu(section.contenu, correspondance.index);
+            ajouterAvertissement(`La variable [${nom}] utilisée à la ligne ${ligne} de « ${section.label} » n’est pas définie.`, section.emplacement, ligne);}});
+    Object.keys(Stage.Variables || {}).forEach(nom => {
+        const nomEchappe = nom.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const referenceVariable = new RegExp(`\\[${nomEchappe}\\]`, "i");
+        if (!contenus.some(section => referenceVariable.test(section.contenu))) {
+            ajouterAvertissement(`La variable [${nom}] est définie, mais n’est utilisée dans aucun contenu.`);}});
+
+    const fichiersExistants = new Set(fichiers.map(path => path.replace(/\\/g, "/").toLowerCase()));
+    const ressourcesSignalees = new Set();
+    contenus.forEach(section => {
+        for (const correspondance of section.contenu.matchAll(/(?:\[ResourcesUrl\]\/|(?:\.\.\/)*ressources\/)([^\s)"'<>]+)/gi)) {
+            const chemin = correspondance[1].split(/[?#]/, 1)[0].replace(/[.,;`]+$/, "");
+            const cle = `ressources/${chemin}`.toLowerCase();
+            if (!chemin || fichiersExistants.has(cle) || ressourcesSignalees.has(cle)) continue;
+            ressourcesSignalees.add(cle);
+            const ligne = ligneDuContenu(section.contenu, correspondance.index);
+            ajouterAvertissement(`La ressource « ${chemin} » référencée à la ligne ${ligne} de « ${section.label} » est absente de l’archive.`, section.emplacement, ligne);}});
+    fichiers.filter(path => path.replace(/\\/g, "/").toLowerCase().startsWith("ressources/"))
+        .forEach(path => {
+            if (countFileReferences(path) === 0) {
+                ajouterAvertissement(`La ressource « ${path.substring(path.lastIndexOf("/") + 1)} » est présente dans l’archive, mais n’est référencée dans aucun contenu.`);}});
+    return avertissements;}
+
+async function exporterStage(confirmerAvertissements = false) {
     majStage();
     const referenceInput = document.getElementById("stageReference");
     const titleInput = document.getElementById("stageTitle");
@@ -312,6 +439,38 @@ async function exporterStage() {
     if (champsManquants.length) {
         dialog.show("Export impossible", `<p>Le stage doit posséder ${champsManquants.join(" et ")} avant de pouvoir être exporté.</p>`, [], "small");
         return;}
+    if (!confirmerAvertissements) {
+        const fichiers = await db.list();
+        const avertissements = diagnostiquerStage(fichiers);
+        if (avertissements.length) {
+            const liste = avertissements.map((avertissement, index) => {
+                const texte = echapperHtmlWriter(avertissement.texte);
+                const contenuCliquable = avertissement.section && avertissement.ligne
+                    ? `<button type="button" class="writerWarningLocation" data-warning-index="${index}">${texte}</button>`
+                    : texte;
+                return `<li>${contenuCliquable}</li>`;}).join("");
+            dialog.show(
+                "Vérifications avant export",
+                `<p>Quelques points méritent votre attention. Vous pouvez revenir à la rédaction ou poursuivre l’export.</p><ul>${liste}</ul>`,
+                [
+                    {label: "Revenir à la rédaction", action: () => dialog.close()},
+                    {label: "Exporter quand même", action: () => exporterStage(true)}
+                ],
+                "small");
+            document.querySelectorAll(".writerWarningLocation").forEach(bouton => {
+                bouton.addEventListener("click", async () => {
+                    const avertissement = avertissements[Number(bouton.dataset.warningIndex)];
+                    dialog.close();
+                    if (avertissement.section.atelier === 0) await selectIntroduction();
+                    else await selectExercice(avertissement.section.atelier, avertissement.section.exercice);
+                    const lignes = textareaSync.value.split("\n");
+                    const debutLigne = lignes.slice(0, avertissement.ligne - 1).reduce((total, ligne) => total + ligne.length + 1, 0);
+                    const finLigne = debutLigne + (lignes[avertissement.ligne - 1]?.length ?? 0);
+                    textareaSync.focus();
+                    textareaSync.setSelectionRange(debutLigne, finLigne);
+                    selection.save();});
+            });
+            return;}}
     const zip = new JSZip();
     zip.file("content.json", JSON.stringify(Stage, null, 2));
     const fichiers = await db.list();
@@ -405,8 +564,12 @@ function sortStage() {
     Stage.Ateliers.forEach(atelier => {
         atelier.Exercices.sort((a, b) => a.Id - b.Id);});}
 
+function estPseudoStage(stage = Stage) {
+    return stage.Ateliers.length === 1 && stage.Ateliers[0].Exercices.length === 1;}
+
 function construireNavigation() {
     const nav = document.getElementById("writerNavigation");
+    document.getElementById("writerMain").classList.toggle("writerPseudoStage", estPseudoStage());
     let html = '<div id ="writerNavIntroduction">Introduction</div>';
     Stage.Ateliers.forEach(atelier => {
         html += `<div class="writerNavAtelier" data-atelier="${atelier.Id}" draggable="true">📂 Atelier ${atelier.Id}</div>`;
@@ -513,6 +676,10 @@ function afficherExercice() {
         document.getElementById("writerNavIntroduction").classList.remove("writerNavSelected");
         document.getElementById("ExerciceHeader").style.display = "flex";
         const atelier = getCurrentAtelier();
+        document.getElementById("writerAtelierTitleLabel").style.display = estPseudoStage() ? "none" : "";
+        document.getElementById("writerAtelierTitle").style.display = estPseudoStage() ? "none" : "";
+        document.getElementById("writerExerciceTitleLabel").style.display = atelier.Exercices.length === 1 ? "none" : "";
+        document.getElementById("writerExerciceTitle").style.display = atelier.Exercices.length === 1 ? "none" : "";
         if (atelier.Exercices.length <= 1)  document.getElementById("btnDeleteExercice").style.display = "none";
         else document.getElementById("btnDeleteExercice").style.display = "flex";
         const exercice = getCurrentExercice();
@@ -1557,7 +1724,7 @@ let Stage = storage.read('Stage',{ Titre: "", "Auteur": "", "Variables": {}, "In
 sortStage();
 systemVariableRefresh();
 let Current = storage.read ('Current', {Atelier : 0, Exercice : 0, Contenu : Stage.Introduction});
-if (Stage.Ateliers.length === 1 && Stage.Ateliers[0].Exercices.length === 1) {
+if (estPseudoStage()) {
     const atelier = Stage.Ateliers[0];
     const exercice = atelier.Exercices[0];
     const currentMatches = Current && typeof Current === "object"
@@ -1601,7 +1768,7 @@ document.getElementById("btnAddSommaire").addEventListener("click",insertSommair
 document.getElementById("btnAddAtelier").addEventListener("click", addAtelier);
 document.getElementById("btnAddExercice").addEventListener("click", addExercice);
 document.getElementById("btnVariables").addEventListener("click", openVariables);
-document.getElementById("btnExport").addEventListener("click", exporterStage);
+document.getElementById("btnExport").addEventListener("click", () => exporterStage());
 document.getElementById("btnHelp").addEventListener("click", openWriterHelp);
 document.getElementById("btnDeleteExercice").addEventListener("click", confirmDeleteExercice);
 document.getElementById("btnDeleteAtelier").addEventListener("click", confirmDeleteAtelier);

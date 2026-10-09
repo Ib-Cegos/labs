@@ -8,6 +8,8 @@
 .somLab { margin-bottom: 2rem; }
 .somLab ul { margin-top: .25rem; }
 .somLabTit { font-size: 1.4em; font-weight: 600; margin-bottom: .25rem; }
+#ibContent .somLabLink { display: inline-block; max-width: 100%; padding: 0; border-radius: 0; color: inherit; text-decoration: none; background: linear-gradient(to right, var(--ib-progress-background) var(--ib-progress, 0%), transparent var(--ib-progress, 0%)); }
+#ibContent .somLabLink .somDuree { color: var(--ib-text-secondary); font-size: .65em; }
 .somEx { margin-bottom: 0.3rem; }
 .somExLink { text-decoration: none; display: inline-block; padding: .2rem .4rem; border-radius: 4px; background: linear-gradient( to right, var(--ib-progress-background) var(--ib-progress, 0%), transparent var(--ib-progress, 0%) ); }
 .somExLink.ibHasNote { position: relative; }

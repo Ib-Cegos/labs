@@ -1,7 +1,6 @@
 from pathlib import Path
 import json
 import zipfile
-import shutil
 
 WRITER_DIR = Path("writer")
 DOCS_DIR = Path("docs")

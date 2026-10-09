@@ -136,7 +136,7 @@ Les autres images et fichiers du stage sont des ressources ordinaires. Les réf�
 
 Les hooks du processeur de contenu agissent à plusieurs étapes :
 
-1. **Markdown** : remplacent la variable système, adaptent le titre des pages de stage et d’exercice, ajoutent la durée et gèrent le cas d’un stage autonome.
+1. **Markdown** : remplacent la variable système, adaptent le titre des pages de stage et d’exercice, ajoutent la durée et gèrent les stages autonomes et les ateliers à exercice unique.
 2. **Contexte de page** : fournissent le template à utiliser, les informations Git, la navigation, le contenu d’aide et la présence/URL d’une illustration.
 3. **HTML rendu** : injectent les métadonnées nécessaires au JavaScript, ajoutent les commandes de copie, transforment les éléments numérotés en tâches interactives, convertissent les variables, signalent les erreurs YAML et construisent le panneau Paramètres.
 
@@ -151,7 +151,11 @@ Le code reconnaît un dossier comme autonome lorsqu’il contient exactement un 
 - le titre du README sert de titre à l’exercice ;
 - l’impression est construite autour de cet exercice.
 
-### 5.3 Publication continue
+### 5.3 Ateliers à exercice unique
+
+Dans un stage qui contient plusieurs exercices au total, un atelier à exercice unique est affiché comme une entrée directe « Atelier » dans le sommaire et la navigation. Son titre reprend le titre défini pour l’atelier, avec le titre de l’exercice comme repli. Le document imprimable reprend cette présentation. Les ateliers à plusieurs exercices gardent leur hiérarchie actuelle.
+
+### 5.4 Publication continue
 
 Le workflow `.github/workflows/publish.yml` se déclenche sur les pushes vers `main` ou `travail`, sauf lorsque les seuls changements concernent `writer/**`. Il :
 

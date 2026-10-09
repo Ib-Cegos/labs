@@ -44,6 +44,8 @@ Le bouton 📸 associe une illustration à l’exercice : elle reste accessible 
 
 <button class="ibActionButton btnExport">Exporter</button> télécharge une archive ZIP contenant le stage et ses ressources. L’export exige une référence et un titre. Conseil : exportez régulièrement votre travail.
 
+Avant l’export, le Writer signale les contenus vides, les titres manquants, les variables non définies ou inutilisées, les ressources absentes ou inutilisées et les listes ou tableaux dont l’interprétation Markdown peut être perturbée par l’absence d’une ligne vide avant eux. Il peut aussi rappeler d’ajouter le sommaire dans l’introduction d’un stage complet. Les avertissements associés à une ligne de contenu sont cliquables : ils ouvrent l’introduction ou l’exercice concerné et sélectionnent la ligne. Ces avertissements ne bloquent pas l’export ; vous pouvez corriger les points signalés ou exporter quand même.
+
 ## Besoin de plus d’aide ?
 
 Le <a href="../guide-redacteur/" title="Guide du rédacteur ibCAN">Guide du rédacteur ibCAN</a> détaille la rédaction, le Markdown et la publication. Pour le PDF, utilisez l’impression du navigateur et désactivez l’option **En-têtes et pieds de page** si elle est proposée.

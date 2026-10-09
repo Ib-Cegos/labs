@@ -1,7 +1,7 @@
 ---
 title: Administration de Microsoft 365
-editionDate: 02/10/2026
-gitVersion: f329b32
+editionDate: 08/10/2026
+gitVersion: e1254c3
 auteur: Renaud Wangler
 ---
 
@@ -24,8 +24,7 @@ L'équipe projet de Adatum a décidé de mettre en œuvre Microsoft 365  dans un
     - <a class='ibPrintTocLink' href='#a2e3'>Exercice 3 - Gestion des groupes</a>
     - <a class='ibPrintTocLink' href='#a2e4'>Exercice 4 - Gestion des utilisateurs et des groupes avec Windows PowerShell</a>
     - <a class='ibPrintTocLink' href='#a2e5'>Exercice 5 - Délégation d'administration</a>
-- Atelier 3 - Connectivité à Microsoft 365
-    - <a class='ibPrintTocLink' href='#a3e1'>Exercice 1 - Utilisation de Microsoft 365 connectivity analyzer</a>
+- <a class='ibPrintTocLink' href='#a3e1'>Atelier 3 : Connectivité à Microsoft 365</a>
 - Atelier 4 - Configuration de la synchronisation d'identités
     - <a class='ibPrintTocLink' href='#a4e1'>Exercice 1 - Préparation de la synchronisation d'identités</a>
     - <a class='ibPrintTocLink' href='#a4e2'>Exercice 2 - Mise en oeuvre de la synchronisation d'identités</a>
@@ -37,8 +36,7 @@ L'équipe projet de Adatum a décidé de mettre en œuvre Microsoft 365  dans un
     - <a class='ibPrintTocLink' href='#a6e1'>Exercice 1 - Paramètres de transport des messages</a>
     - <a class='ibPrintTocLink' href='#a6e2'>Exercice 2 - Configuration de la protection de la messagerie</a>
     - <a class='ibPrintTocLink' href='#a6e3'>Exercice 3 - Configuration des stratégies d'accès client</a>
-- Atelier 7 - Déploiement de Microsoft Teams
-    - <a class='ibPrintTocLink' href='#a7e1'>Exercice 1 - Configuration de Microsoft Teams</a>
+- <a class='ibPrintTocLink' href='#a7e1'>Atelier 7 : Déploiement de Microsoft Teams</a>
 - Atelier 8 - Configuration de Sharepoint Online
     - <a class='ibPrintTocLink' href='#a8e1'>Exercice 1 - Configuration des paramètres de SharePoint Online</a>
     - <a class='ibPrintTocLink' href='#a8e2'>Exercice 2 - Configuration de sites SharePoint Online</a>
@@ -46,8 +44,7 @@ L'équipe projet de Adatum a décidé de mettre en œuvre Microsoft 365  dans un
 - Atelier 9 - Autres outils Microsoft 365
     - <a class='ibPrintTocLink' href='#a9e1'>Exercice 1 - Viva Engage</a>
     - <a class='ibPrintTocLink' href='#a9e2'>Exercice 2 - OneDrive for Business</a>
-- Atelier 10 - Sécurité et conformité dans Microsoft 365
-    - <a class='ibPrintTocLink' href='#a10e1'>Exercice 1 - Création de labels de sensibilité</a>
+- <a class='ibPrintTocLink' href='#a10e1'>Atelier 10 : Sécurité et conformité dans Microsoft 365</a>
 - Atelier 11 - Surveillance et dépannage de Microsoft 365
     - <a class='ibPrintTocLink' href='#a11e1'>Exercice 1 - Etat de santé du service Microsoft 365</a>
     - <a class='ibPrintTocLink' href='#a11e2'>Exercice 2 - Dépannage de flux de messages</a>
@@ -885,8 +882,7 @@ Dans cette tâche, Dominique va vérifier la délégation administrative mise en
 1. Notez que, vu que Leanna s'est vu affecter un rôle administratif, elle peut accéder au centre d'administration : La tuile **Admin** Apparaît à gauche sur la page d'accueil. Cliquez sur **Admin** pour ouvrir le **Microsoft 365 admin center** dans un nouvel onglet.
 1. Sur le portail **Microsoft 365 admin center**, sélectionnez le groupe d'options **Users** dans le menu de navigation pour cliquer sur l'option **Active users**.
 1. De par son rôle **User admin**, Leanna a la permission de réinitialiser les mots de passe des utilisateurs. Leanna a récemment été contactée par **Elvis Cress** et **Alan Yoo**, chacun lui indiquant que son mot de passe aurait été compromis. La stratégie de sécurité de Adatum préconise dans ce cas que Leanna réinitialise le mot de passe des utilisateurs dont le compte a pu être compromis et exige que les utilisateurs changent ensuite leur mot de passe à la prochaine connexion.  
-Dans la liste **Active users**, notez que, en passant la souris sur les lignes représentant les comptes utilisateurs, une clef apparait à droite du nom de l'utilisateur : c'est l'icône **Reset a password**. Cliquez sur la clef correspondant à la ligne de  **Elvis Cress**.
-1. Dans le panneau **Reset password** de Elvis, décochez la case **Automatically create a password**, et saisissez **```Pa55w.rd```** dans le champ **Password**. Si nécessaire, cochez la case **Require this user to change their password when they first sign in**.
+1. Dans la liste **Active users**, notez que, en passant la souris sur les lignes représentant les comptes utilisateurs, une clef apparait à droite du nom de l'utilisateur : c'est l'icône **Reset a password**. Cliquez sur la clef correspondant à la ligne de  **Elvis Cress**.
 1. Cliquez sur **Reset password**.
 1. Vous devriez recevoir un message d'erreur indiquant que vous ne pouvez réinitialiser le mot de passe de Elvis car il s'est vu affecté un rôle administratif. En effet, Elvis est *Billing Administrator*. Comme seul le *Global Admin* permet de réinitialiser le mot de passe d'un autre administrateur, Leanna devra demander à Dominique de s'occuper du cas de Elvis. Cliquez sur **Close**.
 1. Si un sondage d'option s'affiche, fermez-le en cliquant sur **Cancel**.
@@ -909,13 +905,10 @@ Dans la liste **Active users**, notez que, en passant la souris sur les lignes r
 	Vous venez de vérifier que Leila (ou quelqu'un ayant obtenu son nom de connexion et son mot de passe) ne peut ouvrir de session.
 1. Fermez maintenant la fenêtre de navigation privée de **Edge** et basculez sur votre autre fenêtre **Edge**, dans laquelle vous devriez être resté connecté sur l'environnement **Microsoft 365** en tant que Dominique Skyetson. La liste **Active users** devrait être affichée dans le portail **Microsoft 365 admin center** depuis les précédentes tâches.
 1. Après investigation, l'équipe sécurité de Adatum a déterminé que le compte de Leila Macdonald's n'a finalement pas été compromis ; Il a ainsi été demandé à Dominique de supprimer le blocage du compte de Leila.  
-Répétez les étapes vues précédemment pour débloquer le compte de Leila. (Notez que le panneau **Block sign-in** s'intitulera cette fois-ci **Unblock sign-in**).
-1. Dans le panneau **Unblock sign-in**, la case à cocher **Block this user from signing in** est actuellement cochée. Décochez-la puis cliquez sur **Save changes**.
+    Répétez les étapes vues précédemment pour débloquer le compte de Leila. (Notez que le panneau **Block sign-in** s'intitulera cette fois-ci **Unblock sign-in**).
 1. Une fois que le compte de Leila a été débloqué, cliquez sur le **X** en haut à droite pour fermer le panneau **Unblock sign-in**.
 
-<!-- IBCAN_PAGE_BREAK|a3e1 --># Atelier 3 - Connectivité à Microsoft 365
-
-## Exercice 1 - Utilisation de Microsoft 365 connectivity analyzer
+<!-- IBCAN_PAGE_BREAK|a3e1 --># Atelier 3 : Connectivité à Microsoft 365
 
 <div class="ibPrintNotes" data-exercise="a3e1" hidden></div>
 
@@ -957,7 +950,7 @@ vous allez maintenant utiliser l'outil *Microsoft Test Connectivity* pour vérif
 	> Si vous recevez un message concernant le fait d'avoir réalisé trop de tests les 60 dernières secondes, attendez quelques instant avant de réessayer.
 
 1. Lorsqu'apparait le message **The Outlook connectivity test completed successfully** message, cliquez sur la flèche basse **V** à gauche de **Test Steps** (cliquez sur le texte **Test Steps** lui-même ne fonctionne pas) afin de parcourir les étapes vérifiées lors de ce test de connectivité.  
-Chaque étape a une mention **Test Steps** que vous pouvez utiliser pour consulter des opérations détaillées. 
+    Chaque étape a une mention **Test Steps** que vous pouvez utiliser pour consulter des opérations détaillées. 
 1. Fermez votre navigateur Internet.
 
 <!-- IBCAN_PAGE_BREAK|a4e1 --># Atelier 4 - Configuration de la synchronisation d'identités
@@ -1041,6 +1034,7 @@ Dans cette tâche, vous allez utiliser l'assistant d'installation de Entra Conne
 ```powershell
 iex ([Text.Encoding]::UTF8.GetString((Invoke-WebRequest '[resourcesUrl]/enabletls12.ps1' -UseBasicParsing).Content))
 ```
+
 1. Une fois que la machine LON-DC1 a redémarré, connectez-vous dessus avec le compte ```adatum\administrator``` et le mot de passe ```Pa55w.rd```.
 
 	> Il pourra être intéressant de (re)faire le ménage dans le démarrage du réseau du contrôleur de domaine avant de poursuivre les manipulations. Demandez conseil à votre formateur/formatrice le cas échéant...
@@ -1746,9 +1740,7 @@ Dans cette tâche, vous allez configurer une stratégie de boite aux lettres acc
 1. Dans le champ **Password recycle count**, entrez une valeur de **5**.
 1. Cliquez sur **Save** et fermez le panneau **Edit mobile device mailbox policy** une fois vos changements sauvegardés.
 
-<!-- IBCAN_PAGE_BREAK|a7e1 --># Atelier 7 - Déploiement de Microsoft Teams
-
-## Exercice 1 - Configuration de Microsoft Teams
+<!-- IBCAN_PAGE_BREAK|a7e1 --># Atelier 7 : Déploiement de Microsoft Teams
 
 <div class="ibPrintNotes" data-exercise="a7e1" hidden></div>
 
@@ -2369,9 +2361,7 @@ Maintenant que la synchronisation de fichiers est activée avec *OneDrive for Bu
 1. Dans la boite de dialogue **Stop sharing?**, cliquez de nouveau sur **Stop sharing**.
 1. Fermez la boite de dialogue **Manage Access**. Notez que, dans la liste des fichier, la colonne **Sahring** est repassée à **Private** (si ce n'est pas le cas automatiquement, rafraichissez la page du navigateur Internet).
 
-<!-- IBCAN_PAGE_BREAK|a10e1 --># Atelier 10 - Sécurité et conformité dans Microsoft 365
-
-## Exercice 1 - Création de labels de sensibilité
+<!-- IBCAN_PAGE_BREAK|a10e1 --># Atelier 10 : Sécurité et conformité dans Microsoft 365
 
 <div class="ibPrintNotes" data-exercise="a10e1" hidden></div>
 

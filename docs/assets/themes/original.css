@@ -164,6 +164,7 @@ body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", 
 .ibNavExRef { font-weight: 500; line-height: 1.2; }
 .ibNavExTitre { font-size: .85em; color: var(--ib-nav-exercice-title); line-height: 1.25; margin-top: .05rem; }
 .ibNavExercice:hover { background: var(--ib-nav-exercice-hover); }
+.ibNavAtelierLink { margin: 1rem 0 .5rem 0; }
 .ibNavCurrent { background: var(--ib-nav-current-background); color: var(--ib-nav-current-text); }
 .ibNavCurrent .ibNavExRef, .ibNavCurrent .ibNavExTitre { color: inherit; }
 .ibNavCurrent .ibNavExRef { font-weight: 600; }

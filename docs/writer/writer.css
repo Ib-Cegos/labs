@@ -1,4 +1,5 @@
 #writerMain { display: flex; overflow: hidden;}
+#writerMain.writerPseudoStage #writerNavigation { display: none; }
 #writerEditor {flex: 1; min-width: 0; display: flex; flex-direction: column;}
 .ibActionButton { background: var(--ib-color-writer) !important; }
 .ibActionButton:hover { background: var(--ib-color-writer-hover); }
@@ -38,6 +39,8 @@ body {color: var(--ib-color-text)}
 #ibWriterDialogButtons Button { min-width: 100px; padding: .5rem 1rem; border: none; border-radius: 6px; cursor: pointer; background: var(--ib-color-writer); color: white; font-weight: 600; }
 #ibWriterDialogButtons Button:hover {opacity: .9;}
 .ibDialogButtonDelete { background: #dc2626 !important;}
+.writerWarningLocation { padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; text-decoration: underline; text-decoration-style: dotted; cursor: pointer;}
+.writerWarningLocation:hover { color: var(--ib-color-link); }
 
 .ibWriterStyleHandle {cursor: move; user-select: none; color: var(--ib-action-button); font-weight: bold;}
 #ibWriterStyleBar { position: fixed; z-index: 9999; display: none; align-items: center; gap: .35rem; padding: .5rem; background: var(--ib-color-writer); border: 2px solid color-mix(in srgb, var(--ib-color-writer) 70%,white);border-radius: .75rem;box-shadow:0 4px 12px rgba(0,0,0,.25);}

@@ -1,4 +1,5 @@
 ---
+Auteur: Renaud Wangler
 Variables:
     onMicrosoftDomain:
         lib: Préfixe du tenant
@@ -7,7 +8,7 @@ Variables:
     godeployDomain:
         lib: Domaine DNS de l'entreprise
         defaut: labXXXXX
-        aide: Peut être trouvé sous le nom "Lab Domain" dans l'onglet "DNS" du volet de gauche de votre environnement goDeploy.        
+        aide: Peut être trouvé sous le nom "Lab Domain" dans l'onglet "DNS" du volet de gauche de votre environnement goDeploy.
     MODPassword:
         lib: Mot de passe de l'administrateur du tenant
         defaut: MOD Admin Password
@@ -18,17 +19,26 @@ Variables:
         defaut: ibForm@tion
     365Licence:
         defaut: Microsoft 365 E5 (no Teams)
-Auteur: Renaud Wangler
+    PrenomNomAdmin:
+        name: PrenomNomAdmin
+        defaut: Dominique Skyetson
+        aide: 
+    PrenomAdmin:
+        name: PrenomAdmin
+        defaut: Dominique
+        aide: 
 ---
+
+# L'essentiel pour l'administrateur MS365
 
 L'entreprise **ib Cegos Workshop (ICW)** héberge actuellement un environnement informatique *classique*, dans ses datacenters, qui comporte diverses applications historiques (comme Microsoft Exchange par exemple). L'entreprise a cependant récemment décidé de tester la migration vers les outils présents dans l'offre Microsoft 365, y voyant une opportunité économique ainsi qu'une opportunité d'améliorer la qualité du service apporté par le SI aux utilisateurs du métier.  
 
-Au fil des ateliers de ce stage, vous allez prendre l'identité de Dominique Skyetson, membre de l'équipe d'administration IT de ICW.  
-L'équipe projet de ib Cegos Workshop a donc décidé de mettre en oeuvre Microsoft 365 dans un projet pilote, afin de monter en compétence sur les produits et de voir les besoins métiers qui pourraient être couverts par les outils de l'offre Microsoft 365.  
+Au fil des ateliers de ce stage, vous allez prendre l'identité de [PrenomNomAdmin], membre de l'équipe d'administration IT de ICW.  
+L'équipe projet de ib Cegos Workshop a donc décidé de mettre en œuvre Microsoft 365 dans un projet pilote, afin de monter en compétence sur les produits et de voir les besoins métiers qui pourraient être couverts par les outils de l'offre Microsoft 365.  
 
 {{ sommaire() }}
 
 ## Conseils génériques
-1. Pour réaliser les ateliers de ce stage, vous allez utiliser un environnement de stage fourni par notre partenaire *goDeploy*. Cet environnement, qui inclut un compte de test Microsoft 365, comporte des instructions d'atelier (en anglais) que nous vous invitons à remplacer par les présentes instructions.
-1. Si vous constatez des dérives entre les présentes instructions et les interfaces que vous rencontrez pendant votre atelier, n'hésitez pas à prévenir votre formateur/trice pour que les présentes instructions soient mises à jour.  
-1. Les ateliers doivent être réalisés dans l'ordre prévu pour éviter les surprises.
+- Pour réaliser les ateliers de ce stage, vous allez utiliser un environnement de stage fourni par notre partenaire *goDeploy*. Cet environnement, qui inclut un compte de test Microsoft 365, comporte des instructions d'atelier (en anglais) que nous vous invitons à remplacer par les présentes instructions.
+- Si vous constatez des dérives entre les présentes instructions et les interfaces que vous rencontrez pendant votre atelier, n'hésitez pas à prévenir votre formateur/trice pour que les présentes instructions soient mises à jour.  
+- Les ateliers doivent être réalisés dans l'ordre prévu pour éviter les surprises.

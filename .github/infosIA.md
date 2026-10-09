@@ -6,20 +6,6 @@ Le dépôt est public : https://github.com/ib-Cegos/labs
 
 Si nécessaire, je peux fournir le contenu complet des fichiers concernés par l'évolution sur laquelle nous travaillons.
 
----
-
-# Ateliers autonomes
-Cas particulier : 1 atelier contenant 1 seul exercice (donc "a1e1.md" uniquement) : Le moteur considère alors qu'il s'agit d'un atelier autonome.  
-Conséquences :
-
-- le README reste obligatoire ;
-- le README redirige automatiquement vers `a1e1` ;
-- la navigation spécifique est masquée ;
-- le titre de `a1e1.md` est remplacé par le premier titre du README ;
-- l'impression utilise également le titre du README.
-
----
-
 ## Pagination du sommaire du document imprimé
 La pagination automatique du sommaire a fait l'objet de plusieurs expérimentations :
 
