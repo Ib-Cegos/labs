@@ -22,11 +22,11 @@ Variables:
     PrenomNomAdmin:
         name: PrenomNomAdmin
         defaut: Dominique Skyetson
-        aide: 
+        aide: None
     PrenomAdmin:
         name: PrenomAdmin
         defaut: Dominique
-        aide: 
+        aide: None
 ---
 
 # L'essentiel pour l'administrateur MS365
