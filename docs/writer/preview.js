@@ -101,6 +101,18 @@ async function renderPreview() {
     contenu = await resolveInternalImages(contenu);
     contenu = replaceVariables(contenu);
     document.getElementById("ibContent").innerHTML = contenu;
+    document.getElementById("ibContent").querySelectorAll("a").forEach(link => {
+        /* Désactiver les liens locaux inutiles dans la prévisualisation */     
+        const href = link.getAttribute("href") || "";
+        if (href.startsWith("../") || /^a\d+e\d+\/$/i.test(href)) {
+            link.addEventListener("click", event => { event.preventDefault();});
+            const match = href.match(/^(?:\.\.\/)?a(\d+)e(\d+)\/$/i);
+            if (match) {
+                const atelierId = parseInt(match[1], 10);
+                const exerciceId = parseInt(match[2], 10);
+                const exercice = Stage.Ateliers.find(a => a.Id === atelierId)?.Exercices.find(e => e.Id === exerciceId);
+                if (exercice) { link.title = `Renvoi interne vers "Atelier ${atelierId} - Exercice ${exerciceId} - ${exercice.Titre}"`;}}}
+        else {link.target = "_blank"; link.rel = "noopener";}});
     contenu = markLabTasks(document.getElementById("ibContent"));}
 
 function buildSommaire() {

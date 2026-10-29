@@ -36,6 +36,14 @@ async function restoreEditorState(state) {
     selection.restore(state.start, state.end);
     textareaSync.scrollTop = state.scrollTop ?? 0;}
 
+function resetEditorState() {
+    UndoStack = [];
+    RedoStack = [];
+    saveUndoStacks();
+    textareaSync.setSelectionRange(0, 0);
+    textareaSync.scrollTop = 0;}
+
+
 function saveUndoStacks() {
     session.write("Undo", UndoStack);
     session.write("Redo", RedoStack);
@@ -828,6 +836,7 @@ function updateStyleBar() {
 
 async function selectExercice(atelier, exercice) {
     if (atelier == Current.Atelier && exercice == Current.Exercice) return;
+    resetEditorState();
     majStage();
     Current.Atelier = atelier;
     Current.Exercice = exercice;
@@ -836,6 +845,7 @@ async function selectExercice(atelier, exercice) {
 
 async function selectIntroduction() {
     if (Current.Atelier == 0) return;
+    resetEditorState();
     majStage();
     Current.Atelier = 0;
     Current.Exercice = 0;
@@ -1229,7 +1239,7 @@ function selectInternalOption() {
     const prefix = Current.Atelier === 0 ? "" : "../";
     linkUrl.value = prefix + selector.value + '/';
     const linkText = document.getElementById('linkText');
-    if (linkText.value === '') linkText.value=selector.options[selector.selectedIndex].text;}
+    if (linkText.dataset.auto === "true") linkText.value = selector.options[selector.selectedIndex].text;}
 
 function toggleInternal() {
      const button =  document.querySelector(".insertLinkSwitch");
@@ -1263,10 +1273,11 @@ function insertLink() {
     const isUrl = /^https?:\/\/\S+$/i.test(selected);
     const textValue = isUrl ? "" : selected;
     const urlValue = isUrl ? selected : "";
+    const autoText = textValue === "";
     const html = `
     <div class="linkEditor">
         <div class="variableField">
-            <label>Texte</label><input id="linkText" value="${textValue.replace(/"/g,'&quot;')}">
+            <label>Texte</label><input id="linkText" value="${textValue.replace(/"/g,'&quot;')}" data-auto="${autoText}">
         </div>
         <div class="variableField" id="ExternalLink">
             <label>Adresse</label><input id="linkUrl" value="${urlValue.replace(/"/g,'&quot;')}">
@@ -1280,6 +1291,8 @@ function insertLink() {
     buttons.push ({label : "Annuler", action : () => dialog.close()},{label : "Insérer", action : () => saveLink(start,end)});
     dialog.show("Insertion d'un lien", html, buttons, "small");
     setTimeout(() => {
+        const linkText = document.getElementById("linkText");
+        linkText?.addEventListener("input", () => {linkText.dataset.auto = "false";});
         if (isUrl) document.getElementById("linkText")?.focus();
         else document.getElementById("linkUrl")?.focus();},0);}
 
