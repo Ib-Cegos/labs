@@ -39,6 +39,6 @@ L'équipe projet de ib Cegos Workshop a donc décidé de mettre en œuvre Micros
 {{ sommaire() }}
 
 ## Conseils génériques
-- Pour réaliser les ateliers de ce stage, vous allez utiliser un environnement de stage fourni par notre partenaire *goDeploy*. Cet environnement, qui inclut un compte de test Microsoft 365, comporte des instructions d'atelier (en anglais) que nous vous invitons à remplacer par les présentes instructions.
+- Pour réaliser les ateliers de ce stage, vous allez utiliser un environnement de stage fourni par notre partenaire *goDeploy*. Cet environnement, qui inclut un compte de test Microsoft 365, comporte des instructions d'atelier (en anglais) que nous n'utiliserons pas dans notre formation et vous invitons à remplacer par les présentes instructions.
 - Si vous constatez des dérives entre les présentes instructions et les interfaces que vous rencontrez pendant votre atelier, n'hésitez pas à prévenir votre formateur/trice pour que les présentes instructions soient mises à jour.  
-- Les ateliers doivent être réalisés dans l'ordre prévu pour éviter les surprises.
+- Attention : Les ateliers de cette formation se suivent et doivent être réalisés dans l'ordre prévu pour éviter les surprises.
