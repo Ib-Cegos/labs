@@ -112,6 +112,7 @@ Variables:
 - `defaut` est la valeur utilisée initialement dans le texte de tous les exercices du stage.
 - la présence de `lib` rend la variable modifiable par le lecteur et fait apparaître son champ dans Paramètres ;
 - sans `lib`, la variable est une valeur fixe du contenu ;
+    (les variables sans `lib` ne sont pas exposées visuellement comme variables au lecteur.)
 - les occurrences `[NomVariable]` sont converties en éléments que le JavaScript peut actualiser.
 
 Le moteur fournit aussi la variable système `ResourcesUrl`, dont la valeur pointe vers le dossier de ressources du stage sur le site.

@@ -35,11 +35,13 @@ function updateSyncButton() {
 function replaceVariables(content) {
     Object.entries(Stage.Variables).forEach(([name, variable]) => {
         const regex = new RegExp(`\\[${name}\\]`, "gi");
-        content = content.replace(regex, `<span class="ibVariable" title="${variable.lib || ""}">${PreviewShowVariableValues ? variable.defaut || "" : '['+name+']'}</span>`);});
+        const valeur = PreviewShowVariableValues ? (variable.defaut || "") : `[${name}]`;
+        const remplacement = variable.lib ? `<span class="ibVariable" title="${variable.lib || ""}">${valeur}</span>` : valeur;
+        content = content.replace(regex, remplacement);});
     Object.entries(SYSTEM_VARIABLES).forEach(([name, variable]) => {
         const regex = new RegExp(`\\[${name}\\]`, "gi");
         content = content.replace(regex, variable.defaut);});
-    return content;}
+    return content;}    
 
 function variableButton() {
     const variButton = document.getElementById("btnPreviewVariables");

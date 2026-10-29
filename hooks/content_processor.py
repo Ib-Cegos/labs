@@ -123,7 +123,11 @@ def remplacer_variables(html, meta):
     for nom, definition in variables.items():
         nom_normalise = nom.lower()
         valeur_defaut = definition.get( "defaut", nom )
-        html = re.sub( rf"\[{re.escape(nom)}\]", ( f'<span class="ibVariable" data-variable="{nom_normalise}">{valeur_defaut}</span>' ), html, flags=re.IGNORECASE )
+        if definition.get("lib"):
+            remplacement = (f'<span class="ibVariable" data-variable="{nom_normalise}">{valeur_defaut}</span>')
+        else:
+            remplacement = valeur_defaut
+        html = re.sub( rf"\[{re.escape(nom)}\]", remplacement, html, flags=re.IGNORECASE )
     return html
 
 def injecter_variables(html, page, meta):
