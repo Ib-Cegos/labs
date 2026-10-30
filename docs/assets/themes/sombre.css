@@ -34,6 +34,7 @@
   --ib-input-background: #2d2d2d; --ib-input-border: #555555; --ib-input-focus-shadow: rgba(59,156,255,.20);
   --ib-disabled-background: #3a3a3a; --ib-disabled-text: #7a7a7a;
   --ib-input-text: #e5e5e5;
+  --ib-input-placeholder: #9ca3af;
   /* VARIABLES PERSONNELLES */
   --ib-variable-border: #3b9cff; --ib-variable-intro-background: #1f2937;
   --ib-variable-editor-background: #252526; --ib-variable-editor-border: #404040;

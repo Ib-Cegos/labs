@@ -967,7 +967,7 @@ async function moveExercice(aSource, aTarget, eSource, eTarget, before = false, 
 
 function insertSommaire() {
     if (Current.Atelier != 0) return;
-    const marqueur = "{{ Sommaire() }}";
+    const marqueur = "{{ sommaire() }}";
     const regexSommaire = /\{\{\s*sommaire\s*\(\s*\)\s*\}\}/i;
     let position = textareaSync.selectionStart;
     if (position == null) position = textareaSync.value.length;
@@ -1452,6 +1452,26 @@ function countFileReferences(path) {
             const isCurrent = atelier.Id == Current.Atelier && exercice.Id == Current.Exercice;
             count += countInContent(isCurrent ? Current.Contenu : exercice.Contenu);});});
     return count;}
+async function pasteImage() {
+    try {
+        const clipboardItems = await navigator.clipboard.read();
+        for (const item of clipboardItems) {
+            const imageType = item.types.find(type => type.startsWith("image/"));
+            if (!imageType) continue;
+            const blob = await item.getType(imageType);
+            const extension =
+                imageType === "image/jpeg" ? ".jpg"
+                : imageType === "image/webp" ? ".webp"
+                : ".png";
+            const fileName = `clipboard-${new Date().toISOString().replace(/[:.]/g, "-")}${extension}`;
+            const path = `ressources/${fileName}`;
+            await db.write(path, blob);
+            openImageEditor(path);
+            return;}
+        alert("Aucune image détectée dans le presse-papiers.");}
+    catch (error) {
+        console.error(error);
+        alert("Impossible d'accéder au presse-papiers.");}}    
 function selectImage(path) {
     imageSelection = {path: path, title: splitFilePath(path).name};
     document.querySelectorAll(".imageTileSelected").forEach(tile => tile.classList.remove("imageTileSelected"));
@@ -1587,7 +1607,7 @@ async function openImageEditor(selectedPath = null) {
     imageUrls.forEach(url => db.releaseUrl(url));
     imageUrls = [];
     const html = await buildImageGallery(imageSelection.path);
-    dialog.show("Insertion / Modification d'une image",html, [{label : "Ajouter", action : () => addImage()}, {label : "Image externe", action : () => openExternalImageEditor()}, {label : "Annuler", action : () => dialog.close()}, {label : "Valider", action : () => saveImage()}]);}
+    dialog.show("Insertion / Modification d'une image",html, [{label : "Ajouter", action : () => addImage()}, {label : "Coller", action : () => pasteImage()}, {label : "Image externe", action : () => openExternalImageEditor()}, {label : "Annuler", action : () => dialog.close()}, {label : "Valider", action : () => saveImage()}]);}
 
 /* Edition des "illustrations" */
 function refreshIllusButton() {

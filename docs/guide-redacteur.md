@@ -240,13 +240,15 @@ Une illustration est différente d’une image insérée dans le corps du texte 
 
 ### Image dans le texte
 
-Utilisez le bouton **Image/Illustration** de la barre d’outils pour importer une image dans les ressources du stage ou renseigner une URL externe. Le Markdown produit est de la forme :
+Utilisez le bouton **Image/Illustration** de la barre d’outils pour importer ou coller une image dans les ressources du stage, ou renseigner une URL externe. Le Markdown produit est de la forme :
 
 ```markdown
 ![Description de l’image](ressources/capture.png)
 ```
 
 Le chemin ci-dessus illustre le Markdown produit par l’outil pour une image interne. Donnez à l’image un texte descriptif. Une image externe dépend de la disponibilité de son site d’origine ; elle n’est pas incluse dans l’archive du stage.
+
+> En utilisant le bouton "Coller" de la fenêtre de gestion des images, vous pouvez très simplement illustrer vos ateliers avec des copies d'écran.
 
 > L'illustration d'un exercice peut, si nécessaire, être incluse comme image dans ledit exercice
 

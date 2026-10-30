@@ -122,7 +122,7 @@ Le moteur fournit aussi la variable système `ResourcesUrl`, dont la valeur poin
 Une illustration d’exercice est associée automatiquement si un fichier image porte le même nom de base que l’exercice, par exemple `a1e1.png`. Les extensions prises en charge sont `.png`, `.jpg`, `.jpeg`, `.webp`, `.svg`, `.bmp` et `.gif`. Une illustration est affichée dans un panneau latéral et peut être intégrée à l’impression.
 
 Les autres images et fichiers du stage sont des ressources ordinaires. Les références Markdown à des images peuvent être locales ou externes. 
-> Dans le Writer, les ressources internes sont stockées dans IndexedDB pendant l’édition et incluses dans le ZIP d’échange.
+> Dans le Writer, les ressources internes sont stockées dans IndexedDB pendant l’édition et incluses dans le ZIP d’échange. Les images peuvent être directement collées dans l'interface de gestion.
 
 ## 5. Génération et publication du site
 

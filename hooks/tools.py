@@ -319,3 +319,26 @@ def recuperer_infos_git(fichier):
     except Exception as e: print(f"[DEBUG] récupération GIT local pour '{fichier}' : {e}")
     # Cas 3 : aucune information disponible
     return { "gitVersion": "none", "editorName": "none", "editionDate": "none", "editionDateCalc": None }
+
+def typography(text: str) -> str:
+    """
+    Remplace certaines séquences ASCII par leurs équivalents
+    typographiques dans le contenu HTML généré.
+
+    Important :
+    - Ne pas traiter le HTML complet avec des replace() globaux.
+    - Les marqueurs techniques (ex: <!-- IBCAN_PAGE_BREAK -->)
+      ne doivent pas être modifiés.
+    """
+    def replace_content(match):
+        content = match.group(1)
+        return ">" + (
+            content
+            .replace("&lt;=&gt;", "⇔")
+            .replace("&lt;-&gt;", "↔")
+            .replace("=&gt;", "⇒")
+            .replace("&lt;=", "⇐")
+            .replace("-&gt;", "→")
+            .replace("&lt;-", "←")
+        ) + "<"
+    return re.sub(r">(.*?)<", replace_content, text, flags=re.DOTALL)

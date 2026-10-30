@@ -39,8 +39,10 @@ def generer_exercice(exercice, titre_atelier=None):
         contenu.extend(yaml_lines)
         contenu.append("---")
         contenu.append("")
-    contenu.append( f"# {exercice['Titre']}")
-    contenu.append("")
+    titre = exercice.get("Titre", "").strip()
+    if titre:
+        contenu.append(f"# {titre}")
+        contenu.append("")
     contenu_markdown = exercice.get("Contenu","").strip()
     if contenu_markdown: contenu.append(contenu_markdown)
     return "\n".join(contenu)

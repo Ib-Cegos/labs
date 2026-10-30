@@ -18,6 +18,7 @@ COPY_BUTTON_SVG = """
 """
 
 def on_page_content(html, page, config, files):
+    html = tools.typography(html)
     if tools.est_page_print(page): return html
     meta = tools.charger_meta_atelier(page)
     html = injecter_variables(html, page, meta)
