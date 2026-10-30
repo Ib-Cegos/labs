@@ -10,4 +10,4 @@ Variables:
 
 # Proxmox VE pour administrateurs VMware vSphere, réussir la transition
 
-{{ Sommaire() }}
+{{ sommaire() }}
