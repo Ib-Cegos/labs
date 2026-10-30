@@ -166,6 +166,8 @@ function getMimeType(path) {
             return "image/gif";
         case "svg":
             return "image/svg+xml";
+        case "image/bmp":
+            return ".bmp";
         default:
             return "";}}    
 

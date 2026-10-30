@@ -1462,6 +1462,8 @@ async function pasteImage() {
             const extension =
                 imageType === "image/jpeg" ? ".jpg"
                 : imageType === "image/webp" ? ".webp"
+                : imageType === "image/svg+xml" ? ".svg"
+                : imageType === "image/bmp" ? ".bmp"
                 : ".png";
             const fileName = `clipboard-${new Date().toISOString().replace(/[:.]/g, "-")}${extension}`;
             const path = `ressources/${fileName}`;
