@@ -5,6 +5,10 @@ let previewSyncEnabled = session.read("Synchro",true);
 const openerOrigin = opener.location;
 systemVariableRefresh();
 
+function typography(text) {
+    return text.replace(/>(.*?)</gs, (_, content) =>
+        ">" + content.replaceAll("&lt;=&gt;", "⇔").replaceAll("&lt;-&gt;", "↔").replaceAll("=&gt;", "➜").replaceAll("&lt;=", "⬅").replaceAll("-&gt;", "➜").replaceAll("&lt;-", "⬅")+ "<");}
+
 function markLabTasks(preview) {
     let niveau = 0;
     function parcourir(node) {
@@ -98,6 +102,7 @@ async function renderPreview() {
         illuDiv.style.display = "none";
     }
     contenu = marked.parse(contenu);
+    contenu = typography(contenu);
     contenu = await resolveInternalImages(contenu);
     contenu = replaceVariables(contenu);
     document.getElementById("ibContent").innerHTML = contenu;

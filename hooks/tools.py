@@ -289,7 +289,7 @@ def construire_yaml_print(titre, dossier_stage):
 
 def recuperer_infos_git(fichier):
     fichier = Path(fichier)
-    # Cas 1 : GitHub Actions
+        # Cas 1 : GitHub Actions
     if ( "GITHUB_TOKEN" in os.environ and "GITHUB_REPOSITORY" in os.environ):
         workspace = Path(os.environ.get("GITHUB_WORKSPACE", fichier.parent ))
         try:
@@ -314,7 +314,7 @@ def recuperer_infos_git(fichier):
         sha = (subprocess.check_output(["git", "log", "-n", "1", "--format=%h", "--", str(fichier)],text=True).strip() or "initiale")
         auteur = (subprocess.check_output(["git", "log", "-n", "1", "--format=%an", "--", str(fichier)],text=True ).strip() or "writer")
         date_git = subprocess.check_output(["git", "log", "-n", "1", "--format=%aI", "--", str(fichier)], text=True ).strip()
-        edition_date_calc = (datetime.now() if not date_git else datetime.fromisoformat(date_git.replace("Z", "+00:00")))
+        edition_date_calc = (datetime.now().astimezone() if not date_git else datetime.fromisoformat(date_git.replace("Z", "+00:00")))
         return { "gitVersion": sha, "editorName": auteur, "editionDate": edition_date_calc.strftime("%d/%m/%Y"), "editionDateCalc": edition_date_calc }
     except Exception as e: print(f"[DEBUG] récupération GIT local pour '{fichier}' : {e}")
     # Cas 3 : aucune information disponible
@@ -336,9 +336,9 @@ def typography(text: str) -> str:
             content
             .replace("&lt;=&gt;", "⇔")
             .replace("&lt;-&gt;", "↔")
-            .replace("=&gt;", "⇒")
-            .replace("&lt;=", "⇐")
-            .replace("-&gt;", "→")
-            .replace("&lt;-", "←")
+            .replace("=&gt;", "➜")
+            .replace("&lt;=", "⬅")
+            .replace("-&gt;", "➜")
+            .replace("&lt;-", "⬅")
         ) + "<"
     return re.sub(r">(.*?)<", replace_content, text, flags=re.DOTALL)
