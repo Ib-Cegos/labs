@@ -152,6 +152,23 @@ async function clearWorkspace() {
     session.remove("Redo");
     await db.clear();}
 
+function getMimeType(path) {
+    const ext = path.split('.').pop().toLowerCase();
+    switch (ext) {
+        case "png":
+            return "image/png";
+        case "jpg":
+        case "jpeg":
+            return "image/jpeg";
+        case "webp":
+            return "image/webp";
+        case "gif":
+            return "image/gif";
+        case "svg":
+            return "image/svg+xml";
+        default:
+            return "";}}    
+
 /* Chargement d'un zip pour mettre son contenu dans le localStorage et le indexedDB */
 async function ouvrirStageDepuisZip(source) {
     const zip = await JSZip.loadAsync(source);
@@ -171,7 +188,9 @@ async function ouvrirStageDepuisZip(source) {
         if (path === "content.json") continue;
         if (file.dir) continue;
         const blob = await file.async("blob");
-        await db.write(path, blob);}
+        const mimeType = getMimeType(path);
+        const fixedBlob = mimeType ? new Blob([await blob.arrayBuffer()], { type: mimeType }) : blob;
+        await db.write(path, fixedBlob);}
     window.location.href = "writer/";}
 
 /* module de travail avec indexedDB */

@@ -271,7 +271,7 @@ async function promptStoredRecoveryStage() {
             alert("La sauvegarde de récupération n’a pas pu être supprimée.");
             console.error(error);}};
     dialog.show("Précédente édition détectée", "<p>Un stage en cours d’édition ou de création a été trouvé dans ce navigateur. Voulez-vous plutôt reprendre son édition&nbsp;?</p><p><strong>Référence :</strong> <span id=\"ibRecoveryReference\"></span><br><strong>Stage :</strong> <span id=\"ibRecoveryTitle\"></span></p>",
-        [{label: "Continuer sans reprendre", action: async () => {
+        [{label: "Vider le cache et continuer",action: async () => {
                 closeButton.removeEventListener("click", closeRecoveryPrompt);
                 try {
                     await discardStoredRecoveryStage();
@@ -279,7 +279,7 @@ async function promptStoredRecoveryStage() {
                 catch (error) {
                     alert("La sauvegarde de récupération n’a pas pu être supprimée.");
                     console.error(error);}}},
-            {label: "Reprendre l’édition", action: async () => {
+            {label: "Reprendre l’édition en cache", action: async () => {
                 closeButton.removeEventListener("click", closeRecoveryPrompt);
                 try {
                     await resumeStoredRecoveryStage(recovery);}
@@ -1551,6 +1551,8 @@ async function saveImageRename(oldPath, newName) {
     updateFileReferences(oldPath, newPath);
     await db.write(newPath, blob);
     await db.delete(oldPath);
+    if (imageSelection.path === oldPath) {
+    imageSelection = {path: newPath, title: newName};}
     endImageRename(oldPath, newPath);}
 async function deleteImage(path) {
     await db.delete(path);
