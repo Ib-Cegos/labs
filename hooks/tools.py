@@ -324,21 +324,37 @@ def typography(text: str) -> str:
     """
     Remplace certaines séquences ASCII par leurs équivalents
     typographiques dans le contenu HTML généré.
-
     Important :
     - Ne pas traiter le HTML complet avec des replace() globaux.
     - Les marqueurs techniques (ex: <!-- IBCAN_PAGE_BREAK -->)
       ne doivent pas être modifiés.
     """
-    def replace_content(match):
-        content = match.group(1)
-        return ">" + (
-            content
-            .replace("&lt;=&gt;", "⇔")
-            .replace("&lt;-&gt;", "↔")
-            .replace("=&gt;", "➜")
-            .replace("&lt;=", "⬅")
-            .replace("-&gt;", "➜")
-            .replace("&lt;-", "⬅")
-        ) + "<"
-    return re.sub(r">(.*?)<", replace_content, text, flags=re.DOTALL)
+    protected = []
+    def protect(match):
+        protected.append(match.group(0))
+        return f"%%TYPO_{len(protected)-1}%%"
+    text = re.sub(
+        r"<pre\b.*?</pre>",
+        protect,
+        text,
+        flags=re.DOTALL | re.IGNORECASE
+    )
+    text = re.sub(
+        r"<code\b.*?</code>",
+        protect,
+        text,
+        flags=re.DOTALL | re.IGNORECASE
+    )
+    text = (
+        text
+        .replace("&lt;=&gt;", "⇔")
+        .replace("&lt;-&gt;", "↔")
+        .replace("=&gt;", "➜")
+        .replace("&lt;=", "⬅")
+        .replace("-&gt;", "➜")
+        .replace("&lt;-", "⬅")
+    )
+    for index, bloc in enumerate(protected):
+        text = text.replace(f"%%TYPO_{index}%%", bloc)
+    return text
+

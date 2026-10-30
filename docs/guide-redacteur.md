@@ -156,6 +156,10 @@ Get-MgUser -Top 5
 
 Dans les pages ibCAN, les blocs de code et les codes intégrés seront accompagnés d’un bouton de copie. N’incluez donc dans un bloc que les caractères que l’apprenant doit réellement recopier.
 
+### Saisie rapide des flèches
+
+Lors du rendu les séquances de caractères `->` et `=>` seront automatiquement remplaçées par -> et les sequences `<-` et `<=` par <-. Vous pouvez utiliser ces symboles pour montrer un enchainement logique par exemple.
+
 ### Étapes et listes
 
 Une liste numérotée de premier niveau dans un exercice est transformée par ibCAN en tâches cochables. La progression de l’exercice est calculée à partir de ces tâches. Une liste à puces (ou une sous-liste numérotée) reste une liste informative et n’alimente pas la progression.
@@ -172,7 +176,7 @@ Construisez donc votre numérotation pour faciliter aux lecteurs le suivi des ac
 - Un navigateur à jour
 ```
 
-Écrivez une action par étape, commencez par un verbe (essayer de conserver le même temps au long de votre document) et donnez assez de contexte pour que le lecteur sache quoi faire et quel résultat vérifier. Les listes imbriquées ne constituent pas un moyen fiable d’ajouter des tâches de progression : essayez de garder les tâches à un seul niveau et placez les précisions sous forme de paragraphes ou de puces séparées.
+Écrivez une action par étape, commencez par un verbe (essayer de maintenir une cohérence syntaxique au long de votre document, évitez de faire des aller-retour entre l'impératif à l'infinitif) et donnez assez de contexte pour que le lecteur sache quoi faire et quel résultat vérifier. Les listes imbriquées ne constituent pas un moyen fiable d’ajouter des tâches de progression : essayez de garder les tâches à un seul niveau et placez les précisions sous forme de paragraphes ou de puces séparées.
 
 ### Liens internes et externes
 

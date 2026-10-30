@@ -1,7 +1,7 @@
 ---
 title: Proxmox VE pour administrateurs VMware vSphere, réussir la transition
 editionDate: 30/10/2026
-gitVersion: initiale
+gitVersion: b2f8dc5
 auteur: ib cegos
 ---
 
