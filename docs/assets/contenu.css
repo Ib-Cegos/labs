@@ -25,6 +25,20 @@
 /* Mise en forme des notes */
 blockquote { margin: 1rem 0; border-left: 3px solid var(--ib-accent-color); background: var(--ib-note-background); padding: .75rem 1rem; }
 blockquote p:first-child::before { content: "Note : "; font-weight: 600; color: var(--ib-accent-color); }
+.ibTip, .ibWarning, .ibImportant, .ibQuestion {margin: 1rem 0; padding: .75rem 1rem;}
+/* Astuce */
+.ibTip {border-left: 4px solid var(--ib-tip-color); background: var(--ib-tip-background);}
+.ibTip::before {color: var(--ib-tip-color); content: "💡 Astuce : ";}
+/* Attention */
+.ibWarning {border-left: 4px solid var(--ib-warning-color); background: var(--ib-warning-background);}
+.ibWarning::before {color: var(--ib-warning-color); content: "⚠️ Attention : ";}
+/* Important */
+.ibImportant { border-left: 4px solid var(--ib-important-color); background: var(--ib-important-background);}
+.ibImportant::before {content: "📌 Important : "; font-weight: 600; color: var(--ib-important-color);}
+/* Question */
+.ibQuestion {border-left: 4px solid var(--ib-question-color); background: var(--ib-question-background);}
+.ibQuestion::before { content: "❓ Question : "; font-weight: 600; color: var(--ib-question-color);}
+
 
 /* Mise en forme des codes */
 #ibContent code { background: var(--ib-code-background); padding: .10rem .30rem; color: var(--ib-code-text); font-size: .95em; }

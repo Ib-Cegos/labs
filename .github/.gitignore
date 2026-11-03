@@ -1,5 +1,6 @@
 # Python
 __pycache__/
+**/__pychache__/
 *.pyc
 *.pyo
 
@@ -8,6 +9,10 @@ __pycache__/
 
 # Génération locale
 docs/*/print.md
+docs/*/*.zip
+
+# MkDocs
+Site/
 
 # VS Code
 .vscode/

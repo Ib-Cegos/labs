@@ -9,6 +9,14 @@ function typography(text) {
     return text.replace(/>(.*?)</gs, (_, content) =>
         ">" + content.replaceAll("&lt;=&gt;", "⇔").replaceAll("&lt;-&gt;", "↔").replaceAll("=&gt;", "➜").replaceAll("&lt;=", "⬅").replaceAll("-&gt;", "➜").replaceAll("&lt;-", "⬅")+ "<");}
 
+function transformAdmonitions(html) {
+    const admonitions = {tip: "ibTip", warning: "ibWarning", important: "ibImportant", question: "ibQuestion"};
+    for (const [key, cssClass] of Object.entries(admonitions)) {
+        const regex = new RegExp(`<p>\\[!${key}\\]\\s*(.*?)</p>`,"gis");
+        html = html.replace(regex, `<div class="${cssClass}">$1</div>`);}
+    html = html.replace(/<blockquote>\s*((?:<div class="ib(?:Tip|Warning|Important|Question)">.*?<\/div>\s*)+)<\/blockquote>/gis, "$1");
+    return html;}
+
 function markLabTasks(preview) {
     let niveau = 0;
     function parcourir(node) {
@@ -103,6 +111,7 @@ async function renderPreview() {
     }
     contenu = marked.parse(contenu);
     contenu = typography(contenu);
+    contenu = transformAdmonitions(contenu);
     contenu = await resolveInternalImages(contenu);
     contenu = replaceVariables(contenu);
     document.getElementById("ibContent").innerHTML = contenu;

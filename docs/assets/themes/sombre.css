@@ -52,7 +52,15 @@
   --ib-error-detail-background: rgba(255,255,255,.04); --ib-error-detail-border: rgba(255,255,255,.10);
   /* MÉTADONNÉES */
   --ib-duration-background: #252526; --ib-duration-border: #64748b; --ib-duration-text: #cbd5e1; --ib-task-pending: #b0b0b0;
-}
+/* ADMONITIONS */
+--ib-tip-color: #22c55e;
+--ib-tip-background: #1f3527;
+--ib-warning-color: #f59e0b;
+--ib-warning-background: #3a2a12;
+--ib-important-color: #ef4444;
+--ib-important-background: #3b1f1f;
+--ib-question-color: #8b5cf6;
+--ib-question-background: #2e2644;}
 
 /* Structure générale */
 body { margin: 0; background: var(--ib-color-content); font-family: "Segoe UI", sans-serif; display: flex; flex-direction: column; }

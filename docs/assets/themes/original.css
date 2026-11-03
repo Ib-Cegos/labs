@@ -59,6 +59,15 @@
   --ib-error-detail-background: rgba(0,0,0,.05); --ib-error-detail-border: rgba(0,0,0,.1);
   /* MÉTADONNÉES */
   --ib-duration-background: #f8fafc; --ib-duration-border: #94a3b8; --ib-duration-text: #475569; --ib-task-pending: #666666;
+/* Admonitions */
+--ib-tip-color: #22c55e;
+--ib-tip-background: color-mix(in srgb, var(--ib-tip-color) 12%, transparent);
+--ib-warning-color: #f59e0b;
+--ib-warning-background: color-mix(in srgb, var(--ib-warning-color) 12%, transparent);
+--ib-important-color: #dc2626;
+--ib-important-background: color-mix(in srgb, var(--ib-important-color) 12%, transparent);
+--ib-question-color: #8b5cf6;
+--ib-question-background: color-mix(in srgb, var(--ib-question-color) 12%, transparent);
 }
 
 /* Structure générale */

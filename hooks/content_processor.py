@@ -17,8 +17,20 @@ COPY_BUTTON_SVG = """
 </svg>
 """
 
+def transformer_admonitions(html):
+    admonitions = {"TIP": "ibTip", "WARNING": "ibWarning", "IMPORTANT": "ibImportant", "QUESTION": "ibQuestion"}
+    for clef, classe in admonitions.items():
+        html = re.sub(
+            rf'<p>\[!{clef}\]\s*(.*?)</p>',
+            rf'<div class="{classe}">\1</div>',
+            html,
+            flags=re.DOTALL | re.IGNORECASE)
+        html = re.sub(r'<blockquote>\s*((?:<div class="ib(?:Tip|Warning|Important|Question)">.*?</div>\s*)+)</blockquote>', r'\1', html, flags=re.DOTALL)
+    return html
+
 def on_page_content(html, page, config, files):
     html = tools.typography(html)
+    html = transformer_admonitions(html)
     if tools.est_page_print(page): return html
     meta = tools.charger_meta_atelier(page)
     html = injecter_variables(html, page, meta)
