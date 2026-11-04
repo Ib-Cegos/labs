@@ -20,7 +20,7 @@ Le bouton <button class="ibActionButton">🛠️ Outils</button> ouvre la barre 
 | <button class="ibWriterStyleBarButton">**B**</button>&nbsp;et&nbsp;<button class="ibWriterStyleBarButton">*I*</button> | Gras et italique. |
 | <button class="ibWriterStyleBarButton">Code</button> | Code dans une ligne ou un bloc. |
 | <button class="ibWriterStyleBarButton">1.</button>&nbsp;et&nbsp;<button class="ibWriterStyleBarButton">•</button> | Liste numérotée ou à puces. Les éléments numérotés de premier niveau d’un exercice deviennent des tâches à cocher. |
-| <button class="ibWriterStyleBarButton">></button> | Note ou citation. |
+| <button class="ibWriterStyleBarButton">></button> | Note ou citation. Un clic droit permet d'insérer un encadré pédagogique particulier. |
 | <button class="ibWriterStyleBarButton">🔗</button> | Lien vers une page web ou un autre exercice du stage. |
 | <button class="ibWriterStyleBarButton">📎</button> | Ajouter un fichier aux ressources et insérer son lien. |
 | <button class="ibWriterStyleBarButton">🖼️</button> | Insérer une image des ressources ou une image externe. |
@@ -29,6 +29,30 @@ Le bouton <button class="ibActionButton">🛠️ Outils</button> ouvre la barre 
 | <button class="ibWriterStyleBarButton btnUndo">↩</button>&nbsp;et&nbsp;<button class="ibWriterStyleBarButton btnUndo">↪</button> | Annuler ou rétablir des modifications de contenu (Ne restaurent pas les ateliers ou exercices supprimés). |
 
 Déplacez la barre par sa poignée 🛠️ ; cliquez sur ✕ pour la fermer.
+
+### Encadrés pédagogiques
+
+Le bouton <button class="ibWriterStyleBarButton">></button> permet de créer différents types d'encadrés :
+
+> information complémentaire ou remarque générale.
+
+---
+
+> [!TIP] conseil pratique ou gain de temps.
+
+---
+
+> [!WARNING] point de vigilance, erreur fréquente ou risque.
+
+---
+
+> [!IMPORTANT] information à retenir absolument.
+
+---
+
+> [!QUESTION] invite le lecteur à réfléchir ou à vérifier sa compréhension.
+
+Utilisez le clic gauche sur le bouton pour créer une note classique. Utilisez le clic droit pour choisir le type d'encadré à insérer.
 
 # Variables et ressources
 

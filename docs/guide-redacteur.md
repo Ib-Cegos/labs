@@ -156,6 +156,48 @@ Get-MgUser -Top 5
 
 Dans les pages ibCAN, les blocs de code et les codes intégrés seront accompagnés d’un bouton de copie. N’incluez donc dans un bloc que les caractères que l’apprenant doit réellement recopier.
 
+### Notes, astuces et encadrés pédagogiques
+
+ibCAN permet de distinguer plusieurs types d'informations :
+
+- ℹ️ Note : information complémentaire ou remarque générale.
+- 💡 Astuce : conseil pratique ou gain de temps.
+- ⚠️ Attention : point de vigilance ou erreur fréquente.
+- 📌 Important : élément à retenir absolument.
+- ❓ Question : invite le lecteur à réfléchir ou vérifier sa compréhension.
+
+Les informations importantes ou complémentaires peuvent être présentées sous forme d'encadrés.
+La syntaxe la plus simple consiste à faire précéder le texte du caractère `>` :
+
+> Ceci est une note.
+
+Cette syntaxe produit une note classique.
+
+ibCAN prend également en charge plusieurs variantes permettant de distinguer la nature de l'information :
+
+> [!TIP] Conseil pratique ou gain de temps (la ligne commence ici par `> [!TIP]`).
+
+---
+
+> [!WARNING] Point de vigilance ou erreur fréquente (la ligne commence ici par `> [!WARNING]`).
+
+---
+
+> [!IMPORTANT] Élément à retenir absolument (la ligne commence ici par `> [!IMPORTANT]`).
+
+---
+
+> [!QUESTION] Question destinée à faire réfléchir ou à vérifier la compréhension (la ligne commence ici par `> [!QUESTION]`).
+
+Les clés `[!TIP]`, `[!WARNING]`, `[!IMPORTANT]` et `[!QUESTION]` ne sont pas sensibles à la casse. Par exemple, les écritures suivantes sont équivalentes : `[!TIP]`, `[!Tip]` et `[!tip]`
+
+Dans l'éditeur :
+
+- un clic gauche sur le bouton `>` insère une note classique ;
+- un clic droit sur ce même bouton permet de choisir un type d'encadré (Astuce, Attention, Important ou Question).
+
+Utilisez ces encadrés avec modération afin de mettre en valeur les informations réellement importantes pour le lecteur.
+
 ### Saisie rapide des flèches
 
 Lors du rendu les séquances de caractères `->` et `=>` seront automatiquement remplaçées par -> et les sequences `<-` et `<=` par <-. Vous pouvez utiliser ces symboles pour montrer un enchainement logique par exemple.

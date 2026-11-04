@@ -1218,10 +1218,6 @@ function toggleBlockquote(type = null) {
             // Déjà du bon type → ne rien faire
             if (new RegExp(`\\[!${type}\\]`, "i").test(block)) { return block;}
             // Admonition existante → remplacer uniquement la clé
-
-            console.log("BLOCK=");
-            console.log(JSON.stringify(block));
-
             if (admonitionRegex.test(block)) {return block.replace(admonitionRegex, `[!${type}]`);}
             // Création d'une nouvelle admonition
             const content = lines.filter(line => line.trim()).map(line => line.replace(/^\s*>\s*/, ""));
@@ -1237,20 +1233,14 @@ function toggleBlockquote(type = null) {
 
 function openAdmonitionMenu(event) {
     event.preventDefault();
-    dialog.show(
-        "Type d'encadré",
-        `<div class="admonitionMenu">
-            <button class="admonitionButton" onclick="toggleBlockquote('TIP')">💡 Astuce</button>
-            <button class="admonitionButton" onclick="toggleBlockquote('WARNING')">⚠️ Attention</button>
-            <button class="admonitionButton" onclick="toggleBlockquote('IMPORTANT')">📌 Important</button>
-            <button class="admonitionButton" onclick="toggleBlockquote('QUESTION')">❓ Question</button>
-        </div>`,
-        [
-            { label: "Fermer", action: () => dialog.close() }
-        ],
-        "small"
-    );
-}
+    const menu = document.getElementById("admonitionMenu");
+    menu.classList.add("ibContextMenuVisible");
+    const rect = menu.getBoundingClientRect();
+    let top = event.clientY;
+    if (top + rect.height > window.innerHeight)
+    top = event.clientY - rect.height;
+    menu.style.left = `${event.clientX}px`;
+    menu.style.top = `${top}px`;}
 
 function buildInternalLinkOptions() {
     let html = "";
@@ -1584,7 +1574,7 @@ async function saveImageRename(oldPath, newName) {
     updateFileReferences(oldPath, newPath);
     await db.write(newPath, blob);
     await db.delete(oldPath);
-    if (imageSelection.path === oldPath) {
+    if (imageSelection && imageSelection.path === oldPath) {
     imageSelection = {path: newPath, title: newName};}
     endImageRename(oldPath, newPath);}
 async function deleteImage(path) {
@@ -1700,12 +1690,10 @@ async function addIllustration() {
 function selectAttachment(path) {
     attachmentSelection = { path, name: `${splitFilePath(path).name}${splitFilePath(path).extension}` };
     document.querySelectorAll(".fileTileSelected").forEach(tile => tile.classList.remove("fileTileSelected"));
-    document.querySelector(`[data-path="${path}"]`)?.classList.add("fileTileSelected");
-}
+    document.querySelector(`[data-path="${path}"]`)?.classList.add("fileTileSelected");}
 
 function selectFile(path) {
-    selectAttachment(path);
-}
+    selectAttachment(path);}
 
 async function buildAttachmentGallery(selectedPath = "") {
     const files = await db.list();
@@ -1726,15 +1714,13 @@ async function buildAttachmentGallery(selectedPath = "") {
     html += `
     <p>Ces fichiers sont disponibles à l'adresse <span role="button" tabindex="0" title="Copier [ResourcesUrl]" style="cursor: pointer" onclick="navigator.clipboard.writeText('[ResourcesUrl]')">[ResourcesUrl]</span></p>
     <p>(<span role="button" tabindex="0" title="Copier l'URL" style="cursor: pointer" onclick="navigator.clipboard.writeText(this.textContent)">${SYSTEM_VARIABLES['ResourcesUrl'].defaut}</span>)</p></div>`;
-    return html;
-}
+    return html;}
 
 async function deleteAttachment(path) {
     await db.delete(path);
     updateFileReferences(path);
     attachmentSelection = null;
-    openAttachmentEditor();
-}
+    openAttachmentEditor();}
 
 function confirmDeleteAttachment(path) {
     const count = countFileReferences(path);
@@ -1752,10 +1738,8 @@ async function addAttachment() {
         if (!file) return;
         const path = `ressources/${normalizeFileName(file.name)}`;
         await db.write(path, file);
-        openAttachmentEditor(path);
-    };
-    input.click();
-}
+        openAttachmentEditor(path);};
+    input.click();}
 
 function saveAttachment(selectedPath = attachmentSelection?.path) {
     const path = selectedPath || attachmentSelection?.path;
@@ -1769,8 +1753,7 @@ function saveAttachment(selectedPath = attachmentSelection?.path) {
     textareaSync.setRangeText(markdown, start, end, "end");
     selection.restore(start + markdown.length, start + markdown.length);
     refreshEditor();
-    dialog.close();
-}
+    dialog.close();}
 
 async function openAttachmentEditor(selectedPath = null) {
     if (selectedPath !== null) {
@@ -1783,6 +1766,20 @@ async function openAttachmentEditor(selectedPath = null) {
     const html = await buildAttachmentGallery(attachmentSelection?.path || "");
     dialog.show("Insertion / Modification d'un fichier", html, [{label : "Ajouter", action : () => addAttachment()}, {label : "Annuler", action : () => dialog.close()}, {label : "Valider", action : () => saveAttachment()}]);
 }
+
+/* Renommage d'une image collée*/
+async function promptImageRename(path, newPath) {
+    const parts = splitFilePath(path);
+    dialog.show("Changer le nom de cette image ?", `<input id="clipboardImageName" class="ibInput" value="${parts.name}">`,
+        [{label: "Annuler", action: () => dialog.close()},
+            {label: "Valider", action: async () => {
+                const newName = document.getElementById("clipboardImageName").value;
+                await saveImageRename(path, newName);
+                dialog.close();
+                return newName;}}],"small");
+    setTimeout(() => {
+        const input = document.getElementById("clipboardImageName");
+        if (input) {input.focus(); input.select();}}, 50);}
 
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")
@@ -1816,7 +1813,7 @@ refreshUndoButtons();
 afficherExercice();
 document.querySelectorAll("#ibHeader input, #ExerciceHeader input").forEach(field => {
     field.addEventListener("input",() => validateField(field));
-    validateField(field);});  
+    validateField(field);});
 
 /* Initialisation des champs dynamiques */
 document.getElementById("writerAtelierTitle").addEventListener("input", event => {
@@ -1831,6 +1828,19 @@ document.getElementById("writerExerciceLength").addEventListener("input", event 
 textareaSync.addEventListener("input", event => {
         Current.Contenu = event.target.value;
         storage.write("Current",Current);});
+/* Initialisation de la gestion du coller des images */
+textareaSync.addEventListener("paste", async event => {
+    const items = event.clipboardData?.items || [];
+    const imageItem = [...items].find(item => item.type.startsWith("image/"));
+    if (!imageItem) return;
+    event.preventDefault();
+    const blob = imageItem.getAsFile();
+    const extension = blob.type === "image/jpeg" ? ".jpg" : blob.type === "image/webp" ? ".webp" : blob.type === "image/svg+xml" ? ".svg" : ".png";
+    const fileName = `clipboard-${new Date().toISOString().replace(/[:.]/g, "-")}${extension}`;
+    const path = `ressources/${fileName}`;
+    await db.write(path, blob);
+    promptImageRename(path, path);});
+
 /* Initialisation des boutons */
 document.getElementById("btnAddSommaire").addEventListener("click",insertSommaire);      
 document.getElementById("btnAddAtelier").addEventListener("click", addAtelier);
@@ -1873,6 +1883,11 @@ updateStyleBar();
 document.addEventListener("dragend", () => {
     document.querySelectorAll( ".writerNavDropBefore,.writerNavDropAfter" ).forEach(element => {
         clearDropIndicators(element);});});
+/* Initialisation de l'effacement du menu contextuel */
+document.addEventListener("click", event => {
+    const menu = document.getElementById("admonitionMenu");
+    if (!menu.classList.contains("ibContextMenuVisible")) return;
+    if (!menu.contains(event.target)) menu.classList.remove('ibContextMenuVisible');});
 /* Synchonisation de la lecture avec fenêtre preview */
 textareaSync.addEventListener("scroll", () => {
     clearTimeout(scrollTimer);

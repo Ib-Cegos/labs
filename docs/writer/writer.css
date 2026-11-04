@@ -140,3 +140,8 @@ button.variableStyle, button.variableEdit {border : none;background: transparent
 #btnHelp { background: var(--ib-color-help) !important; }
 #btnHelp:hover { background: var(--ib-color-help-hover) !important; }
 #btnPreview,.btnPreview {background: #e6f7e6 !important; color: #2d6a2d !important;}
+
+.ibContextMenu { display: none; position: fixed; z-index: 10000; flex-direction: column; background: var(--ib-modal-background); border: 1px solid var(--ib-modal-border); border-radius: .5rem; box-shadow: 0 4px 15px rgba(0,0,0,.3); overflow: hidden;}
+.ibContextMenu button { border: none; background: transparent; color: var(--ib-color-text); padding: .5rem .8rem; text-align: left; cursor: pointer;}
+.ibContextMenu button:hover {background: var(--ib-color-navigation); color: var(--ib-color-navigation-text);}
+.ibContextMenuVisible { display: flex;}
