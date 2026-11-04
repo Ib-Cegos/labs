@@ -1209,17 +1209,48 @@ function toggleNumberedList() {
             const content = line.substring(indent.length);
             return indent + "1. " + content;}).join("\n");}, true);}
 
-function toggleBlockquote() {
-    saveUndoState("Ajout/suppression d'une note");
+function toggleBlockquote(type = null) {
+    saveUndoState(type ? `Ajout d'un encadré ${type}` : "Ajout/suppression d'une note");
     transformLines(block => {
         const lines = block.split("\n");
+        if (type) {
+            const admonitionRegex = /\[!(TIP|WARNING|IMPORTANT|QUESTION)\]/i;
+            // Déjà du bon type → ne rien faire
+            if (new RegExp(`\\[!${type}\\]`, "i").test(block)) { return block;}
+            // Admonition existante → remplacer uniquement la clé
+
+            console.log("BLOCK=");
+            console.log(JSON.stringify(block));
+
+            if (admonitionRegex.test(block)) {return block.replace(admonitionRegex, `[!${type}]`);}
+            // Création d'une nouvelle admonition
+            const content = lines.filter(line => line.trim()).map(line => line.replace(/^\s*>\s*/, ""));
+            return [`> [!${type}]`, ...content.map(line => `> ${line}`)].join("\n");}
         const isQuote = lines.filter(line => line.trim()).every(line => /^\s*>\s/.test(line));
         return lines.map(line => {
             if (!line.trim()) return line;
-            if (isQuote) return line.replace(/^(\s*)>\s/, "$1");
+            if (isQuote) { return line.replace(/^(\s*)>\s/,"$1");}
             const indent = (line.match(/^\s*/) || [""])[0];
             const content = line.substring(indent.length);
-            return indent + "> " + content;}).join("\n");}, true);}
+            return indent + "> " + content;}).join("\n");
+    }, !type);}
+
+function openAdmonitionMenu(event) {
+    event.preventDefault();
+    dialog.show(
+        "Type d'encadré",
+        `<div class="admonitionMenu">
+            <button class="admonitionButton" onclick="toggleBlockquote('TIP')">💡 Astuce</button>
+            <button class="admonitionButton" onclick="toggleBlockquote('WARNING')">⚠️ Attention</button>
+            <button class="admonitionButton" onclick="toggleBlockquote('IMPORTANT')">📌 Important</button>
+            <button class="admonitionButton" onclick="toggleBlockquote('QUESTION')">❓ Question</button>
+        </div>`,
+        [
+            { label: "Fermer", action: () => dialog.close() }
+        ],
+        "small"
+    );
+}
 
 function buildInternalLinkOptions() {
     let html = "";
