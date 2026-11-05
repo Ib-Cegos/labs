@@ -62,6 +62,8 @@ Le bouton <button class="ibWriterStyleBarButton">[ ]</button> de la barre d’ou
 
 Le bouton 📸 associe une illustration à l’exercice : elle reste accessible dans son panneau pendant la lecture. Les boutons <button class="ibWriterStyleBarButton">🖼️</button> et <button class="ibWriterStyleBarButton">📎</button> servent à insérer respectivement des images et des liens vers les fichiers des ressources. Une image externe n’est pas incluse dans l’export.
 
+> [!TIP] Vous pouvez également coller directement une image dans l'éditeur (à l'aide du raccourci **Ctrl+V**). L'image est ajoutée aux ressources du stage et insérée automatiquement dans le document.
+
 # Aperçu et export
 
 <button class="ibActionButton btnPreview">Aperçu</button> ouvre une fenêtre actualisée au fil des modifications. La synchronisation suit la position de l’éditeur ; vous pouvez la désactiver pour parcourir l’aperçu librement. Le bouton **[ ] → abc** alterne entre le nom des variables et leur valeur par défaut.

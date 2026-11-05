@@ -1556,27 +1556,27 @@ async function saveImageRename(oldPath, newName) {
     newName = normalizeFileName(newName);
     if (!newName) {
         endImageRename(oldPath);
-        return;}
+        return oldPath;}
     const parts = splitFilePath(oldPath);
     const newPath = parts.folder + newName + parts.extension;
     if (newPath === oldPath) {
         endImageRename(oldPath);
-        return;}
+        return oldPath;}
     const files = await db.list();
     if (files.includes(newPath)) {
         alert("Ce nom est déjà utilisé.");
-        return;}
+        return null;}
     const blob = await db.read(oldPath);
     if (!blob) {
         alert("Impossible de lire l'image.");
         endImageRename(oldPath);
-        return;}
+        return null;}
     updateFileReferences(oldPath, newPath);
     await db.write(newPath, blob);
     await db.delete(oldPath);
-    if (imageSelection && imageSelection.path === oldPath) {
-    imageSelection = {path: newPath, title: newName};}
-    endImageRename(oldPath, newPath);}
+    if (imageSelection && imageSelection.path === oldPath) {imageSelection = {path: newPath, title: newName};}
+    endImageRename(oldPath, newPath);
+    return newPath;}
 async function deleteImage(path) {
     await db.delete(path);
     updateFileReferences(path);
@@ -1706,11 +1706,9 @@ async function buildAttachmentGallery(selectedPath = "") {
         html += `<div class="fileTile${selected}" data-path="${path}" onclick="selectAttachment('${path}')">
             <div class="fileTitle" title="${path}">${displayName}
             <button class="fileDeleteButton" onclick="event.stopPropagation(); confirmDeleteAttachment('${path}')">🗑️</button>
-            </div></div>`;
-    }
+            </div></div>`;}
     if (attachments.length === 0) {
-        html += '<p class="emptyGalleryMessage">Aucun fichier inclus.</p>';
-    }
+        html += '<p class="emptyGalleryMessage">Aucun fichier inclus.</p>';}
     html += `
     <p>Ces fichiers sont disponibles à l'adresse <span role="button" tabindex="0" title="Copier [ResourcesUrl]" style="cursor: pointer" onclick="navigator.clipboard.writeText('[ResourcesUrl]')">[ResourcesUrl]</span></p>
     <p>(<span role="button" tabindex="0" title="Copier l'URL" style="cursor: pointer" onclick="navigator.clipboard.writeText(this.textContent)">${SYSTEM_VARIABLES['ResourcesUrl'].defaut}</span>)</p></div>`;
@@ -1790,9 +1788,12 @@ async function promptImageRename(path, imageUrl) {
 async function validateClipboardImageRename(path,imageUrl) {
     const input = document.getElementById("clipboardImageName");
     if (!input) return;
-    await saveImageRename(path, input.value);
+    const finalPath = await saveImageRename(path, input.value);
+    if (!finalPath) return;
+    imageSelection = {path: finalPath, title: splitFilePath(finalPath).name};
     dialog.close();
-    URL.revokeObjectURL(imageUrl);}
+    URL.revokeObjectURL(imageUrl);
+    saveImage();}
 
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")
@@ -1848,7 +1849,7 @@ textareaSync.addEventListener("paste", async event => {
     if (!imageItem) return;
     event.preventDefault();
     const blob = imageItem.getAsFile();
-    const extension = blob.type === "image/jpeg" ? ".jpg" : blob.type === "image/webp" ? ".webp" : blob.type === "image/svg+xml" ? ".svg" : ".png";
+    const extension = blob.type === "image/bmp" ? ".bmp" : blob.type === "image/jpeg" ? ".jpg" : blob.type === "image/webp" ? ".webp" : blob.type === "image/svg+xml" ? ".svg" : ".png";
     const fileName = `clipboard-${new Date().toISOString().replace(/[:.]/g, "-")}${extension}`;
     const path = `ressources/${fileName}`;
     await db.write(path, blob);

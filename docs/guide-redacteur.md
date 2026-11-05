@@ -292,11 +292,15 @@ Utilisez le bouton **Image/Illustration** de la barre d’outils pour importer o
 ![Description de l’image](ressources/capture.png)
 ```
 
-Le chemin ci-dessus illustre le Markdown produit par l’outil pour une image interne. Donnez à l’image un texte descriptif. Une image externe dépend de la disponibilité de son site d’origine ; elle n’est pas incluse dans l’archive du stage.
+Le chemin ci-dessus illustre le Markdown produit par l’outil pour une image interne. Donnez à l’image un texte descriptif. Une image externe dépend de la disponibilité de son site d’origine ; elle n’est pas incluse dans l’archive du stage.  
 
-> En utilisant le bouton "Coller" de la fenêtre de gestion des images, vous pouvez très simplement illustrer vos ateliers avec des copies d'écran.
+L'illustration d'un exercice peut, si nécessaire, être incluse comme image dans ledit exercice
 
-> L'illustration d'un exercice peut, si nécessaire, être incluse comme image dans ledit exercice
+> [!TIP] En utilisant le bouton "Coller" de la fenêtre de gestion des images, vous pouvez très simplement illustrer vos ateliers avec des copies d'écran.
+
+> [!TIP] Pour accélérer la rédaction, vous pouvez également copier une image dans votre système (capture d'écran, Word, navigateur, etc.) puis utiliser **Ctrl+V** directement dans la zone d'édition : L'image est automatiquement ajoutée aux ressources du stage. Le Writer affiche alors un aperçu de celle-ci et propose un renommage avant son insertion dans le document.
+
+
 
 ### Fichier à télécharger
 
