@@ -1768,18 +1768,31 @@ async function openAttachmentEditor(selectedPath = null) {
 }
 
 /* Renommage d'une image collée*/
-async function promptImageRename(path, newPath) {
+async function promptImageRename(path, imageUrl) {
     const parts = splitFilePath(path);
-    dialog.show("Changer le nom de cette image ?", `<input id="clipboardImageName" class="ibInput" value="${parts.name}">`,
-        [{label: "Annuler", action: () => dialog.close()},
-            {label: "Valider", action: async () => {
-                const newName = document.getElementById("clipboardImageName").value;
-                await saveImageRename(path, newName);
-                dialog.close();
-                return newName;}}],"small");
+    dialog.show(
+        "Image collée détectée",
+        `<img class="ibClipboardPreview" src="${imageUrl}"><p>Une image a été détectée dans le presse-papiers et ajoutée aux ressources du stage.</p><p>Vous pouvez la renommer ci-dessous avant son insertion dans le document.</p><div class="variableField"><label>Nom de l'image</label><input id="clipboardImageName" value="${parts.name}"></div>`,
+        [{label: "Annuler",action: async () => {
+            URL.revokeObjectURL(imageUrl);
+            await db.delete(path);
+            dialog.close();}}, {label: "Valider", action: () => validateClipboardImageRename(path, imageUrl)}],'small');
     setTimeout(() => {
         const input = document.getElementById("clipboardImageName");
-        if (input) {input.focus(); input.select();}}, 50);}
+        if (!input) return;
+        input.focus();
+        input.select();
+        input.addEventListener("keydown", event => {
+            if (event.key !== "Enter") return;
+            event.preventDefault();
+            validateClipboardImageRename(path, imageUrl);});}, 50);}
+
+async function validateClipboardImageRename(path,imageUrl) {
+    const input = document.getElementById("clipboardImageName");
+    if (!input) return;
+    await saveImageRename(path, input.value);
+    dialog.close();
+    URL.revokeObjectURL(imageUrl);}
 
 /* Chargement initial de la page */
 const textareaSync = document.getElementById("writerContenu")
@@ -1839,7 +1852,8 @@ textareaSync.addEventListener("paste", async event => {
     const fileName = `clipboard-${new Date().toISOString().replace(/[:.]/g, "-")}${extension}`;
     const path = `ressources/${fileName}`;
     await db.write(path, blob);
-    promptImageRename(path, path);});
+    const imageUrl = URL.createObjectURL(blob);
+    promptImageRename(path, imageUrl);});
 
 /* Initialisation des boutons */
 document.getElementById("btnAddSommaire").addEventListener("click",insertSommaire);      

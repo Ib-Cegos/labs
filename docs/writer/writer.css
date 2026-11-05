@@ -145,3 +145,5 @@ button.variableStyle, button.variableEdit {border : none;background: transparent
 .ibContextMenu button { border: none; background: transparent; color: var(--ib-color-text); padding: .5rem .8rem; text-align: left; cursor: pointer;}
 .ibContextMenu button:hover {background: var(--ib-color-navigation); color: var(--ib-color-navigation-text);}
 .ibContextMenuVisible { display: flex;}
+
+.ibClipboardPreview { max-width: 400px; max-height: 250px; display: block; margin: 1rem auto; object-fit: contain; border: 1px solid var(--ib-color-border); border-radius: .5rem;}

@@ -1,5 +1,5 @@
 ---
-Auteur: ib cegos
+Auteur: Frédéric Bourdet
 ---
 
 # Proxmox VE pour administrateurs VMware vSphere, réussir la transition
