@@ -308,3 +308,17 @@ const db = {
             const siteUrl = window.location.origin +  window.location.pathname.replace(/\/writer\/?.*$/i, "");
             Object.values(SYSTEM_VARIABLES).forEach(variable => {
             variable.defaut = variable.defaut.replaceAll("[site_url]", siteUrl).replaceAll("[stage]", Stage.Reference);});}
+
+/* Gestion des notifications */
+const notify = {
+    show(message, duration = 5000) {
+        const notification = document.createElement("div");
+        notification.className = "ibNotify";
+        notification.textContent = message;
+        const count = document.querySelectorAll(".ibNotify").length;
+        notification.style.bottom = `${16 + count * 70}px`;
+        document.body.appendChild(notification);
+        requestAnimationFrame(() => {notification.classList.add("ibNotifyVisible");});
+        setTimeout(() => {
+            notification.classList.remove("ibNotifyVisible");
+            setTimeout(() => {notification.remove();}, 300);}, duration);}};
