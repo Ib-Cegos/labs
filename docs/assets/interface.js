@@ -21,7 +21,7 @@ document.addEventListener(
                 await clearWorkspace();
                 window.location.href = "writer/";}
             catch (error) {
-                alert("Impossible de sauvegarder le stage en cours ; le nouvel espace n'a pas été créé.");
+                 ibAlert.show("Impossible de sauvegarder le stage en cours ; le nouvel espace n'a pas été créé.", "Error");
                 console.error(error);}});}
         if (openButton && writerFile) {
             openButton.addEventListener("click", () => {writerFile.click();});
@@ -31,7 +31,7 @@ document.addEventListener(
                     if (!file) return;
                     await ouvrirStageDepuisZip(file);}
                 catch(error) {
-                    alert("Le stage n'a pas pu être ouvert. Vérifiez le fichier et le stockage du navigateur.");
+                    ibAlert.show("Le stage n'a pas pu être ouvert. Vérifiez le fichier et le stockage du navigateur.", "Error");
                     console.error(error);}});}});
 
 async function modifierStage(url) {
@@ -41,7 +41,7 @@ async function modifierStage(url) {
         const blob = await response.blob();
         await ouvrirStageDepuisZip(blob);}
     catch (error) {
-        alert("Le stage n'a pas pu être chargé ; l'édition en cours a été conservée.");
+        ibAlert.show("Le stage n'a pas pu être chargé ; l'édition en cours a été conservée.", "Warning");
         console.error(error);}}
 
 function ibResizeIllustrationPanel() {

@@ -310,7 +310,7 @@ const db = {
             variable.defaut = variable.defaut.replaceAll("[site_url]", siteUrl).replaceAll("[stage]", Stage.Reference);});}
 
 /* Gestion des notifications */
-const notify = {
+const ibNotify = {
     show(message, duration = 5000) {
         const notification = document.createElement("div");
         notification.className = "ibNotify";
@@ -322,3 +322,29 @@ const notify = {
         setTimeout(() => {
             notification.classList.remove("ibNotifyVisible");
             setTimeout(() => {notification.remove();}, 300);}, duration);}};
+
+/* Gestion des alertes modales */
+const ibAlert = {
+    show(message, style = "Info", title = null) {
+        const defaultTitles = {
+            Info:    "ℹ️ Information",
+            Warning: "⚠️ Attention",
+            Error:   "❌ Erreur"};
+        title = title || defaultTitles[style] || defaultTitles.Info;
+        const overlay = document.createElement("div");
+        overlay.className = "ibAlertOverlay";
+        const box = document.createElement("div");
+        box.className = `ibAlert ibAlert${style}`;
+        box.innerHTML = `<div class="ibAlertTitle">${title}</div><div class="ibAlertContent">${message}</div><div class="ibAlertFooter"><button class="ibAlertButton">OK</button></div>`;
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+        ibMakeDraggable(box, ".ibAlertTitle");
+        const close = () => overlay.remove();
+        box.querySelector(".ibAlertButton").addEventListener("click", close);
+        document.addEventListener("keydown",
+            function handler(event) {
+                if (event.key !== "Escape") return;
+                document.removeEventListener("keydown", handler);
+                close();},
+            {once: true});
+        return overlay;}};

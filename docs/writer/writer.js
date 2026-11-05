@@ -256,7 +256,7 @@ async function resumeStoredRecoveryStage(recovery) {
     try {
         await db.clearSnapshotFiles();}
     catch (error) {
-        alert("Le stage a été restauré, mais la copie de récupération des fichiers n’a pas pu être supprimée.");
+        ibAlert.show("Le stage a été restauré, mais la copie de récupération des fichiers n’a pas pu être supprimée.","Warning");
         console.error(error);}
     window.location.reload();}
 
@@ -268,7 +268,7 @@ async function promptStoredRecoveryStage() {
         try {
             await discardStoredRecoveryStage();}
         catch (error) {
-            alert("La sauvegarde de récupération n’a pas pu être supprimée.");
+            ibAlert.show("La sauvegarde de récupération n’a pas pu être supprimée.", "Error");
             console.error(error);}};
     dialog.show("Précédente édition détectée", "<p>Un stage en cours d’édition ou de création a été trouvé dans ce navigateur. Voulez-vous plutôt reprendre son édition&nbsp;?</p><p><strong>Référence :</strong> <span id=\"ibRecoveryReference\"></span><br><strong>Stage :</strong> <span id=\"ibRecoveryTitle\"></span></p>",
         [{label: "Vider le cache et continuer",action: async () => {
@@ -277,14 +277,14 @@ async function promptStoredRecoveryStage() {
                     await discardStoredRecoveryStage();
                     dialog.close();}
                 catch (error) {
-                    alert("La sauvegarde de récupération n’a pas pu être supprimée.");
+                    ibAlert.show("La sauvegarde de récupération n’a pas pu être supprimée.", "Error");
                     console.error(error);}}},
             {label: "Reprendre l’édition en cache", action: async () => {
                 closeButton.removeEventListener("click", closeRecoveryPrompt);
                 try {
                     await resumeStoredRecoveryStage(recovery);}
                 catch (error) {
-                    alert("Le stage n’a pas pu être restauré. La sauvegarde de récupération a été conservée.");
+                    ibAlert.show("Le stage n’a pas pu être restauré. La sauvegarde de récupération a été conservée.", "Error");
                     console.error(error);}}}], "small");
     document.getElementById("ibRecoveryTitle").textContent = recovery.stage.Titre || "(sans titre)";
     document.getElementById("ibRecoveryReference").textContent = recovery.stage.Reference || "(sans référence)";
@@ -491,6 +491,7 @@ async function exporterStage(confirmerAvertissements = false) {
     lien.href = url;
     lien.download = `${Stage.Reference || "stage"}-edit.zip`;
     lien.click();
+    ibNotify.show("Export terminé.");
     URL.revokeObjectURL(url);
     dialog.show(
         "Export terminé",
@@ -501,7 +502,7 @@ async function exporterStage(confirmerAvertissements = false) {
                     await clearWriterLocalData();
                     window.location.href = "../";}
                 catch (error) {
-                    alert("Les données locales n’ont pas pu être supprimées.");
+                    ibAlert.show("Les données locales n’ont pas pu être supprimées.", "Error");
                     console.error(error);}}},
             {label: "Conserver", action: () => dialog.close()}
         ],
@@ -770,7 +771,8 @@ function saveVariable() {
     Stage.Variables[vari.name] = vari;
     storage.write("Stage", Stage);
     updateStyleBar();
-    openVariables();}
+    openVariables();
+    ibNotify.show("Variable enregistrée.");}
 
 function deleteVariable(name) {
     let html =  `<p>Supprimer la variable "${name}" ?</p>`
@@ -790,7 +792,7 @@ function deleteVariable(name) {
                 countLib = `l'exerice ${exercice.Id} de l'atelier ${atelier.Id}`}});});
     if (count == 1) html += `<p>Attention, l'occurence du terme [${name}] dans ${countLib} du stage ne sera pas supprimée...</p>`;
     if (count > 1) html += `<p>Attention, les ${count} occurences du terme [${name}] dans les ateliers du stage ne seront pas supprimées...</p>`;
-    dialog.show("Suppression",html, [{label : "Annuler", action : () => openVariables()}, {label : "Supprimer", action : () => { delete Stage.Variables[name]; storage.write("Stage",Stage); updateStyleBar(); openVariables();}, className : "ibDialogButtonDelete"}],'small');}    
+    dialog.show("Suppression",html, [{label : "Annuler", action : () => openVariables()}, {label : "Supprimer", action : () => { delete Stage.Variables[name]; storage.write("Stage",Stage); updateStyleBar(); openVariables();ibNotify.show("Variable supprimée.");}, className : "ibDialogButtonDelete"}],'small');}    
 
 function editVariable(name = null) {
     let vari = null;
@@ -864,7 +866,8 @@ async function addAtelier() {
     Current.Atelier = Stage.Ateliers.at(-1).Id;
     Current.Exercice = 1;
     await chargerExercice();
-    afficherExercice();}
+    afficherExercice();
+    ibNotify.show("Atelier ajouté.");}
 async function deleteAtelier() {
     if (Stage.Ateliers.length <= 1) {
         dialog.show( "Suppression impossible", "<p>Le stage doit contenir au moins un atelier.</p>", [], "small");
@@ -878,7 +881,8 @@ async function deleteAtelier() {
     Current.Exercice = Stage.Ateliers[nextIndex].Exercices[0].Id;
     await chargerExercice();
     construireNavigation();
-    afficherExercice();}
+    afficherExercice();
+    ibNotify.show("Atelier supprimé.");}
 function confirmDeleteAtelier() {
     const atelier =getCurrentAtelier();
     dialog.show("Supprimer l'atelier",
@@ -903,7 +907,8 @@ async function moveAtelier(aSource,aTarget,before = false, confirmed = false) {
     await chargerExercice();
     storage.write("Stage", Stage);
     construireNavigation();
-    afficherExercice();}
+    afficherExercice();
+    ibNotify.show("Atelier déplacé.");}
 
 /* Ajout / Suppression / déplacement des Exercices */
 async function addExercice() {
@@ -915,7 +920,8 @@ async function addExercice() {
     construireNavigation();
     Current.Exercice = atelier.Exercices.at(-1).Id;
     await chargerExercice();
-    afficherExercice();}
+    afficherExercice();
+    ibNotify.show("Exercice ajouté.");}
 async function deleteExercice() {
     /* A faire (peut-être) suppression des illustrations inutiles le cas échéant */
     const atelier = getCurrentAtelier();
@@ -931,7 +937,8 @@ async function deleteExercice() {
     Current.Exercice =  atelier.Exercices[nextIndex].Id;
     await chargerExercice();
     construireNavigation();
-    afficherExercice();}
+    afficherExercice();
+    ibNotify.show("Exercice supprimé.");}
 function confirmDeleteExercice() {
     const exercice = getCurrentExercice();
     dialog.show("Supprimer l'exercice",`<p>Supprimer "${getExerciceLabel(exercice)}" ?</p>`, [{label : "Annuler", action : () => dialog.close()}, {label : "Supprimer",className: "ibDialogButtonDelete", action : () => { deleteExercice(); dialog.close(); }}], 'small');}
@@ -963,7 +970,8 @@ async function moveExercice(aSource, aTarget, eSource, eTarget, before = false, 
     await chargerExercice();
     storage.write("Stage", Stage);
     construireNavigation();
-    afficherExercice();}
+    afficherExercice();
+    ibNotify.show("Exercice déplacé.");}
 
 function insertSommaire() {
     if (Current.Atelier != 0) return;
@@ -1491,10 +1499,10 @@ async function pasteImage() {
             await db.write(path, blob);
             openImageEditor(path);
             return;}
-        alert("Aucune image détectée dans le presse-papiers.");}
+        ibAlert.show("Aucune image détectée dans le presse-papiers.", "Error");}
     catch (error) {
         console.error(error);
-        alert("Impossible d'accéder au presse-papiers.");}}    
+        ibAlert.show("Impossible d'accéder au presse-papiers.", "Error");}}    
 function selectImage(path) {
     imageSelection = {path: path, title: splitFilePath(path).name};
     document.querySelectorAll(".imageTileSelected").forEach(tile => tile.classList.remove("imageTileSelected"));
@@ -1564,11 +1572,11 @@ async function saveImageRename(oldPath, newName) {
         return oldPath;}
     const files = await db.list();
     if (files.includes(newPath)) {
-        alert("Ce nom est déjà utilisé.");
+        ibAlert.show("Ce nom est déjà utilisé.", "Error");
         return null;}
     const blob = await db.read(oldPath);
     if (!blob) {
-        alert("Impossible de lire l'image.");
+        ibAlert.show("Impossible de lire l'image.", "Error");
         endImageRename(oldPath);
         return null;}
     updateFileReferences(oldPath, newPath);
@@ -1576,10 +1584,12 @@ async function saveImageRename(oldPath, newName) {
     await db.delete(oldPath);
     if (imageSelection && imageSelection.path === oldPath) {imageSelection = {path: newPath, title: newName};}
     endImageRename(oldPath, newPath);
+    ibNotify.show("Image renommée.");
     return newPath;}
 async function deleteImage(path) {
     await db.delete(path);
     updateFileReferences(path);
+    ibNotify.show("Image supprimée.");
     openImageEditor();}       
 function confirmDeleteImage(path) {
     const count = countFileReferences(path);
@@ -1596,6 +1606,7 @@ async function addImage() {
         if (!file) return;
         const path = `ressources/${normalizeFileName(file.name)}`;
         await db.write(path, file);
+        ibNotify.show("Image ajoutée aux ressources.");
         openImageEditor(path);};
     input.click();}
 function openExternalImageEditor() {
@@ -1624,7 +1635,8 @@ function saveImage() {
     storage.write("Current", Current);
     selection.restore(image.start + markdown.length,image.start + markdown.length);
     refreshEditor();
-    dialog.close();}
+    dialog.close();
+    ibNotify.show("Image insérée.");}
 async function openImageEditor(selectedPath = null) {
     const image = getCurrentImage();
     if (selectedPath !== null) imageSelection = {path: selectedPath, title: splitFilePath(selectedPath).name};
@@ -1669,7 +1681,8 @@ async function deleteIllustration() {
     storage.write("Current",Current);
     await db.delete(illustration);
     refreshIllusButton();
-    refreshEditor();}
+    refreshEditor();
+    ibNotify.show("Illustration supprimée.");}
 async function addIllustration() {
     if (Current.IllustrationName != "") return;
     const input = document.createElement("input");
@@ -1683,7 +1696,8 @@ async function addIllustration() {
         await db.write(illustrationPath, file);
         Current.IllustrationName = illustrationPath;
         storage.write("Current", Current);
-        refreshIllusButton();};
+        refreshIllusButton();
+        ibNotify.show("Illustration ajoutée.");};
     input.click();}
 
 /* Gestion des fichiers inclus */
@@ -1718,6 +1732,7 @@ async function deleteAttachment(path) {
     await db.delete(path);
     updateFileReferences(path);
     attachmentSelection = null;
+    ibNotify.show("Fichier supprimé.");
     openAttachmentEditor();}
 
 function confirmDeleteAttachment(path) {
@@ -1736,6 +1751,7 @@ async function addAttachment() {
         if (!file) return;
         const path = `ressources/${normalizeFileName(file.name)}`;
         await db.write(path, file);
+        ibNotify.show("Fichier ajouté.");
         openAttachmentEditor(path);};
     input.click();}
 
@@ -1751,7 +1767,8 @@ function saveAttachment(selectedPath = attachmentSelection?.path) {
     textareaSync.setRangeText(markdown, start, end, "end");
     selection.restore(start + markdown.length, start + markdown.length);
     refreshEditor();
-    dialog.close();}
+    dialog.close();
+    ibNotify.show("Lien vers le fichier inséré.");}
 
 async function openAttachmentEditor(selectedPath = null) {
     if (selectedPath !== null) {

@@ -125,3 +125,22 @@ body {color: var(--ib-color-text)}
 /* Notifications */
 .ibNotify { position: fixed; right: 1rem; bottom: 1rem; min-width: 250px; max-width: 450px; padding: .75rem 1rem; color: var(--ib-color-text); background: color-mix(in srgb, var(--ib-modal-background) 85%, transparent); backdrop-filter: blur(4px); border-left: 4px solid var(--ib-accent-color); border-radius: .5rem; box-shadow: 0 4px 12px rgba(0,0,0,.25); opacity: 0; transform: translateY(10px); transition: opacity .3s ease, transform .3s ease; z-index: 10000; pointer-events: none;}
 .ibNotifyVisible { opacity: 1; transform: translateY(0); }
+/* Alertes */
+.ibAlertOverlay { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,.25); z-index: 20000;}
+.ibAlert { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); min-width: 300px; max-width: 600px; width: fit-content; color: var(--ib-color-text); border-width: 2px; border-style: solid; border-radius: .5rem; box-shadow: 0 8px 25px rgba(0,0,0,.35); overflow: hidden;}
+.ibAlertTitle { padding: .9rem 1rem; font-size: 1.1rem; font-weight: 600; color: white; cursor: move; user-select: none;}
+.ibAlertContent { padding: 1.5rem 1.25rem; line-height: 1.5; }
+.ibAlertFooter { display: flex; justify-content: flex-end; padding: .75rem 1rem;}
+.ibAlertButton { min-width: 7rem; }
+.ibAlertInfo { border: 3px solid var(--ib-accent-color); background: color-mix(in srgb, var(--ib-accent-color) 6%, var(--ib-modal-background));}
+.ibAlertInfo .ibAlertTitle {background: var(--ib-accent-color); color: white;}
+.ibAlertInfo .ibAlertButton {border: 1px solid var(--ib-accent-color); color: var(--ib-accent-color); background: transparent;}
+.ibAlertInfo .ibAlertButton:hover {background: var(--ib-accent-color); color: white; }
+.ibAlertWarning { border: 3px solid var(--ib-warning-border); background: color-mix(in srgb, var(--ib-warning-border) 6%, var(--ib-modal-background));}
+.ibAlertWarning .ibAlertTitle {background: var(--ib-warning-border); color: #222;}
+.ibAlertWarning .ibAlertButton {border: 1px solid var(--ib-warning-border); color: var(--ib-warning-border); background: transparent;}
+.ibAlertWarning .ibAlertButton:hover {background: var(--ib-warning-border); color: #222; }
+.ibAlertError { border: 3px solid var(--ib-error-border); background: color-mix(in srgb, var(--ib-error-border) 6%, var(--ib-modal-background));}
+.ibAlertError .ibAlertTitle {background: var(--ib-error-border); color: white;}
+.ibAlertError .ibAlertButton {border: 1px solid var(--ib-error-border); color: var(--ib-error-border); background: transparent;}
+.ibAlertError .ibAlertButton:hover {background: var(--ib-error-border); color: white; }

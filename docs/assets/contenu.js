@@ -1,6 +1,6 @@
 async function ibCopy(text, button) {
     if (!window.ibEnvironment.clipboard) {
-    alert( "Désolé, la copie dans le presse-papiers n'est pas disponible dans votre navigateur." );
+    ibAlert( "Désolé, la copie dans le presse-papiers n'est pas disponible dans votre navigateur.", "Warning" );
     return;}
     await navigator.clipboard.writeText(text);
     button.classList.add("ok");
