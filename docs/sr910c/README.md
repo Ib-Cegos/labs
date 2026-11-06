@@ -1,5 +1,11 @@
 ---
 Auteur: Frédéric Bourdet
+Variables:
+    testVmOldInterfaceName:
+        name: testVmOldInterfaceName
+        defaut: ens160
+        aide: Nom de l'interface réseau de la VM Test-01 lorsqu'elle est encore hébergée par ESXi-01
+        lib: Libellé
 ---
 
 # Proxmox VE pour administrateurs VMware vSphere, réussir la transition
