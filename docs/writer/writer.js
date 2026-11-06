@@ -685,6 +685,7 @@ function afficherExercice() {
         document.getElementById("writerNavIntroduction").classList.remove("writerNavSelected");
         document.getElementById("ExerciceHeader").style.display = "flex";
         const atelier = getCurrentAtelier();
+        document.getElementById("writerExerciceLengthLabel").textContent = atelier.Exercices.length === 1 ? "Durée estimée de l'exercice :" : "Durée :";
         document.getElementById("writerAtelierTitleLabel").style.display = estPseudoStage() ? "none" : "";
         document.getElementById("writerAtelierTitle").style.display = estPseudoStage() ? "none" : "";
         document.getElementById("writerExerciceTitleLabel").style.display = atelier.Exercices.length === 1 ? "none" : "";

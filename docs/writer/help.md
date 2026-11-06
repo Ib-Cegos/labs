@@ -30,6 +30,33 @@ Le bouton <button class="ibActionButton">🛠️ Outils</button> ouvre la barre 
 
 Déplacez la barre par sa poignée 🛠️ ; cliquez sur ✕ pour la fermer.
 
+### Quelques règles Markdown utiles
+
+ibCAN utilise la syntaxe Markdown standard.
+
+- Pour créer un nouveau paragraphe, laissez une ligne vide entre deux blocs de texte.
+- Pour forcer un simple retour à la ligne, terminez la ligne par deux espaces consécutifs.
+- Pour ajouter du contenu à un élément de liste numérotée ou à puces tout en restant dans la logique de la liste, commencez les lignes concernées par quatre espaces.
+
+Exemple :
+
+```markdown
+1. Ouvrir Windows PowerShell.
+
+    Vérifiez que la fenêtre est ouverte avec les droits attendus.
+
+2. Exécuter la commande suivante :
+
+    ```powershell
+    Get-Date
+    ```
+
+3. Vérifier le résultat obtenu.
+
+    - La commande s'exécute sans erreur.
+    - La date et l'heure s'affichent.
+```
+
 ### Encadrés pédagogiques
 
 Le bouton <button class="ibWriterStyleBarButton">></button> permet de créer différents types d'encadrés :
@@ -64,7 +91,7 @@ Le bouton 📸 associe une illustration à l’exercice : elle reste accessible 
 
 > [!TIP] Vous pouvez également coller directement une image dans l'éditeur (à l'aide du raccourci **Ctrl+V**). L'image est ajoutée aux ressources du stage et insérée automatiquement dans le document.
 
-> [!TIP] Vous pouvez également glisser/déposer directement des fichiers dans l'éditeur de texte pour qu'ils soient ajotués aux ressources.
+> [!TIP] Vous pouvez également glisser/déposer directement des fichiers dans l'éditeur de texte pour qu'ils soient ajoutés aux ressources.
 
 # Aperçu et export
 
