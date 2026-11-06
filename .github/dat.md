@@ -122,7 +122,8 @@ Le moteur fournit aussi la variable système `ResourcesUrl`, dont la valeur poin
 Une illustration d’exercice est associée automatiquement si un fichier image porte le même nom de base que l’exercice, par exemple `a1e1.png`. Les extensions prises en charge sont `.png`, `.jpg`, `.jpeg`, `.webp`, `.svg`, `.bmp` et `.gif`. Une illustration est affichée dans un panneau latéral et peut être intégrée à l’impression.
 
 Les autres images et fichiers du stage sont des ressources ordinaires. Les références Markdown à des images peuvent être locales ou externes. 
-> Dans le Writer, les ressources internes sont stockées dans IndexedDB pendant l’édition et incluses dans le ZIP d’échange. Les images peuvent être directement collées dans l'interface de gestion y compris par Ctrl+V).
+
+> Dans le Writer, les ressources internes sont stockées dans IndexedDB pendant l’édition et incluses dans le ZIP d’échange. Les images peuvent être ajoutées depuis l’interface de gestion, collées depuis le presse‑papiers (Ctrl+V) ou déposées par glisser‑déposer. Une image unique déposée dans l’éditeur est automatiquement ajoutée aux ressources puis insérée dans le document courant.
 
 ## 5. Génération et publication du site
 
@@ -255,6 +256,8 @@ Les identifiants `Id` expriment l’ordre courant. Le Writer renumérote atelier
 ### 8.2 Édition et prévisualisation
 
 Le Writer permet d’éditer l’introduction, les ateliers, les exercices, leurs titres et durées, les variables et les ressources. Il permet aussi d’ajouter, supprimer et réordonner ateliers/exercices, d’insérer des éléments Markdown à l’aide de sa barre d’outils, et d’annuler/rétablir des changements.
+
+Les ressources peuvent être ajoutées depuis les sélecteurs de fichiers du navigateur, par collage d’image (Ctrl+V) ou par glisser‑déposer depuis le système d’exploitation. Les conflits de noms sont détectés et signalés avant l’ajout des ressources.
 
 La prévisualisation est une fenêtre distincte. Elle lit le modèle partagé via `localStorage`, observe les événements `storage`, rend le Markdown avec Marked et récupère les images internes depuis IndexedDB. La position de lecture peut être synchronisée avec l’éditeur. Les variables peuvent y être visualisées sous leur nom ou avec leur valeur par défaut.
 

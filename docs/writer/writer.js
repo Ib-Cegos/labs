@@ -1433,7 +1433,8 @@ function saveTable() {
     selection.restore(newPosition, newPosition);}
 
 function normalizeFileName(name) {
-    return name.trim().replace(/\s+/g, "-").replace(/[\/\\:*?"<>|]/g, "");}
+    return name
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(/\s+/g, "-").replace(/[\/\\:*?"<>|]/g, "");}
 function splitFilePath(path) {
     const slash = path.lastIndexOf("/");
     const dot = path.lastIndexOf(".");
@@ -1872,6 +1873,39 @@ textareaSync.addEventListener("paste", async event => {
     await db.write(path, blob);
     const imageUrl = URL.createObjectURL(blob);
     promptImageRename(path, imageUrl);});
+
+/* Initialisation de la gestion du DragNDrop de fichiers */
+textareaSync.addEventListener("dragover", event => {event.preventDefault();});
+textareaSync.addEventListener("drop", async event => {
+    event.preventDefault();
+    const files = [...event.dataTransfer.files];
+    if (!files.length) return;
+    let count = 0;
+    const existingFiles = await db.list();
+    const imported = [];
+    const conflicts = [];
+    for (const file of files) {
+        const path = `ressources/${normalizeFileName(file.name)}`;
+        if (existingFiles.includes(path)) {conflicts.push(file.name); continue;}
+        await db.write(path, file);
+        imported.push(file.name);}
+    // Cas particulier : une seule image déposée sans conflit
+if (imported.length === 1 && conflicts.length === 0) {
+    const path = `ressources/${normalizeFileName(imported[0])}`;
+    if (isImageFile(path)) {
+        imageSelection = {path: path, title: splitFilePath(path).name};
+        saveImage();
+        ibNotify.show("Image ajoutée aux ressources et insérée dans le document.");
+        return;}}
+    if (imported.length) {
+    ibNotify.show(`${imported.length} fichier${imported.length > 1 ? "s" : ""} ajouté${imported.length > 1 ? "s" : ""} aux ressources du stage.`);}
+    if (conflicts.length) {
+        const alertType  = imported.length ? "Warning" : "Error";
+        const article = conflicts.length > 1 ? "Les fichiers suivants existent déjà :" : "Le fichier suivant existe déjà :";
+        const conclusion = conflicts.length > 1 ? "Ils n'ont pas été ajoutés aux ressources du stage." : "Il n'a pas été ajouté aux ressources du stage.";
+        const liste = `<ul>${conflicts.map(file => `<li><strong>${file}</strong></li>`).join("")}</ul>`;
+        ibAlert.show(`<p>${article}</p>${liste}<p>${conclusion}</p>`, alertType);}
+        });
 
 /* Initialisation des boutons */
 document.getElementById("btnAddSommaire").addEventListener("click",insertSommaire);      

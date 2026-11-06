@@ -300,6 +300,8 @@ L'illustration d'un exercice peut, si nécessaire, être incluse comme image dan
 
 > [!TIP] Pour accélérer la rédaction, vous pouvez également copier une image dans votre système (capture d'écran, Word, navigateur, etc.) puis utiliser **Ctrl+V** directement dans la zone d'édition : L'image est automatiquement ajoutée aux ressources du stage. Le Writer affiche alors un aperçu de celle-ci et propose un renommage avant son insertion dans le document.
 
+> [!TIP] Les images et fichiers peuvent être déposés directement depuis l’explorateur Windows dans l’éditeur. Ils sont automatiquement ajoutés aux ressources du stage. Une image déposée seule est également insérée dans le document à l’emplacement du curseur.
+
 
 
 ### Fichier à télécharger

@@ -64,6 +64,8 @@ Le bouton 📸 associe une illustration à l’exercice : elle reste accessible 
 
 > [!TIP] Vous pouvez également coller directement une image dans l'éditeur (à l'aide du raccourci **Ctrl+V**). L'image est ajoutée aux ressources du stage et insérée automatiquement dans le document.
 
+> [!TIP] Vous pouvez également glisser/déposer directement des fichiers dans l'éditeur de texte pour qu'ils soient ajotués aux ressources.
+
 # Aperçu et export
 
 <button class="ibActionButton btnPreview">Aperçu</button> ouvre une fenêtre actualisée au fil des modifications. La synchronisation suit la position de l’éditeur ; vous pouvez la désactiver pour parcourir l’aperçu librement. Le bouton **[ ] → abc** alterne entre le nom des variables et leur valeur par défaut.
