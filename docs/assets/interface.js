@@ -103,13 +103,37 @@ function ibInitNotesPanel() {
 function ibInitNavigationPanel() {
     const panel = document.getElementById( "ibNavigationPanel" );
     const tab = document.getElementById( "ibNavigationTab" );
+    const pin = document.getElementById("ibNavigationPin");
     if (!panel || !tab) {
         if (window.ibEnvironment.storage) { sessionStorage.setItem("ibNavigationOpen","false") }
         return; }
     if ( sessionStorage.getItem( "ibNavigationOpen" ) === "true" ) { panel.classList.add("open"); }
+    const pinned = localStorage.getItem(IB_PREFIX + "navigation-pinned") === "true";
+    document.body.classList.toggle("ibNavigationPinned", pinned);
+    pin.title = pinned ? "Rendre la navigation masquable" : "Conserver la navigation affichée";
+    pin?.classList.toggle("active", pinned);
     tab.addEventListener( "click", () => {
         panel.classList.toggle("open");
-        sessionStorage.setItem( "ibNavigationOpen", panel.classList.contains( "open" )); }); }
+        sessionStorage.setItem( "ibNavigationOpen", panel.classList.contains( "open" )); });
+    pin?.addEventListener("click", () => {
+        const pinned = !document.body.classList.contains("ibNavigationPinned");
+        document.body.classList.toggle("ibNavigationPinned", pinned);
+        if (pinned) {
+            panel.classList.add("open");
+            sessionStorage.setItem("ibNavigationOpen", true);}
+        else {
+            panel.classList.remove("open");
+            sessionStorage.setItem("ibNavigationOpen", false);}
+        pin.classList.toggle("active", pinned);
+        pin.title = pinned ? "Rendre la navigation masquable" : "Conserver la navigation affichée";
+        localStorage.setItem(IB_PREFIX + "navigation-pinned", pinned);});
+    document.addEventListener("click", event => {
+        if (document.body.classList.contains("ibNavigationPinned")) {return;}
+        if (!panel.classList.contains("open")) {return;}
+        if (panel.contains(event.target)) {return;}
+        panel.classList.remove("open");
+        sessionStorage.setItem("ibNavigationOpen", false);});
+}
 
 function ibInitIllustrationPanel() {
     const panel = document.getElementById("ibIllustrationPanel");

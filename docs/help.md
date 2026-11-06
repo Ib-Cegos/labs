@@ -3,11 +3,12 @@
 - Vous pouvez revenir au sommaire du stage à tout moment en cliquant sur l'icône sommaire <span class="navSom">📖</span>.  
 - Dans un atelier contenant plusieurs exercices, les boutons <span class="navPrev">⬅️</span> et <span class="navNext">➡️</span> vous permettent de naviguer entre les exercices de l'atelier.  
 - Cliquez sur l'onglet <span class= "ibNavigationTab">Navigation</span> sur le bord gauche de l'écran pour ouvrir le panneau de navigation. Dans ce panneau :
-    - Vous pouvez suivre votre progression et accéder rapidement à tous les exercices du stage.  
+    - Vous pouvez suivre votre progression et accéder rapidement à tous les exercices du stage.
+    - Cliquez sur l'icône 📌 pour conserver la navigation affichée en permanence. Cette préférence est mémorisée dans votre navigateur.
     - <span class="ibNavExerciceHelp" style="--ib-progress: 35%;">Un fond vert apparaît derrière le titre d'un exercice commencé. Sa largeur dépend de votre progression dans l'exercice.</span>  
     - <span class="ibHasNote"><span class="ibNavExRef">Une barre jaune indique la présence de notes personnelles.</span></span>  
-    - <span class="ibNavExerciceHelp ibExerciceTermine" style="--ib-progress: 100%;">Une barre verte s'affiche à droite d'un exercice est terminé.</span>  
-    - Le comportement de ces éléments (qui est repris dans le sommaire du stage) dépend des cases que vous avez coché dans le contenu de l'exercice.
+    - <span class="ibNavExerciceHelp ibExerciceTermine" style="--ib-progress: 100%;">Une barre verte s'affiche à droite d'un exercice terminé.</span>  
+    - Le comportement de ces éléments (qui est repris dans le sommaire du stage) dépend des cases que vous avez cochées dans le contenu de l'exercice.
 - Certains exercices peuvent comporter une illustration qui peut vous être utile à tout moment. Dans ce cas, cliquez sur l'onglet <span class="ibIllustrationTab">Illustration</span> qui apparaît sur le bord droit de l'écran.
 
 # Contenu

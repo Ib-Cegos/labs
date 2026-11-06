@@ -175,7 +175,8 @@ Le site publié est donc un site statique ; les fonctionnalités du lecteur s’
 
 Le template courant fournit l’en-tête, le pied de page, l’aide, les notes, le bouton Paramètres et, selon la page, la navigation et le panneau d’illustration. `interface.js` relie ces composants à leurs actions.
 
-La navigation est reconstruite par Python depuis les fichiers d’exercice. Elle permet d’ouvrir les exercices, de repérer l’exercice courant, d’afficher la progression et de signaler les notes présentes. L’ouverture du panneau et l’état des groupes d’ateliers sont conservés temporairement dans `sessionStorage`.
+La navigation est reconstruite par Python depuis les fichiers d’exercice. Elle permet d’ouvrir les exercices, de repérer l’exercice courant, d’afficher la progression et de signaler les notes présentes. L’ouverture du panneau et l’état des groupes d’ateliers sont conservés temporairement dans `sessionStorage`.  
+Sur les écrans de grande largeur, le lecteur peut épingler la navigation latérale à l’aide d’une icône 📌. Dans ce mode, la navigation reste affichée en permanence, le contenu principal est repositionné pour éviter tout recouvrement et la préférence est conservée dans le `localStorage` du navigateur.
 
 Le site dispose également de composants d’interface partagés :
 
