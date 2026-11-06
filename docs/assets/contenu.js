@@ -39,6 +39,7 @@ function ibInitFontSize() {
     document.documentElement.style.setProperty( "--ib-content-font-size", valeur );
     select.addEventListener( "change", () => {
         localStorage.setItem( IB_PREFIX + "font-size", select.value );
+        ibNotify.show("Taille du texte enregistrée.");
         document.documentElement.style.setProperty( "--ib-content-font-size", select.value);});}
 
 /* Gestion des variables */
@@ -69,6 +70,7 @@ function ibSaveVariables() {
     document.querySelectorAll(".ibVariableInput").forEach(input => {
         input.addEventListener("change",() => {
             localStorage.setItem( ibVarKey(input.dataset.variable), input.value);
+            ibNotify.show("Variable enregistrée.");
             ibUpdateVariables(); });});}
 
 function ibVariablesAConfigurer() {
@@ -89,8 +91,9 @@ function ibImport(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         const data = JSON.parse(e.target.result);
-        Object.entries(data).forEach(([key, value]) => {if (key.toLowerCase().startsWith(IB_PREFIX)) localStorage.setItem(key, value);});
-        location.reload();};
+        Object.entries(data).forEach(([key, value]) => {if (key.toLowerCase().startsWith(IB_PREFIX.toLowerCase())) localStorage.setItem(key, value);});
+        ibNotify.show("Données importées.");
+        setTimeout(() => {location.reload();}, 500);};
     reader.readAsText(file);}
     
 function ibExport() {
@@ -145,11 +148,13 @@ function ibInitNotes() {
     ibMajBoutonNotes();
     ibMajBoutonSuppressionNote();
     ibMajIndicateursNotes();
+    let noteSaveTimer = null;
     textarea.addEventListener( "input", () => { localStorage.setItem( key, textarea.value ); ibMajBoutonNotes(); ibMajBoutonSuppressionNote();ibMajIndicateursNotes();});
     document.getElementById("ibNotesDelete").addEventListener( "click", () => {
         if (!confirm( "Voulez-vous vraiment supprimer cette note ?" )) { return; }
         textarea.value = "";
         localStorage.removeItem(key);
+        ibNotify.show("Note supprimée.");
         ibMajBoutonNotes();
         ibMajBoutonSuppressionNote();
         ibMajIndicateursNotes(); });}

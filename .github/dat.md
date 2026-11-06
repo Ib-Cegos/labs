@@ -59,7 +59,7 @@ Les deux chaînes se rejoignent sur les fichiers Markdown de `docs/` :
 
 ### Front-end du site
 
-- `docs/assets/common.js` : utilitaires communs, vérification du stockage et du presse-papiers, thèmes, chargement des ZIP dans le Writer et accès à IndexedDB.
+- `docs/assets/common.js` : utilitaires communs, vérification du stockage et du presse-papiers, thèmes, chargement des ZIP dans le Writer, accès à IndexedDB et composants d’interface partagés (notifications et alertes).
 - `docs/assets/contenu.js` : variables du stage, tâches et progression, notes, taille de texte et export/import des données du lecteur.
 - `docs/assets/interface.js` : panneaux et interactions de navigation, aide, paramètres, illustrations et ouverture de l’impression.
 - `docs/assets/print.js` : préparation du document imprimable et application des options d’impression.
@@ -175,6 +175,11 @@ Le site publié est donc un site statique ; les fonctionnalités du lecteur s’
 Le template courant fournit l’en-tête, le pied de page, l’aide, les notes, le bouton Paramètres et, selon la page, la navigation et le panneau d’illustration. `interface.js` relie ces composants à leurs actions.
 
 La navigation est reconstruite par Python depuis les fichiers d’exercice. Elle permet d’ouvrir les exercices, de repérer l’exercice courant, d’afficher la progression et de signaler les notes présentes. L’ouverture du panneau et l’état des groupes d’ateliers sont conservés temporairement dans `sessionStorage`.
+
+Le site dispose également de composants d’interface partagés :
+
+- `ibNotify.show()` affiche une notification temporaire non bloquante destinée à confirmer une action effectuée automatiquement (par exemple l’enregistrement d’une variable ou l’import de données).
+- `ibAlert.show()` affiche une fenêtre d’information bloquante indépendante des autres boîtes de dialogue. Elle est utilisée pour les erreurs, avertissements et informations importantes nécessitant une confirmation du lecteur ou du rédacteur.
 
 ### 6.2 Tâches et progression
 
@@ -296,7 +301,7 @@ Les principaux artefacts régénérables sont :
 
 - Modifier le comportement de génération des pages dans `hooks/content_processor.py` ou les helpers associés dans `hooks/tools.py`.
 - Modifier le contenu du catalogue ou sa macro dans `main.py`.
-- Modifier les interactions du lecteur dans `docs/assets/` ; conserver les styles communs dans `contenu.css`, les styles d’impression dans `print.css` et les variantes visuelles dans `assets/themes/`.
+- Modifier les interactions du lecteur dans `docs/assets/` ; les composants transverses (`ibNotify`, `ibAlert`, IndexedDB, thèmes, stockage, chargement de ZIP…) sont regroupés dans `common.js`; conserver les styles communs dans `contenu.css`, les styles d’impression dans `print.css` et les variantes visuelles dans `assets/themes/`.
 - Modifier l’édition dans `docs/writer/` et les règles d’échange ou de conversion dans `writer/`.
 - Modifier les contenus pédagogiques dans les fichiers Markdown de `docs/<stage>/`, pas dans les artefacts `print.md`.
 - Après un changement aux structures échangées, vérifier ensemble la compatibilité entre `writer.js`, `writer/export.py`, `writer/import.py` et les fichiers Markdown produits.

@@ -138,7 +138,8 @@ function ibInitTheme() {
     ibApplyTheme(theme);
     select.addEventListener( "change", () => {
         localStorage.setItem( IB_PREFIX + "theme", select.value );
-        ibApplyTheme( select.value );});}
+        ibApplyTheme( select.value );
+        ibNotify.show("Thème appliqué.");});}
 
 function ibApplyTheme(theme) {
     const css = document.getElementById("ibThemeCss");
